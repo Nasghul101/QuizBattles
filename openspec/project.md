@@ -18,12 +18,19 @@ A fully 2D, mobile-first quiz duel game inspired by Quizduell for phone apps. Pl
 - Clean, well-commented code
 - Easy to refactor and maintain
 - Clear naming conventions
+- Static typing: All variables should be statically typed if possible
 - Mobile-performance optimizations
 - No hardcoded art styles, colors, or themes in logic
 - Avoid code assumptions about "only one game mode"
 
 ### Architecture Patterns
 - **Scene-based architecture**: Each screen is a separate, reusable scene
+- **Composition workflow**: Follow composition-based design as described in [Composition in Godot 4](https://www.gotut.net/composition-in-godot-4/)
+  - Build complex objects by combining simpler, reusable components
+  - Create modular components (scripts or scenes) that can be mixed and matched
+  - Components should be independent and easily replaceable
+  - Benefits: Reusability, modularity, flexibility, and consistency
+  - Use both scene-based components (for shared visual/configuration defaults) and script-based components (for behavior logic)
 - **Separation of concerns**:
   - Game logic layer (duel mechanics, scoring, turn management)
   - UI layer (visual presentation, input handling)
