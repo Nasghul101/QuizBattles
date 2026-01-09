@@ -19,6 +19,7 @@ A fully 2D, mobile-first quiz duel game inspired by Quizduell for phone apps. Pl
 - Easy to refactor and maintain
 - Clear naming conventions
 - Static typing: All variables should be statically typed if possible
+- Indentation: Use spaces only (no tabs)
 - Mobile-performance optimizations
 - No hardcoded art styles, colors, or themes in logic
 - Avoid code assumptions about "only one game mode"
