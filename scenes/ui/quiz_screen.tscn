@@ -1,0 +1,72 @@
+[gd_scene load_steps=3 format=3 uid="uid://b5n5d733kj2v5"]
+
+[ext_resource type="Script" uid="uid://dnejqrkpdbaum" path="res://scenes/ui/quiz_screen.gd" id="1_script"]
+[ext_resource type="PackedScene" uid="uid://bwx7yjvxq8cxl" path="res://scenes/ui/components/answer_button.tscn" id="2_answer_button"]
+
+[node name="QuizScreen" type="Control"]
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+script = ExtResource("1_script")
+
+[node name="QuestionPanel" type="Panel" parent="."]
+layout_mode = 1
+anchors_preset = 10
+anchor_right = 1.0
+offset_left = 20.0
+offset_top = 40.0
+offset_right = -20.0
+offset_bottom = 240.0
+grow_horizontal = 2
+
+[node name="QuestionLabel" type="Label" parent="QuestionPanel"]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_left = 20.0
+offset_top = 26.0
+offset_right = -20.0
+offset_bottom = -14.0
+grow_horizontal = 2
+grow_vertical = 2
+text = "Question text will appear here"
+horizontal_alignment = 1
+vertical_alignment = 1
+autowrap_mode = 3
+
+[node name="AnswersGrid" type="GridContainer" parent="."]
+layout_mode = 1
+anchors_preset = 7
+anchor_left = 0.5
+anchor_top = 1.0
+anchor_right = 0.5
+anchor_bottom = 1.0
+offset_left = -320.0
+offset_top = -640.0
+offset_right = 390.0
+offset_bottom = -31.0
+grow_horizontal = 2
+grow_vertical = 0
+theme_override_constants/h_separation = 20
+theme_override_constants/v_separation = 20
+columns = 2
+
+[node name="AnswerButton1" parent="AnswersGrid" instance=ExtResource("2_answer_button")]
+custom_minimum_size = Vector2(300, 120)
+layout_mode = 2
+
+[node name="AnswerButton2" parent="AnswersGrid" instance=ExtResource("2_answer_button")]
+custom_minimum_size = Vector2(300, 120)
+layout_mode = 2
+
+[node name="AnswerButton3" parent="AnswersGrid" instance=ExtResource("2_answer_button")]
+custom_minimum_size = Vector2(300, 120)
+layout_mode = 2
+
+[node name="AnswerButton4" parent="AnswersGrid" instance=ExtResource("2_answer_button")]
+custom_minimum_size = Vector2(300, 120)
+layout_mode = 2
