@@ -32,8 +32,8 @@ func _ready() -> void:
     # Connect button press to internal handler
     pressed.connect(_on_button_pressed)
 
+## Initialize the button's visual style with neutral color
 func _setup_style() -> void:
-    """Initialize the button's visual style with neutral color"""
     _style_box = StyleBoxFlat.new()
     _style_box.bg_color = neutral_color
     _style_box.border_width_left = 0
@@ -54,19 +54,17 @@ func _setup_style() -> void:
     add_theme_stylebox_override("pressed", _style_box)
     add_theme_stylebox_override("disabled", _style_box)
 
+## Set the answer text and index for this button
+##
+## Args:
+##   answer_text: The text to display on the button
+##   index: The index of this answer (0-3)
 func set_answer(answer_text: String, index: int) -> void:
-    """
-    Set the answer text and index for this button
-    
-    Args:
-        answer_text: The text to display on the button
-        index: The index of this answer (0-3)
-    """
     text = answer_text
     answer_index = index
 
+## Handle button press: disable and add white outline, emit signal
 func _on_button_pressed() -> void:
-    """Handle button press: disable and add white outline, emit signal"""
     disabled = true
     
     # Add white outline to indicate selection
@@ -79,21 +77,19 @@ func _on_button_pressed() -> void:
     # Emit signal with answer index
     answer_selected.emit(answer_index)
 
+## Animate button to correct (green) state
 func reveal_correct() -> void:
-    """Animate button to correct (green) state"""
     _animate_color(correct_color)
 
+## Animate button to wrong (red) state
 func reveal_wrong() -> void:
-    """Animate button to wrong (red) state"""
     _animate_color(wrong_color)
 
+## Smoothly animate the button's background color
+##
+## Args:
+##   target_color: The color to animate to
 func _animate_color(target_color: Color) -> void:
-    """
-    Smoothly animate the button's background color
-    
-    Args:
-        target_color: The color to animate to
-    """
     # Cancel any existing tween
     if _tween:
         _tween.kill()

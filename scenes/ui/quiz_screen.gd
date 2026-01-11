@@ -42,14 +42,12 @@ func _ready() -> void:
         button.answer_selected.connect(_on_answer_selected)
 
 
+## Load and display a quiz question with answers
+##
+## Args:
+##   data: Dictionary with keys "question" (String), "correct_answer" (String),
+##         and "incorrect_answers" (Array of 3 Strings)
 func load_question(data: Dictionary) -> void:
-    """
-    Load and display a quiz question with answers
-    
-    Args:
-        data: Dictionary with keys "question" (String), "correct_answer" (String),
-              and "incorrect_answers" (Array of 3 Strings)
-    """
     # Validate input data
     if not data.has("question") or not data.has("correct_answer") or not data.has("incorrect_answers"):
         push_error("Invalid question data format. Missing required keys.")
@@ -80,13 +78,11 @@ func load_question(data: Dictionary) -> void:
         answer_buttons[i].set_answer(all_answers[i], i)
 
 
+## Handle answer button selection
+##
+## Args:
+##   answer_index: Index of the selected answer button (0-3)
 func _on_answer_selected(answer_index: int) -> void:
-    """
-    Handle answer button selection
-    
-    Args:
-        answer_index: Index of the selected answer button (0-3)
-    """
     # Prevent multiple answers
     if has_answered:
         return
@@ -108,10 +104,8 @@ func _on_answer_selected(answer_index: int) -> void:
         answer_correct.emit()
 
 
+## Reveal the correct/wrong state of all answer buttons
 func _reveal_all_buttons() -> void:
-    """
-    Reveal the correct/wrong state of all answer buttons
-    """
     for button in answer_buttons:
         # Check if this button has the correct answer
         if button.text == correct_answer_text:

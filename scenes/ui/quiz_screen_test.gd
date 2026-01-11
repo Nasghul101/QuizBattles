@@ -21,8 +21,8 @@ func _ready() -> void:
     quiz_screen.load_question(sample_question)
 
 
+## Handle correct answer signal
 func _on_answer_correct() -> void:
-    """Handle correct answer signal"""
     print("✓ Correct answer! Point scored.")
     
     # Wait 2 seconds then load another question
@@ -30,8 +30,8 @@ func _on_answer_correct() -> void:
     _load_next_question()
 
 
+## Load another sample question for testing
 func _load_next_question() -> void:
-    """Load another sample question for testing"""
     var questions: Array = [
         {
             "question": "What is 2 + 2?",

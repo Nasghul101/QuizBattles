@@ -15,14 +15,26 @@ A fully 2D, mobile-first quiz duel game inspired by Quizduell for phone apps. Pl
 ## Project Conventions
 
 ### Code Style
-- Clean, well-commented code
-- Easy to refactor and maintain
-- Clear naming conventions
-- Static typing: All variables should be statically typed if possible
-- Indentation: Use spaces only (no tabs)
+- Follow official GDScript style guide: https://docs.godotengine.org/en/stable/tutorials/scripting/gdscript/gdscript_styleguide.html
+- Static typing: Use static typing where possible for better performance and error checking
 - Mobile-performance optimizations
 - No hardcoded art styles, colors, or themes in logic
 - Avoid code assumptions about "only one game mode"
+
+### Documentation Conventions
+- Follow official GDScript documentation comments guide: https://docs.godotengine.org/en/stable/tutorials/scripting/gdscript/gdscript_documentation_comments.html
+- Use `##` for documentation comments (class descriptions, function descriptions)
+- Use `#` for inline explanatory comments
+- Example:
+  ```gdscript
+  extends Node2D
+  ## Test scene for quiz screen component
+  
+  ## Calculate the final score based on correct answers and time bonus
+  func calculate_score(correct: int, time_bonus: float) -> int:
+      # Multiply by 100 to get base score
+      return int(correct * 100 * time_bonus)
+  ```
 
 ### Architecture Patterns
 - **Scene-based architecture**: Each screen is a separate, reusable scene
