@@ -22,13 +22,13 @@ extends Control
 signal answer_correct
 
 # Node references
-@onready var question_label: Label = $QuestionPanel/QuestionLabel
-@onready var answers_grid: GridContainer = $AnswersGrid
+@onready var question_label: Label = $PanelContainer/MarginContainer/VBoxContainer/QuestionPanel/QuestionLabel
+@onready var answers_grid: GridContainer = $PanelContainer/MarginContainer/VBoxContainer/AnswersGrid
 @onready var answer_buttons: Array[Button] = [
-    $AnswersGrid/AnswerButton1,
-    $AnswersGrid/AnswerButton2,
-    $AnswersGrid/AnswerButton3,
-    $AnswersGrid/AnswerButton4
+    $PanelContainer/MarginContainer/VBoxContainer/AnswersGrid/AnswerButton1,
+    $PanelContainer/MarginContainer/VBoxContainer/AnswersGrid/AnswerButton2,
+    $PanelContainer/MarginContainer/VBoxContainer/AnswersGrid/AnswerButton3,
+    $PanelContainer/MarginContainer/VBoxContainer/AnswersGrid/AnswerButton4
 ]
 
 # Internal state
