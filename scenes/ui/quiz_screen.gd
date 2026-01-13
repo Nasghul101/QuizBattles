@@ -22,14 +22,9 @@ extends Control
 signal answer_correct
 
 # Node references
-@onready var question_label: Label = $PanelContainer/MarginContainer/VBoxContainer/QuestionPanel/QuestionLabel
-@onready var answers_grid: GridContainer = $PanelContainer/MarginContainer/VBoxContainer/AnswersGrid
-@onready var answer_buttons: Array[Button] = [
-    $PanelContainer/MarginContainer/VBoxContainer/AnswersGrid/AnswerButton1,
-    $PanelContainer/MarginContainer/VBoxContainer/AnswersGrid/AnswerButton2,
-    $PanelContainer/MarginContainer/VBoxContainer/AnswersGrid/AnswerButton3,
-    $PanelContainer/MarginContainer/VBoxContainer/AnswersGrid/AnswerButton4
-]
+@onready var question_label: Label = %QuestionLabel
+@onready var answers_grid: GridContainer = %AnswersGrid
+@onready var answer_buttons: Array[Button] 
 
 # Internal state
 var correct_answer_text: String = ""
@@ -37,6 +32,9 @@ var has_answered: bool = false
 
 
 func _ready() -> void:
+    for child in answers_grid.get_children():
+        answer_buttons.append(child)
+        
     # Connect all answer button signals to handler
     for button in answer_buttons:
         button.answer_selected.connect(_on_answer_selected)
