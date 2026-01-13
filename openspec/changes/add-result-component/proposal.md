@@ -1,80 +1,109 @@
-# Proposal: add-result-component
+# Change Proposal: add-result-component
 
-## Overview
-Add a reusable result component that displays a category icon and question results for a single round. The component will show one large category circle and dynamically generated question circles that can be clicked to review the answered quiz screens.
+## Summary
+Add a reusable result component that displays a category summary with answer outcomes for a round of 3 questions. The component shows a category symbol/icon and three answer indicator buttons that can be clicked to review the answered questions in a popup (popup implementation is out of scope).
 
-## Problem Statement
-Players need a way to review their performance after answering questions in a category. Currently, there is no component to display:
+## Problem
+After answering 3 questions from a category in a round, players need a visual summary showing:
 - Which category was played
-- Which questions were answered correctly or incorrectly
-- A way to review the actual quiz screens from completed questions
+- Which of the 3 questions were answered correctly/incorrectly
+- Ability to review individual questions by clicking on the answer indicators
 
-## Proposed Solution
-Create a `result_component` scene that:
-- Displays a non-interactive category circle (TextureRect) showing the category icon
-- Dynamically generates clickable question circle buttons based on configurable question count
-- Stores references to quiz_screen instances from completed questions
-- Shows the corresponding quiz screen in an internal panel when a question circle is clicked
-- Uses a Panel > HBox > (Category + VBox) structure for proper scaling and layout
-- Supports texture loading for both category and question circles
+Currently, no component exists to display this per-category round result information.
 
-## Scope
-This change introduces a new UI component following the same reusable pattern as `answer-button-component`. 
+## Motivation
+**Why is this change necessary?**
+- The game flow requires showing round results after each category (3 questions)
+- Players need visual feedback on their performance per category
+- Players should be able to review their answered questions
+- The result component will be reused multiple times on a result screen (5 categories per player = 10 components total in a full game)
+
+**What user/developer pain does it solve?**
+- Provides clear, structured feedback on round performance
+- Enables question review functionality
+- Creates a reusable building block for result screens
+
+**Why now?**
+- Foundational component needed for game flow
+- Depends on existing quiz-screen-component and answer-button-component
+- Logical progression after implementing question answering
+
+## Proposed Changes
+
+### New Capabilities
+- **result-component**: A UI component that displays category icon and answer outcomes for a round of 3 questions, with clickable review buttons
+
+### Modified Capabilities
+None.
+
+### Removed Capabilities
+None.
+
+## Design Decisions
+
+### Component Responsibilities
+The result component is responsible for:
+- Displaying a category texture/icon
+- Showing 3 answer indicators (correct/incorrect icons)
+- Storing question data and answer outcomes for each of the 3 questions
+- Emitting events when an answer indicator is clicked (with the question data)
+
+The result component is NOT responsible for:
+- Creating or managing the review popup (handled by parent/screen)
+- Result screen layout (handled by parent container)
+- Player identification (handled by parent container)
+- Category texture loading/management (textures passed from parent)
+
+### Data Flow
+1. Parent screen provides: category texture + array of 3 question results
+2. Result component stores: question data, answer outcomes, player answers
+3. On button click: component emits signal with stored question data
+4. Parent screen: handles popup creation/display (out of scope)
+
+### Visual Design
+- Category symbol displayed as TextureRect at top
+- Three answer indicator buttons in horizontal layout below
+- Buttons show icon_right.png (correct) or icon_wrong.png (incorrect)
+- Clicking a button emits signal with that question's data
+
+## Implementation Scope
 
 ### In Scope
-- New `result_component` scene and script
-- Node structure: Panel > HBox > (TextureRect for category + VBox with dynamic Button children)
-- Method to load category data and quiz screen references
-- Dynamic generation of question buttons based on count
-- Internal panel/container to display quiz screens when question buttons are clicked
-- Signal emission when quiz screens are shown/hidden
-- Texture support for category and question circles
-- Expand/collapse functionality for quiz screen review
+- ResultComponent scene with script (result_component.gd)
+- Data structure for storing category and question results
+- Method to initialize component with category texture and question data
+- Three clickable buttons that emit signals with question data
+- Correct/incorrect icon display on buttons
 
 ### Out of Scope
-- Result screen layout and composition (will be implemented separately)
-- Color modulation (textures contain colors)
-- Score calculation or display
-- Animation between result states
-- Persistence of result data
+- Review popup implementation
+- Result screen layout/container
+- Player identification/labeling
+- Category texture atlas/loading system
+- Animations or transitions
 
-## Changes to Specifications
-
-### New Specifications
-- `result-component`: A reusable component for displaying category and question results with review capability
-
-### Modified Specifications
-None
+## Testing Strategy
+- Manual testing: Load component with sample data, verify icons display
+- Manual testing: Click buttons, verify signals emit correct question data
+- Manual testing: Test with all-correct, all-incorrect, and mixed scenarios
 
 ## Dependencies
-- Requires `quiz-screen-component` spec (already exists)
-- No blocking dependencies
-
-## Risks & Mitigations
-- **Risk**: Dynamic button generation could impact performance with many questions
-  - **Mitigation**: Follow Godot best practices for node pooling if needed; start with simple instantiation
-  
-- **Risk**: Storing quiz_screen node references could cause memory issues if not managed properly
-  - **Mitigation**: Implement proper cleanup methods; document lifecycle expectations
-
-- **Risk**: Scaling behavior might not work as expected across different screen sizes
-  - **Mitigation**: Use container expand/fill flags properly; test on mobile portrait orientation
+- Existing: quiz-screen-component (for question data format)
+- Existing: icon_right.png and icon_wrong.png assets
+- Future: Review popup (will consume signals from this component)
 
 ## Alternatives Considered
-1. **Static question count**: Hardcode 3 question circles
-   - Rejected: Need flexibility for future game modes with different question counts
-   
-2. **Recreate quiz screens from data**: Store question data and rebuild quiz screens on demand
-   - Rejected: More complex and loses original state (user selections, timing, etc.)
 
-3. **External quiz screen display**: Emit signal and let parent handle showing quiz screen
-   - Rejected: Makes component less self-contained and harder to reuse
+### Alternative 1: Embed quiz screen instances
+Store actual quiz screen scene instances instead of data.
+**Rejected because**: Memory inefficient, tight coupling, unnecessary complexity for simple display/storage needs.
 
-## Success Criteria
-- Result component scene exists at `scenes/ui/components/result_component.tscn`
-- Component can be instantiated and configured in any parent scene
-- Question circles are generated dynamically based on configurable count
-- Clicking a question circle displays the corresponding quiz screen
-- Category texture can be loaded via method or _ready function
-- Component follows project conventions for composition and reusability
-- All requirements pass validation with `openspec validate`
+### Alternative 2: Component manages popup
+Result component creates and manages its own popup.
+**Rejected because**: Violates single responsibility, reduces reusability, makes parent screen layout harder to control.
+
+## Open Questions
+None - all clarifications received from user.
+
+## Approvals
+- [ ] User approval required before implementation

@@ -2,182 +2,63 @@
 
 ## Implementation Tasks
 
-### 1. Create result_component scene structure
-- Create new scene at `scenes/ui/components/result_component.tscn`
-- Add PanelContainer as root node
-- Add HBoxContainer as child of PanelContainer
-- Add TextureRect (for category circle) as first child of HBoxContainer
-- Add VBoxContainer as second child of HBoxContainer
-- Configure container properties (expand, fill, sizing flags)
-- Configure TextureRect to be circular or square (will hold circular texture)
+### 1. Create result_component.gd script
+- [ ] Create `scenes/ui/components/result_component.gd`
+- [ ] Define data structure for question results (question_data, was_correct, player_answer)
+- [ ] Define signal `question_review_requested(question_index: int, question_data: Dictionary)`
+- [ ] Implement `load_result_data(category_texture: Texture2D, results: Array)` method
+- [ ] Store category texture and question results internally
+- [ ] Validate that results array contains exactly 3 entries
+- [ ] Add documentation comments
 
-**Validation**: Scene file exists and node structure matches requirement
+**Validation**: Script compiles without errors, follows GDScript style guide
 
----
+### 2. Update result_component.tscn scene
+- [ ] Add script reference to result_component.gd
+- [ ] Verify CategorySymbol (TextureRect) node exists
+- [ ] Verify HBoxContainer with 3 answer indicator buttons exists
+- [ ] Get node references in script using @onready
+- [ ] Ensure buttons have appropriate minimum sizes
 
-### 2. Create result_component script with basic structure
-- Create `scenes/ui/components/result_component.gd`
-- Attach script to root PanelContainer
-- Add class documentation comment
-- Define exported property `@export var question_count: int = 3`
-- Create node references (@onready variables) for category TextureRect, question VBoxContainer, and quiz display container
-- Add signal definitions: `question_clicked(index: int)`, `quiz_review_closed()`
-- Implement `_ready()` function with basic initialization
+**Validation**: Scene loads in editor, all nodes are accessible
 
-**Validation**: Script compiles without errors, exported properties visible in editor
+### 3. Implement button icon display logic
+- [ ] Create method `_update_button_icons()` to set button icons based on correctness
+- [ ] Load icon_right.png from `res://assets/icon_right.png`
+- [ ] Load icon_wrong.png from `res://assets/icon_wrong.png`
+- [ ] Set button icons based on was_correct field in results data
+- [ ] Call icon update when `load_result_data()` is invoked
 
----
+**Validation**: Buttons display correct icons for correct/incorrect answers
 
-### 3. Implement quiz screen display container
-- Add Control or Panel node to scene for displaying quiz screens
-- Position and size it appropriately (overlay or separate panel)
-- Set initial visibility to hidden
-- Add close Button to the container
-- Connect close button pressed signal to close handler
-- Implement `_show_quiz_screen(quiz_screen: Node)` method
-- Implement `_hide_quiz_screen()` method
-- Emit `quiz_review_closed()` signal when closed
+### 4. Implement button click handling
+- [ ] Connect all 3 button pressed signals to handler method
+- [ ] Create `_on_answer_button_pressed(button_index: int)` handler
+- [ ] Emit `question_review_requested` signal with question index and stored data
+- [ ] Ensure signal includes all necessary data for popup display
 
-**Validation**: Container exists, can be shown/hidden programmatically
+**Validation**: Clicking buttons emits correct signals with proper data
 
----
+### 5. Manual testing
+- [ ] Create test scene that instantiates result component
+- [ ] Test with all-correct scenario (3 correct answers)
+- [ ] Test with all-incorrect scenario (3 incorrect answers)
+- [ ] Test with mixed scenario (1-2 correct, rest incorrect)
+- [ ] Verify button signals contain correct question data
+- [ ] Test with different category textures
 
-### 4. Implement dynamic question button generation
-- Create `_generate_question_buttons()` private method
-- Clear any existing buttons in VBoxContainer
-- Loop based on `question_count` and instantiate Button nodes
-- Configure each button (size, expand flags)
-- Add texture support to buttons (icon or custom texture property)
-- Store button references in array or access via get_children()
-- Connect each button's pressed signal to handler with index parameter
+**Validation**: Component behaves correctly in all scenarios
 
-**Validation**: Changing question_count in editor creates correct number of buttons at runtime
-
----
-
-### 5. Implement load_result_data method
-- Create `load_result_data(category_texture: Texture2D, quiz_screens: Array, question_textures: Array = [])` method
-- Validate input parameters (array sizes match question_count)
-- Store quiz_screens array in member variable
-- Set category texture on TextureRect
-- Call `_generate_question_buttons()` if not already generated
-- Apply textures to question buttons from question_textures array
-- Add documentation comment explaining parameters
-
-**Validation**: Method accepts data and displays category texture, creates buttons
-
----
-
-### 6. Implement question button click handler
-- Create `_on_question_button_pressed(index: int)` method
-- Emit `question_clicked(index)` signal
-- Retrieve quiz_screen from stored array at given index
-- Reparent or add quiz_screen to display container
-- Call `_show_quiz_screen(quiz_screen)`
-- Handle error cases (invalid index, null quiz_screen)
-
-**Validation**: Clicking question button displays corresponding quiz screen
-
----
-
-### 7. Implement set_category_texture method
-- Create public `set_category_texture(texture: Texture2D)` method
-- Apply texture to category TextureRect node
-- Add null check
-- Add documentation comment
-
-**Validation**: Method successfully updates category texture
-
----
-
-### 8. Implement set_question_texture method
-- Create public `set_question_texture(index: int, texture: Texture2D)` method
-- Validate index is within bounds
-- Get button at index from VBoxContainer children
-- Apply texture to button (icon property or custom)
-- Add null checks and error handling
-- Add documentation comment
-
-**Validation**: Method successfully updates individual question button textures
-
----
-
-### 9. Implement clear_data method
-- Create public `clear_data()` method
-- Clear quiz_screens array
-- Remove quiz_screen from display container if currently showing
-- Hide display container
-- Clear textures from all buttons
-- Clear category texture
-- Add documentation comment
-
-**Validation**: Component can be cleared and reloaded with new data without errors
-
----
-
-### 10. Create test scene for result_component
-- Create `scenes/ui/result_component_test.tscn`
-- Add result_component instance
-- Create test script `scenes/ui/result_component_test.gd`
-- Load sample category texture
-- Create or mock 3 quiz_screen instances with test data
-- Call `load_result_data()` in `_ready()`
-- Add UI to test different question counts
-- Test button clicks and quiz screen display
-
-**Validation**: Test scene runs, displays component, buttons work, quiz screens appear
-
----
-
-### 11. Add UID files for new scripts
-- Ensure `.uid` files are generated for `result_component.gd`
-- Ensure `.uid` files are generated for `result_component_test.gd`
-
-**Validation**: UID files exist alongside script files
-
----
-
-### 12. Verify layout and scaling behavior
-- Test component with different panel sizes
-- Verify children expand/fill properly
-- Test with different question_counts (3, 5, 1)
-- Test on mobile portrait resolution (if possible)
-- Adjust container flags if needed for proper scaling
-
-**Validation**: Component scales properly, maintains layout with different configurations
-
----
-
-## Testing Tasks
-
-### Manual Testing Checklist
-- [ ] Component instantiates without errors
-- [ ] Category texture displays correctly
-- [ ] Question buttons generate dynamically based on count
-- [ ] Question button textures display correctly
-- [ ] Clicking question button shows quiz screen
-- [ ] Quiz screen display fills container properly
-- [ ] Close button hides quiz screen
-- [ ] Signals emit at correct times
-- [ ] clear_data() properly resets component
-- [ ] Component works with different question_counts
-- [ ] Layout scales with panel resizing
-
----
+## Validation Checklist
+- [ ] Script follows GDScript style guide conventions
+- [ ] Documentation comments follow Godot conventions (## for docs, # for inline)
+- [ ] All public methods have documentation
+- [ ] Scene structure matches component requirements
+- [ ] Icons display correctly for all answer states
+- [ ] Signals emit with complete question data
+- [ ] No errors in Godot console when using component
 
 ## Dependencies
-- Task 1 must complete before Task 2
-- Task 3 can be done in parallel with Task 2
-- Tasks 4-9 depend on Task 2 completion
-- Task 10 depends on Tasks 1-9 completion
-- Task 11 can be done after file creation
-- Task 12 should be done after Task 10
-
----
-
-## Notes
-- Follow GDScript style guide for all code
-- Use static typing throughout
-- Add documentation comments (##) for all public methods
-- Keep component simple and reusable like answer_button component
-- Question button styling (circular shape, borders) can be refined later via themes or custom drawing
+- Sequential: Tasks 1-2 must complete before task 3
+- Sequential: Task 3 must complete before task 4
+- Sequential: Tasks 1-4 must complete before task 5
