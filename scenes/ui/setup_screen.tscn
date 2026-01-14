@@ -1,4 +1,6 @@
-[gd_scene format=3 uid="uid://mhewb3r1p5f0"]
+[gd_scene load_steps=2 format=3 uid="uid://mhewb3r1p5f0"]
+
+[ext_resource type="Script" uid="uid://yw4amno58glr" path="res://scenes/ui/setup_screen.gd" id="1_w8j3x"]
 
 [node name="SetupScreen" type="Control"]
 layout_mode = 3
@@ -7,6 +9,7 @@ anchor_right = 1.0
 anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
+script = ExtResource("1_w8j3x")
 
 [node name="VBoxContainer" type="VBoxContainer" parent="."]
 layout_mode = 1
@@ -39,7 +42,8 @@ size_flags_horizontal = 8
 text = "Number of Rounds:"
 vertical_alignment = 1
 
-[node name="HSlider" type="HSlider" parent="VBoxContainer/MarginContainer/HBoxContainer"]
+[node name="RoundsSlider" type="HSlider" parent="VBoxContainer/MarginContainer/HBoxContainer"]
+unique_name_in_owner = true
 custom_minimum_size = Vector2(0, 30)
 layout_mode = 2
 size_flags_horizontal = 3
@@ -47,7 +51,8 @@ size_flags_vertical = 1
 max_value = 6.0
 value = 5.0
 
-[node name="Amount" type="Label" parent="VBoxContainer/MarginContainer/HBoxContainer"]
+[node name="RoundsAmount" type="Label" parent="VBoxContainer/MarginContainer/HBoxContainer"]
+unique_name_in_owner = true
 custom_minimum_size = Vector2(30, 30)
 layout_mode = 2
 size_flags_horizontal = 8
@@ -70,7 +75,8 @@ size_flags_horizontal = 8
 text = "Number of Questions:"
 vertical_alignment = 1
 
-[node name="HSlider" type="HSlider" parent="VBoxContainer/MarginContainer2/HBoxContainer"]
+[node name="QuestionsSlider" type="HSlider" parent="VBoxContainer/MarginContainer2/HBoxContainer"]
+unique_name_in_owner = true
 custom_minimum_size = Vector2(0, 30)
 layout_mode = 2
 size_flags_horizontal = 3
@@ -78,7 +84,8 @@ size_flags_vertical = 1
 max_value = 4.0
 value = 3.0
 
-[node name="Amount" type="Label" parent="VBoxContainer/MarginContainer2/HBoxContainer"]
+[node name="QuestionsAmount" type="Label" parent="VBoxContainer/MarginContainer2/HBoxContainer"]
+unique_name_in_owner = true
 custom_minimum_size = Vector2(30, 30)
 layout_mode = 2
 size_flags_horizontal = 8
