@@ -4,6 +4,7 @@
 [ext_resource type="Script" uid="uid://cefdono8km11m" path="res://scenes/ui/components/result_component.gd" id="1_script"]
 
 [node name="ResultComponent" type="PanelContainer"]
+custom_minimum_size = Vector2(100, 100)
 anchors_preset = -1
 anchor_right = 0.48000002
 anchor_bottom = 0.48000002
@@ -11,6 +12,8 @@ offset_right = -0.07110596
 offset_bottom = -0.040008545
 grow_horizontal = 2
 grow_vertical = 2
+size_flags_horizontal = 2
+size_flags_vertical = 4
 script = ExtResource("1_script")
 metadata/_edit_use_anchors_ = true
 

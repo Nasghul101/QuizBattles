@@ -69,7 +69,7 @@ layout_mode = 2
 size_flags_vertical = 2
 text = "Results"
 
-[node name="Button" type="Button" parent="MarginContainer/HBoxContainer/VBoxContainer3"]
+[node name="PlayButton" type="Button" parent="MarginContainer/HBoxContainer/VBoxContainer3"]
 custom_minimum_size = Vector2(70, 50)
 layout_mode = 2
 size_flags_horizontal = 4
