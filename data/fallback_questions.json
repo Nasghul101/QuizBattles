@@ -1,0 +1,338 @@
+{
+  "Entertainment": [
+    {
+      "category": "Entertainment",
+      "type": "multiple",
+      "difficulty": "medium",
+      "question": "Which movie won the Academy Award for Best Picture in 2020?",
+      "correct_answer": "Parasite",
+      "incorrect_answers": ["1917", "Joker", "Once Upon a Time in Hollywood"]
+    },
+    {
+      "category": "Entertainment",
+      "type": "multiple",
+      "difficulty": "easy",
+      "question": "Who played Iron Man in the Marvel Cinematic Universe?",
+      "correct_answer": "Robert Downey Jr.",
+      "incorrect_answers": ["Chris Evans", "Chris Hemsworth", "Mark Ruffalo"]
+    },
+    {
+      "category": "Entertainment",
+      "type": "multiple",
+      "difficulty": "hard",
+      "question": "What year was the first episode of The Simpsons aired?",
+      "correct_answer": "1989",
+      "incorrect_answers": ["1987", "1990", "1992"]
+    },
+    {
+      "category": "Entertainment",
+      "type": "multiple",
+      "difficulty": "medium",
+      "question": "Which band released the album 'Abbey Road' in 1969?",
+      "correct_answer": "The Beatles",
+      "incorrect_answers": ["The Rolling Stones", "Led Zeppelin", "Pink Floyd"]
+    },
+    {
+      "category": "Entertainment",
+      "type": "multiple",
+      "difficulty": "easy",
+      "question": "What is the name of Mario's brother in the Super Mario video game series?",
+      "correct_answer": "Luigi",
+      "incorrect_answers": ["Wario", "Waluigi", "Yoshi"]
+    }
+  ],
+  "Science": [
+    {
+      "category": "Science",
+      "type": "multiple",
+      "difficulty": "easy",
+      "question": "What is the chemical symbol for gold?",
+      "correct_answer": "Au",
+      "incorrect_answers": ["Go", "Gd", "Ag"]
+    },
+    {
+      "category": "Science",
+      "type": "multiple",
+      "difficulty": "medium",
+      "question": "What is the speed of light in vacuum?",
+      "correct_answer": "299,792,458 m/s",
+      "incorrect_answers": ["150,000,000 m/s", "400,000,000 m/s", "250,000,000 m/s"]
+    },
+    {
+      "category": "Science",
+      "type": "multiple",
+      "difficulty": "hard",
+      "question": "What is the name of the first electronic general-purpose computer?",
+      "correct_answer": "ENIAC",
+      "incorrect_answers": ["UNIVAC", "EDVAC", "BINAC"]
+    },
+    {
+      "category": "Science",
+      "type": "multiple",
+      "difficulty": "medium",
+      "question": "What programming language was named after a type of Indonesian coffee?",
+      "correct_answer": "Java",
+      "incorrect_answers": ["Python", "Ruby", "Perl"]
+    },
+    {
+      "category": "Science",
+      "type": "multiple",
+      "difficulty": "easy",
+      "question": "What planet is known as the Red Planet?",
+      "correct_answer": "Mars",
+      "incorrect_answers": ["Venus", "Jupiter", "Mercury"]
+    }
+  ],
+  "History": [
+    {
+      "category": "History",
+      "type": "multiple",
+      "difficulty": "medium",
+      "question": "In which year did World War II end?",
+      "correct_answer": "1945",
+      "incorrect_answers": ["1944", "1946", "1943"]
+    },
+    {
+      "category": "History",
+      "type": "multiple",
+      "difficulty": "easy",
+      "question": "Who was the first President of the United States?",
+      "correct_answer": "George Washington",
+      "incorrect_answers": ["Thomas Jefferson", "John Adams", "Benjamin Franklin"]
+    },
+    {
+      "category": "History",
+      "type": "multiple",
+      "difficulty": "hard",
+      "question": "What year did the Berlin Wall fall?",
+      "correct_answer": "1989",
+      "incorrect_answers": ["1987", "1990", "1991"]
+    },
+    {
+      "category": "History",
+      "type": "multiple",
+      "difficulty": "medium",
+      "question": "Which ancient wonder of the world still stands today?",
+      "correct_answer": "Great Pyramid of Giza",
+      "incorrect_answers": ["Hanging Gardens of Babylon", "Colossus of Rhodes", "Lighthouse of Alexandria"]
+    },
+    {
+      "category": "History",
+      "type": "multiple",
+      "difficulty": "easy",
+      "question": "Who wrote the Declaration of Independence?",
+      "correct_answer": "Thomas Jefferson",
+      "incorrect_answers": ["John Adams", "Benjamin Franklin", "George Washington"]
+    }
+  ],
+  "Geography": [
+    {
+      "category": "Geography",
+      "type": "multiple",
+      "difficulty": "easy",
+      "question": "What is the capital of France?",
+      "correct_answer": "Paris",
+      "incorrect_answers": ["London", "Berlin", "Madrid"]
+    },
+    {
+      "category": "Geography",
+      "type": "multiple",
+      "difficulty": "medium",
+      "question": "Which river is the longest in the world?",
+      "correct_answer": "Nile",
+      "incorrect_answers": ["Amazon", "Yangtze", "Mississippi"]
+    },
+    {
+      "category": "Geography",
+      "type": "multiple",
+      "difficulty": "hard",
+      "question": "What is the smallest country in the world by area?",
+      "correct_answer": "Vatican City",
+      "incorrect_answers": ["Monaco", "San Marino", "Liechtenstein"]
+    },
+    {
+      "category": "Geography",
+      "type": "multiple",
+      "difficulty": "medium",
+      "question": "Mount Everest is located in which mountain range?",
+      "correct_answer": "Himalayas",
+      "incorrect_answers": ["Alps", "Andes", "Rockies"]
+    },
+    {
+      "category": "Geography",
+      "type": "multiple",
+      "difficulty": "easy",
+      "question": "Which continent is the Sahara Desert located in?",
+      "correct_answer": "Africa",
+      "incorrect_answers": ["Asia", "Australia", "South America"]
+    }
+  ],
+  "Sports": [
+    {
+      "category": "Sports",
+      "type": "multiple",
+      "difficulty": "easy",
+      "question": "How many players are on a soccer team on the field?",
+      "correct_answer": "11",
+      "incorrect_answers": ["9", "10", "12"]
+    },
+    {
+      "category": "Sports",
+      "type": "multiple",
+      "difficulty": "medium",
+      "question": "Which country has won the most FIFA World Cup titles?",
+      "correct_answer": "Brazil",
+      "incorrect_answers": ["Germany", "Italy", "Argentina"]
+    },
+    {
+      "category": "Sports",
+      "type": "multiple",
+      "difficulty": "hard",
+      "question": "In which year were the first modern Olympic Games held?",
+      "correct_answer": "1896",
+      "incorrect_answers": ["1900", "1888", "1904"]
+    },
+    {
+      "category": "Sports",
+      "type": "multiple",
+      "difficulty": "medium",
+      "question": "What sport is known as 'the beautiful game'?",
+      "correct_answer": "Soccer",
+      "incorrect_answers": ["Basketball", "Tennis", "Cricket"]
+    },
+    {
+      "category": "Sports",
+      "type": "multiple",
+      "difficulty": "easy",
+      "question": "How many rings are on the Olympic flag?",
+      "correct_answer": "5",
+      "incorrect_answers": ["4", "6", "7"]
+    }
+  ],
+  "General Knowledge": [
+    {
+      "category": "General Knowledge",
+      "type": "multiple",
+      "difficulty": "easy",
+      "question": "What is the largest mammal in the world?",
+      "correct_answer": "Blue Whale",
+      "incorrect_answers": ["African Elephant", "Giraffe", "Polar Bear"]
+    },
+    {
+      "category": "General Knowledge",
+      "type": "multiple",
+      "difficulty": "medium",
+      "question": "What is the most spoken language in the world by number of native speakers?",
+      "correct_answer": "Mandarin Chinese",
+      "incorrect_answers": ["English", "Spanish", "Hindi"]
+    },
+    {
+      "category": "General Knowledge",
+      "type": "multiple",
+      "difficulty": "hard",
+      "question": "What is the rarest blood type?",
+      "correct_answer": "AB negative",
+      "incorrect_answers": ["O negative", "B negative", "AB positive"]
+    },
+    {
+      "category": "General Knowledge",
+      "type": "multiple",
+      "difficulty": "medium",
+      "question": "How many bones are in the adult human body?",
+      "correct_answer": "206",
+      "incorrect_answers": ["198", "214", "220"]
+    },
+    {
+      "category": "General Knowledge",
+      "type": "multiple",
+      "difficulty": "easy",
+      "question": "What is the largest ocean on Earth?",
+      "correct_answer": "Pacific Ocean",
+      "incorrect_answers": ["Atlantic Ocean", "Indian Ocean", "Arctic Ocean"]
+    }
+  ],
+  "Art": [
+    {
+      "category": "Art",
+      "type": "multiple",
+      "difficulty": "easy",
+      "question": "Who painted the Mona Lisa?",
+      "correct_answer": "Leonardo da Vinci",
+      "incorrect_answers": ["Michelangelo", "Raphael", "Donatello"]
+    },
+    {
+      "category": "Art",
+      "type": "multiple",
+      "difficulty": "medium",
+      "question": "Which art movement was Pablo Picasso associated with?",
+      "correct_answer": "Cubism",
+      "incorrect_answers": ["Impressionism", "Surrealism", "Expressionism"]
+    },
+    {
+      "category": "Art",
+      "type": "multiple",
+      "difficulty": "hard",
+      "question": "In which museum is the painting 'The Starry Night' by Vincent van Gogh displayed?",
+      "correct_answer": "Museum of Modern Art",
+      "incorrect_answers": ["Louvre", "Metropolitan Museum of Art", "National Gallery"]
+    },
+    {
+      "category": "Art",
+      "type": "multiple",
+      "difficulty": "medium",
+      "question": "What is the art of beautiful handwriting called?",
+      "correct_answer": "Calligraphy",
+      "incorrect_answers": ["Typography", "Lithography", "Cartography"]
+    },
+    {
+      "category": "Art",
+      "type": "multiple",
+      "difficulty": "easy",
+      "question": "Which colors are primary colors in painting?",
+      "correct_answer": "Red, Yellow, Blue",
+      "incorrect_answers": ["Red, Green, Blue", "Orange, Purple, Green", "Black, White, Gray"]
+    }
+  ],
+  "Animals": [
+    {
+      "category": "Animals",
+      "type": "multiple",
+      "difficulty": "easy",
+      "question": "What is a baby kangaroo called?",
+      "correct_answer": "Joey",
+      "incorrect_answers": ["Cub", "Kit", "Pup"]
+    },
+    {
+      "category": "Animals",
+      "type": "multiple",
+      "difficulty": "medium",
+      "question": "How many hearts does an octopus have?",
+      "correct_answer": "3",
+      "incorrect_answers": ["1", "2", "4"]
+    },
+    {
+      "category": "Animals",
+      "type": "multiple",
+      "difficulty": "hard",
+      "question": "What is the only mammal capable of true flight?",
+      "correct_answer": "Bat",
+      "incorrect_answers": ["Flying Squirrel", "Sugar Glider", "Flying Lemur"]
+    },
+    {
+      "category": "Animals",
+      "type": "multiple",
+      "difficulty": "medium",
+      "question": "What is the fastest land animal?",
+      "correct_answer": "Cheetah",
+      "incorrect_answers": ["Lion", "Gazelle", "Greyhound"]
+    },
+    {
+      "category": "Animals",
+      "type": "multiple",
+      "difficulty": "easy",
+      "question": "What do pandas primarily eat?",
+      "correct_answer": "Bamboo",
+      "incorrect_answers": ["Fish", "Meat", "Insects"]
+    }
+  ]
+}

@@ -27,35 +27,35 @@ layout_mode = 2
 theme_override_constants/separation = 64
 alignment = 1
 
-[node name="VBoxContainer" type="VBoxContainer" parent="MarginContainer/HBoxContainer"]
+[node name="ResultContainerL" type="VBoxContainer" parent="MarginContainer/HBoxContainer"]
 layout_mode = 2
 alignment = 1
 
-[node name="ResultL1" parent="MarginContainer/HBoxContainer/VBoxContainer" instance=ExtResource("2_wj8cw")]
+[node name="ResultL1" parent="MarginContainer/HBoxContainer/ResultContainerL" instance=ExtResource("2_wj8cw")]
 custom_minimum_size = Vector2(100, 100)
 layout_mode = 2
 size_flags_horizontal = 0
 size_flags_vertical = 6
 
-[node name="ResultL2" parent="MarginContainer/HBoxContainer/VBoxContainer" instance=ExtResource("2_wj8cw")]
+[node name="ResultL2" parent="MarginContainer/HBoxContainer/ResultContainerL" instance=ExtResource("2_wj8cw")]
 custom_minimum_size = Vector2(100, 100)
 layout_mode = 2
 size_flags_horizontal = 0
 size_flags_vertical = 6
 
-[node name="ResultL3" parent="MarginContainer/HBoxContainer/VBoxContainer" instance=ExtResource("2_wj8cw")]
+[node name="ResultL3" parent="MarginContainer/HBoxContainer/ResultContainerL" instance=ExtResource("2_wj8cw")]
 custom_minimum_size = Vector2(100, 100)
 layout_mode = 2
 size_flags_horizontal = 0
 size_flags_vertical = 6
 
-[node name="ResultL4" parent="MarginContainer/HBoxContainer/VBoxContainer" instance=ExtResource("2_wj8cw")]
+[node name="ResultL4" parent="MarginContainer/HBoxContainer/ResultContainerL" instance=ExtResource("2_wj8cw")]
 custom_minimum_size = Vector2(100, 100)
 layout_mode = 2
 size_flags_horizontal = 0
 size_flags_vertical = 6
 
-[node name="ResultL5" parent="MarginContainer/HBoxContainer/VBoxContainer" instance=ExtResource("2_wj8cw")]
+[node name="ResultL5" parent="MarginContainer/HBoxContainer/ResultContainerL" instance=ExtResource("2_wj8cw")]
 custom_minimum_size = Vector2(100, 100)
 layout_mode = 2
 size_flags_horizontal = 0
@@ -76,34 +76,34 @@ size_flags_horizontal = 4
 size_flags_vertical = 8
 text = "Play"
 
-[node name="VBoxContainer2" type="VBoxContainer" parent="MarginContainer/HBoxContainer"]
+[node name="ResultContainerR" type="VBoxContainer" parent="MarginContainer/HBoxContainer"]
 layout_mode = 2
 
-[node name="ResultR1" parent="MarginContainer/HBoxContainer/VBoxContainer2" instance=ExtResource("2_wj8cw")]
+[node name="ResultR1" parent="MarginContainer/HBoxContainer/ResultContainerR" instance=ExtResource("2_wj8cw")]
 custom_minimum_size = Vector2(100, 100)
 layout_mode = 2
 size_flags_horizontal = 0
 size_flags_vertical = 6
 
-[node name="ResultR2" parent="MarginContainer/HBoxContainer/VBoxContainer2" instance=ExtResource("2_wj8cw")]
+[node name="ResultR2" parent="MarginContainer/HBoxContainer/ResultContainerR" instance=ExtResource("2_wj8cw")]
 custom_minimum_size = Vector2(100, 100)
 layout_mode = 2
 size_flags_horizontal = 0
 size_flags_vertical = 6
 
-[node name="ResultR3" parent="MarginContainer/HBoxContainer/VBoxContainer2" instance=ExtResource("2_wj8cw")]
+[node name="ResultR3" parent="MarginContainer/HBoxContainer/ResultContainerR" instance=ExtResource("2_wj8cw")]
 custom_minimum_size = Vector2(100, 100)
 layout_mode = 2
 size_flags_horizontal = 0
 size_flags_vertical = 6
 
-[node name="ResultR4" parent="MarginContainer/HBoxContainer/VBoxContainer2" instance=ExtResource("2_wj8cw")]
+[node name="ResultR4" parent="MarginContainer/HBoxContainer/ResultContainerR" instance=ExtResource("2_wj8cw")]
 custom_minimum_size = Vector2(100, 100)
 layout_mode = 2
 size_flags_horizontal = 0
 size_flags_vertical = 6
 
-[node name="ResultR5" parent="MarginContainer/HBoxContainer/VBoxContainer2" instance=ExtResource("2_wj8cw")]
+[node name="ResultR5" parent="MarginContainer/HBoxContainer/ResultContainerR" instance=ExtResource("2_wj8cw")]
 custom_minimum_size = Vector2(100, 100)
 layout_mode = 2
 size_flags_horizontal = 0
