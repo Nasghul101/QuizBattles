@@ -1,4 +1,4 @@
-extends Control
+extends PanelContainer
 ## Result component for displaying round outcomes
 ##
 ## A reusable UI component that displays a category summary with answer outcomes

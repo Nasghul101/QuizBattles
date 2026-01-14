@@ -1,0 +1,98 @@
+[gd_scene load_steps=2 format=3 uid="uid://b1e44akqxjl"]
+
+[ext_resource type="PackedScene" uid="uid://cx7jsysa3rfi4" path="res://scenes/ui/components/result_component.tscn" id="1_3ubwy"]
+
+[node name="ResultScreen" type="Control"]
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="MarginContainer" type="MarginContainer" parent="."]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_constants/margin_top = 30
+theme_override_constants/margin_bottom = 30
+
+[node name="HBoxContainer" type="HBoxContainer" parent="MarginContainer"]
+layout_mode = 2
+theme_override_constants/separation = 64
+alignment = 1
+
+[node name="VBoxContainer" type="VBoxContainer" parent="MarginContainer/HBoxContainer"]
+layout_mode = 2
+alignment = 1
+
+[node name="ResultL1" parent="MarginContainer/HBoxContainer/VBoxContainer" instance=ExtResource("1_3ubwy")]
+custom_minimum_size = Vector2(100, 100)
+layout_mode = 2
+size_flags_horizontal = 0
+size_flags_vertical = 6
+
+[node name="ResultL2" parent="MarginContainer/HBoxContainer/VBoxContainer" instance=ExtResource("1_3ubwy")]
+custom_minimum_size = Vector2(100, 100)
+layout_mode = 2
+size_flags_horizontal = 0
+size_flags_vertical = 6
+
+[node name="ResultL3" parent="MarginContainer/HBoxContainer/VBoxContainer" instance=ExtResource("1_3ubwy")]
+custom_minimum_size = Vector2(100, 100)
+layout_mode = 2
+size_flags_horizontal = 0
+size_flags_vertical = 6
+
+[node name="ResultL4" parent="MarginContainer/HBoxContainer/VBoxContainer" instance=ExtResource("1_3ubwy")]
+custom_minimum_size = Vector2(100, 100)
+layout_mode = 2
+size_flags_horizontal = 0
+size_flags_vertical = 6
+
+[node name="ResultL5" parent="MarginContainer/HBoxContainer/VBoxContainer" instance=ExtResource("1_3ubwy")]
+custom_minimum_size = Vector2(100, 100)
+layout_mode = 2
+size_flags_horizontal = 0
+size_flags_vertical = 6
+
+[node name="Label" type="Label" parent="MarginContainer/HBoxContainer"]
+layout_mode = 2
+size_flags_vertical = 0
+text = "Results"
+
+[node name="VBoxContainer2" type="VBoxContainer" parent="MarginContainer/HBoxContainer"]
+layout_mode = 2
+
+[node name="ResultR1" parent="MarginContainer/HBoxContainer/VBoxContainer2" instance=ExtResource("1_3ubwy")]
+custom_minimum_size = Vector2(100, 100)
+layout_mode = 2
+size_flags_horizontal = 0
+size_flags_vertical = 6
+
+[node name="ResultR2" parent="MarginContainer/HBoxContainer/VBoxContainer2" instance=ExtResource("1_3ubwy")]
+custom_minimum_size = Vector2(100, 100)
+layout_mode = 2
+size_flags_horizontal = 0
+size_flags_vertical = 6
+
+[node name="ResultR3" parent="MarginContainer/HBoxContainer/VBoxContainer2" instance=ExtResource("1_3ubwy")]
+custom_minimum_size = Vector2(100, 100)
+layout_mode = 2
+size_flags_horizontal = 0
+size_flags_vertical = 6
+
+[node name="ResultR4" parent="MarginContainer/HBoxContainer/VBoxContainer2" instance=ExtResource("1_3ubwy")]
+custom_minimum_size = Vector2(100, 100)
+layout_mode = 2
+size_flags_horizontal = 0
+size_flags_vertical = 6
+
+[node name="ResultR5" parent="MarginContainer/HBoxContainer/VBoxContainer2" instance=ExtResource("1_3ubwy")]
+custom_minimum_size = Vector2(100, 100)
+layout_mode = 2
+size_flags_horizontal = 0
+size_flags_vertical = 6
