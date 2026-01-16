@@ -1,0 +1,10 @@
+[gd_scene load_steps=4 format=3 uid="uid://cuhmmug1k1qy1"]
+
+[ext_resource type="Script" uid="uid://cnbgabgs8nxlc" path="res://scenes/ui/components/result_button_component.gd" id="1_script"]
+[ext_resource type="Texture2D" uid="uid://dd071erjoo0dd" path="res://assets/icon_right.png" id="2_gsw65"]
+[ext_resource type="Texture2D" uid="uid://bwiby0r7dcp7d" path="res://assets/icon_wrong.png" id="3_j4c4y"]
+
+[node name="ResultButtonComponent" type="Button"]
+script = ExtResource("1_script")
+icon_right = ExtResource("2_gsw65")
+icon_wrong = ExtResource("3_j4c4y")

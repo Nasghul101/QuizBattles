@@ -18,41 +18,6 @@ The result component SHALL display a category symbol/icon as a TextureRect at th
 
 ---
 
-### Requirement: The component SHALL display three answer outcome buttons
-The result component SHALL display exactly 3 buttons in a horizontal layout that indicate correct or incorrect answers.
-
-#### Scenario: Button layout structure
-**Given** a result component scene  
-**When** the scene loads  
-**Then** an HBoxContainer contains exactly 3 Button nodes for answer indicators
-
-#### Scenario: All buttons are visible
-**Given** a result component before loading data  
-**When** the scene is ready  
-**Then** all 3 answer indicator buttons are visible and enabled
-
----
-
-### Requirement: The component SHALL accept result data for three questions
-The result component SHALL accept an array of exactly 3 question result entries containing question data and outcome information.
-
-#### Scenario: Load result data with valid format
-**Given** a result component instance  
-**When** `load_result_data(texture, results)` is called with a Texture2D and an Array of 3 result dictionaries  
-**Then** the component stores all data internally without errors
-
-#### Scenario: Expected result data format
-**Given** result data for a round  
-**When** each entry contains "question_data" (Dictionary), "was_correct" (bool), and "player_answer" (String)  
-**Then** the result component can parse and store this data correctly
-
-#### Scenario: Validate array size
-**Given** a result component receiving data  
-**When** `load_result_data()` is called with an array that does not contain exactly 3 entries  
-**Then** the component logs an error and does not process the invalid data
-
----
-
 ### Requirement: The component SHALL display correct/incorrect icons on buttons
 The result component SHALL show icon_right.png for correct answers and icon_wrong.png for incorrect answers on the three answer buttons.
 
@@ -125,6 +90,76 @@ The result component SHALL adhere to the official GDScript style guide and proje
 **Given** the result_component.gd script  
 **When** declaring variables and function parameters  
 **Then** static type hints are used where possible (e.g., `var texture: Texture2D`, `func load_result_data(texture: Texture2D, results: Array) -> void`)
+
+---
+
+### Requirement: The component SHALL display answer outcome buttons
+The result component SHALL dynamically instantiate ResultButtonComponent instances to indicate correct or incorrect answers, with the quantity determined by the number of questions.
+
+#### Scenario: Button instantiation in initialize_empty
+**Given** a result component at game start
+**When** `initialize_empty(num_answer_buttons)` is called with count N
+**Then** exactly N ResultButtonComponent instances are created and added to the AnswerButtonContainer
+
+#### Scenario: Button layout structure
+**Given** a result component scene
+**When** the scene loads
+**Then** an HBoxContainer named "AnswerButtonContainer" exists to hold dynamically created ResultButtonComponent instances
+
+#### Scenario: Variable button count support
+**Given** a result component
+**When** `initialize_empty()` is called with different counts (1, 3, 5, etc.)
+**Then** the component creates the specified number of ResultButtonComponent instances
+
+---
+
+### Requirement: The component SHALL accept result data for questions
+The result component SHALL accept an array of question result entries and configure ResultButtonComponent instances accordingly, supporting variable question counts.
+
+#### Scenario: Load result data with variable size
+**Given** a result component instance
+**When** `load_result_data(texture, results)` is called with an Array of N result dictionaries
+**Then** the first N ResultButtonComponent instances are configured with result data
+
+#### Scenario: Handle fewer results than buttons
+**Given** a result component with more button instances than results
+**When** `load_result_data()` is called
+**Then** unused ResultButtonComponent instances remain in empty state
+
+#### Scenario: Validate array size constraints
+**Given** a result component receiving data
+**When** `load_result_data()` is called with more results than button instances
+**Then** the component logs an error and does not process the invalid data
+
+---
+
+### Requirement: The component SHALL configure ResultButtonComponent states
+The result component SHALL call ResultButtonComponent methods to set correct/incorrect states instead of directly manipulating button properties.
+
+#### Scenario: Configure correct answer state
+**Given** a result entry where "was_correct" is true
+**When** `load_result_data()` is called
+**Then** the corresponding ResultButtonComponent's `set_correct_state()` method is called
+
+#### Scenario: Configure incorrect answer state
+**Given** a result entry where "was_correct" is false
+**When** `load_result_data()` is called
+**Then** the corresponding ResultButtonComponent's `set_incorrect_state()` method is called
+
+---
+
+### Requirement: The component SHALL connect to ResultButtonComponent signals
+The result component SHALL connect to the ResultButtonComponent's "result_clicked" signal and forward the data through its own "question_review_requested" signal.
+
+#### Scenario: Connect to child component signals
+**Given** ResultButtonComponent instances are created
+**When** `initialize_empty()` instantiates each component
+**Then** the result_component connects to each ResultButtonComponent's "result_clicked" signal
+
+#### Scenario: Forward button press events
+**Given** a ResultButtonComponent emits "result_clicked(index, data)"
+**When** result_component receives the signal
+**Then** result_component emits "question_review_requested(index, data)"
 
 ---
 

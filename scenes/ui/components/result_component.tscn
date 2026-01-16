@@ -31,21 +31,3 @@ expand_mode = 1
 unique_name_in_owner = true
 layout_mode = 2
 alignment = 1
-
-[node name="AnswerButton1" type="Button" parent="VBoxContainer/AnswerButtonContainer"]
-custom_minimum_size = Vector2(30, 30)
-layout_mode = 2
-icon_alignment = 1
-expand_icon = true
-
-[node name="AnswerButton2" type="Button" parent="VBoxContainer/AnswerButtonContainer"]
-custom_minimum_size = Vector2(30, 30)
-layout_mode = 2
-icon_alignment = 1
-expand_icon = true
-
-[node name="AnswerButton3" type="Button" parent="VBoxContainer/AnswerButtonContainer"]
-custom_minimum_size = Vector2(30, 30)
-layout_mode = 2
-icon_alignment = 1
-expand_icon = true

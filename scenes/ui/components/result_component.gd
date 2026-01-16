@@ -28,33 +28,21 @@ extends PanelContainer
 # Signal emitted when a player clicks an answer button to review a question
 signal question_review_requested(question_index: int, question_data: Dictionary)
 
+# Preload ResultButtonComponent scene
+const ResultButtonComponent = preload("res://scenes/ui/components/result_button_component.tscn")
+
 # Node references
 @onready var category_symbol: TextureRect = %CategorySymbol
 @onready var answer_button_container: HBoxContainer = %AnswerButtonContainer
 
 # Internal state
-var answer_buttons: Array[Button] = []
+var answer_buttons: Array = []
 var stored_results: Array = []
-var answer_buttons_minimum_size: Vector2
-var icon_right: Texture2D
-var icon_wrong: Texture2D
 var is_empty: bool = true
 
 
 func _ready() -> void:
-    # Load icon assets
-    icon_right = load("res://assets/icon_right.png")
-    icon_wrong = load("res://assets/icon_wrong.png")
-    
-    # Populate button array from container children
-    for child in answer_button_container.get_children():
-        if child is Button:
-            answer_buttons.append(child)
-            answer_buttons_minimum_size = child.custom_minimum_size
-    
-    # Connect button signals to handler
-    for i in range(answer_buttons.size()):
-        answer_buttons[i].pressed.connect(_on_answer_button_pressed.bind(i))
+    pass
 
 ## Initialize component in empty/disabled state
 ##
@@ -70,16 +58,17 @@ func initialize_empty(num_answer_buttons: int) -> void:
     
     answer_buttons.clear()
     
-    # Create new buttons in disabled state
+    # Create new ResultButtonComponent instances in disabled state
     for i in range(num_answer_buttons):
-        var button = Button.new()
-        button.disabled = true
-        button.modulate = Color(0.5, 0.5, 0.5)  # Grey appearance
-        button.custom_minimum_size = answer_buttons_minimum_size
-        button.expand_icon = true
-        button.icon_alignment = HORIZONTAL_ALIGNMENT_CENTER
-        answer_button_container.add_child(button)
-        answer_buttons.append(button)
+        var button_instance = ResultButtonComponent.instantiate()
+        answer_button_container.add_child(button_instance)
+        answer_buttons.append(button_instance)
+        
+        # Set to empty state
+        button_instance.set_empty_state()
+        
+        # Connect signal
+        button_instance.result_clicked.connect(_on_result_button_pressed)
     
     # Set category symbol to greyscale placeholder
     if category_symbol:
@@ -96,7 +85,7 @@ func initialize_empty(num_answer_buttons: int) -> void:
 ## Args:
 ##   category_texture: Texture2D to display as the category symbol
 ##   results: Array of dictionaries, each containing "question_data" (Dictionary),
-##            "was_correct" (bool), and "player_answer" (String). Must match the number of buttons.
+##            "was_correct" (bool), and "player_answer" (String). Must not exceed the number of buttons.
 func load_result_data(category_texture: Texture2D, results: Array) -> void:
     # Validate input data
     if results.is_empty():
@@ -128,47 +117,37 @@ func load_result_data(category_texture: Texture2D, results: Array) -> void:
     # Mark as not empty
     is_empty = false
     
-    # Update button icons based on correctness
-    _update_button_icons()
+    # Update button states based on correctness
+    _update_button_states()
 
 
-## Update button icons to show correct/incorrect states
-func _update_button_icons() -> void:
+## Update button states to show correct/incorrect states
+func _update_button_states() -> void:
     # Only update buttons for which we have results
     for i in range(stored_results.size()):
-        var button = answer_buttons[i]
-        var was_correct: bool = stored_results[i]["was_correct"]
+        var button_component = answer_buttons[i]
+        var result_data = stored_results[i]
+        var was_correct: bool = result_data["was_correct"]
         
-        # Enable button and reset modulate
-        button.disabled = false
-        button.modulate = Color(1.0, 1.0, 1.0)
+        # Load question data into button
+        button_component.load_question_data(i, result_data)
         
-        # Set icon based on correctness
+        # Set state based on correctness
         if was_correct:
-            button.icon = icon_right
+            button_component.set_correct_state()
         else:
-            button.icon = icon_wrong
+            button_component.set_incorrect_state()
     
-    # Leave remaining buttons disabled if we have fewer results than buttons
+    # Leave remaining buttons in empty state if we have fewer results than buttons
     for i in range(stored_results.size(), answer_buttons.size()):
-        answer_buttons[i].disabled = true
-        answer_buttons[i].modulate = Color(0.3, 0.3, 0.3)  # Darker grey for unused slots
+        answer_buttons[i].set_empty_state()
 
 
-## Handle answer button press
+## Handle result button press from ResultButtonComponent
 ##
 ## Args:
-##   button_index: Index of the pressed button
-func _on_answer_button_pressed(button_index: int) -> void:
-    # Get the stored data for this question
-    var result_data = stored_results[button_index]
-    
-    # Create complete data dictionary for the signal
-    var complete_data = {
-        "question_data": result_data["question_data"],
-        "was_correct": result_data["was_correct"],
-        "player_answer": result_data["player_answer"]
-    }
-    
-    # Emit signal with question index and complete data
-    question_review_requested.emit(button_index, complete_data)
+##   question_index: Index of the pressed button
+##   question_data: Complete question data from the button
+func _on_result_button_pressed(question_index: int, question_data: Dictionary) -> void:
+    # Forward signal with the data from the button component
+    question_review_requested.emit(question_index, question_data)
