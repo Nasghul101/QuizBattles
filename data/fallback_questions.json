@@ -334,5 +334,173 @@
       "correct_answer": "Bamboo",
       "incorrect_answers": ["Fish", "Meat", "Insects"]
     }
+  ],
+  "Mythology": [
+    {
+      "category": "Mythology",
+      "type": "multiple",
+      "difficulty": "easy",
+      "question": "Who was the king of the gods in Greek mythology?",
+      "correct_answer": "Zeus",
+      "incorrect_answers": ["Poseidon", "Hades", "Apollo"]
+    },
+    {
+      "category": "Mythology",
+      "type": "multiple",
+      "difficulty": "medium",
+      "question": "In Norse mythology, what is the name of Thor's hammer?",
+      "correct_answer": "Mjolnir",
+      "incorrect_answers": ["Gungnir", "Tyrfing", "Gram"]
+    },
+    {
+      "category": "Mythology",
+      "type": "multiple",
+      "difficulty": "hard",
+      "question": "Who is the Egyptian god of the dead?",
+      "correct_answer": "Anubis",
+      "incorrect_answers": ["Ra", "Osiris", "Set"]
+    },
+    {
+      "category": "Mythology",
+      "type": "multiple",
+      "difficulty": "medium",
+      "question": "What creature in Greek mythology has the head of a bull and body of a man?",
+      "correct_answer": "Minotaur",
+      "incorrect_answers": ["Centaur", "Satyr", "Cyclops"]
+    },
+    {
+      "category": "Mythology",
+      "type": "multiple",
+      "difficulty": "easy",
+      "question": "Who was the Roman god of war?",
+      "correct_answer": "Mars",
+      "incorrect_answers": ["Jupiter", "Neptune", "Mercury"]
+    }
+  ],
+  "Politics": [
+    {
+      "category": "Politics",
+      "type": "multiple",
+      "difficulty": "easy",
+      "question": "What is the capital of the United States?",
+      "correct_answer": "Washington D.C.",
+      "incorrect_answers": ["New York", "Los Angeles", "Boston"]
+    },
+    {
+      "category": "Politics",
+      "type": "multiple",
+      "difficulty": "medium",
+      "question": "How many members are in the United States Senate?",
+      "correct_answer": "100",
+      "incorrect_answers": ["50", "435", "200"]
+    },
+    {
+      "category": "Politics",
+      "type": "multiple",
+      "difficulty": "hard",
+      "question": "What year did the European Union officially form?",
+      "correct_answer": "1993",
+      "incorrect_answers": ["1985", "2000", "1990"]
+    },
+    {
+      "category": "Politics",
+      "type": "multiple",
+      "difficulty": "medium",
+      "question": "Who was the first female Prime Minister of the United Kingdom?",
+      "correct_answer": "Margaret Thatcher",
+      "incorrect_answers": ["Theresa May", "Angela Merkel", "Indira Gandhi"]
+    },
+    {
+      "category": "Politics",
+      "type": "multiple",
+      "difficulty": "easy",
+      "question": "What is the term length for a U.S. President?",
+      "correct_answer": "4 years",
+      "incorrect_answers": ["2 years", "6 years", "8 years"]
+    }
+  ],
+  "Celebrities": [
+    {
+      "category": "Celebrities",
+      "type": "multiple",
+      "difficulty": "easy",
+      "question": "Which singer is known as the 'King of Pop'?",
+      "correct_answer": "Michael Jackson",
+      "incorrect_answers": ["Elvis Presley", "Prince", "David Bowie"]
+    },
+    {
+      "category": "Celebrities",
+      "type": "multiple",
+      "difficulty": "medium",
+      "question": "Which actress played Hermione Granger in the Harry Potter films?",
+      "correct_answer": "Emma Watson",
+      "incorrect_answers": ["Emma Stone", "Emma Roberts", "Emily Blunt"]
+    },
+    {
+      "category": "Celebrities",
+      "type": "multiple",
+      "difficulty": "hard",
+      "question": "What is Eminem's real name?",
+      "correct_answer": "Marshall Mathers",
+      "incorrect_answers": ["Marcus Williams", "Martin Miller", "Malcolm Mitchell"]
+    },
+    {
+      "category": "Celebrities",
+      "type": "multiple",
+      "difficulty": "medium",
+      "question": "Which celebrity couple is known as 'Brangelina'?",
+      "correct_answer": "Brad Pitt and Angelina Jolie",
+      "incorrect_answers": ["Ben Affleck and Jennifer Lopez", "Tom Cruise and Katie Holmes", "George Clooney and Amal Alamuddin"]
+    },
+    {
+      "category": "Celebrities",
+      "type": "multiple",
+      "difficulty": "easy",
+      "question": "Which talk show host is known for her generous giveaways?",
+      "correct_answer": "Oprah Winfrey",
+      "incorrect_answers": ["Ellen DeGeneres", "Jimmy Fallon", "James Corden"]
+    }
+  ],
+  "Vehicles": [
+    {
+      "category": "Vehicles",
+      "type": "multiple",
+      "difficulty": "easy",
+      "question": "Which company manufactures the Mustang?",
+      "correct_answer": "Ford",
+      "incorrect_answers": ["Chevrolet", "Dodge", "Chrysler"]
+    },
+    {
+      "category": "Vehicles",
+      "type": "multiple",
+      "difficulty": "medium",
+      "question": "What does BMW stand for?",
+      "correct_answer": "Bayerische Motoren Werke",
+      "incorrect_answers": ["British Motor Works", "Berlin Motor Works", "Bavarian Machine Works"]
+    },
+    {
+      "category": "Vehicles",
+      "type": "multiple",
+      "difficulty": "hard",
+      "question": "What was the first car to break the sound barrier?",
+      "correct_answer": "Thrust SSC",
+      "incorrect_answers": ["Bloodhound SSC", "Spirit of America", "Blue Flame"]
+    },
+    {
+      "category": "Vehicles",
+      "type": "multiple",
+      "difficulty": "medium",
+      "question": "Which company makes the 911 sports car?",
+      "correct_answer": "Porsche",
+      "incorrect_answers": ["Ferrari", "Lamborghini", "Aston Martin"]
+    },
+    {
+      "category": "Vehicles",
+      "type": "multiple",
+      "difficulty": "easy",
+      "question": "What does SUV stand for?",
+      "correct_answer": "Sport Utility Vehicle",
+      "incorrect_answers": ["Super Urban Vehicle", "Special Utility Van", "Standard Urban Vehicle"]
+    }
   ]
 }

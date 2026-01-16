@@ -90,6 +90,7 @@ func fetch_questions(category: String, amount: int) -> void:
         var cached = get_cached_questions(category, amount)
         if cached.size() > 0:
             # Return cached questions immediately
+            print("[TriviaService] Returning %d cached questions for category: %s (requested: %d)" % [cached.size(), category, amount])
             questions_ready.emit(cached)
             return
     
@@ -108,8 +109,10 @@ func fetch_questions(category: String, amount: int) -> void:
         "amount": amount
     }
     
-    # Construct API URL
-    var url: String = "%s?amount=%d&category=%d" % [API_BASE_URL, amount, category_id]
+    # Construct API URL - request only multiple choice questions (not true/false)
+    var url: String = "%s?amount=%d&category=%d&type=multiple" % [API_BASE_URL, amount, category_id]
+    
+    print("[TriviaService] Fetching %d questions for category: %s (API category ID: %d)" % [amount, category, category_id])
     
     # Make HTTP request
     var error = _http_request.request(url)
@@ -185,6 +188,8 @@ func _get_category_id(category: String) -> int:
 
 ## Load questions from fallback JSON file
 func _load_fallback_questions(category: String, amount: int) -> Array:
+    print("[TriviaService] Loading fallback questions for category: %s (requested: %d)" % [category, amount])
+    
     # Check if file exists
     if not FileAccess.file_exists(FALLBACK_JSON_PATH):
         push_error("Fallback questions file not found: %s" % FALLBACK_JSON_PATH)
@@ -224,6 +229,7 @@ func _load_fallback_questions(category: String, amount: int) -> Array:
     for i in range(min(amount, category_questions.size())):
         result.append(category_questions[i])
     
+    print("[TriviaService] Returning %d fallback questions (requested: %d)" % [result.size(), amount])
     return result
 
 
@@ -333,6 +339,8 @@ func _on_request_completed(result: int, response_code: int, headers: PackedStrin
     
     # Cache successful results
     _cache_questions(category, valid_questions)
+    
+    print("[TriviaService] API returned %d valid questions for category: %s (requested: %d)" % [valid_questions.size(), category, amount])
     
     # Emit success signal
     questions_ready.emit(valid_questions)

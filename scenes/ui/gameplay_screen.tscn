@@ -1,7 +1,6 @@
-[gd_scene load_steps=3 format=3 uid="uid://ctegsm4qv7ren"]
+[gd_scene load_steps=2 format=3 uid="uid://ctegsm4qv7ren"]
 
 [ext_resource type="Script" uid="uid://offlje3jpa8l" path="res://scenes/ui/gameplay_screen.gd" id="1_k5m8p"]
-[ext_resource type="PackedScene" uid="uid://cx7jsysa3rfi4" path="res://scenes/ui/components/result_component.tscn" id="2_wj8cw"]
 
 [node name="GameplayScreen" type="Control"]
 layout_mode = 3
@@ -28,38 +27,9 @@ theme_override_constants/separation = 64
 alignment = 1
 
 [node name="ResultContainerL" type="VBoxContainer" parent="MarginContainer/HBoxContainer"]
+unique_name_in_owner = true
 layout_mode = 2
 alignment = 1
-
-[node name="ResultL1" parent="MarginContainer/HBoxContainer/ResultContainerL" instance=ExtResource("2_wj8cw")]
-custom_minimum_size = Vector2(100, 100)
-layout_mode = 2
-size_flags_horizontal = 0
-size_flags_vertical = 6
-
-[node name="ResultL2" parent="MarginContainer/HBoxContainer/ResultContainerL" instance=ExtResource("2_wj8cw")]
-custom_minimum_size = Vector2(100, 100)
-layout_mode = 2
-size_flags_horizontal = 0
-size_flags_vertical = 6
-
-[node name="ResultL3" parent="MarginContainer/HBoxContainer/ResultContainerL" instance=ExtResource("2_wj8cw")]
-custom_minimum_size = Vector2(100, 100)
-layout_mode = 2
-size_flags_horizontal = 0
-size_flags_vertical = 6
-
-[node name="ResultL4" parent="MarginContainer/HBoxContainer/ResultContainerL" instance=ExtResource("2_wj8cw")]
-custom_minimum_size = Vector2(100, 100)
-layout_mode = 2
-size_flags_horizontal = 0
-size_flags_vertical = 6
-
-[node name="ResultL5" parent="MarginContainer/HBoxContainer/ResultContainerL" instance=ExtResource("2_wj8cw")]
-custom_minimum_size = Vector2(100, 100)
-layout_mode = 2
-size_flags_horizontal = 0
-size_flags_vertical = 6
 
 [node name="VBoxContainer3" type="VBoxContainer" parent="MarginContainer/HBoxContainer"]
 layout_mode = 2
@@ -70,6 +40,7 @@ size_flags_vertical = 2
 text = "Results"
 
 [node name="PlayButton" type="Button" parent="MarginContainer/HBoxContainer/VBoxContainer3"]
+unique_name_in_owner = true
 custom_minimum_size = Vector2(70, 50)
 layout_mode = 2
 size_flags_horizontal = 4
@@ -77,34 +48,5 @@ size_flags_vertical = 8
 text = "Play"
 
 [node name="ResultContainerR" type="VBoxContainer" parent="MarginContainer/HBoxContainer"]
+unique_name_in_owner = true
 layout_mode = 2
-
-[node name="ResultR1" parent="MarginContainer/HBoxContainer/ResultContainerR" instance=ExtResource("2_wj8cw")]
-custom_minimum_size = Vector2(100, 100)
-layout_mode = 2
-size_flags_horizontal = 0
-size_flags_vertical = 6
-
-[node name="ResultR2" parent="MarginContainer/HBoxContainer/ResultContainerR" instance=ExtResource("2_wj8cw")]
-custom_minimum_size = Vector2(100, 100)
-layout_mode = 2
-size_flags_horizontal = 0
-size_flags_vertical = 6
-
-[node name="ResultR3" parent="MarginContainer/HBoxContainer/ResultContainerR" instance=ExtResource("2_wj8cw")]
-custom_minimum_size = Vector2(100, 100)
-layout_mode = 2
-size_flags_horizontal = 0
-size_flags_vertical = 6
-
-[node name="ResultR4" parent="MarginContainer/HBoxContainer/ResultContainerR" instance=ExtResource("2_wj8cw")]
-custom_minimum_size = Vector2(100, 100)
-layout_mode = 2
-size_flags_horizontal = 0
-size_flags_vertical = 6
-
-[node name="ResultR5" parent="MarginContainer/HBoxContainer/ResultContainerR" instance=ExtResource("2_wj8cw")]
-custom_minimum_size = Vector2(100, 100)
-layout_mode = 2
-size_flags_horizontal = 0
-size_flags_vertical = 6

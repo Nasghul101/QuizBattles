@@ -35,8 +35,10 @@ signal question_review_requested(question_index: int, question_data: Dictionary)
 # Internal state
 var answer_buttons: Array[Button] = []
 var stored_results: Array = []
+var answer_buttons_minimum_size: Vector2
 var icon_right: Texture2D
 var icon_wrong: Texture2D
+var is_empty: bool = true
 
 
 func _ready() -> void:
@@ -48,10 +50,45 @@ func _ready() -> void:
     for child in answer_button_container.get_children():
         if child is Button:
             answer_buttons.append(child)
+            answer_buttons_minimum_size = child.custom_minimum_size
     
     # Connect button signals to handler
     for i in range(answer_buttons.size()):
         answer_buttons[i].pressed.connect(_on_answer_button_pressed.bind(i))
+
+## Initialize component in empty/disabled state
+##
+## Creates the specified number of answer buttons in a grey, disabled state.
+## Used to show result slots before rounds are completed.
+##
+## Args:
+##   num_answer_buttons: Number of answer buttons to create
+func initialize_empty(num_answer_buttons: int) -> void:
+    # Clear any existing buttons
+    for child in answer_button_container.get_children():
+        child.queue_free()
+    
+    answer_buttons.clear()
+    
+    # Create new buttons in disabled state
+    for i in range(num_answer_buttons):
+        var button = Button.new()
+        button.disabled = true
+        button.modulate = Color(0.5, 0.5, 0.5)  # Grey appearance
+        button.custom_minimum_size = answer_buttons_minimum_size
+        button.expand_icon = true
+        button.icon_alignment = HORIZONTAL_ALIGNMENT_CENTER
+        answer_button_container.add_child(button)
+        answer_buttons.append(button)
+    
+    # Set category symbol to greyscale placeholder
+    if category_symbol:
+        category_symbol.modulate = Color(0.5, 0.5, 0.5)
+        category_symbol.texture = null
+    
+    # Mark as empty
+    is_empty = true
+    stored_results.clear()
 
 
 ## Load and display result data for a category round
@@ -66,9 +103,13 @@ func load_result_data(category_texture: Texture2D, results: Array) -> void:
         push_error("Invalid results data. Array cannot be empty.")
         return
     
-    if results.size() != answer_buttons.size():
-        push_error("Invalid results data. Expected %d entries to match button count, got %d." % [answer_buttons.size(), results.size()])
+    # Allow loading fewer results than buttons (in case API returned fewer questions)
+    if results.size() > answer_buttons.size():
+        push_error("Invalid results data. Too many results: expected max %d entries, got %d." % [answer_buttons.size(), results.size()])
         return
+    
+    if results.size() < answer_buttons.size():
+        push_warning("Loading %d results into %d button slots. Remaining buttons will stay disabled." % [results.size(), answer_buttons.size()])
     
     # Validate each result entry has required fields
     for i in range(results.size()):
@@ -82,6 +123,10 @@ func load_result_data(category_texture: Texture2D, results: Array) -> void:
     
     # Set category texture
     category_symbol.texture = category_texture
+    category_symbol.modulate = Color(1.0, 1.0, 1.0)  # Reset to full color
+    
+    # Mark as not empty
+    is_empty = false
     
     # Update button icons based on correctness
     _update_button_icons()
@@ -89,15 +134,25 @@ func load_result_data(category_texture: Texture2D, results: Array) -> void:
 
 ## Update button icons to show correct/incorrect states
 func _update_button_icons() -> void:
-    for i in range(answer_buttons.size()):
+    # Only update buttons for which we have results
+    for i in range(stored_results.size()):
         var button = answer_buttons[i]
         var was_correct: bool = stored_results[i]["was_correct"]
+        
+        # Enable button and reset modulate
+        button.disabled = false
+        button.modulate = Color(1.0, 1.0, 1.0)
         
         # Set icon based on correctness
         if was_correct:
             button.icon = icon_right
         else:
             button.icon = icon_wrong
+    
+    # Leave remaining buttons disabled if we have fewer results than buttons
+    for i in range(stored_results.size(), answer_buttons.size()):
+        answer_buttons[i].disabled = true
+        answer_buttons[i].modulate = Color(0.3, 0.3, 0.3)  # Darker grey for unused slots
 
 
 ## Handle answer button press

@@ -21,10 +21,17 @@ extends Control
 # Signal emitted when the player selects the correct answer
 signal answer_correct
 
+# Signal emitted when the player selects any answer (correct or incorrect)
+signal question_answered(was_correct: bool)
+
+# Signal emitted when the NextQuestion button is pressed
+signal next_question_requested
+
 # Node references
 @onready var question_label: Label = %QuestionLabel
 @onready var answers_grid: GridContainer = %AnswersGrid
-@onready var answer_buttons: Array[Button] 
+@onready var answer_buttons: Array[Button]
+@onready var next_question_button: Button = $NextQuestion 
 
 # Internal state
 var correct_answer_text: String = ""
@@ -38,6 +45,12 @@ func _ready() -> void:
     # Connect all answer button signals to handler
     for button in answer_buttons:
         button.answer_selected.connect(_on_answer_selected)
+    
+    # Connect NextQuestion button
+    next_question_button.pressed.connect(_on_next_question_pressed)
+    
+    # Hide NextQuestion button initially
+    next_question_button.visible = false
 
 
 ## Load and display a quiz question with answers
@@ -57,6 +70,13 @@ func load_question(data: Dictionary) -> void:
     
     # Reset state
     has_answered = false
+    
+    # Hide NextQuestion button when loading new question
+    next_question_button.visible = false
+    
+    # Reset all answer buttons to neutral state
+    for button in answer_buttons:
+        button.reset()
     
     # Display question text
     question_label.text = data["question"]
@@ -97,9 +117,20 @@ func _on_answer_selected(answer_index: int) -> void:
     # Reveal all button states
     _reveal_all_buttons()
     
+    # Emit question_answered signal with correctness
+    question_answered.emit(is_correct)
+    
+    # Show NextQuestion button
+    next_question_button.visible = true
+    
     # Emit signal only if answer was correct
     if is_correct:
         answer_correct.emit()
+
+
+## Handle NextQuestion button press
+func _on_next_question_pressed() -> void:
+    next_question_requested.emit()
 
 
 ## Reveal the correct/wrong state of all answer buttons

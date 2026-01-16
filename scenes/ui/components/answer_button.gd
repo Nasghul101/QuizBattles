@@ -85,6 +85,24 @@ func reveal_correct() -> void:
 func reveal_wrong() -> void:
     _animate_color(wrong_color)
 
+## Reset button to neutral state for new question
+func reset() -> void:
+    # Re-enable the button
+    disabled = false
+    
+    # Remove white outline
+    _style_box.border_width_left = 0
+    _style_box.border_width_right = 0
+    _style_box.border_width_top = 0
+    _style_box.border_width_bottom = 0
+    
+    # Reset to neutral color
+    _style_box.bg_color = neutral_color
+    
+    # Cancel any ongoing animation
+    if _tween:
+        _tween.kill()
+
 ## Smoothly animate the button's background color
 ##
 ## Args:
