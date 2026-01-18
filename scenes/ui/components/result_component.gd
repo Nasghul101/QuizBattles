@@ -31,6 +31,9 @@ signal question_review_requested(question_index: int, question_data: Dictionary)
 # Preload ResultButtonComponent scene
 const ResultButtonComponent = preload("res://scenes/ui/components/result_button_component.tscn")
 
+# Preload AnswerReviewScreen scene
+const AnswerReviewScreen = preload("res://scenes/ui/components/answer_review_screen.tscn")
+
 # Node references
 @onready var category_symbol: TextureRect = %CategorySymbol
 @onready var answer_button_container: HBoxContainer = %AnswerButtonContainer
@@ -39,10 +42,17 @@ const ResultButtonComponent = preload("res://scenes/ui/components/result_button_
 var answer_buttons: Array = []
 var stored_results: Array = []
 var is_empty: bool = true
+var answer_review_screen: Control = null
 
 
 func _ready() -> void:
-    pass
+    # Instantiate and configure answer review screen
+    answer_review_screen = AnswerReviewScreen.instantiate()
+    add_child(answer_review_screen)
+    answer_review_screen.visible = false
+    
+    # Set high z-index to ensure it appears above other elements
+    answer_review_screen.z_index = 100
 
 ## Initialize component in empty/disabled state
 ##
@@ -147,7 +157,28 @@ func _update_button_states() -> void:
 ##
 ## Args:
 ##   question_index: Index of the pressed button
-##   question_data: Complete question data from the button
-func _on_result_button_pressed(question_index: int, question_data: Dictionary) -> void:
-    # Forward signal with the data from the button component
-    question_review_requested.emit(question_index, question_data)
+##   result_data: Complete result data from the button (includes question_data, was_correct, player_answer)
+func _on_result_button_pressed(question_index: int, result_data: Dictionary) -> void:
+    # Show the answer review screen with this question's data
+    _show_answer_review(result_data)
+
+
+## Show the answer review screen with question data
+##
+## Args:
+##   result_data: Complete result data with nested question_data and player_answer
+func _show_answer_review(result_data: Dictionary) -> void:
+    # Hide the review screen first if it's already visible (to support multiple clicks)
+    if answer_review_screen and answer_review_screen.visible:
+        answer_review_screen.hide_review()
+    
+    # Extract and merge the data for the review screen
+    # result_data has structure: {"question_data": {...}, "was_correct": bool, "player_answer": string}
+    # We need to merge question_data with player_answer for the review screen
+    var review_data: Dictionary = result_data["question_data"].duplicate()
+    review_data["player_answer"] = result_data["player_answer"]
+    
+    # Load the merged question data into the review screen
+    if answer_review_screen:
+        answer_review_screen.load_review_data(review_data)
+        answer_review_screen.show_review()

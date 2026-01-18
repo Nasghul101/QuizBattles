@@ -177,15 +177,15 @@ func _on_questions_ready(questions: Array) -> void:
 
 
 ## Handle question answered
-func _on_question_answered(was_correct: bool) -> void:
+func _on_question_answered(was_correct: bool, player_answer: String) -> void:
     # Get current question data
     var current_question_data = fetched_questions[current_question_index]
     
-    # Store result
+    # Store result with player's selected answer
     current_round_results.append({
         "question_data": current_question_data,
         "was_correct": was_correct,
-        "player_answer": ""  # Optional: could extract from quiz_screen
+        "player_answer": player_answer
     })
 
 

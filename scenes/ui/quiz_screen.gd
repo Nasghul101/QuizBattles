@@ -22,7 +22,7 @@ extends Control
 signal answer_correct
 
 # Signal emitted when the player selects any answer (correct or incorrect)
-signal question_answered(was_correct: bool)
+signal question_answered(was_correct: bool, player_answer: String)
 
 # Signal emitted when the NextQuestion button is pressed
 signal next_question_requested
@@ -117,8 +117,8 @@ func _on_answer_selected(answer_index: int) -> void:
     # Reveal all button states
     _reveal_all_buttons()
     
-    # Emit question_answered signal with correctness
-    question_answered.emit(is_correct)
+    # Emit question_answered signal with correctness and player's answer
+    question_answered.emit(is_correct, selected_answer_text)
     
     # Show NextQuestion button
     next_question_button.visible = true
