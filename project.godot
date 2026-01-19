@@ -19,3 +19,4 @@ config/icon="res://icon.svg"
 
 TransitionManager="*res://autoload/transition_manager.gd"
 TriviaQuestionService="*res://autoload/trivia_question_service.gd"
+UserDatabase="*res://autoload/user_database.gd"

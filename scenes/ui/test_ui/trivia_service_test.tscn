@@ -1,6 +1,6 @@
 [gd_scene load_steps=3 format=3 uid="uid://gm0xfhlhpugs"]
 
-[ext_resource type="Script" uid="uid://dv64wopb74nqq" path="res://scenes/ui/trivia_service_test.gd" id="1_9s5xy"]
+[ext_resource type="Script" uid="uid://dv64wopb74nqq" path="res://scenes/ui/test_ui/trivia_service_test.gd" id="1_9s5xy"]
 [ext_resource type="PackedScene" uid="uid://b5n5d733kj2v5" path="res://scenes/ui/quiz_screen.tscn" id="2_jlf8v"]
 
 [node name="TriviaServiceTest" type="Control"]

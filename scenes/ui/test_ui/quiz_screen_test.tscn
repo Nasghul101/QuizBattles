@@ -1,6 +1,6 @@
 [gd_scene load_steps=3 format=3 uid="uid://dunclcdhn4qsq"]
 
-[ext_resource type="Script" uid="uid://ll76rt4l7n4m" path="res://scenes/ui/quiz_screen_test.gd" id="1_test_script"]
+[ext_resource type="Script" uid="uid://ll76rt4l7n4m" path="res://scenes/ui/test_ui/quiz_screen_test.gd" id="1_test_script"]
 [ext_resource type="PackedScene" uid="uid://b5n5d733kj2v5" path="res://scenes/ui/quiz_screen.tscn" id="2_quiz_screen"]
 
 [node name="QuizScreenTest" type="Node2D"]
