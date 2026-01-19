@@ -244,12 +244,13 @@ func _validate_username(username: String) -> Dictionary:
 
 ## Hash a password using SHA-256.
 ##
-## Uses Godot's built-in Crypto class to generate a secure hash.
+## Uses Godot's built-in HashingContext to generate a secure hash.
 ##
 ## @param password: Plain-text password to hash
 ## @return Hex-encoded SHA-256 hash of the password
 func _hash_password(password: String) -> String:
-    var crypto := Crypto.new()
-    var password_bytes := password.to_utf8_buffer()
-    var hash_bytes: PackedByteArray = crypto.generate_sha256(password_bytes)
+    var ctx := HashingContext.new()
+    ctx.start(HashingContext.HASH_SHA256)
+    ctx.update(password.to_utf8_buffer())
+    var hash_bytes: PackedByteArray = ctx.finish()
     return hash_bytes.hex_encode()
