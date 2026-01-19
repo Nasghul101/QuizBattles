@@ -48,11 +48,18 @@ var answer_review_screen: Control = null
 func _ready() -> void:
     # Instantiate and configure answer review screen
     answer_review_screen = AnswerReviewScreen.instantiate()
-    add_child(answer_review_screen)
+    # Add to viewport root instead of this node to avoid position inheritance
+    get_tree().root.add_child(answer_review_screen)
     answer_review_screen.visible = false
     
     # Set high z-index to ensure it appears above other elements
     answer_review_screen.z_index = 100
+
+
+func _exit_tree() -> void:
+    # Clean up answer review screen when this component is removed
+    if answer_review_screen and is_instance_valid(answer_review_screen):
+        answer_review_screen.queue_free()
 
 ## Initialize component in empty/disabled state
 ##
