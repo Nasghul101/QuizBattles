@@ -1,17 +1,17 @@
 [gd_scene load_steps=3 format=3 uid="uid://ysbddqt5mwwf"]
 
-[ext_resource type="Script" path="res://scenes/ui/account_ui/account_management_screen.gd" id="1_d4e5f"]
+[ext_resource type="Script" uid="uid://crr12b7mb5suu" path="res://scenes/ui/account_ui/account_management_screen.gd" id="1_d4e5f"]
 
 [sub_resource type="PlaceholderTexture2D" id="PlaceholderTexture2D_cm8pu"]
 
 [node name="AccountManagementScreen" type="Control"]
-script = ExtResource("1_d4e5f")
 layout_mode = 3
 anchors_preset = 15
 anchor_right = 1.0
 anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
+script = ExtResource("1_d4e5f")
 
 [node name="BackButton" type="Button" parent="."]
 custom_minimum_size = Vector2(50, 50)
@@ -30,7 +30,7 @@ grow_horizontal = 2
 grow_vertical = 2
 mouse_filter = 2
 
-[node name="Label" type="Label" parent="VBoxContainer"]
+[node name="HeaderLabel" type="Label" parent="VBoxContainer"]
 layout_mode = 2
 size_flags_horizontal = 6
 theme_override_font_sizes/font_size = 50
@@ -44,7 +44,7 @@ layout_mode = 2
 size_flags_horizontal = 4
 texture = SubResource("PlaceholderTexture2D_cm8pu")
 
-[node name="Label2" type="Label" parent="VBoxContainer"]
+[node name="NameLabel" type="Label" parent="VBoxContainer"]
 layout_mode = 2
 size_flags_horizontal = 6
 theme_override_font_sizes/font_size = 30
