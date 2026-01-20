@@ -1,26 +1,6 @@
-# main-lobby-screen Specification
+# main-lobby-screen Spec Delta
 
-## Purpose
-TBD - created by archiving change add-account-screen-navigation. Update Purpose after archive.
-## Requirements
-### Requirement: User State Detection on Load
-The main lobby screen SHALL detect the current user's login state when the scene is initialized.
-
-**Rationale:** Enables conditional navigation based on authentication state for the AccountButton and other potential features.
-
-#### Scenario: Detect logged-in user on load
-**GIVEN** a user is signed in via UserDatabase  
-**WHEN** the main lobby screen is loaded  
-**THEN** the screen SHALL cache the user's logged-in state  
-**AND** the state SHALL be available for navigation decisions
-
-#### Scenario: Detect logged-out user on load
-**GIVEN** no user is signed in  
-**WHEN** the main lobby screen is loaded  
-**THEN** the screen SHALL cache the logged-out state  
-**AND** the state SHALL be available for navigation decisions
-
----
+## MODIFIED Requirements
 
 ### Requirement: Conditional AccountButton Navigation
 The main lobby SHALL query UserDatabase.is_signed_in() dynamically when AccountButton is pressed to determine navigation target.
@@ -52,16 +32,3 @@ The main lobby SHALL query UserDatabase.is_signed_in() dynamically when AccountB
 **When** the AccountButton is pressed  
 **Then** the screen queries UserDatabase.is_signed_in() and gets true  
 **And** the screen transitions to account_management_screen (not register/login)
-
-### Requirement: Navigation Error Handling
-The main lobby screen SHALL handle navigation failures gracefully.
-
-**Rationale:** Prevent user confusion and provide debugging information when transitions fail.
-
-#### Scenario: Handle transition failure
-**GIVEN** a scene transition is initiated  
-**WHEN** the transition fails (e.g., scene path not found)  
-**THEN** the screen SHALL log an error to the console using `push_error()`  
-**AND** the screen SHALL remain on the main lobby screen  
-**AND** the user SHALL be able to continue interacting with the lobby
-

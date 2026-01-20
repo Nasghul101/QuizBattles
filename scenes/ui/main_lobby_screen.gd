@@ -4,18 +4,10 @@ extends Control
 ## Entry point screen that provides access to game features and account management.
 ## Conditionally navigates to account screens based on user login state.
 
-## Cached user login state, set during _ready()
-var _is_user_logged_in: bool = false
-
-
-func _ready() -> void:
-    # Cache user login state for navigation decisions
-    _is_user_logged_in = UserDatabase.is_signed_in()
-
 
 ## Handle AccountButton press with conditional navigation based on login state
 func _on_account_button_pressed() -> void:
-    if _is_user_logged_in:
+    if UserDatabase.is_signed_in():
         # User is logged in - navigate to account management
         _navigate_to_account_management()
     else:
