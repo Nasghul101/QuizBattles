@@ -1,4 +1,6 @@
-[gd_scene format=3 uid="uid://c6q8wpx2jehng"]
+[gd_scene load_steps=2 format=3 uid="uid://c6q8wpx2jehng"]
+
+[ext_resource type="Script" uid="uid://bbvvhw0unfkrd" path="res://scenes/ui/account_ui/register_login_screen.gd" id="1_a3b4c"]
 
 [node name="RegisterLoginScreen" type="Control"]
 layout_mode = 3
@@ -7,11 +9,12 @@ anchor_right = 1.0
 anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
+script = ExtResource("1_a3b4c")
 
 [node name="BackButton" type="Button" parent="."]
 custom_minimum_size = Vector2(50, 50)
-layout_mode = 0
-offset_right = 80.0
+layout_mode = 1
+offset_right = 50.0
 offset_bottom = 50.0
 size_flags_horizontal = 0
 text = "Back"
@@ -23,6 +26,7 @@ anchor_right = 1.0
 anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
+mouse_filter = 2
 theme_override_constants/separation = 24
 
 [node name="Label" type="Label" parent="VBoxContainer"]
@@ -53,3 +57,7 @@ text = "Log in"
 layout_mode = 2
 size_flags_horizontal = 4
 text = "Create new Account"
+
+[connection signal="pressed" from="BackButton" to="." method="_on_back_button_pressed"]
+[connection signal="pressed" from="VBoxContainer/LogInButton" to="." method="_on_log_in_button_pressed"]
+[connection signal="pressed" from="VBoxContainer/NewAccountButton" to="." method="_on_new_account_button_pressed"]

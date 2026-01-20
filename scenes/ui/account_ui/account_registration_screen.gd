@@ -16,7 +16,7 @@ extends Control
 ## Reference to the password confirmation input field
 @onready var password_confirm: TextEdit = $VBoxContainer/PasswordConfirm
 
-## Reference to the email input field
+## Reference to the email input field<
 @onready var email_input: TextEdit = $VBoxContainer/EmailInput
 
 ## Reference to the Create Account button
@@ -42,9 +42,6 @@ func _ready() -> void:
     # Connect special handler for username field to handle duplicate error recovery
     name_input.text_changed.connect(_on_name_input_changed)
     
-    # Connect button pressed signal
-    create_account_button.pressed.connect(_on_create_account_button_pressed)
-
 
 ## Called when any input field text changes
 func _on_input_field_changed() -> void:
@@ -71,6 +68,9 @@ func _update_button_state() -> void:
     # Disable if duplicate username error flag is set
     create_account_button.disabled = not all_fields_filled or _duplicate_username_error
 
+
+func _on_back_button_pressed() -> void:
+    pass # Replace with function body.
 
 ## Handle Create Account button press
 func _on_create_account_button_pressed() -> void:

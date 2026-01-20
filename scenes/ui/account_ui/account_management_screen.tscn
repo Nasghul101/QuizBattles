@@ -1,8 +1,11 @@
-[gd_scene load_steps=2 format=3 uid="uid://ysbddqt5mwwf"]
+[gd_scene load_steps=3 format=3 uid="uid://ysbddqt5mwwf"]
+
+[ext_resource type="Script" path="res://scenes/ui/account_ui/account_management_screen.gd" id="1_d4e5f"]
 
 [sub_resource type="PlaceholderTexture2D" id="PlaceholderTexture2D_cm8pu"]
 
 [node name="AccountManagementScreen" type="Control"]
+script = ExtResource("1_d4e5f")
 layout_mode = 3
 anchors_preset = 15
 anchor_right = 1.0
