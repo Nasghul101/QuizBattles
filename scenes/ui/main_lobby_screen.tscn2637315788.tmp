@@ -54,30 +54,24 @@ size_flags_vertical = 4
 icon = ExtResource("1_f1jjt")
 expand_icon = true
 
-[node name="PageClipContainer" type="Control" parent="VBoxContainer"]
+[node name="PageContainer" type="TabContainer" parent="VBoxContainer"]
 layout_mode = 2
 size_flags_vertical = 3
+current_tab = 0
 
-[node name="PagesContainer" type="HBoxContainer" parent="VBoxContainer/PageClipContainer"]
-layout_mode = 1
-anchors_preset = 15
-anchor_right = 1.0
-anchor_bottom = 1.0
-grow_horizontal = 2
-grow_vertical = 2
-theme_override_constants/separation = 0
-
-[node name="DuelPage" parent="VBoxContainer/PageClipContainer/PagesContainer" instance=ExtResource("3_1l6go")]
+[node name="DuelPage" parent="VBoxContainer/PageContainer" instance=ExtResource("3_1l6go")]
 layout_mode = 2
-size_flags_horizontal = 3
+metadata/_tab_index = 0
 
-[node name="Page2" parent="VBoxContainer/PageClipContainer/PagesContainer" instance=ExtResource("4_4wv0w")]
+[node name="Page2" parent="VBoxContainer/PageContainer" instance=ExtResource("4_4wv0w")]
+visible = false
 layout_mode = 2
-size_flags_horizontal = 3
+metadata/_tab_index = 1
 
-[node name="SocialsPage" parent="VBoxContainer/PageClipContainer/PagesContainer" instance=ExtResource("5_6xylg")]
+[node name="SocialsPage" parent="VBoxContainer/PageContainer" instance=ExtResource("5_6xylg")]
+visible = false
 layout_mode = 2
-size_flags_horizontal = 3
+metadata/_tab_index = 2
 
 [node name="PanelContainer3" type="PanelContainer" parent="VBoxContainer"]
 custom_minimum_size = Vector2(0, 100)
