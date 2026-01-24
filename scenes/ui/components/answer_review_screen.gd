@@ -22,7 +22,6 @@ extends Control
 # Node references
 @onready var question_label: Label = %QuestionLabel
 @onready var answers_grid: GridContainer = %AnswersGrid
-@onready var back_button: Button = %BackButton
 
 # Answer button references
 var answer_buttons: Array = []
@@ -33,8 +32,6 @@ func _ready() -> void:
     for child in answers_grid.get_children():
         answer_buttons.append(child)
     
-    # Connect back button
-    back_button.pressed.connect(_on_back_button_pressed)
     
     # Start hidden
     visible = false

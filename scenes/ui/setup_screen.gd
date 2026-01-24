@@ -16,8 +16,6 @@ extends Control
 ## Reference to questions amount label
 @onready var questions_amount: Label = %QuestionsAmount
 
-## Reference to start game button
-@onready var start_button: Button = $VBoxContainer/StartGameButton
 
 
 func _ready() -> void:
@@ -36,7 +34,6 @@ func _ready() -> void:
     # Connect signals
     rounds_slider.value_changed.connect(_on_rounds_slider_changed)
     questions_slider.value_changed.connect(_on_questions_slider_changed)
-    start_button.pressed.connect(_on_start_button_pressed)
 
 
 ## Updates rounds amount label when slider changes
@@ -50,7 +47,7 @@ func _on_questions_slider_changed(value: float) -> void:
 
 
 ## Starts the game with selected configuration
-func _on_start_button_pressed() -> void:
+func _on_start_game_button_pressed() -> void:
     var rounds_value: int = int(rounds_slider.value)
     var questions_value: int = int(questions_slider.value)
     

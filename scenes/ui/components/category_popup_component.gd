@@ -18,12 +18,12 @@ extends Control
 signal category_selected(category_name: String)
 
 # Node references
-@onready var headline: Label = $VBoxContainer/Headline
-@onready var category1: Button = $VBoxContainer/HBoxContainer/Category1
-@onready var category2: Button = $VBoxContainer/HBoxContainer/Category2
-@onready var category3: Button = $VBoxContainer/HBoxContainer/Category3
-@onready var progress_bar: ProgressBar = $VBoxContainer/ProgressBar
-@onready var category_container: HBoxContainer = $VBoxContainer/HBoxContainer
+@onready var headline: Label = %Headline
+@onready var category1: Button = %Category1
+@onready var category2: Button = %Category2
+@onready var category3: Button = %Category3
+@onready var progress_bar: ProgressBar = %ProgressBar
+@onready var category_container: HBoxContainer = %HBoxContainer
 
 # Internal state
 var is_loading: bool = false

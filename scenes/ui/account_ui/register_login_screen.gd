@@ -5,13 +5,13 @@ extends Control
 ## and account management after successful login.
 
 ## Reference to the username input field
-@onready var username_input: TextEdit = $VBoxContainer/UsernameInput
+@onready var username_input: TextEdit = %UsernameInput
 
 ## Reference to the password input field
-@onready var password_input: TextEdit = $VBoxContainer/PasswordInput
+@onready var password_input: TextEdit = %PasswordInput
 
 ## Reference to the Log In button
-@onready var log_in_button: Button = $VBoxContainer/LogInButton
+@onready var log_in_button: Button = %LogInButton
 
 ## Flag to track if login failed due to authentication error
 var _login_failed: bool = false
@@ -44,7 +44,7 @@ func _on_username_input_changed() -> void:
 
 ## Update the Log In button enabled/disabled state
 func _update_button_state() -> void:
-    var all_fields_filled := (
+    var all_fields_filled: bool = (
         not username_input.text.strip_edges().is_empty() and
         not password_input.text.strip_edges().is_empty()
     )
@@ -64,11 +64,11 @@ func _on_new_account_button_pressed() -> void:
 
 
 func _on_log_in_button_pressed() -> void:
-    var username := username_input.text.strip_edges()
-    var password := password_input.text
+    var username: String = username_input.text.strip_edges()
+    var password: String = password_input.text
     
     # Attempt to sign in with UserDatabase
-    var result := UserDatabase.sign_in(username, password)
+    var result: Dictionary = UserDatabase.sign_in(username, password)
     
     if result.success:
         # Success - navigate to account management

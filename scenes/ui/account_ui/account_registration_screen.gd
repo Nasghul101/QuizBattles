@@ -8,22 +8,19 @@ extends Control
 ## when the button is pressed.
 
 ## Reference to the username input field
-@onready var name_input: TextEdit = $VBoxContainer/NameInput
+@onready var name_input: TextEdit = %NameInput
 
 ## Reference to the password input field
-@onready var password_input: TextEdit = $VBoxContainer/PasswordInput
+@onready var password_input: TextEdit = %PasswordInput
 
 ## Reference to the password confirmation input field
-@onready var password_confirm: TextEdit = $VBoxContainer/PasswordConfirm
+@onready var password_confirm: TextEdit = %PasswordConfirm
 
 ## Reference to the email input field<
-@onready var email_input: TextEdit = $VBoxContainer/EmailInput
+@onready var email_input: TextEdit = %EmailInput
 
 ## Reference to the Create Account button
-@onready var create_account_button: Button = $VBoxContainer/CreateAccountButton
-
-## Reference to the Back button (no functionality implemented)
-@onready var back_button: Button = $BackButton
+@onready var create_account_button: Button = %CreateAccountButton
 
 ## Flag to track if account creation failed due to duplicate username
 var _duplicate_username_error: bool = false
@@ -58,7 +55,7 @@ func _on_name_input_changed() -> void:
 
 ## Update the Create Account button enabled/disabled state
 func _update_button_state() -> void:
-    var all_fields_filled := (
+    var all_fields_filled: bool = (
         not name_input.text.strip_edges().is_empty() and
         not password_input.text.strip_edges().is_empty() and
         not password_confirm.text.strip_edges().is_empty() and
@@ -74,10 +71,10 @@ func _on_back_button_pressed() -> void:
 
 ## Handle Create Account button press
 func _on_create_account_button_pressed() -> void:
-    var username := name_input.text.strip_edges()
-    var password := password_input.text
-    var password_confirm_text := password_confirm.text
-    var email := email_input.text.strip_edges()
+    var username: String = name_input.text.strip_edges()
+    var password: String = password_input.text
+    var password_confirm_text: String = password_confirm.text
+    var email: String = email_input.text.strip_edges()
     
     # Validate password match
     if password != password_confirm_text:
@@ -85,14 +82,14 @@ func _on_create_account_button_pressed() -> void:
         return
     
     # Attempt to create user account
-    var result := UserDatabase.create_user(username, password, email)
+    var result: Dictionary = UserDatabase.create_user(username, password, email)
     
     if result.success:
         # Success - log the created user data
         print("Account created successfully: ", result.user)
         
         # Log the user in immediately after account creation
-        var sign_in_result := UserDatabase.sign_in(username, password)
+        var sign_in_result: Dictionary = UserDatabase.sign_in(username, password)
         if sign_in_result.success:
             print("User automatically logged in")
             NavigationUtils.navigate_to_scene("account_management", "register_login")

@@ -1,6 +1,6 @@
 [gd_scene load_steps=2 format=3 uid="uid://c65fvwpoh5cav"]
 
-[ext_resource type="Script" path="res://scenes/ui/components/category_popup_component.gd" id="1_script"]
+[ext_resource type="Script" uid="uid://du2is7604h5ib" path="res://scenes/ui/components/category_popup_component.gd" id="1_script"]
 
 [node name="CategoryPopupComponent" type="Control"]
 layout_mode = 3
@@ -21,6 +21,7 @@ grow_vertical = 2
 theme_override_constants/separation = 34
 
 [node name="Headline" type="Label" parent="VBoxContainer"]
+unique_name_in_owner = true
 layout_mode = 2
 theme_override_font_sizes/font_size = 50
 text = "Choose a Category"
@@ -28,22 +29,27 @@ horizontal_alignment = 1
 vertical_alignment = 1
 
 [node name="HBoxContainer" type="HBoxContainer" parent="VBoxContainer"]
+unique_name_in_owner = true
 layout_mode = 2
 size_flags_vertical = 3
 theme_override_constants/separation = 29
 
 [node name="Category1" type="Button" parent="VBoxContainer/HBoxContainer"]
+unique_name_in_owner = true
 layout_mode = 2
 size_flags_horizontal = 3
 
 [node name="Category2" type="Button" parent="VBoxContainer/HBoxContainer"]
+unique_name_in_owner = true
 layout_mode = 2
 size_flags_horizontal = 3
 
 [node name="Category3" type="Button" parent="VBoxContainer/HBoxContainer"]
+unique_name_in_owner = true
 layout_mode = 2
 size_flags_horizontal = 3
 
 [node name="ProgressBar" type="ProgressBar" parent="VBoxContainer"]
+unique_name_in_owner = true
 custom_minimum_size = Vector2(0, 50)
 layout_mode = 2

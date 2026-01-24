@@ -87,7 +87,7 @@ func _ready() -> void:
 func fetch_questions(category: String, amount: int) -> void:
     # Check cache first
     if has_cached_questions(category):
-        var cached = get_cached_questions(category, amount)
+        var cached: Array = get_cached_questions(category, amount)
         if cached.size() > 0:
             # Return cached questions immediately
             print("[TriviaService] Returning %d cached questions for category: %s (requested: %d)" % [cached.size(), category, amount])
@@ -99,7 +99,7 @@ func fetch_questions(category: String, amount: int) -> void:
     if category_id == -1:
         push_error("Invalid category: %s" % category)
         # Fall back to local questions
-        var fallback = _load_fallback_questions(category, amount)
+        var fallback: Array = _load_fallback_questions(category, amount)
         questions_ready.emit(fallback)
         return
     
@@ -115,7 +115,7 @@ func fetch_questions(category: String, amount: int) -> void:
     print("[TriviaService] Fetching %d questions for category: %s (API category ID: %d)" % [amount, category, category_id])
     
     # Make HTTP request
-    var error = _http_request.request(url)
+    var error: Error = _http_request.request(url)
     if error != OK:
         push_error("Failed to make HTTP request: %d" % error)
         connection_error.emit()
@@ -141,7 +141,7 @@ func get_cached_questions(category: String, amount: int) -> Array:
     var result: Array = []
     var count: int = min(amount, cached_questions.size())
     
-    for i in range(count):
+    for i: int in range(count):
         result.append(cached_questions.pop_front())
     
     # Update total count
@@ -163,7 +163,7 @@ func clear_cache() -> void:
 ## Get list of available categories
 func get_available_categories() -> Array[String]:
     var categories: Array[String] = []
-    for category in CATEGORY_MAPPING.keys():
+    for category: String in CATEGORY_MAPPING.keys():
         categories.append(category)
     return categories
 
@@ -204,8 +204,8 @@ func _load_fallback_questions(category: String, amount: int) -> Array:
     var json_string: String = file.get_as_text()
     file.close()
     
-    var json = JSON.new()
-    var parse_result = json.parse(json_string)
+    var json: JSON = JSON.new()
+    var parse_result: Error = json.parse(json_string)
     
     if parse_result != OK:
         push_error("Failed to parse fallback questions JSON: %s" % json.get_error_message())
@@ -226,7 +226,7 @@ func _load_fallback_questions(category: String, amount: int) -> Array:
     
     # Return up to 'amount' questions
     var result: Array = []
-    for i in range(min(amount, category_questions.size())):
+    for i: int in range(min(amount, category_questions.size())):
         result.append(category_questions[i])
     
     print("[TriviaService] Returning %d fallback questions (requested: %d)" % [result.size(), amount])
@@ -257,7 +257,7 @@ func _evict_oldest_cache_entry() -> void:
     var oldest_category: String = ""
     var oldest_timestamp: int = Time.get_ticks_msec()
     
-    for category in _question_cache.keys():
+    for category: String in _question_cache.keys():
         var timestamp: int = _question_cache[category]["timestamp"]
         if timestamp < oldest_timestamp:
             oldest_timestamp = timestamp
@@ -291,13 +291,13 @@ func _on_request_completed(result: int, response_code: int, headers: PackedStrin
     
     # Parse JSON response
     var json_string: String = body.get_string_from_utf8()
-    var json = JSON.new()
-    var parse_result = json.parse(json_string)
+    var json: JSON = JSON.new()
+    var parse_result: Error = json.parse(json_string)
     
     if parse_result != OK:
         push_warning("Failed to parse API response: %s" % json.get_error_message())
         api_failed.emit()
-        var fallback = _load_fallback_questions(category, amount)
+        var fallback: Array = _load_fallback_questions(category, amount)
         questions_ready.emit(fallback)
         return
     
@@ -307,7 +307,7 @@ func _on_request_completed(result: int, response_code: int, headers: PackedStrin
     if not data is Dictionary or not data.has("results"):
         push_warning("Invalid API response structure")
         api_failed.emit()
-        var fallback = _load_fallback_questions(category, amount)
+        var fallback: Array = _load_fallback_questions(category, amount)
         questions_ready.emit(fallback)
         return
     
@@ -333,7 +333,7 @@ func _on_request_completed(result: int, response_code: int, headers: PackedStrin
     if valid_questions.is_empty():
         push_warning("No valid questions in API response")
         api_failed.emit()
-        var fallback = _load_fallback_questions(category, amount)
+        var fallback: Array = _load_fallback_questions(category, amount)
         questions_ready.emit(fallback)
         return
     

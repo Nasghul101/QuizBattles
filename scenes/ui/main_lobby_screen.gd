@@ -6,19 +6,19 @@ extends Control
 ## Supports multi-page navigation with swipe gestures and bottom navigation buttons.
 
 ## Reference to the container holding page content
-@onready var page_clip_container: Control = $VBoxContainer/PageClipContainer
-@onready var pages_container: HBoxContainer = $VBoxContainer/PageClipContainer/PagesContainer
+@onready var page_clip_container: Control = %PageClipContainer
+@onready var pages_container: HBoxContainer = %PagesContainer
 
 ## Swipe detection state
-var swipe_start_pos := Vector2.ZERO
-var is_swiping := false
-var swipe_threshold := 100.0  # Minimum pixels to trigger page change
-var drag_start_container_pos := 0.0
-var page_width := 0.0
+var swipe_start_pos: Vector2 = Vector2.ZERO
+var is_swiping: bool = false
+var swipe_threshold: float = 100.0  # Minimum pixels to trigger page change
+var drag_start_container_pos: float = 0.0
+var page_width: float = 0.0
 
 ## Current page tracking
-var current_page := 0
-var is_animating := false
+var current_page: int = 0
+var is_animating: bool = false
 
 
 func _ready() -> void:
@@ -75,11 +75,11 @@ func _input(event: InputEvent) -> void:
 
 ## Process swipe gesture and change page if threshold met
 func _handle_swipe_end(end_pos: Vector2) -> void:
-    var swipe_vector := end_pos - swipe_start_pos
-    var swipe_distance := swipe_vector.x
+    var swipe_vector: Vector2 = end_pos - swipe_start_pos
+    var swipe_distance: float = swipe_vector.x
     
     # Determine target page based on swipe direction and distance
-    var target_page := current_page
+    var target_page: int = current_page
     
     if abs(swipe_distance) >= swipe_threshold:
         if swipe_distance > 0:  # Swipe right → go to previous page

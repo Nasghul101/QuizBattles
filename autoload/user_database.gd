@@ -39,12 +39,12 @@ var current_user: Dictionary = {}
 ##   - {success: false, error_code: String, message: String} on failure
 func create_user(username: String, password: String, email: String) -> Dictionary:
     # Validate username length
-    var username_validation := _validate_username(username)
+    var username_validation: Dictionary = _validate_username(username)
     if not username_validation.success:
         return username_validation
     
     # Validate email format
-    var email_validation := _validate_email(email)
+    var email_validation: Dictionary = _validate_email(email)
     if not email_validation.success:
         return email_validation
     
@@ -65,8 +65,8 @@ func create_user(username: String, password: String, email: String) -> Dictionar
         }
     
     # Hash password and store user
-    var password_hash := _hash_password(password)
-    var user_data := {
+    var password_hash: String = _hash_password(password)
+    var user_data: Dictionary = {
         "username": username,
         "password_hash": password_hash,
         "email": email
@@ -106,7 +106,7 @@ func sign_in(username: String, password: String) -> Dictionary:
     var stored_hash: String = user_data.password_hash
     
     # Verify password hash
-    var provided_hash := _hash_password(password)
+    var provided_hash: String = _hash_password(password)
     if provided_hash != stored_hash:
         return {
             "success": false,
@@ -198,8 +198,8 @@ func _validate_email(email: String) -> Dictionary:
         }
     
     # Check for valid TLD
-    var has_valid_tld := false
-    for tld in VALID_TLDS:
+    var has_valid_tld: bool = false
+    for tld: String in VALID_TLDS:
         if email.ends_with(tld):
             has_valid_tld = true
             break
@@ -223,7 +223,7 @@ func _validate_email(email: String) -> Dictionary:
 ##   - {success: true} if valid
 ##   - {success: false, error_code: String, message: String} if invalid
 func _validate_username(username: String) -> Dictionary:
-    var length := username.length()
+    var length: int = username.length()
     
     if length < MIN_USERNAME_LENGTH:
         return {
@@ -249,7 +249,7 @@ func _validate_username(username: String) -> Dictionary:
 ## @param password: Plain-text password to hash
 ## @return Hex-encoded SHA-256 hash of the password
 func _hash_password(password: String) -> String:
-    var ctx := HashingContext.new()
+    var ctx: HashingContext = HashingContext.new()
     ctx.start(HashingContext.HASH_SHA256)
     ctx.update(password.to_utf8_buffer())
     var hash_bytes: PackedByteArray = ctx.finish()
