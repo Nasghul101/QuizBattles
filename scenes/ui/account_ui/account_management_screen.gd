@@ -30,7 +30,7 @@ func _display_username() -> void:
 
 ## Handle BackButton press - return to main lobby
 func _on_back_button_pressed() -> void:
-    _navigate_to_main_lobby()
+    NavigationUtils.navigate_to_scene("main_lobby")
 
 
 ## Handle LogOffButton press - log out user and return to login screen
@@ -46,23 +46,4 @@ func _on_log_off_button_pressed() -> void:
     print("User %s logged out" % username)
     
     # Navigate to register/login screen
-    _navigate_to_register_login()
-
-
-## Navigate to main lobby screen
-func _navigate_to_main_lobby() -> void:
-    var scene_path := "res://scenes/ui/main_lobby_screen.tscn"
-    if ResourceLoader.exists(scene_path):
-        TransitionManager.change_scene(scene_path)
-    else:
-        push_error("Failed to navigate: main_lobby_screen.tscn not found at " + scene_path)
-        # Fallback already to main lobby, so just log error
-
-
-## Navigate to register/login screen
-func _navigate_to_register_login() -> void:
-    var scene_path := "res://scenes/ui/account_ui/register_login_screen.tscn"
-    if ResourceLoader.exists(scene_path):
-        TransitionManager.change_scene(scene_path)
-    else:
-        push_error("Failed to navigate: register_login_screen.tscn not found at " + scene_path)
+    NavigationUtils.navigate_to_scene("register_login")

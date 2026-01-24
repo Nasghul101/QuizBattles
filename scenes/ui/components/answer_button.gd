@@ -36,10 +36,7 @@ func _ready() -> void:
 func _setup_style() -> void:
     _style_box = StyleBoxFlat.new()
     _style_box.bg_color = neutral_color
-    _style_box.border_width_left = 0
-    _style_box.border_width_right = 0
-    _style_box.border_width_top = 0
-    _style_box.border_width_bottom = 0
+    _configure_style_box_border(0, Color.TRANSPARENT)
     _style_box.corner_radius_top_left = 8
     _style_box.corner_radius_top_right = 8
     _style_box.corner_radius_bottom_left = 8
@@ -53,6 +50,20 @@ func _setup_style() -> void:
     add_theme_stylebox_override("hover", _style_box)
     add_theme_stylebox_override("pressed", _style_box)
     add_theme_stylebox_override("disabled", _style_box)
+
+
+## Configure border properties for style box
+##
+## Args:
+##   width: Border width in pixels
+##   border_color: Border color (only applied if width > 0)
+func _configure_style_box_border(width: int, border_color: Color) -> void:
+    _style_box.border_width_left = width
+    _style_box.border_width_right = width
+    _style_box.border_width_top = width
+    _style_box.border_width_bottom = width
+    if width > 0:
+        _style_box.border_color = border_color
 
 ## Set the answer text and index for this button
 ##
@@ -68,11 +79,7 @@ func _on_button_pressed() -> void:
     disabled = true
     
     # Add white outline to indicate selection
-    _style_box.border_width_left = 3
-    _style_box.border_width_right = 3
-    _style_box.border_width_top = 3
-    _style_box.border_width_bottom = 3
-    _style_box.border_color = selected_outline_color
+    _configure_style_box_border(3, selected_outline_color)
     
     # Emit signal with answer index
     answer_selected.emit(answer_index)
@@ -91,10 +98,7 @@ func reset() -> void:
     disabled = false
     
     # Remove white outline
-    _style_box.border_width_left = 0
-    _style_box.border_width_right = 0
-    _style_box.border_width_top = 0
-    _style_box.border_width_bottom = 0
+    _configure_style_box_border(0, Color.TRANSPARENT)
     
     # Reset to neutral color
     _style_box.bg_color = neutral_color

@@ -70,7 +70,7 @@ func _update_button_state() -> void:
 
 
 func _on_back_button_pressed() -> void:
-    _navigate_to_register_login()
+    NavigationUtils.navigate_to_scene("register_login")
 
 ## Handle Create Account button press
 func _on_create_account_button_pressed() -> void:
@@ -95,10 +95,10 @@ func _on_create_account_button_pressed() -> void:
         var sign_in_result := UserDatabase.sign_in(username, password)
         if sign_in_result.success:
             print("User automatically logged in")
-            _navigate_to_account_management()
+            NavigationUtils.navigate_to_scene("account_management", "register_login")
         else:
             print("ERROR: Failed to log in after account creation: ", sign_in_result.message)
-            _navigate_to_register_login()
+            NavigationUtils.navigate_to_scene("register_login")
     else:
         # Error - log the error message
         print("ERROR: ", result.message)
@@ -107,23 +107,3 @@ func _on_create_account_button_pressed() -> void:
         if result.error_code == "USERNAME_EXISTS":
             _duplicate_username_error = true
             _update_button_state()
-
-
-## Navigate to register/login screen
-func _navigate_to_register_login() -> void:
-    var scene_path := "res://scenes/ui/account_ui/register_login_screen.tscn"
-    if ResourceLoader.exists(scene_path):
-        TransitionManager.change_scene(scene_path)
-    else:
-        push_error("Failed to navigate: register_login_screen.tscn not found at " + scene_path)
-
-
-## Navigate to account management screen after successful registration
-func _navigate_to_account_management() -> void:
-    var scene_path := "res://scenes/ui/account_ui/account_management_screen.tscn"
-    if ResourceLoader.exists(scene_path):
-        TransitionManager.change_scene(scene_path)
-    else:
-        push_error("Failed to navigate: account_management_screen.tscn not found at " + scene_path)
-        # Fallback to register/login on error
-        _navigate_to_register_login()
