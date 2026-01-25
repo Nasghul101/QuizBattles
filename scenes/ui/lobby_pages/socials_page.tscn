@@ -1,4 +1,6 @@
-[gd_scene format=3 uid="uid://crnu6goxc6w28"]
+[gd_scene load_steps=2 format=3 uid="uid://crnu6goxc6w28"]
+
+[ext_resource type="Script" uid="uid://b83dqaa5lkynv" path="res://scenes/ui/lobby_pages/socials_page.gd" id="1_xpe0s"]
 
 [node name="SocialsPage" type="Control"]
 layout_mode = 3
@@ -7,8 +9,68 @@ anchor_right = 1.0
 anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
+script = ExtResource("1_xpe0s")
 
-[node name="Label" type="Label" parent="."]
+[node name="PopupOverlay" type="ColorRect" parent="."]
+visible = false
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+color = Color(0, 0, 0, 0)
+
+[node name="VBoxContainer" type="VBoxContainer" parent="."]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_constants/separation = 59
+
+[node name="Label" type="Label" parent="VBoxContainer"]
+layout_mode = 2
+size_flags_horizontal = 4
+size_flags_vertical = 0
+theme_override_font_sizes/font_size = 60
+text = "Socials Page"
+horizontal_alignment = 1
+vertical_alignment = 1
+
+[node name="FriendsList" type="GridContainer" parent="VBoxContainer"]
+layout_mode = 2
+size_flags_horizontal = 4
+size_flags_vertical = 3
+theme_override_constants/h_separation = 150
+theme_override_constants/v_separation = 100
+columns = 2
+
+[node name="AddNewFriendButton" type="Button" parent="VBoxContainer"]
+custom_minimum_size = Vector2(150, 50)
+layout_mode = 2
+size_flags_horizontal = 4
+text = "Add new friend"
+
+[node name="AddFriendsPopup" type="Panel" parent="."]
+visible = false
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="DragHandle" type="Panel" parent="AddFriendsPopup"]
+custom_minimum_size = Vector2(0, 60)
+layout_mode = 1
+anchors_preset = 10
+anchor_right = 1.0
+offset_bottom = 60.0
+grow_horizontal = 2
+
+[node name="Label" type="Label" parent="AddFriendsPopup/DragHandle"]
 layout_mode = 1
 anchors_preset = 8
 anchor_left = 0.5
@@ -21,5 +83,33 @@ offset_right = 20.0
 offset_bottom = 11.5
 grow_horizontal = 2
 grow_vertical = 2
-theme_override_font_sizes/font_size = 60
-text = "Socials Page"
+text = "Add Friends"
+horizontal_alignment = 1
+vertical_alignment = 1
+
+[node name="VBoxContainer" type="VBoxContainer" parent="AddFriendsPopup"]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_top = 60.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="NameInput" type="TextEdit" parent="AddFriendsPopup/VBoxContainer"]
+custom_minimum_size = Vector2(0, 50)
+layout_mode = 2
+placeholder_text = "Input name"
+
+[node name="Panel" type="PanelContainer" parent="AddFriendsPopup/VBoxContainer"]
+layout_mode = 2
+size_flags_vertical = 3
+
+[node name="AddFriendButton" type="Button" parent="AddFriendsPopup/VBoxContainer"]
+custom_minimum_size = Vector2(150, 50)
+layout_mode = 2
+size_flags_horizontal = 4
+text = "Add friend"
+
+[connection signal="pressed" from="VBoxContainer/AddNewFriendButton" to="." method="_on_add_new_friend_button_pressed"]
+[connection signal="pressed" from="AddFriendsPopup/VBoxContainer/AddFriendButton" to="." method="_on_add_friend_button_pressed"]

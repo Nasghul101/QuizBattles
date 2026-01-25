@@ -271,7 +271,7 @@ func _evict_oldest_cache_entry() -> void:
 
 
 ## Handle HTTP request completion
-func _on_request_completed(result: int, response_code: int, headers: PackedStringArray, body: PackedByteArray) -> void:
+func _on_request_completed(result: int, response_code: int, _headers: PackedStringArray, body: PackedByteArray) -> void:
     var category: String = _current_request_metadata.get("category", "")
     var amount: int = _current_request_metadata.get("amount", 0)
     
