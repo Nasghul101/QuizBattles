@@ -3,20 +3,16 @@ extends Control
 ##
 ## Displays user account information and settings with navigation back to main lobby.
 
+@onready var avatar_container: GridContainer = %AvatarContainer
+@onready var choose_avatar_popup: PanelContainer = %ChooseAvatarPopup
+
+var avatar_component_scene: PackedScene = preload("res://scenes/ui/components/avatar_component.tscn")
+
+
 func _ready() -> void:
     # Display username
     _display_username()
     
-    # Connect BackButton signal
-    var back_button: Button = %BackButton
-    if back_button:
-        back_button.pressed.connect(_on_back_button_pressed)
-    
-    # Connect LogOffButton signal
-    var log_off_button: Button = %LogOffButton
-    if log_off_button:
-        log_off_button.pressed.connect(_on_log_off_button_pressed)
-
 
 ## Display the current user's username in NameLabel
 func _display_username() -> void:
@@ -47,3 +43,55 @@ func _on_log_off_button_pressed() -> void:
     
     # Navigate to register/login screen
     NavigationUtils.navigate_to_scene("register_login")
+
+
+## Handle UserAvatar button press - populate and show avatar chooser popup
+func _on_user_avatar_pressed() -> void:
+    _populate_avatar_container()
+    choose_avatar_popup.visible = true
+
+
+## Populate the avatar container with avatar components from profile_pictures folder
+func _populate_avatar_container() -> void:
+    # Clear existing children
+    for child in avatar_container.get_children():
+        child.queue_free()
+    
+    # Get all PNG files from profile_pictures folder
+    var dir: DirAccess = DirAccess.open("res://assets/profile_pictures/")
+    if dir:
+        dir.list_dir_begin()
+        var file_name: String = dir.get_next()
+        
+        while file_name != "":
+            # Only process PNG files (skip .import files)
+            if file_name.ends_with(".png"):
+                var texture_path: String = "res://assets/profile_pictures/" + file_name
+                var display_name: String = _get_display_name_from_filename(file_name)
+                
+                # Instantiate avatar component
+                var avatar_component: Button = avatar_component_scene.instantiate()
+                avatar_container.add_child(avatar_component)
+                
+                # Configure the component
+                avatar_component.set_avatar_picture(texture_path)
+                avatar_component.set_avatar_name(display_name)
+            
+            file_name = dir.get_next()
+
+
+## Convert filename (e.g., "man_beard.png") to display name (e.g., "Man Beard")
+func _get_display_name_from_filename(file_name: String) -> String:
+    # Remove extension
+    var name_without_ext: String = file_name.trim_suffix(".png")
+    
+    # Split on underscore and capitalize each word
+    var words: PackedStringArray = name_without_ext.split("_")
+    var display_name_parts: PackedStringArray = []
+    
+    for word in words:
+        if word.length() > 0:
+            # Capitalize first letter, keep rest as is
+            display_name_parts.append(word[0].to_upper() + word.substr(1))
+    
+    return " ".join(display_name_parts)

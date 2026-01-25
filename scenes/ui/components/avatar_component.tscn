@@ -1,13 +1,16 @@
-[gd_scene load_steps=2 format=3 uid="uid://kgw55lm1wori"]
+[gd_scene load_steps=3 format=3 uid="uid://kgw55lm1wori"]
 
-[sub_resource type="PlaceholderTexture2D" id="PlaceholderTexture2D_mx5p6"]
+[ext_resource type="Script" uid="uid://dafvxbnoojmeq" path="res://scenes/ui/components/avatar_component.gd" id="1_0pvvy"]
 
-[node name="FriendAvatarComponent" type="Button"]
+[sub_resource type="PlaceholderTexture2D" id="PlaceholderTexture2D_a27k3"]
+
+[node name="AvatarComponent" type="Button"]
 anchors_preset = 15
 anchor_right = 1.0
 anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
+script = ExtResource("1_0pvvy")
 
 [node name="VBoxContainer" type="VBoxContainer" parent="."]
 layout_mode = 1
@@ -23,7 +26,8 @@ custom_minimum_size = Vector2(50, 50)
 layout_mode = 2
 size_flags_horizontal = 4
 size_flags_vertical = 0
-texture = SubResource("PlaceholderTexture2D_mx5p6")
+texture = SubResource("PlaceholderTexture2D_a27k3")
+expand_mode = 1
 
 [node name="NameLabel" type="Label" parent="VBoxContainer"]
 unique_name_in_owner = true
