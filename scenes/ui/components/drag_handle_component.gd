@@ -58,15 +58,15 @@ func _gui_input(event: InputEvent) -> void:
 
 
 ## Start drag interaction
-func _start_drag(position: Vector2) -> void:
+func _start_drag(handle_position: Vector2) -> void:
     is_dragging = true
-    drag_start_pos = position
-    drag_started.emit(position)
+    drag_start_pos = handle_position
+    drag_started.emit(handle_position)
 
 
 ## Update drag state and emit progress
-func _update_drag(position: Vector2) -> void:
-    var delta: Vector2 = position - drag_start_pos
+func _update_drag(handle_position: Vector2) -> void:
+    var delta: Vector2 = handle_position - drag_start_pos
     var distance: float = _calculate_directional_distance(delta)
     var progress: float = clamp(distance / drag_threshold, 0.0, 1.0)
     
@@ -74,13 +74,13 @@ func _update_drag(position: Vector2) -> void:
 
 
 ## End drag interaction and determine dismissal
-func _end_drag(position: Vector2) -> void:
+func _end_drag(handle_position: Vector2) -> void:
     if not is_dragging:
         return
     
     is_dragging = false
     
-    var delta: Vector2 = position - drag_start_pos
+    var delta: Vector2 = handle_position - drag_start_pos
     var final_distance: float = _calculate_directional_distance(delta)
     var should_dismiss: bool = final_distance >= drag_threshold
     

@@ -4,6 +4,8 @@ var is_popup_open: bool = false
 var animation_in_progress: bool = false
 var popup_start_y: float = 0.0
 
+@onready var popup: Panel = %AddFriendsPopup
+@onready var overlay: ColorRect = %PopupOverlay
 
 func open_popup() -> void:
     if animation_in_progress:
@@ -13,8 +15,6 @@ func open_popup() -> void:
     is_popup_open = true
     
     # Get references
-    var popup: Panel = $AddFriendsPopup
-    var overlay: ColorRect = $PopupOverlay
     var viewport_height: float = get_viewport_rect().size.y
     
     # Show overlay and popup
@@ -50,8 +50,6 @@ func close_popup() -> void:
     is_popup_open = false
     
     # Get references
-    var popup: Panel = $AddFriendsPopup
-    var overlay: ColorRect = $PopupOverlay
     var viewport_height: float = get_viewport_rect().size.y
     
     # Create tween for animations
@@ -92,16 +90,12 @@ func _on_drag_handle_component_drag_started(_start_position: Vector2) -> void:
     if not is_popup_open or animation_in_progress:
         return
     
-    var popup: Panel = $AddFriendsPopup
     popup_start_y = popup.position.y
 
 
 func _on_drag_handle_component_drag_updated(delta: Vector2, _total_distance: float, progress: float) -> void:
     if not is_popup_open or animation_in_progress:
         return
-    
-    var popup: Panel = $AddFriendsPopup
-    var overlay: ColorRect = $PopupOverlay
     
     # Update popup position (only allow downward movement)
     var new_y: float = popup_start_y + delta.y
@@ -118,7 +112,6 @@ func _on_drag_handle_component_drag_ended(_final_distance: float, should_dismiss
         close_popup()
     else:
         # Snap back to original position
-        var popup: Panel = $AddFriendsPopup
         var tween: Tween = create_tween()
         tween.set_ease(Tween.EASE_OUT)
         tween.set_trans(Tween.TRANS_CUBIC)

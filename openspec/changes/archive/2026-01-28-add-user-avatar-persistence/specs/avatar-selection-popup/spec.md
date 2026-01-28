@@ -1,55 +1,6 @@
-# avatar-selection-popup Specification
+# avatar-selection-popup Spec Delta
 
-## Purpose
-TBD - created by archiving change 2026-01-25-populate-avatar-chooser-popup. Update Purpose after archive.
-## Requirements
-### Requirement: Display Avatar Options in Modal Popup
-When the user presses the `UserAvatar` button on the Account Management Screen, the `ChooseAvatarPopup` SHALL display as a modal overlay.
-
-#### Scenario: UserAvatar button press shows modal popup
-- **Given**: User is on Account Management Screen
-- **When**: User presses the `UserAvatar` button
-- **Then**: `ChooseAvatarPopup` becomes visible with modal behavior (blocks interaction with elements behind it)
-
----
-
-### Requirement: Populate Avatar Container with Available Avatars
-The `AvatarContainer` SHALL be populated with `AvatarComponent` instances for each PNG file in the `profile_pictures` folder.
-
-#### Scenario: Avatar container populated on popup display
-- **Given**: `ChooseAvatarPopup` is about to be shown
-- **When**: `_on_user_avatar_pressed()` is called
-- **Then**: `AvatarContainer` contains exactly one `AvatarComponent` for each PNG in `res://assets/profile_pictures/`
-- **And**: Each component displays the correct image texture
-- **And**: Each component displays the filename as a display name (e.g., "man_beard.png" → "Man Beard")
-
-#### Scenario: Avatar container is cleared before repopulation
-- **Given**: User pressed `UserAvatar` once and the popup was shown
-- **When**: User presses `UserAvatar` again
-- **Then**: Previous avatar components are removed
-- **And**: `AvatarContainer` is repopulated with fresh instances
-
----
-
-### Requirement: AvatarComponent Exposes Configuration Functions
-`AvatarComponent` SHALL provide utility functions to set its picture and name, and SHALL store the texture path for retrieval.
-
-**Changes from previous version:**
-- Added internal storage of texture_path for later retrieval
-- Added get_avatar_path() method
-
-#### Scenario: Set avatar picture and store path
-**Given** an `AvatarComponent` instance exists  
-**When** `set_avatar_picture("res://assets/profile_pictures/man_suit.png")` is called  
-**Then** the `Picture` TextureRect displays the loaded texture  
-**And** the component internally stores the path "res://assets/profile_pictures/man_suit.png"
-
-#### Scenario: Retrieve stored avatar path
-**Given** an `AvatarComponent` has been configured with `set_avatar_picture("res://assets/profile_pictures/woman_purple.png")`  
-**When** `get_avatar_path()` is called  
-**Then** it returns "res://assets/profile_pictures/woman_purple.png"
-
----
+## ADDED Requirements
 
 ### Requirement: Enable Avatar Selection via Component Press
 Each `AvatarComponent` in the popup SHALL be pressable and SHALL trigger avatar update when pressed.
@@ -121,3 +72,24 @@ If an avatar path fails to load, the system SHALL fall back to the default avata
 
 ---
 
+## MODIFIED Requirements
+
+### Requirement: AvatarComponent Exposes Configuration Functions
+`AvatarComponent` SHALL provide utility functions to set its picture and name, and SHALL store the texture path for retrieval.
+
+**Changes from previous version:**
+- Added internal storage of texture_path for later retrieval
+- Added get_avatar_path() method
+
+#### Scenario: Set avatar picture and store path
+**Given** an `AvatarComponent` instance exists  
+**When** `set_avatar_picture("res://assets/profile_pictures/man_suit.png")` is called  
+**Then** the `Picture` TextureRect displays the loaded texture  
+**And** the component internally stores the path "res://assets/profile_pictures/man_suit.png"
+
+#### Scenario: Retrieve stored avatar path
+**Given** an `AvatarComponent` has been configured with `set_avatar_picture("res://assets/profile_pictures/woman_purple.png")`  
+**When** `get_avatar_path()` is called  
+**Then** it returns "res://assets/profile_pictures/woman_purple.png"
+
+---

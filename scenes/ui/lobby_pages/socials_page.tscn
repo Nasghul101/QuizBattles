@@ -13,6 +13,7 @@ grow_vertical = 2
 script = ExtResource("1_xpe0s")
 
 [node name="PopupOverlay" type="ColorRect" parent="."]
+unique_name_in_owner = true
 visible = false
 layout_mode = 1
 anchors_preset = 15
@@ -55,6 +56,7 @@ size_flags_horizontal = 4
 text = "Add new friend"
 
 [node name="AddFriendsPopup" type="Panel" parent="."]
+unique_name_in_owner = true
 visible = false
 layout_mode = 1
 anchors_preset = 15

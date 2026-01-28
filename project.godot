@@ -11,7 +11,7 @@ config_version=5
 [application]
 
 config/name="quizduell"
-run/main_scene="uid://mhewb3r1p5f0"
+run/main_scene="uid://mt4cflygcn3b"
 config/features=PackedStringArray("4.5", "Forward Plus")
 config/icon="res://icon.svg"
 

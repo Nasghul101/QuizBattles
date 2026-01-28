@@ -1,8 +1,8 @@
-[gd_scene load_steps=3 format=3 uid="uid://ysbddqt5mwwf"]
+[gd_scene load_steps=4 format=3 uid="uid://ysbddqt5mwwf"]
 
 [ext_resource type="Script" uid="uid://crr12b7mb5suu" path="res://scenes/ui/account_ui/account_management_screen.gd" id="1_d4e5f"]
-
-[sub_resource type="PlaceholderTexture2D" id="PlaceholderTexture2D_nmdvi"]
+[ext_resource type="Texture2D" uid="uid://3n1oqbk583e1" path="res://assets/profile_pictures/man_standard.png" id="2_2qluw"]
+[ext_resource type="PackedScene" uid="uid://deyncocxwp1mp" path="res://scenes/ui/components/drag_handle_component.tscn" id="2_xldbt"]
 
 [node name="AccountManagementScreen" type="Control"]
 layout_mode = 3
@@ -43,7 +43,7 @@ vertical_alignment = 1
 custom_minimum_size = Vector2(100, 100)
 layout_mode = 2
 size_flags_horizontal = 4
-icon = SubResource("PlaceholderTexture2D_nmdvi")
+icon = ExtResource("2_2qluw")
 icon_alignment = 1
 expand_icon = true
 
@@ -110,6 +110,12 @@ size_flags_vertical = 3
 theme_override_constants/h_separation = 90
 columns = 6
 
+[node name="DragHandle" parent="ChooseAvatarPopup" instance=ExtResource("2_xldbt")]
+layout_mode = 2
+
 [connection signal="pressed" from="BackButton" to="." method="_on_back_button_pressed"]
 [connection signal="pressed" from="VBoxContainer/UserAvatar" to="." method="_on_user_avatar_pressed"]
 [connection signal="pressed" from="VBoxContainer/LogOffButton" to="." method="_on_log_off_button_pressed"]
+[connection signal="drag_ended" from="ChooseAvatarPopup/DragHandle" to="." method="_on_drag_handle_drag_ended"]
+[connection signal="drag_started" from="ChooseAvatarPopup/DragHandle" to="." method="_on_drag_handle_drag_started"]
+[connection signal="drag_updated" from="ChooseAvatarPopup/DragHandle" to="." method="_on_drag_handle_drag_updated"]

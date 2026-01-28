@@ -20,6 +20,9 @@ const MIN_USERNAME_LENGTH := 5
 ## Maximum username length
 const MAX_USERNAME_LENGTH := 15
 
+## Default avatar path for new users
+const DEFAULT_AVATAR_PATH := "res://assets/profile_pictures/man_standard.png"
+
 ## In-memory user storage: Dictionary mapping username -> user data
 var _users: Dictionary = {}
 
@@ -69,7 +72,8 @@ func create_user(username: String, password: String, email: String) -> Dictionar
     var user_data: Dictionary = {
         "username": username,
         "password_hash": password_hash,
-        "email": email
+        "email": email,
+        "avatar_path": DEFAULT_AVATAR_PATH
     }
     _users[username] = user_data
     
@@ -78,7 +82,8 @@ func create_user(username: String, password: String, email: String) -> Dictionar
         "success": true,
         "user": {
             "username": username,
-            "email": email
+            "email": email,
+            "avatar_path": DEFAULT_AVATAR_PATH
         }
     }
 
@@ -117,7 +122,8 @@ func sign_in(username: String, password: String) -> Dictionary:
     # Set current user (without password hash)
     current_user = {
         "username": user_data.username,
-        "email": user_data.email
+        "email": user_data.email,
+        "avatar_path": user_data.avatar_path
     }
     
     # Return success with user data
@@ -145,6 +151,38 @@ func get_current_user() -> Dictionary:
 ## @return true if a user is signed in, false otherwise
 func is_signed_in() -> bool:
     return not current_user.is_empty()
+
+
+## Update the avatar path for the currently signed-in user.
+##
+## @param avatar_path: New avatar path to set
+## @return Dictionary with success status and error info:
+##   - {success: true, avatar_path: String} on success
+##   - {success: false, error_code: String, message: String} on failure
+func update_avatar(avatar_path: String) -> Dictionary:
+    # Check if user is signed in
+    if not is_signed_in():
+        return {
+            "success": false,
+            "error_code": "NOT_SIGNED_IN",
+            "message": "No user is currently signed in"
+        }
+    
+    # Get current username
+    var username: String = current_user.username
+    
+    # Update avatar_path in stored user data
+    if _users.has(username):
+        _users[username].avatar_path = avatar_path
+    
+    # Update avatar_path in current session
+    current_user.avatar_path = avatar_path
+    
+    # Return success
+    return {
+        "success": true,
+        "avatar_path": avatar_path
+    }
 
 
 ## Check if a username is already registered.
