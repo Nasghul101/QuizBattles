@@ -1,6 +1,7 @@
-[gd_scene load_steps=2 format=3 uid="uid://crnu6goxc6w28"]
+[gd_scene load_steps=3 format=3 uid="uid://crnu6goxc6w28"]
 
 [ext_resource type="Script" uid="uid://b83dqaa5lkynv" path="res://scenes/ui/lobby_pages/socials_page.gd" id="1_xpe0s"]
+[ext_resource type="PackedScene" uid="uid://deyncocxwp1mp" path="res://scenes/ui/components/drag_handle_component.tscn" id="2_hfrco"]
 
 [node name="SocialsPage" type="Control"]
 layout_mode = 3
@@ -62,31 +63,6 @@ anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
 
-[node name="DragHandle" type="Panel" parent="AddFriendsPopup"]
-custom_minimum_size = Vector2(0, 60)
-layout_mode = 1
-anchors_preset = 10
-anchor_right = 1.0
-offset_bottom = 60.0
-grow_horizontal = 2
-
-[node name="Label" type="Label" parent="AddFriendsPopup/DragHandle"]
-layout_mode = 1
-anchors_preset = 8
-anchor_left = 0.5
-anchor_top = 0.5
-anchor_right = 0.5
-anchor_bottom = 0.5
-offset_left = -20.0
-offset_top = -11.5
-offset_right = 20.0
-offset_bottom = 11.5
-grow_horizontal = 2
-grow_vertical = 2
-text = "Add Friends"
-horizontal_alignment = 1
-vertical_alignment = 1
-
 [node name="VBoxContainer" type="VBoxContainer" parent="AddFriendsPopup"]
 layout_mode = 1
 anchors_preset = 15
@@ -111,5 +87,13 @@ layout_mode = 2
 size_flags_horizontal = 4
 text = "Add friend"
 
+[node name="DragHandleComponent" parent="AddFriendsPopup" instance=ExtResource("2_hfrco")]
+z_index = 4
+layout_mode = 1
+anchors_preset = 15
+
 [connection signal="pressed" from="VBoxContainer/AddNewFriendButton" to="." method="_on_add_new_friend_button_pressed"]
 [connection signal="pressed" from="AddFriendsPopup/VBoxContainer/AddFriendButton" to="." method="_on_add_friend_button_pressed"]
+[connection signal="drag_ended" from="AddFriendsPopup/DragHandleComponent" to="." method="_on_drag_handle_component_drag_ended"]
+[connection signal="drag_started" from="AddFriendsPopup/DragHandleComponent" to="." method="_on_drag_handle_component_drag_started"]
+[connection signal="drag_updated" from="AddFriendsPopup/DragHandleComponent" to="." method="_on_drag_handle_component_drag_updated"]

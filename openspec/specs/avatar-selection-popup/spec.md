@@ -1,9 +1,10 @@
-# Spec Delta: Avatar Selection Popup
+# avatar-selection-popup Specification
 
-## ADDED Requirements
-
+## Purpose
+TBD - created by archiving change 2026-01-25-populate-avatar-chooser-popup. Update Purpose after archive.
+## Requirements
 ### Requirement: Display Avatar Options in Modal Popup
-When the user presses the `UserAvatar` button on the Account Management Screen, the `ChooseAvatarPopup` displays as a modal overlay.
+When the user presses the `UserAvatar` button on the Account Management Screen, the `ChooseAvatarPopup` SHALL display as a modal overlay.
 
 #### Scenario: UserAvatar button press shows modal popup
 - **Given**: User is on Account Management Screen
@@ -13,7 +14,7 @@ When the user presses the `UserAvatar` button on the Account Management Screen, 
 ---
 
 ### Requirement: Populate Avatar Container with Available Avatars
-The `AvatarContainer` is populated with `AvatarComponent` instances for each PNG file in the `profile_pictures` folder.
+The `AvatarContainer` SHALL be populated with `AvatarComponent` instances for each PNG file in the `profile_pictures` folder.
 
 #### Scenario: Avatar container populated on popup display
 - **Given**: `ChooseAvatarPopup` is about to be shown
@@ -31,7 +32,7 @@ The `AvatarContainer` is populated with `AvatarComponent` instances for each PNG
 ---
 
 ### Requirement: AvatarComponent Exposes Configuration Functions
-`AvatarComponent` provides utility functions to set its picture and name.
+`AvatarComponent` SHALL provide utility functions to set its picture and name.
 
 #### Scenario: Set avatar picture via utility function
 - **Given**: An `AvatarComponent` instance exists
@@ -45,12 +46,3 @@ The `AvatarContainer` is populated with `AvatarComponent` instances for each PNG
 
 ---
 
-## MODIFIED Requirements
-
-(None at this stage.)
-
----
-
-## REMOVED Requirements
-
-(None at this stage.)

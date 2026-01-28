@@ -17,5 +17,5 @@ func set_avatar_picture(texture_path: String) -> void:
 
 
 ## Set the avatar name label text
-func set_avatar_name(name: String) -> void:
-    name_label.text = name
+func set_avatar_name(custom_name: String) -> void:
+    name_label.text = custom_name

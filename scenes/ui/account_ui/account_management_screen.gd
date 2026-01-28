@@ -67,7 +67,7 @@ func _populate_avatar_container() -> void:
             # Only process PNG files (skip .import files)
             if file_name.ends_with(".png"):
                 var texture_path: String = "res://assets/profile_pictures/" + file_name
-                var display_name: String = _get_display_name_from_filename(file_name)
+                var display_name: String = ""
                 
                 # Instantiate avatar component
                 var avatar_component: Button = avatar_component_scene.instantiate()

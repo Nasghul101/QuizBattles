@@ -8,6 +8,17 @@
 
 Implement popup behavior to dynamically populate the `ChooseAvatarPopup` with avatar selection options when the user presses the `UserAvatar` button on the Account Management Screen. Each avatar option will be represented as an `AvatarComponent` displaying a profile picture from the `profile_pictures` folder along with its filename as a label.
 
+## Why
+
+Users need a visual way to select their profile avatar. The Account Management Screen already has a `UserAvatar` button and `ChooseAvatarPopup` UI structure, but they are not yet connected or populated with actual avatar options. This change bridges that gap by dynamically loading available avatars and displaying them in a modal popup.
+
+## What Changes
+
+- `account_management_screen.gd` will handle the `UserAvatar` button press signal and show the `ChooseAvatarPopup`
+- `account_management_screen.gd` will scan `res://assets/profile_pictures/` and instantiate `AvatarComponent` instances for each PNG
+- `avatar_component.gd` will expose `set_avatar_picture()` and `set_avatar_name()` utility functions
+- `ChooseAvatarPopup` will be configured as modal
+
 ## Goals
 
 1. Populate `AvatarContainer` with `AvatarComponent` instances for each PNG in `assets/profile_pictures/`
