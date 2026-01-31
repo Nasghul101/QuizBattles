@@ -6,7 +6,7 @@ extends Control
 @onready var avatar_container: GridContainer = %AvatarContainer
 @onready var choose_avatar_popup: PanelContainer = %ChooseAvatarPopup
 @onready var user_avatar_button: Button = $VBoxContainer/UserAvatar
-
+ 
 var avatar_component_scene: PackedScene = preload("res://scenes/ui/components/avatar_component.tscn")
 
 ## Track popup start position for drag interaction

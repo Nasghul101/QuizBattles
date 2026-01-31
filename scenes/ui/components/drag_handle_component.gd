@@ -40,8 +40,14 @@ enum DragDirection {
 ## Current drag state
 var is_dragging: bool = false
 
+## Tracking if mouse is pressed but not yet determined to be a drag
+var is_pressed: bool = false
+
 ## Initial mouse position when drag started
 var drag_start_pos: Vector2 = Vector2.ZERO
+
+## Small threshold to differentiate click from drag
+const DRAG_START_THRESHOLD: float = 5.0
 
 
 ## Handle mouse and touch input for drag detection
@@ -49,12 +55,28 @@ func _gui_input(event: InputEvent) -> void:
     if event is InputEventMouseButton:
         if event.button_index == MOUSE_BUTTON_LEFT:
             if event.pressed:
-                _start_drag(event.global_position)
+                is_pressed = true
+                drag_start_pos = event.global_position
+                # Don't accept event yet - wait to see if it's a drag
             else:
+                var was_dragging: bool = is_dragging
                 _end_drag(event.global_position)
+                is_pressed = false
+                # Only consume release if we were actually dragging
+                if was_dragging:
+                    accept_event()
     
-    elif event is InputEventMouseMotion and is_dragging:
-        _update_drag(event.global_position)
+    elif event is InputEventMouseMotion:
+        if is_pressed and not is_dragging:
+            # Check if we've moved enough to start a drag
+            var delta: Vector2 = event.global_position - drag_start_pos
+            if delta.length() >= DRAG_START_THRESHOLD:
+                _start_drag(drag_start_pos)
+                accept_event()
+        
+        if is_dragging:
+            _update_drag(event.global_position)
+            accept_event()  # Consume motion events while dragging
 
 
 ## Start drag interaction

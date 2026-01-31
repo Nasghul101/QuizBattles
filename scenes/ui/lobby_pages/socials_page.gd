@@ -1,11 +1,53 @@
 extends Control
 
+## Avatar component scene for displaying search results
+const AVATAR_COMPONENT: PackedScene = preload("res://scenes/ui/components/avatar_component.tscn")
+
 var is_popup_open: bool = false
 var animation_in_progress: bool = false
 var popup_start_y: float = 0.0
 
 @onready var popup: Panel = %AddFriendsPopup
 @onready var overlay: ColorRect = %PopupOverlay
+@onready var name_input: TextEdit = %NameInput
+@onready var search_results: GridContainer = %SearchResults
+
+
+func _ready() -> void:
+    # Connect NameInput text_changed signal
+    name_input.text_changed.connect(_on_name_input_text_changed)
+
+
+## Handle text changes in the NameInput field to trigger search
+func _on_name_input_text_changed() -> void:
+    var query: String = name_input.text
+    _update_search_results(query)
+
+
+## Update search results based on query string
+##
+## Clears existing results and displays new avatar components for matching users.
+##
+## @param query: Search string to match against usernames
+func _update_search_results(query: String) -> void:
+    # Clear all existing children from SearchResults container
+    for child in search_results.get_children():
+        child.queue_free()
+    
+    # Return early if query is empty
+    if query.is_empty():
+        return
+    
+    # Search for users matching the query
+    var results: Array = UserDatabase.search_users_by_username(query)
+    
+    # Create and add avatar component for each result
+    for user_data: Dictionary in results:
+        var avatar: Button = AVATAR_COMPONENT.instantiate()
+        search_results.add_child(avatar)
+        avatar.set_avatar_name(user_data.username)
+        avatar.set_avatar_picture(user_data.avatar_path)
+
 
 func open_popup() -> void:
     if animation_in_progress:

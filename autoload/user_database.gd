@@ -213,9 +213,45 @@ func get_user_by_username(username: String) -> Dictionary:
         var user_data : Dictionary = _users[username]
         return {
             "username": user_data.username,
-            "email": user_data.email
+            "email": user_data.email,
+            "avatar_path": user_data.avatar_path
         }
     return {}
+
+
+## Search for users by username with case-insensitive partial matching.
+##
+## Performs partial substring matching (case-insensitive) and excludes
+## the currently logged-in user from results.
+##
+## @param query: Search string to match against usernames
+## @return Array of user dictionaries with username, email, and avatar_path
+func search_users_by_username(query: String) -> Array:
+    var results: Array = []
+    
+    # Return empty array if query is empty
+    if query.is_empty():
+        return results
+    
+    # Convert query to lowercase for case-insensitive matching
+    var query_lower: String = query.to_lower()
+    
+    # Search through all users
+    for username: String in _users.keys():
+        # Exclude current user from results
+        if is_signed_in() and username == current_user.username:
+            continue
+        
+        # Check if username contains query (case-insensitive)
+        if username.to_lower().contains(query_lower):
+            var user_data: Dictionary = _users[username]
+            results.append({
+                "username": user_data.username,
+                "email": user_data.email,
+                "avatar_path": user_data.avatar_path
+            })
+    
+    return results
 
 
 ## Validate email format.
