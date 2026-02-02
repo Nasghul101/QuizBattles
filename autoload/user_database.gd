@@ -23,11 +23,57 @@ const MAX_USERNAME_LENGTH := 15
 ## Default avatar path for new users
 const DEFAULT_AVATAR_PATH := "res://assets/profile_pictures/man_standard.png"
 
+## Path to the JSON file where user data is stored
+const DATABASE_PATH := "res://data/user_database.json"
+
 ## In-memory user storage: Dictionary mapping username -> user data
 var _users: Dictionary = {}
 
 ## Currently logged-in user (empty Dictionary if not signed in)
 var current_user: Dictionary = {}
+
+
+func _ready() -> void:
+    _load_database()
+    # Connect to GlobalSignalBus to handle incoming notifications
+    GlobalSignalBus.notification_received.connect(_on_notification_received_global)
+
+
+## Handle notification received from GlobalSignalBus
+## Adds notification to recipient's database regardless of who is currently logged in
+func _on_notification_received_global(notification_data: Dictionary) -> void:
+    var recipient: String = notification_data.get("recipient_username", "")
+    if recipient.is_empty():
+        push_error("Cannot add notification: recipient_username is missing")
+        return
+    
+    # Check for duplicate friend requests
+    if notification_data.has("action_data"):
+        var action_data: Dictionary = notification_data.action_data
+        if action_data.get("type") == "friend_request":
+            var sender: String = notification_data.get("sender", "")
+            if _has_pending_friend_request(recipient, sender):
+                push_warning("Friend request already sent to %s from %s" % [recipient, sender])
+                return
+    
+    # Add notification to recipient's account
+    add_notification(recipient, notification_data)
+
+
+## Check if a pending friend request already exists from sender to recipient
+func _has_pending_friend_request(recipient: String, sender: String) -> bool:
+    if not user_exists(recipient):
+        return false
+    
+    var notifications: Array = get_notifications(recipient)
+    
+    for notification: Dictionary in notifications:
+        if notification.has("action_data") and notification.action_data is Dictionary:
+            var action_data: Dictionary = notification.action_data
+            if action_data.get("type") == "friend_request" and notification.get("sender") == sender:
+                return true
+    
+    return false
 
 
 ## Create a new user account with username, password, and email.
@@ -73,10 +119,11 @@ func create_user(username: String, password: String, email: String) -> Dictionar
         "username": username,
         "password_hash": password_hash,
         "email": email,
-        "avatar_path": DEFAULT_AVATAR_PATH
+        "avatar_path": DEFAULT_AVATAR_PATH,
+        "notifications": []
     }
     _users[username] = user_data
-    
+    _save_database()
     # Return success with public user data (no password hash)
     return {
         "success": true,
@@ -174,8 +221,9 @@ func update_avatar(avatar_path: String) -> Dictionary:
     # Update avatar_path in stored user data
     if _users.has(username):
         _users[username].avatar_path = avatar_path
+        _save_database()
     
-    # Update avatar_path in current session
+    # Update current_user session to reflect the change
     current_user.avatar_path = avatar_path
     
     # Return success
@@ -328,3 +376,194 @@ func _hash_password(password: String) -> String:
     ctx.update(password.to_utf8_buffer())
     var hash_bytes: PackedByteArray = ctx.finish()
     return hash_bytes.hex_encode()
+
+
+## Add a notification to a user's notification list.
+##
+## Automatically generates unique ID and timestamp if not provided.
+## Stores notification in user's record and persists to database.
+##
+## @param username: Username of recipient
+## @param notification_data: Dictionary containing notification details:
+##   - message: String - The notification text
+##   - sender: String - Username or "System"
+##   - has_actions: bool - Whether to show accept/deny buttons
+##   - action_data: Dictionary - Custom data for handling actions
+##   - id (optional): String - Auto-generated if not provided
+##   - timestamp (optional): String - Auto-generated if not provided (ISO 8601)
+##   - is_read (optional): bool - Defaults to false
+func add_notification(username: String, notification_data: Dictionary) -> void:
+    # Validate user exists
+    if not user_exists(username):
+        push_error("Cannot add notification: user '%s' does not exist" % username)
+        return
+    
+    # Ensure user has notifications array
+    if not _users[username].has("notifications"):
+        _users[username].notifications = []
+    
+    # Auto-generate ID if not provided
+    if not notification_data.has("id"):
+        notification_data.id = _generate_notification_id()
+    
+    # Auto-generate timestamp if not provided
+    if not notification_data.has("timestamp"):
+        notification_data.timestamp = Time.get_datetime_string_from_system(true)
+    
+    # Default is_read to false
+    if not notification_data.has("is_read"):
+        notification_data.is_read = false
+    
+    # Append notification to user's list
+    _users[username].notifications.append(notification_data)
+    
+    # Persist to disk
+    _save_database()
+
+
+## Remove a notification from a user's notification list by ID.
+##
+## @param username: Username of the user
+## @param notification_id: Unique ID of the notification to remove
+func remove_notification(username: String, notification_id: String) -> void:
+    # Validate user exists
+    if not user_exists(username):
+        push_error("Cannot remove notification: user '%s' does not exist" % username)
+        return
+    
+    # Check if user has notifications array
+    if not _users[username].has("notifications"):
+        return
+    
+    var notifications: Array = _users[username].notifications
+    
+    # Find and remove notification by ID
+    for i in range(notifications.size()):
+        if notifications[i].has("id") and notifications[i].id == notification_id:
+            notifications.remove_at(i)
+            _save_database()
+            return
+
+
+## Get all notifications for a specific user.
+##
+## @param username: Username to get notifications for
+## @return Array of notification dictionaries, or empty array if user doesn't exist
+func get_notifications(username: String) -> Array:
+    if not user_exists(username):
+        return []
+    
+    if not _users[username].has("notifications"):
+        return []
+    
+    return _users[username].notifications.duplicate(true)
+
+
+## Mark a notification as read for a user.
+##
+## @param username: Username of the user
+## @param notification_id: Unique ID of the notification to mark as read
+func mark_notification_read(username: String, notification_id: String) -> void:
+    # Validate user exists
+    if not user_exists(username):
+        push_error("Cannot mark notification as read: user '%s' does not exist" % username)
+        return
+    
+    # Check if user has notifications array
+    if not _users[username].has("notifications"):
+        return
+    
+    var notifications: Array = _users[username].notifications
+    
+    # Find and update notification
+    for notification: Dictionary in notifications:
+        if notification.has("id") and notification.id == notification_id:
+            notification.is_read = true
+            _save_database()
+            return
+
+
+## Get the count of unread notifications for a user.
+##
+## @param username: Username to check
+## @return Number of unread notifications (is_read == false)
+func get_unread_count(username: String) -> int:
+    if not user_exists(username):
+        return 0
+    
+    if not _users[username].has("notifications"):
+        return 0
+    
+    var unread_count: int = 0
+    for notification: Dictionary in _users[username].notifications:
+        if notification.has("is_read") and not notification.is_read:
+            unread_count += 1
+    
+    return unread_count
+
+
+## Generate a unique notification ID.
+##
+## Combines current time in milliseconds with a random component.
+##
+## @return Unique ID string
+func _generate_notification_id() -> String:
+    var time_ms: int = Time.get_ticks_msec()
+    var random_part: int = randi() % 10000
+    return "%d_%d" % [time_ms, random_part]
+
+
+## Save the user database to a JSON file.
+func _save_database() -> void:
+    # Convert users dictionary to JSON
+    var json_string: String = JSON.stringify(_users, "\t")
+    
+    # Open file for writing
+    var file: FileAccess = FileAccess.open(DATABASE_PATH, FileAccess.WRITE)
+    if file == null:
+        push_error("Failed to save user database: " + str(FileAccess.get_open_error()))
+        return
+    
+    # Write JSON data to file
+    file.store_string(json_string)
+    file.close()
+
+
+## Load the user database from a JSON file.
+## Creates a new empty database file if it doesn't exist.
+func _load_database() -> void:
+    # Check if file exists
+    if not FileAccess.file_exists(DATABASE_PATH):
+        print("User database not found, creating new database at: " + DATABASE_PATH)
+        _users = {}
+        _save_database()
+        return
+    
+    # Open file for reading
+    var file: FileAccess = FileAccess.open(DATABASE_PATH, FileAccess.READ)
+    if file == null:
+        push_error("Failed to load user database: " + str(FileAccess.get_open_error()))
+        _users = {}
+        return
+    
+    # Read and parse JSON data
+    var json_string: String = file.get_as_text()
+    file.close()
+    
+    # Parse JSON
+    var json: JSON = JSON.new()
+    var parse_result: Error = json.parse(json_string)
+    
+    if parse_result != OK:
+        push_error("Failed to parse user database JSON: " + json.get_error_message())
+        _users = {}
+        return
+    
+    # Load parsed data
+    var data: Variant = json.data
+    if data is Dictionary:
+        _users = data
+        print("User database loaded successfully. Users: " + str(_users.size()))
+    else:
+        push_error("User database JSON is not a valid dictionary")
+        _users = {}

@@ -4,10 +4,20 @@ extends Control
 ## Entry point screen that provides access to game features and account management.
 ## Conditionally navigates to account screens based on user login state.
 ## Supports multi-page navigation with swipe gestures and bottom navigation buttons.
+## Displays and manages notifications with visual indicators.
+
+## Preload notification component for instantiation
+const NOTIFICATION_COMPONENT = preload("res://scenes/ui/components/notification_component.tscn")
+
+## Color to apply to notifications button when unread notifications exist
+@export var notification_indicator_color: Color = Color(1.0, 0.8, 0.0)  # Yellow
 
 ## Reference to the container holding page content
 @onready var page_clip_container: Control = %PageClipContainer
 @onready var pages_container: HBoxContainer = %PagesContainer
+@onready var notifications_button: Button = $VBoxContainer/PanelContainer/HBoxContainer/HBoxContainer/NotificationsButton
+@onready var notifications_popup: Panel = $NotificationsPopUp
+@onready var notification_list_container: VBoxContainer = %NotificationListContainer
 
 ## Swipe detection state
 var swipe_start_pos: Vector2 = Vector2.ZERO
@@ -20,8 +30,20 @@ var page_width: float = 0.0
 var current_page: int = 0
 var is_animating: bool = false
 
+## Track instantiated notification components
+var notification_components: Array[Control] = []
+
 
 func _ready() -> void:
+    # Connect to GlobalSignalBus for notifications
+    GlobalSignalBus.notification_received.connect(_on_notification_received)
+    
+    # Load existing notifications for current user
+    _load_existing_notifications()
+    
+    # Update notification indicator
+    _update_notification_indicator()
+    
     # Calculate page width from viewport
     await get_tree().process_frame  # Wait for layout
     page_width = page_clip_container.size.x
@@ -156,3 +178,108 @@ func _on_account_button_pressed() -> void:
     else:
         # User is not logged in - navigate to register/login
         NavigationUtils.navigate_to_scene("register_login")
+
+
+## Open notifications popup
+func _on_notifications_button_pressed() -> void:
+    notifications_popup.visible = true
+
+
+## Close notifications popup
+func _on_close_pop_up_button_pressed() -> void:
+    notifications_popup.visible = false
+
+
+## Load existing notifications from database and display them
+func _load_existing_notifications() -> void:
+    # Only load if user is signed in
+    if not UserDatabase.is_signed_in():
+        return
+    
+    var notifications: Array = UserDatabase.get_notifications(UserDatabase.current_user.username)
+    
+    # Instantiate a component for each notification
+    for notification: Dictionary in notifications:
+        _instantiate_notification_component(notification)
+
+
+## Handle notification received signal
+func _on_notification_received(notification_data: Dictionary) -> void:
+    # Check if notification is for current user
+    if not UserDatabase.is_signed_in():
+        return
+    
+    var recipient: String = notification_data.get("recipient_username", "")
+    if recipient != UserDatabase.current_user.username:
+        return
+    
+    # Note: Notification is already added to database by UserDatabase autoload
+    # We just need to display it if the recipient is currently logged in
+    
+    # Instantiate component to display notification
+    _instantiate_notification_component(notification_data)
+    
+    # Update indicator
+    _update_notification_indicator()
+
+
+## Instantiate a notification component and add to list
+func _instantiate_notification_component(notification_data: Dictionary) -> void:
+    var component: Control = NOTIFICATION_COMPONENT.instantiate()
+    
+    # Add to list container first so @onready variables are initialized
+    notification_list_container.add_child(component)
+    notification_components.append(component)
+    
+    # Set notification data after component is in tree
+    if component.has_method("set_notification_data"):
+        component.set_notification_data(notification_data)
+    
+    # Connect action_taken signal
+    if component.has_signal("action_taken"):
+        component.action_taken.connect(_on_notification_action)
+
+
+## Handle notification action (accept/deny)
+func _on_notification_action(notification_id: String, action: String) -> void:
+    # Only handle if user is signed in
+    if not UserDatabase.is_signed_in():
+        return
+    
+    # Remove from database
+    UserDatabase.remove_notification(UserDatabase.current_user.username, notification_id)
+    
+    # Emit global signal for systems to handle action
+    GlobalSignalBus.notification_action_taken.emit(notification_id, action)
+    
+    # Find and remove component from UI
+    for i in range(notification_components.size()):
+        var component: Control = notification_components[i]
+        
+        # Check if this component matches the notification_id
+        if component.has_method("set_notification_data"):
+            # Access notification_data if available
+            if component.get("notification_data") is Dictionary:
+                var data: Dictionary = component.get("notification_data")
+                if data.get("id") == notification_id:
+                    # Remove from array and free
+                    notification_components.remove_at(i)
+                    component.queue_free()
+                    break
+    
+    # Update indicator
+    _update_notification_indicator()
+
+
+## Update visual indicator on notifications button based on unread count
+func _update_notification_indicator() -> void:
+    if not UserDatabase.is_signed_in():
+        notifications_button.modulate = Color.WHITE
+        return
+    
+    var unread_count: int = UserDatabase.get_unread_count(UserDatabase.current_user.username)
+    
+    if unread_count > 0:
+        notifications_button.modulate = notification_indicator_color
+    else:
+        notifications_button.modulate = Color.WHITE

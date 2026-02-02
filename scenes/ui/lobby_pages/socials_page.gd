@@ -47,6 +47,9 @@ func _update_search_results(query: String) -> void:
         search_results.add_child(avatar)
         avatar.set_avatar_name(user_data.username)
         avatar.set_avatar_picture(user_data.avatar_path)
+        
+        # Connect pressed signal to send friend request
+        avatar.pressed.connect(_on_search_avatar_pressed.bind(user_data.username))
 
 
 func open_popup() -> void:
@@ -119,6 +122,32 @@ func toggle_popup() -> void:
         close_popup()
     else:
         open_popup()
+
+
+## Handle avatar clicked in search results - send friend request notification
+func _on_search_avatar_pressed(username: String) -> void:
+    # Ensure user is signed in before sending friend request
+    if not UserDatabase.is_signed_in():
+        return
+    
+    # Create notification data for friend request
+    var notification_data: Dictionary = {
+        "recipient_username": username,
+        "message": "Friend request from %s" % UserDatabase.current_user.username,
+        "sender": UserDatabase.current_user.username,
+        "has_actions": true,
+        "action_data": {
+            "type": "friend_request",
+            "sender_id": UserDatabase.current_user.username
+        }
+    }
+    
+    # Emit notification via GlobalSignalBus
+    GlobalSignalBus.notification_received.emit(notification_data)
+    
+    # Provide user feedback (optional: could show a toast or label)
+    print("Friend request sent to %s" % username)
+
 
 func _on_add_friend_button_pressed() -> void:
     pass # Replace with function body.

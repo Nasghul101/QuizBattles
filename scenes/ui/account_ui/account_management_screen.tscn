@@ -111,7 +111,9 @@ theme_override_constants/h_separation = 90
 columns = 6
 
 [node name="DragHandle" parent="ChooseAvatarPopup" instance=ExtResource("2_xldbt")]
+custom_minimum_size = Vector2(0, 100)
 layout_mode = 2
+size_flags_vertical = 0
 
 [connection signal="pressed" from="BackButton" to="." method="_on_back_button_pressed"]
 [connection signal="pressed" from="VBoxContainer/UserAvatar" to="." method="_on_user_avatar_pressed"]
