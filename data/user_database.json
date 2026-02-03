@@ -1,57 +1,53 @@
 {
-    "linus": {
-        "avatar_path": "res://assets/profile_pictures/man_standard.png",
-        "email": "linus@test.de",
-        "notifications": [
-            {
-                "action_data": {
-                    "sender_id": "robin",
-                    "type": "friend_request"
-                },
-                "has_actions": true,
-                "id": "74735_561",
-                "is_read": false,
-                "message": "Friend request from robin",
-                "recipient_username": "linus",
-                "sender": "robin",
-                "timestamp": "2026-02-02T13:17:50"
-            }
-        ],
-        "password_hash": "a665a45920422f9d417e4867efdc4fb8a04a1f3fff1fa07e998e86f7f7a27ae3",
-        "username": "linus"
-    },
-    "merlin": {
-        "avatar_path": "res://assets/profile_pictures/man_beard.png",
-        "email": "merlin@test.de",
-        "notifications": [
-            {
-                "action_data": {
-                    "sender_id": "robin",
-                    "type": "friend_request"
-                },
-                "has_actions": true,
-                "id": "73650_9535",
-                "is_read": false,
-                "message": "Friend request from robin",
-                "recipient_username": "merlin",
-                "sender": "robin",
-                "timestamp": "2026-02-02T13:17:49"
-            }
-        ],
-        "password_hash": "a665a45920422f9d417e4867efdc4fb8a04a1f3fff1fa07e998e86f7f7a27ae3",
-        "username": "merlin"
-    },
-    "roberto": {
-        "avatar_path": "res://assets/profile_pictures/man_standard.png",
-        "email": "roberto@test.de",
-        "password_hash": "a665a45920422f9d417e4867efdc4fb8a04a1f3fff1fa07e998e86f7f7a27ae3",
-        "username": "roberto"
-    },
-    "robin": {
-        "avatar_path": "res://assets/profile_pictures/woman_standard.png",
-        "email": "robin@test.de",
-        "notifications": [],
-        "password_hash": "a665a45920422f9d417e4867efdc4fb8a04a1f3fff1fa07e998e86f7f7a27ae3",
-        "username": "robin"
-    }
+	"linus": {
+		"avatar_path": "res://assets/profile_pictures/man_beard.png",
+		"email": "linus@test.de",
+		"friends": [
+			"robin",
+			"merlin"
+		],
+		"notifications": [],
+		"password_hash": "a665a45920422f9d417e4867efdc4fb8a04a1f3fff1fa07e998e86f7f7a27ae3",
+		"username": "linus"
+	},
+	"merlin": {
+		"avatar_path": "res://assets/profile_pictures/man_beard.png",
+		"email": "merlin@test.de",
+		"friends": [
+			"linus"
+		],
+		"notifications": [
+			{
+				"action_data": {
+					"sender_id": "robin",
+					"type": "friend_request"
+				},
+				"has_actions": true,
+				"id": "73650_9535",
+				"is_read": false,
+				"message": "Friend request from robin",
+				"recipient_username": "merlin",
+				"sender": "robin",
+				"timestamp": "2026-02-02T13:17:49"
+			}
+		],
+		"password_hash": "a665a45920422f9d417e4867efdc4fb8a04a1f3fff1fa07e998e86f7f7a27ae3",
+		"username": "merlin"
+	},
+	"roberto": {
+		"avatar_path": "res://assets/profile_pictures/man_standard.png",
+		"email": "roberto@test.de",
+		"password_hash": "a665a45920422f9d417e4867efdc4fb8a04a1f3fff1fa07e998e86f7f7a27ae3",
+		"username": "roberto"
+	},
+	"robin": {
+		"avatar_path": "res://assets/profile_pictures/woman_standard.png",
+		"email": "robin@test.de",
+		"friends": [
+			"linus"
+		],
+		"notifications": [],
+		"password_hash": "a665a45920422f9d417e4867efdc4fb8a04a1f3fff1fa07e998e86f7f7a27ae3",
+		"username": "robin"
+	}
 }

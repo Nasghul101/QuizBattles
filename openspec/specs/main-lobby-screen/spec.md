@@ -251,3 +251,23 @@ Page transitions SHALL include smooth animations for better user experience.
 
 ---
 
+### Requirement: ScrollContainer for Notification List
+The NotificationsPopUp SHALL contain a ScrollContainer to handle overflow when notification count exceeds viewport height.
+
+#### Scenario: ScrollContainer wraps notification list
+**Given** the NotificationsPopUp exists in the scene  
+**When** the scene is inspected  
+**Then** a ScrollContainer SHALL exist as a child of the NotificationContainer  
+**And** NotificationComponent instances are added as children of the ScrollContainer's content container
+
+---
+
+### Requirement: ClosePopUpButton Connection
+The ClosePopUpButton SHALL be connected to hide the NotificationsPopUp when pressed.
+
+#### Scenario: ClosePopUpButton closes popup
+**Given** the NotificationsPopUp is visible  
+**When** the ClosePopUpButton is pressed  
+**Then** the pressed signal triggers _on_close_popup_button_pressed()  
+**And** NotificationsPopUp.visible is set to false
+

@@ -11,17 +11,47 @@ var popup_start_y: float = 0.0
 @onready var overlay: ColorRect = %PopupOverlay
 @onready var name_input: TextEdit = %NameInput
 @onready var search_results: GridContainer = %SearchResults
+@onready var friends_list: GridContainer = %FriendsList
 
 
 func _ready() -> void:
     # Connect NameInput text_changed signal
     name_input.text_changed.connect(_on_name_input_text_changed)
+    
+    # Connect to notification action signal for real-time friend updates
+    GlobalSignalBus.notification_action_taken.connect(_on_friendship_changed)
+    
+    # Populate friends list
+    _populate_friends_list()
 
 
 ## Handle text changes in the NameInput field to trigger search
 func _on_name_input_text_changed() -> void:
     var query: String = name_input.text
     _update_search_results(query)
+
+
+## Populate friends list with avatar components
+##
+## Clears existing avatars and creates new ones for each friend of the current user.
+func _populate_friends_list() -> void:
+    # Clear existing children
+    for child in friends_list.get_children():
+        child.queue_free()
+    
+    # Return early if user is not signed in
+    if not UserDatabase.is_signed_in():
+        return
+    
+    # Get current user's friends
+    var friends: Array = UserDatabase.get_friends(UserDatabase.current_user.username)
+    
+    # Create and add avatar component for each friend
+    for friend: Dictionary in friends:
+        var avatar: Button = AVATAR_COMPONENT.instantiate()
+        friends_list.add_child(avatar)
+        avatar.set_avatar_name(friend.username)
+        avatar.set_avatar_picture(friend.avatar_path)
 
 
 ## Update search results based on query string
@@ -187,3 +217,16 @@ func _on_drag_handle_component_drag_ended(_final_distance: float, should_dismiss
         tween.set_ease(Tween.EASE_OUT)
         tween.set_trans(Tween.TRANS_CUBIC)
         tween.tween_property(popup, "position:y", 0.0, 0.2)
+
+
+## Handle friendship changes to update friend list in real-time
+##
+## Refreshes the friends list when a friend request is accepted.
+##
+## @param notification_id: ID of the notification that was acted on
+## @param action: Action taken ("accept" or "deny")
+func _on_friendship_changed(_notification_id: String, action: String) -> void:
+    # Only refresh on accept actions (friend requests)
+    # The UserDatabase and MainLobbyScreen already handle the friend_request logic
+    if action == "accept":
+        _populate_friends_list()

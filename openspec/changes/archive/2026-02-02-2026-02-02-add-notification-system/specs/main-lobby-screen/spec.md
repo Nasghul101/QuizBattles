@@ -1,6 +1,6 @@
 # Spec Delta: Main Lobby Screen (Notification System)
 
-## MODIFIED Requirements
+## ADDED Requirements
 
 ### Requirement: NotificationsPopUp Toggle on Button Press
 The main lobby screen SHALL open the NotificationsPopUp when the NotificationsButton is pressed and close it when ClosePopUpButton is pressed.

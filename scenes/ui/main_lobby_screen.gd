@@ -246,13 +246,7 @@ func _on_notification_action(notification_id: String, action: String) -> void:
     if not UserDatabase.is_signed_in():
         return
     
-    # Remove from database
-    UserDatabase.remove_notification(UserDatabase.current_user.username, notification_id)
-    
-    # Emit global signal for systems to handle action
-    GlobalSignalBus.notification_action_taken.emit(notification_id, action)
-    
-    # Find and remove component from UI
+    # Find component and handle friend request BEFORE emitting signal
     for i in range(notification_components.size()):
         var component: Control = notification_components[i]
         
@@ -262,10 +256,25 @@ func _on_notification_action(notification_id: String, action: String) -> void:
             if component.get("notification_data") is Dictionary:
                 var data: Dictionary = component.get("notification_data")
                 if data.get("id") == notification_id:
+                    # Handle friend request acceptance FIRST
+                    if data.has("action_data") and action == "accept":
+                        var action_data: Dictionary = data.action_data
+                        if action_data.get("type") == "friend_request":
+                            # Call UserDatabase directly to add friend
+                            var sender: String = data.get("sender", "")
+                            if not sender.is_empty():
+                                UserDatabase.add_friend(UserDatabase.current_user.username, sender)
+                    
                     # Remove from array and free
                     notification_components.remove_at(i)
                     component.queue_free()
                     break
+    
+    # Remove from database
+    UserDatabase.remove_notification(UserDatabase.current_user.username, notification_id)
+    
+    # Emit global signal AFTER friend is added so listeners see updated state
+    GlobalSignalBus.notification_action_taken.emit(notification_id, action)
     
     # Update indicator
     _update_notification_indicator()

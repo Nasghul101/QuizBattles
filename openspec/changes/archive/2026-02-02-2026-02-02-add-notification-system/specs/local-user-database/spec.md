@@ -1,6 +1,6 @@
 # Spec Delta: Local User Database (Notification Storage)
 
-## MODIFIED Requirements
+## ADDED Requirements
 
 ### Requirement: User Data Schema with Notifications
 The user database SHALL store a notifications array for each user containing notification objects.
@@ -21,8 +21,6 @@ The user database SHALL store a notifications array for each user containing not
 **And** each notification SHALL contain all original data fields
 
 ---
-
-## ADDED Requirements
 
 ### Requirement: Add Notification to User
 The user database SHALL provide a function to add a notification to a specific user's notification array.

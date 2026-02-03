@@ -1,0 +1,53 @@
+[gd_scene load_steps=4 format=3 uid="uid://dnr83p3aukr5k"]
+
+[ext_resource type="Script" uid="uid://cuag73iw3g4do" path="res://scenes/ui/account_ui/account_popup.gd" id="1_541jh"]
+[ext_resource type="Texture2D" uid="uid://bwiby0r7dcp7d" path="res://assets/icon_wrong.png" id="1_lspc7"]
+[ext_resource type="Texture2D" uid="uid://dncii1qdcses" path="res://assets/profile_pictures/man_beard.png" id="3_mpaho"]
+
+[node name="AccountPopup" type="Panel"]
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+script = ExtResource("1_541jh")
+
+[node name="BackButton" type="Button" parent="."]
+custom_minimum_size = Vector2(80, 80)
+layout_mode = 1
+anchors_preset = 1
+anchor_left = 1.0
+anchor_right = 1.0
+offset_left = -84.22
+offset_bottom = 8.0
+grow_horizontal = 0
+size_flags_horizontal = 8
+icon = ExtResource("1_lspc7")
+expand_icon = true
+
+[node name="VBoxContainer" type="VBoxContainer" parent="."]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="NameLabel" type="Label" parent="VBoxContainer"]
+unique_name_in_owner = true
+layout_mode = 2
+size_flags_horizontal = 6
+theme_override_font_sizes/font_size = 60
+text = "Name"
+horizontal_alignment = 1
+vertical_alignment = 1
+
+[node name="PlayerAvatar" type="TextureRect" parent="VBoxContainer"]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(100, 100)
+layout_mode = 2
+size_flags_horizontal = 4
+texture = ExtResource("3_mpaho")
+expand_mode = 1
+
+[connection signal="pressed" from="BackButton" to="." method="_on_back_button_pressed"]

@@ -120,7 +120,8 @@ func create_user(username: String, password: String, email: String) -> Dictionar
         "password_hash": password_hash,
         "email": email,
         "avatar_path": DEFAULT_AVATAR_PATH,
-        "notifications": []
+        "notifications": [],
+        "friends": []
     }
     _users[username] = user_data
     _save_database()
@@ -511,6 +512,131 @@ func _generate_notification_id() -> String:
     var time_ms: int = Time.get_ticks_msec()
     var random_part: int = randi() % 10000
     return "%d_%d" % [time_ms, random_part]
+
+
+## Check if two users are friends.
+##
+## @param username1: First user's username
+## @param username2: Second user's username
+## @return true if users are friends, false otherwise
+func are_friends(username1: String, username2: String) -> bool:
+    # Check if first user exists
+    if not user_exists(username1):
+        return false
+    
+    # Check if user has friends array
+    if not _users[username1].has("friends"):
+        return false
+    
+    # Check if username2 is in username1's friends array
+    return username2 in _users[username1].friends
+
+
+## Add a bidirectional friendship between two users.
+##
+## Creates friendship in both directions and prevents duplicates and self-friending.
+##
+## @param username: First user's username
+## @param friend_username: Second user's username to befriend
+func add_friend(username: String, friend_username: String) -> void:
+    # Validate both users exist
+    if not user_exists(username):
+        push_error("Cannot add friend: user '%s' does not exist" % username)
+        return
+    
+    if not user_exists(friend_username):
+        push_error("Cannot add friend: user '%s' does not exist" % friend_username)
+        return
+    
+    # Prevent self-friending
+    if username == friend_username:
+        push_error("Cannot add friend: users cannot friend themselves")
+        return
+    
+    # Check if already friends
+    if are_friends(username, friend_username):
+        push_warning("Users '%s' and '%s' are already friends" % [username, friend_username])
+        return
+    
+    # Ensure both users have friends array
+    if not _users[username].has("friends"):
+        _users[username].friends = []
+    
+    if not _users[friend_username].has("friends"):
+        _users[friend_username].friends = []
+    
+    # Add bidirectional friendship
+    _users[username].friends.append(friend_username)
+    _users[friend_username].friends.append(username)
+    
+    # Save to database
+    _save_database()
+    
+    print("Friendship created: %s <-> %s" % [username, friend_username])
+
+
+## Remove a bidirectional friendship between two users.
+##
+## Removes friendship from both users' friends arrays.
+##
+## @param username: First user's username
+## @param friend_username: Second user's username to unfriend
+func remove_friend(username: String, friend_username: String) -> void:
+    # Validate both users exist (silent return if not)
+    if not user_exists(username) or not user_exists(friend_username):
+        return
+    
+    # Ensure both users have friends array
+    if not _users[username].has("friends"):
+        _users[username].friends = []
+    
+    if not _users[friend_username].has("friends"):
+        _users[friend_username].friends = []
+    
+    # Remove from both sides
+    if friend_username in _users[username].friends:
+        _users[username].friends.erase(friend_username)
+    
+    if username in _users[friend_username].friends:
+        _users[friend_username].friends.erase(username)
+    
+    # Save to database
+    _save_database()
+    
+    print("Friendship removed: %s <-> %s" % [username, friend_username])
+
+
+## Get list of friends with full user data.
+##
+## Returns array of friend dictionaries containing username, email, and avatar_path.
+## Skips friends who no longer exist in the database.
+##
+## @param username: Username to get friends for
+## @return Array of friend data dictionaries, or empty array if user doesn't exist
+func get_friends(username: String) -> Array:
+    # Validate user exists
+    if not user_exists(username):
+        push_error("Cannot get friends: user '%s' does not exist" % username)
+        return []
+    
+    # Check if user has friends array
+    if not _users[username].has("friends"):
+        return []
+    
+    var results: Array = []
+    var friends_list: Array = _users[username].friends
+    
+    # Get full data for each friend
+    for friend_username: String in friends_list:
+        var friend_data: Dictionary = get_user_by_username(friend_username)
+        
+        # Skip if friend no longer exists (deleted user)
+        if friend_data.is_empty():
+            continue
+        
+        results.append(friend_data)
+    
+    return results
 
 
 ## Save the user database to a JSON file.
