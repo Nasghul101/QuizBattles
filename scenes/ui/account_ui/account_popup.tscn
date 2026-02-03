@@ -4,7 +4,9 @@
 [ext_resource type="Texture2D" uid="uid://bwiby0r7dcp7d" path="res://assets/icon_wrong.png" id="1_lspc7"]
 [ext_resource type="Texture2D" uid="uid://dncii1qdcses" path="res://assets/profile_pictures/man_beard.png" id="3_mpaho"]
 
-[node name="AccountPopup" type="Panel"]
+[node name="AccountPopup" type="Control"]
+visible = false
+layout_mode = 3
 anchors_preset = 15
 anchor_right = 1.0
 anchor_bottom = 1.0
@@ -12,20 +14,30 @@ grow_horizontal = 2
 grow_vertical = 2
 script = ExtResource("1_541jh")
 
-[node name="BackButton" type="Button" parent="."]
-custom_minimum_size = Vector2(80, 80)
+[node name="Overlay" type="ColorRect" parent="."]
 layout_mode = 1
-anchors_preset = 1
-anchor_left = 1.0
+anchors_preset = 15
 anchor_right = 1.0
-offset_left = -84.22
-offset_bottom = 8.0
-grow_horizontal = 0
-size_flags_horizontal = 8
-icon = ExtResource("1_lspc7")
-expand_icon = true
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+color = Color(0, 0, 0, 0.4)
 
-[node name="VBoxContainer" type="VBoxContainer" parent="."]
+[node name="PopupPanel" type="Panel" parent="."]
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -400.0
+offset_top = -300.0
+offset_right = 400.0
+offset_bottom = 300.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="VBoxContainer" type="VBoxContainer" parent="PopupPanel"]
 layout_mode = 1
 anchors_preset = 15
 anchor_right = 1.0
@@ -33,7 +45,7 @@ anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
 
-[node name="NameLabel" type="Label" parent="VBoxContainer"]
+[node name="NameLabel" type="Label" parent="PopupPanel/VBoxContainer"]
 unique_name_in_owner = true
 layout_mode = 2
 size_flags_horizontal = 6
@@ -42,7 +54,7 @@ text = "Name"
 horizontal_alignment = 1
 vertical_alignment = 1
 
-[node name="PlayerAvatar" type="TextureRect" parent="VBoxContainer"]
+[node name="PlayerAvatar" type="TextureRect" parent="PopupPanel/VBoxContainer"]
 unique_name_in_owner = true
 custom_minimum_size = Vector2(100, 100)
 layout_mode = 2
@@ -50,4 +62,18 @@ size_flags_horizontal = 4
 texture = ExtResource("3_mpaho")
 expand_mode = 1
 
-[connection signal="pressed" from="BackButton" to="." method="_on_back_button_pressed"]
+[node name="BackButton" type="Button" parent="PopupPanel"]
+custom_minimum_size = Vector2(80, 80)
+layout_mode = 1
+anchors_preset = 1
+anchor_left = 1.0
+anchor_right = 1.0
+offset_left = -80.0
+offset_bottom = 80.0
+grow_horizontal = 0
+size_flags_horizontal = 8
+icon = ExtResource("1_lspc7")
+expand_icon = true
+
+[connection signal="gui_input" from="Overlay" to="." method="_on_overlay_gui_input"]
+[connection signal="pressed" from="PopupPanel/BackButton" to="." method="_on_back_button_pressed"]

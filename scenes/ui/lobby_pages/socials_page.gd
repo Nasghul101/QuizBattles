@@ -12,6 +12,7 @@ var popup_start_y: float = 0.0
 @onready var name_input: TextEdit = %NameInput
 @onready var search_results: GridContainer = %SearchResults
 @onready var friends_list: GridContainer = %FriendsList
+@onready var account_popup: Control = $AccountPopup
 
 
 func _ready() -> void:
@@ -52,6 +53,10 @@ func _populate_friends_list() -> void:
         friends_list.add_child(avatar)
         avatar.set_avatar_name(friend.username)
         avatar.set_avatar_picture(friend.avatar_path)
+        avatar.set_user_id(friend.username)
+        
+        # Connect avatar_clicked signal to account_popup.display_user
+        avatar.avatar_clicked.connect(account_popup.display_user)
 
 
 ## Update search results based on query string

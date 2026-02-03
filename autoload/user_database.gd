@@ -121,7 +121,10 @@ func create_user(username: String, password: String, email: String) -> Dictionar
         "email": email,
         "avatar_path": DEFAULT_AVATAR_PATH,
         "notifications": [],
-        "friends": []
+        "friends": [],
+        "wins": 0,
+        "losses": 0,
+        "current_streak": 0
     }
     _users[username] = user_data
     _save_database()
@@ -266,6 +269,27 @@ func get_user_by_username(username: String) -> Dictionary:
             "avatar_path": user_data.avatar_path
         }
     return {}
+
+
+## Get user data safe for display in UI (excludes sensitive data).
+##
+## Returns username, avatar_path, wins, losses, current_streak.
+## Explicitly excludes password_hash and email for security.
+##
+## @param username: Username to look up
+## @return Dictionary with display-safe user data, or empty Dictionary if user doesn't exist
+func get_user_data_for_display(username: String) -> Dictionary:
+    if not user_exists(username):
+        return {}
+    
+    var user_data: Dictionary = _users[username]
+    return {
+        "username": user_data.username,
+        "avatar_path": user_data.get("avatar_path", DEFAULT_AVATAR_PATH),
+        "wins": user_data.get("wins", 0),
+        "losses": user_data.get("losses", 0),
+        "current_streak": user_data.get("current_streak", 0)
+    }
 
 
 ## Search for users by username with case-insensitive partial matching.
@@ -689,7 +713,43 @@ func _load_database() -> void:
     var data: Variant = json.data
     if data is Dictionary:
         _users = data
+        _migrate_user_data()
         print("User database loaded successfully. Users: " + str(_users.size()))
     else:
         push_error("User database JSON is not a valid dictionary")
         _users = {}
+
+
+## Migrate existing user data to include new fields.
+##
+## Adds wins, losses, current_streak fields with default value 0 to existing users
+## that don't have these fields. Ensures backward compatibility.
+func _migrate_user_data() -> void:
+    var migrated_count: int = 0
+    
+    for username: String in _users.keys():
+        var user_data: Dictionary = _users[username]
+        var needs_migration: bool = false
+        
+        # Add wins field if missing
+        if not user_data.has("wins"):
+            user_data.wins = 0
+            needs_migration = true
+        
+        # Add losses field if missing
+        if not user_data.has("losses"):
+            user_data.losses = 0
+            needs_migration = true
+        
+        # Add current_streak field if missing
+        if not user_data.has("current_streak"):
+            user_data.current_streak = 0
+            needs_migration = true
+        
+        if needs_migration:
+            migrated_count += 1
+    
+    # Save if any users were migrated
+    if migrated_count > 0:
+        _save_database()
+        print("Migrated %d users to include statistics fields" % migrated_count)

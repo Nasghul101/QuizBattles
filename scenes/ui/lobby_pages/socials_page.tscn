@@ -1,7 +1,8 @@
-[gd_scene load_steps=3 format=3 uid="uid://crnu6goxc6w28"]
+[gd_scene load_steps=4 format=3 uid="uid://crnu6goxc6w28"]
 
 [ext_resource type="Script" uid="uid://b83dqaa5lkynv" path="res://scenes/ui/lobby_pages/socials_page.gd" id="1_xpe0s"]
 [ext_resource type="PackedScene" uid="uid://deyncocxwp1mp" path="res://scenes/ui/components/drag_handle_component.tscn" id="2_hfrco"]
+[ext_resource type="PackedScene" uid="uid://dnr83p3aukr5k" path="res://scenes/ui/account_ui/account_popup.tscn" id="3_6lj5o"]
 
 [node name="SocialsPage" type="Control"]
 layout_mode = 3
@@ -110,6 +111,10 @@ offset_right = 1152.0
 offset_bottom = 60.0
 grow_horizontal = 1
 grow_vertical = 1
+
+[node name="AccountPopup" parent="." instance=ExtResource("3_6lj5o")]
+visible = true
+layout_mode = 1
 
 [connection signal="pressed" from="VBoxContainer/AddNewFriendButton" to="." method="_on_add_new_friend_button_pressed"]
 [connection signal="pressed" from="AddFriendsPopup/VBoxContainer/AddFriendButton" to="." method="_on_add_friend_button_pressed"]
