@@ -25,6 +25,7 @@ theme_override_constants/separation = 10
 
 [node name="NotificationText" type="Label" parent="MarginContainer/VBoxContainer"]
 unique_name_in_owner = true
+custom_minimum_size = Vector2(100, 50)
 layout_mode = 2
 text = "Notification message text"
 autowrap_mode = 3

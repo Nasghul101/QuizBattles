@@ -62,7 +62,7 @@ func _on_overlay_gui_input(event: InputEvent) -> void:
 
 
 ## Handle invite to game button press
-## Sends game invite notification to displayed user and disables button
+## Opens setup screen for configuring game parameters before sending invite
 func _on_invite_to_game_button_pressed() -> void:
     # Check if user is signed in
     if not UserDatabase.is_signed_in():
@@ -77,19 +77,12 @@ func _on_invite_to_game_button_pressed() -> void:
     # Disable button to provide visual feedback
     invite_button.disabled = true
     
-    # Create game invite notification
-    var notification_data: Dictionary = {
-        "recipient_username": current_displayed_user,
-        "message": "%s invites you to a duel" % UserDatabase.current_user.username,
-        "sender": UserDatabase.current_user.username,
-        "has_actions": true,
-        "action_data": {
-            "type": "game_invite",
-            "inviter_id": UserDatabase.current_user.username
-        }
-    }
+    # Store username before closing popup (close_popup clears current_displayed_user)
+    var invited_username: String = current_displayed_user
     
-    # Emit notification through GlobalSignalBus
-    GlobalSignalBus.notification_received.emit(notification_data)
+    # Close popup
+    close_popup()
     
-    print("Game invite sent to %s from %s" % [current_displayed_user, UserDatabase.current_user.username])
+    # Navigate to setup screen with invited player context
+    var params: Dictionary = {"invited_player": invited_username}
+    TransitionManager.change_scene("res://scenes/ui/setup_screen.tscn", params)

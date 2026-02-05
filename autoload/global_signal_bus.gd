@@ -29,3 +29,10 @@ signal notification_action_taken(notification_id: String, action: String)
 ## Currently no system connects to this, but multiplayer logic will use it
 ## to start game sessions between the two players.
 signal game_invite_accepted(inviter_username: String, invitee_username: String)
+
+## Emitted when a new multiplayer match is created.
+## [param match_id] String - Unique identifier of the created match
+## [param player1] String - Username of first player
+## [param player2] String - Username of second player
+## This signal allows UI components to update when new matches are available.
+signal match_created(match_id: String, player1: String, player2: String)

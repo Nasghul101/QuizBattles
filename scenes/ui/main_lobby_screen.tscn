@@ -88,7 +88,7 @@ theme_override_constants/separation = 0
 layout_mode = 2
 size_flags_horizontal = 3
 
-[node name="Page2" parent="VBoxContainer/PageClipContainer/PagesContainer" instance=ExtResource("4_4wv0w")]
+[node name="FriendlyBattlePage" parent="VBoxContainer/PageClipContainer/PagesContainer" instance=ExtResource("4_4wv0w")]
 layout_mode = 2
 size_flags_horizontal = 3
 

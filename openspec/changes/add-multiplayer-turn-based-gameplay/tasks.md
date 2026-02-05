@@ -1034,22 +1034,22 @@ Tasks are ordered to deliver user-visible progress incrementally while maintaini
 
 Once all tasks complete, verify:
 - [x] UserDatabase has `multiplayer_matches` array
-- [ ] Matches can be created, retrieved, updated
-- [ ] Invite flow navigates: account_popup → setup_screen → notification → lobby
-- [ ] Notifications include rounds/questions
-- [ ] Accepting invite creates match
-- [ ] friendly_battle_page shows avatar_components
-- [ ] Turn labels accurate ("Your Turn" vs "[Player] Turn")
-- [ ] Clicking avatar navigates to gameplay_screen with match_id
-- [ ] Play button enables/disables based on turn
-- [ ] Category chooser alternates (inviter: odd, invitee: even)
-- [ ] Questions saved and reused for opponent
-- [ ] Answers hidden until both complete round
-- [ ] Results reveal after round completion
-- [ ] Turn switches correctly
-- [ ] Match completes and returns to lobby
-- [ ] Multiple simultaneous matches work
-- [ ] State persists across app restarts
+- [x] Matches can be created, retrieved, updated
+- [x] Invite flow navigates: account_popup → setup_screen → notification → lobby
+- [x] Notifications include rounds/questions
+- [x] Accepting invite creates match
+- [x] friendly_battle_page shows avatar_components
+- [x] Turn labels accurate ("Your Turn" vs "[Player] Turn")
+- [x] Clicking avatar navigates to gameplay_screen with match_id
+- [x] Play button enables/disables based on turn
+- [x] Category chooser alternates (inviter: odd, invitee: even)
+- [x] Questions saved and reused for opponent
+- [x] Answers hidden until both complete round
+- [x] Results reveal after round completion
+- [x] Turn switches correctly
+- [x] Match completes and returns to lobby
+- [x] Multiple simultaneous matches work
+- [x] State persists across app restarts
 
 ## Notes
 

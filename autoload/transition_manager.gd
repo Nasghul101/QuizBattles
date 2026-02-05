@@ -53,7 +53,7 @@ func change_scene(scene_path: String, params: Dictionary = {}) -> void:
     
     # Initialize with parameters if provided
     if not params.is_empty() and new_scene.has_method("initialize"):
-        new_scene.initialize(params.get("rounds", 0), params.get("questions", 0))
+        new_scene.initialize(params)
     
     # Add to tree
     get_tree().root.add_child(new_scene)

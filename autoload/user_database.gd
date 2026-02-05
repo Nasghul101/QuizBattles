@@ -26,8 +26,18 @@ const DEFAULT_AVATAR_PATH := "res://assets/profile_pictures/man_standard.png"
 ## Path to the JSON file where user data is stored
 const DATABASE_PATH := "res://data/user_database.json"
 
-## In-memory user storage: Dictionary mapping username -> user data
-var _users: Dictionary = {}
+## Main database structure containing users and matches
+var data: Dictionary = {
+    "users": {},
+    "multiplayer_matches": []
+}
+
+## Shortcut reference to users dictionary for backward compatibility
+var _users: Dictionary:
+    get:
+        return data.users
+    set(value):
+        data.users = value
 
 ## Currently logged-in user (empty Dictionary if not signed in)
 var current_user: Dictionary = {}
@@ -39,6 +49,8 @@ func _ready() -> void:
     GlobalSignalBus.notification_received.connect(_on_notification_received_global)
     # Connect to notification actions for handling denial logic
     GlobalSignalBus.notification_action_taken.connect(_on_notification_action_taken)
+    # Connect to game invite acceptance for match creation
+    GlobalSignalBus.game_invite_accepted.connect(_on_game_invite_accepted)
 
 
 ## Handle notification received from GlobalSignalBus
@@ -753,10 +765,155 @@ func get_friends(username: String) -> Array:
     return results
 
 
+## ============================================================================
+## Multiplayer Match Management
+## ============================================================================
+
+## Create a new multiplayer match between two players
+##
+## @param inviter: Username who sent the invitation
+## @param invitee: Username who accepted the invitation
+## @param rounds: Number of rounds to play
+## @param questions: Number of questions per round
+## @return match_id: Unique identifier for the created match
+func create_match(inviter: String, invitee: String, rounds: int, questions: int) -> String:
+    var match_id = "match_%d" % Time.get_unix_time_from_system()
+    
+    var match_data = {
+        "match_id": match_id,
+        "players": [inviter, invitee],
+        "inviter": inviter,
+        "config": {
+            "rounds": rounds,
+            "questions": questions
+        },
+        "current_turn": inviter,  # Inviter always starts
+        "current_round": 1,
+        "status": "active",
+        "rounds_data": [],
+        "created_at": Time.get_unix_time_from_system()
+    }
+    
+    # Initialize rounds_data with empty structures
+    for i in range(rounds):
+        var round_data = {
+            "round_number": i + 1,
+            "category": "",
+            "category_chooser": inviter if (i + 1) % 2 == 1 else invitee,
+            "questions": [],
+            "player_answers": {
+                inviter: {
+                    "answered": false,
+                    "results": []
+                },
+                invitee: {
+                    "answered": false,
+                    "results": []
+                }
+            }
+        }
+        match_data.rounds_data.append(round_data)
+    
+    data.multiplayer_matches.append(match_data)
+    _save_database()
+    
+    return match_id
+
+
+## Retrieve a specific match by ID
+##
+## @param match_id: Unique identifier of the match
+## @return Dictionary: Match data, or empty Dictionary if not found
+func get_match(match_id: String) -> Dictionary:
+    for match in data.multiplayer_matches:
+        if match.match_id == match_id:
+            return match
+    
+    push_warning("Match not found: %s" % match_id)
+    return {}
+
+
+## Get all active matches for a specific player
+##
+## @param username: Player's username
+## @return Array[Dictionary]: List of active matches where player is participant
+func get_active_matches_for_player(username: String) -> Array:
+    var player_matches: Array = []
+    
+    for match in data.multiplayer_matches:
+        if match.status == "active" and username in match.players:
+            player_matches.append(match)
+    
+    return player_matches
+
+
+## Update an existing match with new data
+##
+## @param match_data: Complete match Dictionary with updated fields
+func update_match(match_data: Dictionary) -> void:
+    if not match_data.has("match_id"):
+        push_error("Cannot update match: missing match_id")
+        return
+    
+    for i in range(data.multiplayer_matches.size()):
+        if data.multiplayer_matches[i].match_id == match_data.match_id:
+            data.multiplayer_matches[i] = match_data
+            _save_database()
+            return
+    
+    push_warning("Match not found for update: %s" % match_data.match_id)
+
+
+## Delete a match from the database
+##
+## @param match_id: Unique identifier of the match to delete
+## @return bool: true if match was deleted, false if not found
+func delete_match(match_id: String) -> bool:
+    for i in range(data.multiplayer_matches.size()):
+        if data.multiplayer_matches[i].match_id == match_id:
+            data.multiplayer_matches.remove_at(i)
+            _save_database()
+            print("Match deleted: %s" % match_id)
+            return true
+    
+    push_warning("Match not found for deletion: %s" % match_id)
+    return false
+
+
+## Handle game invite acceptance by creating a match
+##
+## Extracts rounds/questions from the most recent game invite notification
+## for the invitee and creates a persistent match entry.
+##
+## @param inviter_username: Username who sent the invite
+## @param invitee_username: Username who accepted the invite
+func _on_game_invite_accepted(inviter_username: String, invitee_username: String) -> void:
+    # Find the notification with game invite data
+    var notifications = get_notifications(invitee_username)
+    var rounds = 3  # Default fallback
+    var questions = 2  # Default fallback
+    
+    for notification in notifications:
+        if notification.has("action_data") and notification.action_data.get("type") == "game_invite":
+            if notification.action_data.get("inviter_id") == inviter_username:
+                rounds = notification.action_data.get("rounds", 3)
+                questions = notification.action_data.get("questions", 2)
+                break
+    
+    # Create the match
+    var match_id = create_match(inviter_username, invitee_username, rounds, questions)
+    print("Match created: %s between %s and %s (%d rounds, %d questions)" % [
+        match_id, inviter_username, invitee_username, rounds, questions
+    ])
+    
+    # Emit signal to notify UI of new match
+    GlobalSignalBus.match_created.emit(match_id, inviter_username, invitee_username)
+
+
 ## Save the user database to a JSON file.
 func _save_database() -> void:
-    # Convert users dictionary to JSON
-    var json_string: String = JSON.stringify(_users, "\t")
+    # Convert data dictionary to JSON
+    var json_string: String = JSON.stringify(data, "\t")
     
     # Open file for writing
     var file: FileAccess = FileAccess.open(DATABASE_PATH, FileAccess.WRITE)
@@ -775,7 +932,10 @@ func _load_database() -> void:
     # Check if file exists
     if not FileAccess.file_exists(DATABASE_PATH):
         print("User database not found, creating new database at: " + DATABASE_PATH)
-        _users = {}
+        data = {
+            "users": {},
+            "multiplayer_matches": []
+        }
         _save_database()
         return
     
@@ -783,7 +943,10 @@ func _load_database() -> void:
     var file: FileAccess = FileAccess.open(DATABASE_PATH, FileAccess.READ)
     if file == null:
         push_error("Failed to load user database: " + str(FileAccess.get_open_error()))
-        _users = {}
+        data = {
+            "users": {},
+            "multiplayer_matches": []
+        }
         return
     
     # Read and parse JSON data
@@ -796,18 +959,34 @@ func _load_database() -> void:
     
     if parse_result != OK:
         push_error("Failed to parse user database JSON: " + json.get_error_message())
-        _users = {}
+        data = {
+            "users": {},
+            "multiplayer_matches": []
+        }
         return
     
     # Load parsed data
-    var data: Variant = json.data
-    if data is Dictionary:
-        _users = data
+    var loaded_data: Variant = json.data
+    if loaded_data is Dictionary:
+        # Check if this is old format (direct user dictionary) or new format
+        if loaded_data.has("users") and loaded_data.has("multiplayer_matches"):
+            # New format
+            data = loaded_data
+        else:
+            # Old format - migrate
+            print("Migrating database from old format to new format")
+            data = {
+                "users": loaded_data,
+                "multiplayer_matches": []
+            }
         _migrate_user_data()
-        print("User database loaded successfully. Users: " + str(_users.size()))
+        print("User database loaded successfully. Users: " + str(data.users.size()))
     else:
         push_error("User database JSON is not a valid dictionary")
-        _users = {}
+        data = {
+            "users": {},
+            "multiplayer_matches": []
+        }
 
 
 ## Migrate existing user data to include new fields.
