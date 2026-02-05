@@ -4,7 +4,7 @@
 [ext_resource type="Script" uid="uid://b11jdqaf8o7sv" path="res://scenes/ui/main_lobby_screen.gd" id="1_m4p3a"]
 [ext_resource type="Texture2D" uid="uid://ep6jekuw6lka" path="res://assets/profile_pictures/man_suit.png" id="2_4wv0w"]
 [ext_resource type="PackedScene" uid="uid://db55cjof2f4uv" path="res://scenes/ui/lobby_pages/duel_page.tscn" id="3_1l6go"]
-[ext_resource type="PackedScene" uid="uid://cxkr8w47uveic" path="res://scenes/ui/lobby_pages/page2.tscn" id="4_4wv0w"]
+[ext_resource type="PackedScene" uid="uid://cxkr8w47uveic" path="res://scenes/ui/lobby_pages/friendly_battle_page.tscn" id="4_4wv0w"]
 [ext_resource type="PackedScene" uid="uid://crnu6goxc6w28" path="res://scenes/ui/lobby_pages/socials_page.tscn" id="5_6xylg"]
 [ext_resource type="Texture2D" uid="uid://bwiby0r7dcp7d" path="res://assets/icon_wrong.png" id="7_6xylg"]
 

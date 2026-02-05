@@ -76,10 +76,10 @@ func _has_pending_friend_request(recipient: String, sender: String) -> bool:
     
     var notifications: Array = get_notifications(recipient)
     
-    for notification: Dictionary in notifications:
-        if notification.has("action_data") and notification.action_data is Dictionary:
-            var action_data: Dictionary = notification.action_data
-            if action_data.get("type") == "friend_request" and notification.get("sender") == sender:
+    for notif_data: Dictionary in notifications:
+        if notif_data.has("action_data") and notif_data.action_data is Dictionary:
+            var action_data: Dictionary = notif_data.action_data
+            if action_data.get("type") == "friend_request" and notif_data.get("sender") == sender:
                 return true
     
     return false
@@ -92,10 +92,10 @@ func _has_pending_game_invite(recipient: String, sender: String) -> bool:
     
     var notifications: Array = get_notifications(recipient)
     
-    for notification: Dictionary in notifications:
-        if notification.has("action_data") and notification.action_data is Dictionary:
-            var action_data: Dictionary = notification.action_data
-            if action_data.get("type") == "game_invite" and notification.get("sender") == sender:
+    for notif_data: Dictionary in notifications:
+        if notif_data.has("action_data") and notif_data.action_data is Dictionary:
+            var action_data: Dictionary = notif_data.action_data
+            if action_data.get("type") == "game_invite" and notif_data.get("sender") == sender:
                 return true
     
     return false
@@ -118,9 +118,9 @@ func _on_notification_action_taken(notification_id: String, action: String) -> v
     var notifications: Array = get_notifications(current_username)
     var denied_notification: Dictionary = {}
     
-    for notification: Dictionary in notifications:
-        if notification.get("id") == notification_id:
-            denied_notification = notification
+    for notif_data: Dictionary in notifications:
+        if notif_data.get("id") == notification_id:
+            denied_notification = notif_data
             break
     
     # Check if it's a game invite
@@ -555,9 +555,9 @@ func get_notifications(username: String) -> Array:
     var current_time: float = Time.get_unix_time_from_system()
     var filtered_notifications: Array = []
     
-    for notification: Dictionary in _users[username].notifications:
+    for notif_data: Dictionary in _users[username].notifications:
         var notification_time: float = 0.0
-        var timestamp_value: Variant = notification.get("timestamp", 0.0)
+        var timestamp_value: Variant = notif_data.get("timestamp", 0.0)
         
         # Handle both float (Unix timestamp) and String (ISO 8601) formats for backwards compatibility
         if timestamp_value is float:
@@ -569,7 +569,7 @@ func get_notifications(username: String) -> Array:
         
         # Keep notification if not expired
         if current_time - notification_time <= NOTIFICATION_EXPIRY_SECONDS:
-            filtered_notifications.append(notification)
+            filtered_notifications.append(notif_data)
     
     return filtered_notifications
 
@@ -591,9 +591,9 @@ func mark_notification_read(username: String, notification_id: String) -> void:
     var notifications: Array = _users[username].notifications
     
     # Find and update notification
-    for notification: Dictionary in notifications:
-        if notification.has("id") and notification.id == notification_id:
-            notification.is_read = true
+    for notif_data: Dictionary in notifications:
+        if notif_data.has("id") and notif_data.id == notification_id:
+            notif_data.is_read = true
             _save_database()
             return
 
@@ -610,8 +610,8 @@ func get_unread_count(username: String) -> int:
         return 0
     
     var unread_count: int = 0
-    for notification: Dictionary in _users[username].notifications:
-        if notification.has("is_read") and not notification.is_read:
+    for notif_data: Dictionary in _users[username].notifications:
+        if notif_data.has("is_read") and not notif_data.is_read:
             unread_count += 1
     
     return unread_count
