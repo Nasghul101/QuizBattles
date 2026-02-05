@@ -21,3 +21,11 @@ signal notification_received(notification_data: Dictionary)
 ## Systems interested in specific notification types should listen to this signal
 ## and check action_data to handle their notification types appropriately.
 signal notification_action_taken(notification_id: String, action: String)
+
+## Emitted when a player accepts a game invitation.
+## [param inviter_username] String - Username of player who sent invite
+## [param invitee_username] String - Username of player who accepted invite
+## This signal serves as a hook for future multiplayer game initialization.
+## Currently no system connects to this, but multiplayer logic will use it
+## to start game sessions between the two players.
+signal game_invite_accepted(inviter_username: String, invitee_username: String)

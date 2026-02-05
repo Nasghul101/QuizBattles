@@ -113,7 +113,7 @@ grow_horizontal = 1
 grow_vertical = 1
 
 [node name="AccountPopup" parent="." instance=ExtResource("3_6lj5o")]
-visible = true
+visible = false
 layout_mode = 1
 
 [connection signal="pressed" from="VBoxContainer/AddNewFriendButton" to="." method="_on_add_new_friend_button_pressed"]

@@ -4,6 +4,8 @@ extends Panel
 ##
 ## Reusable UI component for displaying notifications with optional action buttons.
 ## Emits action_taken signal when user accepts or denies the notification.
+## Notifications are automatically filtered by the database to remove expired items (>3 days old).
+## The timestamp field is managed automatically by UserDatabase.
 
 ## Emitted when user interacts with notification (accepts or denies).
 ## [param notification_id] Unique ID of the notification

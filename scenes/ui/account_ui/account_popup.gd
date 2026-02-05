@@ -1,12 +1,11 @@
-extends Control
+extends Panel
 
 ## Currently displayed user's username
 var current_displayed_user: String = ""
 
 @onready var name_label: Label = %NameLabel
 @onready var player_avatar: TextureRect = %PlayerAvatar
-@onready var overlay: ColorRect = $Overlay
-@onready var popup_panel: Panel = $PopupPanel
+@onready var invite_button: Button = %InviteToGameButton
 
 
 ## Display account information for a specific user
@@ -34,6 +33,9 @@ func display_user(user_id: String) -> void:
     # These can be displayed in additional UI elements when needed
     current_displayed_user = user_id
     
+    # Re-enable invite button on popup open
+    invite_button.disabled = false
+    
     # Show popup
     visible = true
 
@@ -54,6 +56,40 @@ func _on_overlay_gui_input(event: InputEvent) -> void:
         var mouse_event: InputEventMouseButton = event as InputEventMouseButton
         if mouse_event.pressed and mouse_event.button_index == MOUSE_BUTTON_LEFT:
             # Check if click is outside popup panel bounds
-            var popup_rect: Rect2 = popup_panel.get_global_rect()
+            var popup_rect: Rect2 = self.get_global_rect()
             if not popup_rect.has_point(mouse_event.global_position):
                 close_popup()
+
+
+## Handle invite to game button press
+## Sends game invite notification to displayed user and disables button
+func _on_invite_to_game_button_pressed() -> void:
+    # Check if user is signed in
+    if not UserDatabase.is_signed_in():
+        push_warning("Cannot send game invite: user not signed in")
+        return
+    
+    # Check if a user is displayed
+    if current_displayed_user.is_empty():
+        push_warning("Cannot send game invite: no user displayed")
+        return
+    
+    # Disable button to provide visual feedback
+    invite_button.disabled = true
+    
+    # Create game invite notification
+    var notification_data: Dictionary = {
+        "recipient_username": current_displayed_user,
+        "message": "%s invites you to a duel" % UserDatabase.current_user.username,
+        "sender": UserDatabase.current_user.username,
+        "has_actions": true,
+        "action_data": {
+            "type": "game_invite",
+            "inviter_id": UserDatabase.current_user.username
+        }
+    }
+    
+    # Emit notification through GlobalSignalBus
+    GlobalSignalBus.notification_received.emit(notification_data)
+    
+    print("Game invite sent to %s from %s" % [current_displayed_user, UserDatabase.current_user.username])

@@ -98,3 +98,17 @@ NotificationComponent SHALL use a clean, minimal design matching existing UI com
 **Then** it visually aligns with the existing component style  
 **And** uses consistent spacing, fonts, and panel styling
 
+### Requirement: Timestamp Field Support
+NotificationComponent SHALL support displaying notifications that include a timestamp field in their data structure.
+
+#### Scenario: Notification with timestamp is displayed
+**Given** a notification has timestamp field in its data  
+**When** NotificationComponent displays the notification  
+**Then** the component functions normally  
+**And** the timestamp does not interfere with display  
+**And** the timestamp is available in the notification data for potential future UI features (e.g., "received 2 days ago")
+
+**Note**: This requirement ensures timestamp compatibility but does not require displaying timestamps in the UI. The timestamp is used by UserDatabase for expiry filtering before notifications reach the component.
+
+---
+

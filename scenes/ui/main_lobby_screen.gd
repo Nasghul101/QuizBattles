@@ -264,6 +264,17 @@ func _on_notification_action(notification_id: String, action: String) -> void:
                             var sender: String = data.get("sender", "")
                             if not sender.is_empty():
                                 UserDatabase.add_friend(UserDatabase.current_user.username, sender)
+                        
+                        # Handle game invite acceptance
+                        if action_data.get("type") == "game_invite":
+                            var inviter_id: String = action_data.get("inviter_id", "")
+                            if inviter_id.is_empty():
+                                push_warning("Game invite missing inviter_id")
+                            else:
+                                # Emit signal for future multiplayer integration
+                                GlobalSignalBus.game_invite_accepted.emit(inviter_id, UserDatabase.current_user.username)
+                                print("Game invite accepted: %s vs %s" % [inviter_id, UserDatabase.current_user.username])
+                                # TODO: Connect multiplayer game initialization to GlobalSignalBus.game_invite_accepted signal
                     
                     # Remove from array and free
                     notification_components.remove_at(i)

@@ -37,6 +37,8 @@ func _ready() -> void:
     _load_database()
     # Connect to GlobalSignalBus to handle incoming notifications
     GlobalSignalBus.notification_received.connect(_on_notification_received_global)
+    # Connect to notification actions for handling denial logic
+    GlobalSignalBus.notification_action_taken.connect(_on_notification_action_taken)
 
 
 ## Handle notification received from GlobalSignalBus
@@ -54,6 +56,13 @@ func _on_notification_received_global(notification_data: Dictionary) -> void:
             var sender: String = notification_data.get("sender", "")
             if _has_pending_friend_request(recipient, sender):
                 push_warning("Friend request already sent to %s from %s" % [recipient, sender])
+                return
+        
+        # Check for duplicate game invites
+        if action_data.get("type") == "game_invite":
+            var sender: String = notification_data.get("sender", "")
+            if _has_pending_game_invite(recipient, sender):
+                push_warning("Game invite already sent to %s from %s" % [recipient, sender])
                 return
     
     # Add notification to recipient's account
@@ -74,6 +83,65 @@ func _has_pending_friend_request(recipient: String, sender: String) -> bool:
                 return true
     
     return false
+
+
+## Check if a pending game invite already exists from sender to recipient
+func _has_pending_game_invite(recipient: String, sender: String) -> bool:
+    if not user_exists(recipient):
+        return false
+    
+    var notifications: Array = get_notifications(recipient)
+    
+    for notification: Dictionary in notifications:
+        if notification.has("action_data") and notification.action_data is Dictionary:
+            var action_data: Dictionary = notification.action_data
+            if action_data.get("type") == "game_invite" and notification.get("sender") == sender:
+                return true
+    
+    return false
+
+
+## Handle notification action taken (for denial logic)
+## Sends rejection notification to inviter when game invite is denied
+func _on_notification_action_taken(notification_id: String, action: String) -> void:
+    # Only handle deny actions
+    if action != "deny":
+        return
+    
+    # Get current user
+    if not is_signed_in():
+        return
+    
+    var current_username: String = current_user.username
+    
+    # Find the notification being denied
+    var notifications: Array = get_notifications(current_username)
+    var denied_notification: Dictionary = {}
+    
+    for notification: Dictionary in notifications:
+        if notification.get("id") == notification_id:
+            denied_notification = notification
+            break
+    
+    # Check if it's a game invite
+    if denied_notification.has("action_data"):
+        var action_data: Dictionary = denied_notification.action_data
+        if action_data.get("type") == "game_invite":
+            # Send rejection notification to original sender
+            var inviter: String = denied_notification.get("sender", "")
+            if not inviter.is_empty():
+                var rejection_data: Dictionary = {
+                    "recipient_username": inviter,
+                    "message": "%s rejected your duel" % current_username,
+                    "sender": "System",
+                    "has_actions": false,
+                    "action_data": {
+                        "type": "game_invite_rejection"
+                    }
+                }
+                # Emit through signal bus to trigger notification creation
+                GlobalSignalBus.notification_received.emit(rejection_data)
+                print("Rejection notification sent to %s" % inviter)
 
 
 ## Create a new user account with username, password, and email.
@@ -431,9 +499,9 @@ func add_notification(username: String, notification_data: Dictionary) -> void:
     if not notification_data.has("id"):
         notification_data.id = _generate_notification_id()
     
-    # Auto-generate timestamp if not provided
+    # Auto-generate timestamp if not provided (Unix timestamp for expiry logic)
     if not notification_data.has("timestamp"):
-        notification_data.timestamp = Time.get_datetime_string_from_system(true)
+        notification_data.timestamp = Time.get_unix_time_from_system()
     
     # Default is_read to false
     if not notification_data.has("is_read"):
@@ -471,9 +539,10 @@ func remove_notification(username: String, notification_id: String) -> void:
 
 
 ## Get all notifications for a specific user.
+## Automatically filters out notifications older than 3 days.
 ##
 ## @param username: Username to get notifications for
-## @return Array of notification dictionaries, or empty array if user doesn't exist
+## @return Array of notification dictionaries (excluding expired), or empty array if user doesn't exist
 func get_notifications(username: String) -> Array:
     if not user_exists(username):
         return []
@@ -481,7 +550,28 @@ func get_notifications(username: String) -> Array:
     if not _users[username].has("notifications"):
         return []
     
-    return _users[username].notifications.duplicate(true)
+    # Filter out expired notifications (older than 3 days)
+    const NOTIFICATION_EXPIRY_SECONDS: int = 259200  # 3 days in seconds
+    var current_time: float = Time.get_unix_time_from_system()
+    var filtered_notifications: Array = []
+    
+    for notification: Dictionary in _users[username].notifications:
+        var notification_time: float = 0.0
+        var timestamp_value: Variant = notification.get("timestamp", 0.0)
+        
+        # Handle both float (Unix timestamp) and String (ISO 8601) formats for backwards compatibility
+        if timestamp_value is float:
+            notification_time = timestamp_value
+        elif timestamp_value is String:
+            # Parse ISO 8601 string to Unix timestamp
+            var datetime: Dictionary = Time.get_datetime_dict_from_datetime_string(timestamp_value, false)
+            notification_time = Time.get_unix_time_from_datetime_dict(datetime)
+        
+        # Keep notification if not expired
+        if current_time - notification_time <= NOTIFICATION_EXPIRY_SECONDS:
+            filtered_notifications.append(notification)
+    
+    return filtered_notifications
 
 
 ## Mark a notification as read for a user.
