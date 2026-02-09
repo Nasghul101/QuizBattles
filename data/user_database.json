@@ -146,11 +146,11 @@
         },
         {
             "config": {
-                "questions": 1,
-                "rounds": 4
+                "questions": 1.0,
+                "rounds": 4.0
             },
             "created_at": 1770305357.833,
-            "current_round": 4,
+            "current_round": 4.0,
             "current_turn": "robin",
             "inviter": "robin",
             "match_id": "match_1770305357",
@@ -220,7 +220,7 @@
                             "type": "multiple"
                         }
                     ],
-                    "round_number": 1
+                    "round_number": 1.0
                 },
                 {
                     "category": "History",
@@ -283,7 +283,7 @@
                             "type": "multiple"
                         }
                     ],
-                    "round_number": 2
+                    "round_number": 2.0
                 },
                 {
                     "category": "Politics",
@@ -346,7 +346,7 @@
                             "type": "multiple"
                         }
                     ],
-                    "round_number": 3
+                    "round_number": 3.0
                 },
                 {
                     "category": "Vehicles",
@@ -409,10 +409,633 @@
                             "type": "multiple"
                         }
                     ],
-                    "round_number": 4
+                    "round_number": 4.0
                 }
             ],
             "status": "completed"
+        },
+        {
+            "config": {
+                "questions": 3.0,
+                "rounds": 3.0
+            },
+            "created_at": 1770379054.33,
+            "current_round": 2.0,
+            "current_turn": "robin",
+            "inviter": "robin",
+            "match_id": "match_1770379054",
+            "players": [
+                "robin",
+				"tobias"
+            ],
+            "rounds_data": [
+                {
+                    "category": "Geography",
+                    "category_chooser": "robin",
+                    "player_answers": {
+                        "robin": {
+                            "answered": true,
+                            "results": [
+                                {
+                                    "player_answer": "Dakar",
+                                    "question_data": {
+                                        "category": "Geography",
+                                        "correct_answer": "Dakar",
+                                        "difficulty": "medium",
+                                        "incorrect_answers": [
+                                            "Nouakchott",
+                                            "Conakry",
+											"Monrovia"
+                                        ],
+                                        "question": "What is the capital of Senegal?",
+                                        "type": "multiple"
+                                    },
+                                    "was_correct": true
+                                },
+                                {
+                                    "player_answer": "Slova&scaron;ko",
+                                    "question_data": {
+                                        "category": "Geography",
+                                        "correct_answer": "Slova&scaron;ko",
+                                        "difficulty": "medium",
+                                        "incorrect_answers": [
+                                            "Suomi",
+                                            "Schweiz",
+											"Ell&aacute;da"
+                                        ],
+                                        "question": "Which of these countries is not written in its native language?",
+                                        "type": "multiple"
+                                    },
+                                    "was_correct": true
+                                },
+                                {
+                                    "player_answer": "Dublin, Ireland",
+                                    "question_data": {
+                                        "category": "Geography",
+                                        "correct_answer": "Carlisle, England",
+                                        "difficulty": "medium",
+                                        "incorrect_answers": [
+                                            "Rome, Italy",
+                                            "Alexandria, Egypt",
+											"Dublin, Ireland"
+                                        ],
+                                        "question": "Where is Hadrian&#039;s Wall located?",
+                                        "type": "multiple"
+                                    },
+                                    "was_correct": false
+                                }
+                            ]
+                        },
+                        "tobias": {
+                            "answered": true,
+                            "results": [
+                                {
+                                    "player_answer": "Dakar",
+                                    "question_data": {
+                                        "category": "Geography",
+                                        "correct_answer": "Dakar",
+                                        "difficulty": "medium",
+                                        "incorrect_answers": [
+                                            "Nouakchott",
+                                            "Conakry",
+											"Monrovia"
+                                        ],
+                                        "question": "What is the capital of Senegal?",
+                                        "type": "multiple"
+                                    },
+                                    "was_correct": true
+                                },
+                                {
+                                    "player_answer": "Schweiz",
+                                    "question_data": {
+                                        "category": "Geography",
+                                        "correct_answer": "Slova&scaron;ko",
+                                        "difficulty": "medium",
+                                        "incorrect_answers": [
+                                            "Suomi",
+                                            "Schweiz",
+											"Ell&aacute;da"
+                                        ],
+                                        "question": "Which of these countries is not written in its native language?",
+                                        "type": "multiple"
+                                    },
+                                    "was_correct": false
+                                },
+                                {
+                                    "player_answer": "Dublin, Ireland",
+                                    "question_data": {
+                                        "category": "Geography",
+                                        "correct_answer": "Carlisle, England",
+                                        "difficulty": "medium",
+                                        "incorrect_answers": [
+                                            "Rome, Italy",
+                                            "Alexandria, Egypt",
+											"Dublin, Ireland"
+                                        ],
+                                        "question": "Where is Hadrian&#039;s Wall located?",
+                                        "type": "multiple"
+                                    },
+                                    "was_correct": false
+                                }
+                            ]
+                        }
+                    },
+                    "questions": [
+                        {
+                            "category": "Geography",
+                            "correct_answer": "Dakar",
+                            "difficulty": "medium",
+                            "incorrect_answers": [
+                                "Nouakchott",
+                                "Conakry",
+								"Monrovia"
+                            ],
+                            "question": "What is the capital of Senegal?",
+                            "type": "multiple"
+                        },
+                        {
+                            "category": "Geography",
+                            "correct_answer": "Slova&scaron;ko",
+                            "difficulty": "medium",
+                            "incorrect_answers": [
+                                "Suomi",
+                                "Schweiz",
+								"Ell&aacute;da"
+                            ],
+                            "question": "Which of these countries is not written in its native language?",
+                            "type": "multiple"
+                        },
+                        {
+                            "category": "Geography",
+                            "correct_answer": "Carlisle, England",
+                            "difficulty": "medium",
+                            "incorrect_answers": [
+                                "Rome, Italy",
+                                "Alexandria, Egypt",
+								"Dublin, Ireland"
+                            ],
+                            "question": "Where is Hadrian&#039;s Wall located?",
+                            "type": "multiple"
+                        }
+                    ],
+                    "round_number": 1.0
+                },
+                {
+                    "category": "Sports",
+                    "category_chooser": "tobias",
+                    "player_answers": {
+                        "robin": {
+                            "answered": false,
+                            "results": []
+                        },
+                        "tobias": {
+                            "answered": true,
+                            "results": [
+                                {
+                                    "player_answer": "11",
+                                    "question_data": {
+                                        "category": "Sports",
+                                        "correct_answer": "11",
+                                        "difficulty": "easy",
+                                        "incorrect_answers": [
+                                            "10",
+                                            "9",
+											"8"
+                                        ],
+                                        "question": "How many players are there in an association football/soccer team?",
+                                        "type": "multiple"
+                                    },
+                                    "was_correct": true
+                                },
+                                {
+                                    "player_answer": "3",
+                                    "question_data": {
+                                        "category": "Sports",
+                                        "correct_answer": "4",
+                                        "difficulty": "easy",
+                                        "incorrect_answers": [
+                                            "1",
+                                            "2",
+											"3"
+                                        ],
+                                        "question": "In Baseball, how many times does the ball have to be pitched outside of the strike zone before the batter is walked?",
+                                        "type": "multiple"
+                                    },
+                                    "was_correct": false
+                                },
+                                {
+                                    "player_answer": "Germany",
+                                    "question_data": {
+                                        "category": "Sports",
+                                        "correct_answer": "Russia",
+                                        "difficulty": "medium",
+                                        "incorrect_answers": [
+                                            "Canada",
+                                            "United States",
+											"Germany"
+                                        ],
+                                        "question": "What country hosted the 2014 Winter Olympics?",
+                                        "type": "multiple"
+                                    },
+                                    "was_correct": false
+                                }
+                            ]
+                        }
+                    },
+                    "questions": [
+                        {
+                            "category": "Sports",
+                            "correct_answer": "11",
+                            "difficulty": "easy",
+                            "incorrect_answers": [
+                                "10",
+                                "9",
+								"8"
+                            ],
+                            "question": "How many players are there in an association football/soccer team?",
+                            "type": "multiple"
+                        },
+                        {
+                            "category": "Sports",
+                            "correct_answer": "4",
+                            "difficulty": "easy",
+                            "incorrect_answers": [
+                                "1",
+                                "2",
+								"3"
+                            ],
+                            "question": "In Baseball, how many times does the ball have to be pitched outside of the strike zone before the batter is walked?",
+                            "type": "multiple"
+                        },
+                        {
+                            "category": "Sports",
+                            "correct_answer": "Russia",
+                            "difficulty": "medium",
+                            "incorrect_answers": [
+                                "Canada",
+                                "United States",
+								"Germany"
+                            ],
+                            "question": "What country hosted the 2014 Winter Olympics?",
+                            "type": "multiple"
+                        }
+                    ],
+                    "round_number": 2.0
+                },
+                {
+                    "category": "",
+                    "category_chooser": "robin",
+                    "player_answers": {
+                        "robin": {
+                            "answered": false,
+                            "results": []
+                        },
+                        "tobias": {
+                            "answered": false,
+                            "results": []
+                        }
+                    },
+                    "questions": [],
+                    "round_number": 3.0
+                }
+            ],
+            "status": "active"
+        },
+        {
+            "config": {
+                "questions": 3,
+                "rounds": 3
+            },
+            "created_at": 1770641879.731,
+            "current_round": 3,
+            "current_turn": "robin",
+            "inviter": "robin",
+            "match_id": "match_1770641879",
+            "players": [
+                "robin",
+				"linus"
+            ],
+            "rounds_data": [
+                {
+                    "category": "Art",
+                    "category_chooser": "robin",
+                    "player_answers": {
+                        "linus": {
+                            "answered": true,
+                            "results": [
+                                {
+                                    "player_answer": "Collodion process",
+                                    "question_data": {
+                                        "category": "Art",
+                                        "correct_answer": "The Daguerreotype",
+                                        "difficulty": "hard",
+                                        "incorrect_answers": [
+                                            "Collodion process",
+                                            "The Turin Shroud",
+											"Kodachrome film"
+                                        ],
+                                        "question": "What was the first successful and commercially viable photographic technique?",
+                                        "type": "multiple"
+                                    },
+                                    "was_correct": false
+                                },
+                                {
+                                    "player_answer": "The Ninth Wave",
+                                    "question_data": {
+                                        "category": "Art",
+                                        "correct_answer": "The Ninth Wave",
+                                        "difficulty": "easy",
+                                        "incorrect_answers": [
+                                            "Caf&eacute; Terrace at Night",
+                                            "Bedroom In Arles",
+											"Starry Night"
+                                        ],
+                                        "question": "Which painting was not made by Vincent Van Gogh?",
+                                        "type": "multiple"
+                                    },
+                                    "was_correct": true
+                                },
+                                {
+                                    "player_answer": "Impressionism",
+                                    "question_data": {
+                                        "category": "Art",
+                                        "correct_answer": "Neoplasticism",
+                                        "difficulty": "hard",
+                                        "incorrect_answers": [
+                                            "Precisionism",
+                                            "Cubism",
+											"Impressionism"
+                                        ],
+                                        "question": "Painter Piet Mondrian (1872 - 1944) was a part of what movement?",
+                                        "type": "multiple"
+                                    },
+                                    "was_correct": false
+                                }
+                            ]
+                        },
+                        "robin": {
+                            "answered": true,
+                            "results": [
+                                {
+                                    "player_answer": "The Turin Shroud",
+                                    "question_data": {
+                                        "category": "Art",
+                                        "correct_answer": "The Daguerreotype",
+                                        "difficulty": "hard",
+                                        "incorrect_answers": [
+                                            "Collodion process",
+                                            "The Turin Shroud",
+											"Kodachrome film"
+                                        ],
+                                        "question": "What was the first successful and commercially viable photographic technique?",
+                                        "type": "multiple"
+                                    },
+                                    "was_correct": false
+                                },
+                                {
+                                    "player_answer": "Caf&eacute; Terrace at Night",
+                                    "question_data": {
+                                        "category": "Art",
+                                        "correct_answer": "The Ninth Wave",
+                                        "difficulty": "easy",
+                                        "incorrect_answers": [
+                                            "Caf&eacute; Terrace at Night",
+                                            "Bedroom In Arles",
+											"Starry Night"
+                                        ],
+                                        "question": "Which painting was not made by Vincent Van Gogh?",
+                                        "type": "multiple"
+                                    },
+                                    "was_correct": false
+                                },
+                                {
+                                    "player_answer": "Precisionism",
+                                    "question_data": {
+                                        "category": "Art",
+                                        "correct_answer": "Neoplasticism",
+                                        "difficulty": "hard",
+                                        "incorrect_answers": [
+                                            "Precisionism",
+                                            "Cubism",
+											"Impressionism"
+                                        ],
+                                        "question": "Painter Piet Mondrian (1872 - 1944) was a part of what movement?",
+                                        "type": "multiple"
+                                    },
+                                    "was_correct": false
+                                }
+                            ]
+                        }
+                    },
+                    "questions": [
+                        {
+                            "category": "Art",
+                            "correct_answer": "The Daguerreotype",
+                            "difficulty": "hard",
+                            "incorrect_answers": [
+                                "Collodion process",
+                                "The Turin Shroud",
+								"Kodachrome film"
+                            ],
+                            "question": "What was the first successful and commercially viable photographic technique?",
+                            "type": "multiple"
+                        },
+                        {
+                            "category": "Art",
+                            "correct_answer": "The Ninth Wave",
+                            "difficulty": "easy",
+                            "incorrect_answers": [
+                                "Caf&eacute; Terrace at Night",
+                                "Bedroom In Arles",
+								"Starry Night"
+                            ],
+                            "question": "Which painting was not made by Vincent Van Gogh?",
+                            "type": "multiple"
+                        },
+                        {
+                            "category": "Art",
+                            "correct_answer": "Neoplasticism",
+                            "difficulty": "hard",
+                            "incorrect_answers": [
+                                "Precisionism",
+                                "Cubism",
+								"Impressionism"
+                            ],
+                            "question": "Painter Piet Mondrian (1872 - 1944) was a part of what movement?",
+                            "type": "multiple"
+                        }
+                    ],
+                    "round_number": 1
+                },
+                {
+                    "category": "Art",
+                    "category_chooser": "linus",
+                    "player_answers": {
+                        "linus": {
+                            "answered": true,
+                            "results": [
+                                {
+                                    "player_answer": "Kodachrome film",
+                                    "question_data": {
+                                        "category": "Art",
+                                        "correct_answer": "The Daguerreotype",
+                                        "difficulty": "hard",
+                                        "incorrect_answers": [
+                                            "Collodion process",
+                                            "The Turin Shroud",
+											"Kodachrome film"
+                                        ],
+                                        "question": "What was the first successful and commercially viable photographic technique?",
+                                        "type": "multiple"
+                                    },
+                                    "was_correct": false
+                                },
+                                {
+                                    "player_answer": "The Ninth Wave",
+                                    "question_data": {
+                                        "category": "Art",
+                                        "correct_answer": "The Ninth Wave",
+                                        "difficulty": "easy",
+                                        "incorrect_answers": [
+                                            "Caf&eacute; Terrace at Night",
+                                            "Bedroom In Arles",
+											"Starry Night"
+                                        ],
+                                        "question": "Which painting was not made by Vincent Van Gogh?",
+                                        "type": "multiple"
+                                    },
+                                    "was_correct": true
+                                },
+                                {
+                                    "player_answer": "Neoplasticism",
+                                    "question_data": {
+                                        "category": "Art",
+                                        "correct_answer": "Neoplasticism",
+                                        "difficulty": "hard",
+                                        "incorrect_answers": [
+                                            "Precisionism",
+                                            "Cubism",
+											"Impressionism"
+                                        ],
+                                        "question": "Painter Piet Mondrian (1872 - 1944) was a part of what movement?",
+                                        "type": "multiple"
+                                    },
+                                    "was_correct": true
+                                }
+                            ]
+                        },
+                        "robin": {
+                            "answered": true,
+                            "results": [
+                                {
+                                    "player_answer": "Collodion process",
+                                    "question_data": {
+                                        "category": "Art",
+                                        "correct_answer": "The Daguerreotype",
+                                        "difficulty": "hard",
+                                        "incorrect_answers": [
+                                            "Collodion process",
+                                            "The Turin Shroud",
+											"Kodachrome film"
+                                        ],
+                                        "question": "What was the first successful and commercially viable photographic technique?",
+                                        "type": "multiple"
+                                    },
+                                    "was_correct": false
+                                },
+                                {
+                                    "player_answer": "Caf&eacute; Terrace at Night",
+                                    "question_data": {
+                                        "category": "Art",
+                                        "correct_answer": "The Ninth Wave",
+                                        "difficulty": "easy",
+                                        "incorrect_answers": [
+                                            "Caf&eacute; Terrace at Night",
+                                            "Bedroom In Arles",
+											"Starry Night"
+                                        ],
+                                        "question": "Which painting was not made by Vincent Van Gogh?",
+                                        "type": "multiple"
+                                    },
+                                    "was_correct": false
+                                },
+                                {
+                                    "player_answer": "Impressionism",
+                                    "question_data": {
+                                        "category": "Art",
+                                        "correct_answer": "Neoplasticism",
+                                        "difficulty": "hard",
+                                        "incorrect_answers": [
+                                            "Precisionism",
+                                            "Cubism",
+											"Impressionism"
+                                        ],
+                                        "question": "Painter Piet Mondrian (1872 - 1944) was a part of what movement?",
+                                        "type": "multiple"
+                                    },
+                                    "was_correct": false
+                                }
+                            ]
+                        }
+                    },
+                    "questions": [
+                        {
+                            "category": "Art",
+                            "correct_answer": "The Daguerreotype",
+                            "difficulty": "hard",
+                            "incorrect_answers": [
+                                "Collodion process",
+                                "The Turin Shroud",
+								"Kodachrome film"
+                            ],
+                            "question": "What was the first successful and commercially viable photographic technique?",
+                            "type": "multiple"
+                        },
+                        {
+                            "category": "Art",
+                            "correct_answer": "The Ninth Wave",
+                            "difficulty": "easy",
+                            "incorrect_answers": [
+                                "Caf&eacute; Terrace at Night",
+                                "Bedroom In Arles",
+								"Starry Night"
+                            ],
+                            "question": "Which painting was not made by Vincent Van Gogh?",
+                            "type": "multiple"
+                        },
+                        {
+                            "category": "Art",
+                            "correct_answer": "Neoplasticism",
+                            "difficulty": "hard",
+                            "incorrect_answers": [
+                                "Precisionism",
+                                "Cubism",
+								"Impressionism"
+                            ],
+                            "question": "Painter Piet Mondrian (1872 - 1944) was a part of what movement?",
+                            "type": "multiple"
+                        }
+                    ],
+                    "round_number": 2
+                },
+                {
+                    "category": "",
+                    "category_chooser": "robin",
+                    "player_answers": {
+                        "linus": {
+                            "answered": false,
+                            "results": []
+                        },
+                        "robin": {
+                            "answered": false,
+                            "results": []
+                        }
+                    },
+                    "questions": [],
+                    "round_number": 3
+                }
+            ],
+            "status": "active"
         }
     ],
     "users": {
@@ -441,16 +1064,30 @@
             "wins": 0.0
         },
         "robin": {
-            "avatar_path": "res://assets/profile_pictures/man_beard.png",
+            "avatar_path": "res://assets/profile_pictures/man_standard.png",
             "current_streak": 0.0,
             "email": "r@test.de",
             "friends": [
-				"linus"
+                "linus",
+				"tobias"
             ],
             "losses": 0.0,
             "notifications": [],
             "password_hash": "a665a45920422f9d417e4867efdc4fb8a04a1f3fff1fa07e998e86f7f7a27ae3",
             "username": "robin",
+            "wins": 0.0
+        },
+        "tobias": {
+            "avatar_path": "res://assets/profile_pictures/man_beard.png",
+            "current_streak": 0.0,
+            "email": "tobi@test.de",
+            "friends": [
+				"robin"
+            ],
+            "losses": 0.0,
+            "notifications": [],
+            "password_hash": "a665a45920422f9d417e4867efdc4fb8a04a1f3fff1fa07e998e86f7f7a27ae3",
+            "username": "tobias",
             "wins": 0.0
         }
     }

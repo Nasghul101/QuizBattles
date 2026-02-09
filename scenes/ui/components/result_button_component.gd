@@ -18,7 +18,7 @@ var question_index: int = -1
 var question_data: Dictionary = {}
 @export var icon_right: Texture2D
 @export var icon_wrong: Texture2D
-
+@export var icon_hidden: Texture2D
 
 func _ready() -> void:
     # Set default visual properties
@@ -68,6 +68,16 @@ func set_empty_state() -> void:
     icon = null
     disabled = true
     modulate = Color(0.5, 0.5, 0.5)
+
+
+## Configure button to display hidden state
+##
+## Sets the button to show the hidden icon and disables interaction.
+## Used when opponent results should not be visible until both players complete the round.
+func set_hidden_state() -> void:
+    icon = icon_hidden
+    disabled = true
+    modulate = Color(1.0, 1.0, 1.0)
 
 
 ## Handle button press and emit custom signal

@@ -160,6 +160,16 @@ func _update_button_states() -> void:
         answer_buttons[i].set_empty_state()
 
 
+## Hide all result buttons for incomplete rounds
+##
+## Sets all answer buttons to hidden state, used by gameplay_screen when opponent
+## results should not be visible until both players complete the round.
+## Maintains component separation by not requiring knowledge of player/opponent concepts.
+func hide_results() -> void:
+    for button in answer_buttons:
+        button.set_hidden_state()
+
+
 ## Handle result button press from ResultButtonComponent
 ##
 ## Args:

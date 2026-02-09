@@ -413,9 +413,19 @@ func _load_existing_match_state() -> void:
         if round_data.player_answers[my_username].answered:
             _display_round_results(round_idx, my_username, "right")
         
-        # Display opponent results if they've answered
-        if round_data.player_answers[opponent_username].answered:
+        # Handle opponent results based on round completion status
+        var opponent_answered = round_data.player_answers[opponent_username].answered
+        var my_answered = round_data.player_answers[my_username].answered
+        
+        if opponent_answered:
+            # Display opponent results
             _display_round_results(round_idx, opponent_username, "left")
+            
+            # If opponent answered but I haven't, hide their results
+            if not my_answered:
+                var opponent_container = result_container_l
+                var opponent_result_component = opponent_container.get_child(round_idx)
+                opponent_result_component.hide_results()
 
 
 func _on_back_button_pressed() -> void:
