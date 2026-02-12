@@ -5,19 +5,32 @@ The friendly_battle_page displays all active multiplayer matches for the current
 
 ## Requirements
 
-### Requirement: Display Active Multiplayer Matches
-The friendly_battle_page SHALL display avatar_component instances for each active multiplayer match involving the current user.
+### Requirement: Display All Multiplayer Matches (Active and Finished)
+The friendly_battle_page SHALL display avatar_component instances for all multiplayer matches (both active and finished) involving the current user, excluding matches that the user has already dismissed.
 
-**Rationale:** Provide visual overview of all ongoing quiz duels so players can see their active games at a glance.
+**Rationale:** Provide visual overview of all ongoing and completed quiz duels so players can see their active games and finished matches that require dismissal.
 
 #### Scenario: Load matches on page open
-**Given** Player A has 2 active matches  
+**Given** Player A has 2 active matches and 1 finished match  
 **When** friendly_battle_page becomes visible  
-**Then** 2 avatar_components are instantiated in the FriendsList GridContainer  
+**Then** 3 avatar_components are instantiated in the FriendsList GridContainer  
 **And** each avatar corresponds to a different match
 
+#### Scenario: Call get_all_matches_for_player instead of get_active_matches_for_player
+**Given** friendly_battle_page is populating matches  
+**When** _populate_active_matches() executes  
+**Then** UserDatabase.get_all_matches_for_player() is called  
+**And** NOT get_active_matches_for_player()  
+**And** the returned array includes matches with status="finished"
+
+#### Scenario: Filter out matches dismissed by current user
+**Given** Player A has finished a match and dismissed it  
+**When** friendly_battle_page loads matches  
+**Then** the dismissed match is filtered out  
+**And** only matches where Player A is NOT in `dismissed_by` array are shown
+
 #### Scenario: Empty state when no matches
-**Given** Player A has no active matches  
+**Given** Player A has no active or undismissed finished matches  
 **When** friendly_battle_page loads  
 **Then** a message "No active matches" is displayed  
 **And** no avatar_components are shown
@@ -38,21 +51,40 @@ Each avatar_component SHALL display the opponent's profile picture and name from
 
 ---
 
-### Requirement: Display Turn Status Label
-Each avatar_component SHALL display whose turn it is using the avatar name label.
+### Requirement: Display Turn Status or Game Finished Label
+Each avatar_component SHALL display whose turn it is for active matches, or "Game Finished" for completed matches.
 
-**Rationale:** Enable players to quickly identify which matches require their action.
+**Rationale:** Enable players to quickly identify which matches require their action and which are awaiting dismissal.
+
+#### Scenario: Show "Game Finished" for finished match
+**Given** a match with status="finished" exists  
+**When** the avatar_component is created for this match  
+**Then** the avatar name label displays "Game Finished"  
+**And** no turn information is shown
+
+#### Scenario: Prioritize finished status over turn status
+**Given** a match with status="finished" and current_turn="Alice"  
+**When** avatar label logic executes  
+**Then** label displays "Game Finished"  
+**And** NOT "Your Turn" or "Alice Turn"
 
 #### Scenario: Show "Your Turn" when it's player's turn
-**Given** a match where `current_turn` equals the current user's username  
-**When** the avatar is displayed  
-**Then** the label text is set to "Your Turn"
+**Given** an active match where `current_turn` equals the current user's username  
+**When** the avatar is displayed   for both active and finished matches.
 
-#### Scenario: Show opponent's turn
-**Given** a match with Player A vs Player B  
-**And** `current_turn` equals Player B's username  
-**When** Player A views the avatar  
-**Then** the label text is set to "Player B Turn" (using opponent's username)
+**Rationale:** Enable players to open specific matches for gameplay or to review finished matches and dismiss them.
+
+#### Scenario: Pass match_id on avatar click
+**Given** an avatar_component representing match "match_123"  
+**When** the avatar is clicked  
+**Then** `NavigationUtils.navigate_to_scene("gameplay_screen", {"match_id": "match_123"})` is called
+
+#### Scenario: Open finished match in gameplay_screen
+**Given** an avatar representing a finished match is clicked  
+**When** _on_avatar_clicked() executes  
+**Then** TransitionManager.change_scene() is called with gameplay_screen path  
+**And** match_id parameter is passed  
+**And** FinishGamePopup is shown automatically with winner/draw announcement
 
 ---
 

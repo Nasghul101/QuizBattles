@@ -32,10 +32,17 @@ func _populate_active_matches() -> void:
     if not UserDatabase.is_signed_in():
         return
     
-    # Get active matches for current user
-    var matches: Array = UserDatabase.get_active_matches_for_player(
+    # Get all matches for current user
+    var all_matches: Array = UserDatabase.get_all_matches_for_player(
         UserDatabase.current_user.username
     )
+    
+    # Filter out matches that current user has dismissed
+    var matches: Array = []
+    for match in all_matches:
+        var dismissed_by = match.get("dismissed_by", [])
+        if UserDatabase.current_user.username not in dismissed_by:
+            matches.append(match)
     
     # Show/hide empty state message if it exists
     var no_matches_label = get_node_or_null("%NoMatchesLabel")
@@ -61,7 +68,9 @@ func _populate_active_matches() -> void:
         
         # Set turn status label
         var label_text = ""
-        if match.current_turn == UserDatabase.current_user.username:
+        if match.status == "finished":
+            label_text = "Game Finished"
+        elif match.current_turn == UserDatabase.current_user.username:
             label_text = "Your Turn"
         else:
             label_text = "%s Turn" % opponent_username

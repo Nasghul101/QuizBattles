@@ -33,6 +33,11 @@ var selected_category: String = ""
 @onready var result_container_l: VBoxContainer = %ResultContainerL
 @onready var result_container_r: VBoxContainer = %ResultContainerR
 @onready var play_button: Button = %PlayButton
+@onready var score_p1_label: Label = get_node("MarginContainer/HBoxContainer/VBoxContainer3/HBoxContainer/ScoreP1")
+@onready var score_p2_label: Label = get_node("MarginContainer/HBoxContainer/VBoxContainer3/HBoxContainer/ScoreP2")
+@onready var finish_game_popup: MarginContainer = $FinishGamePopup
+@onready var winner_display: Label = $FinishGamePopup/PanelContainer/VBoxContainer/WinnerDisplay
+@onready var finish_game_button: Button = $FinishGamePopup/PanelContainer/VBoxContainer/FinishGameButton
 
 # Scene references
 var result_component_scene: PackedScene = preload("res://scenes/ui/components/result_component.tscn")
@@ -67,6 +72,9 @@ func _ready() -> void:
     # Connect PlayButton
     play_button.pressed.connect(_on_play_button_pressed)
     
+    # Connect FinishGameButton
+    finish_game_button.pressed.connect(_on_finish_game_button_pressed)
+    
     # Remove existing result components and create new ones
     _initialize_result_components()
     
@@ -74,6 +82,11 @@ func _ready() -> void:
     if is_multiplayer:
         _update_play_button_state()
         _load_existing_match_state()
+        _update_score_labels()
+        
+        # If match is finished, show popup immediately
+        if match_data.status == "finished":
+            _show_finish_popup()
     
     # Display current configuration for debugging
     if num_rounds > 0 and num_questions > 0:
@@ -279,13 +292,11 @@ func _complete_round() -> void:
     # Hide quiz screen
     quiz_screen.visible = false
     
-    # Get result components for current round (0-indexed)
+    # Get result component for current round (0-indexed) - only left side for single-player
     var result_l = result_container_l.get_child(current_round - 1)
-    var result_r = result_container_r.get_child(current_round - 1)
     
-    # Load results into both components
+    # Load results into left component (logged-in player side)
     result_l.load_result_data(icon_placeholder, current_round_results)
-    result_r.load_result_data(icon_placeholder, current_round_results)
     
     # Check if all rounds are complete
     if current_round >= num_rounds:
@@ -311,15 +322,15 @@ func _handle_round_completion() -> void:
         match_data.rounds_data[current_round_idx].player_answers[my_username].answered = true
         match_data.rounds_data[current_round_idx].player_answers[my_username].results = current_round_results.duplicate(true)
         
-        # Display my results on right side
-        _display_round_results(current_round_idx, my_username, "right")
+        # Display my results on left side
+        _display_round_results(current_round_idx, my_username, "left")
         
         # Check if opponent also answered
         var opponent_answered = match_data.rounds_data[current_round_idx].player_answers[opponent_username].answered
         
         if opponent_answered:
             # Both answered - reveal opponent results and advance round
-            _display_round_results(current_round_idx, opponent_username, "left")
+            _display_round_results(current_round_idx, opponent_username, "right")
             
             # Check if more rounds remain
             if match_data.current_round < num_rounds:
@@ -329,11 +340,14 @@ func _handle_round_completion() -> void:
                 match_data.current_turn = match_data.rounds_data[next_round_idx].category_chooser
             
             else:
-                # Match complete - delete from database
-                UserDatabase.delete_match(match_data.match_id)
+                # Match complete - update statistics before finishing
+                UserDatabase.update_player_statistics(match_data)
                 
-                # Return to lobby
-                TransitionManager.change_scene("res://scenes/ui/main_lobby_screen.tscn")
+                # Set status to finished and show popup
+                match_data.status = "finished"
+                UserDatabase.update_match(match_data)
+                _update_score_labels()
+                _show_finish_popup()
                 return
         
         else:
@@ -396,6 +410,10 @@ func _display_round_results(round_idx: int, username: String, side: String) -> v
     
     # Load results using the component's proper method
     result_component.load_result_data(icon_placeholder, results)
+    
+    # Update score labels after displaying results
+    if is_multiplayer:
+        _update_score_labels()
 
 
 ## Load and display existing match state from database
@@ -411,7 +429,7 @@ func _load_existing_match_state() -> void:
         
         # Display my results if I've answered
         if round_data.player_answers[my_username].answered:
-            _display_round_results(round_idx, my_username, "right")
+            _display_round_results(round_idx, my_username, "left")
         
         # Handle opponent results based on round completion status
         var opponent_answered = round_data.player_answers[opponent_username].answered
@@ -419,14 +437,91 @@ func _load_existing_match_state() -> void:
         
         if opponent_answered:
             # Display opponent results
-            _display_round_results(round_idx, opponent_username, "left")
+            _display_round_results(round_idx, opponent_username, "right")
             
             # If opponent answered but I haven't, hide their results
             if not my_answered:
-                var opponent_container = result_container_l
+                var opponent_container = result_container_r
                 var opponent_result_component = opponent_container.get_child(round_idx)
                 opponent_result_component.hide_results()
 
 
 func _on_back_button_pressed() -> void:
     NavigationUtils.navigate_to_scene("main_lobby")
+
+
+## Calculate score from result components in a container
+##
+## @param container: VBoxContainer with result_components
+## @return int: Total number of correct answers
+func _calculate_score_from_results(container: VBoxContainer) -> int:
+    var score = 0
+    for result_component in container.get_children():
+        if result_component.is_empty:
+            continue
+        
+        for result_data in result_component.stored_results:
+            if result_data.was_correct:
+                score += 1
+    
+    return score
+
+
+## Update score labels based on current result components
+func _update_score_labels() -> void:
+    if not is_multiplayer:
+        return
+    
+    var p1_score = _calculate_score_from_results(result_container_l)
+    var p2_score = _calculate_score_from_results(result_container_r)
+    
+    score_p1_label.text = str(p1_score)
+    score_p2_label.text = str(p2_score)
+
+
+## Show finish game popup with winner determination
+func _show_finish_popup() -> void:
+    var p1_score = _calculate_score_from_results(result_container_l)
+    var p2_score = _calculate_score_from_results(result_container_r)
+    
+    var my_username = UserDatabase.current_user.username
+    var winner_text = ""
+    
+    if p1_score > p2_score:
+        winner_text = '"%s" won' % my_username
+    elif p2_score > p1_score:
+        winner_text = '"%s" won' % opponent_username
+    else:
+        winner_text = "Draw"
+    
+    winner_display.text = winner_text
+    finish_game_popup.visible = true
+
+
+## Handle finish game button press
+func _on_finish_game_button_pressed() -> void:
+    var my_username = UserDatabase.current_user.username
+    
+    # Initialize dismissed_by array if it doesn't exist (backward compatibility)
+    if not match_data.has("dismissed_by"):
+        match_data.dismissed_by = []
+    
+    # Add current user to dismissed_by list
+    if my_username not in match_data.dismissed_by:
+        match_data.dismissed_by.append(my_username)
+    
+    # Check if both players have dismissed
+    var all_dismissed = true
+    for player in match_data.players:
+        if player not in match_data.dismissed_by:
+            all_dismissed = false
+            break
+    
+    if all_dismissed:
+        # Both players dismissed - delete the match
+        UserDatabase.delete_match(match_id)
+    else:
+        # Only this player dismissed - update match
+        UserDatabase.update_match(match_data)
+    
+    TransitionManager.change_scene("res://scenes/ui/main_lobby_screen.tscn")

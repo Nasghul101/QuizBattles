@@ -2,9 +2,7 @@
 
 ## Purpose
 The multiplayer-match-system provides persistent storage and management of asynchronous turn-based quiz duels, including match creation, state tracking, turn management, and answer storage.
-
 ## Requirements
-
 ### Requirement: Store Match Data in UserDatabase
 The system SHALL persist multiplayer match data in UserDatabase's JSON file storage under a `multiplayer_matches` array.
 
@@ -188,11 +186,12 @@ The match data SHALL maintain a `current_round` field (1-based) indicating the a
 **When** the second player's answers are submitted  
 **Then** `current_round` is incremented to 3
 
-#### Scenario: Mark match complete after last round
+#### Scenario: Mark match finished after last round
 **Given** both players completed all questions in the final round  
 **When** the second player's answers are submitted  
-**Then** `status` is set to "completed"  
-**And** `current_round` remains at the final round number
+**Then** `status` is set to "finished"  
+**And** `current_round` remains at the final round number  
+**And** the match remains in the database
 
 ---
 
@@ -288,3 +287,148 @@ Match data SHALL persist to disk and reload on app restart.
 **And** the match progresses even though Player A is offline
 
 ---
+
+### Requirement: Support "finished" match status
+The multiplayer match system SHALL recognize and persist a "finished" status for matches where all rounds are complete but not yet dismissed by all players.
+
+**Rationale:** Distinguish completed matches from active ones and enable display of finished matches until players dismiss them.
+
+#### Scenario: Match with finished status persists in database
+**Given** a match has status="finished"  
+**When** the database is saved and reloaded  
+**Then** the match remains in the multiplayer_matches array  
+**And** status field still equals "finished"
+
+#### Scenario: Status transitions from active to finished
+**Given** a match with status="active"  
+**When** both players complete the final round  
+**And** gameplay_screen calls update_match() with status="finished"  
+**Then** the match status is updated in the database  
+**And** the match is NOT deleted
+
+---
+
+### Requirement: Track dismissed players with dismissed_by field
+The match data SHALL include a `dismissed_by` array that records which players have dismissed the finished match.
+
+**Rationale:** Enable per-player dismissal so each player controls when they clear finished matches from their view.
+
+#### Scenario: Initialize dismissed_by as empty array
+**Given** a new match is created  
+**When** the match data is stored  
+**Then** `dismissed_by` is initialized as an empty array
+
+#### Scenario: Add player to dismissed_by on dismissal
+**Given** a finished match with empty dismissed_by array  
+**When** Player A clicks FinishGameButton  
+**Then** Player A's username is appended to dismissed_by array  
+**And** UserDatabase.update_match() is called
+
+#### Scenario: Delete match when all players dismissed
+**Given** a finished match with Player A in dismissed_by  
+**When** Player B clicks FinishGameButton  
+**Then** Player B's username is appended to dismissed_by array  
+**And** all players from match.players are in dismissed_by  
+**And** UserDatabase.delete_match() is called  
+**And** the match is removed from the database
+
+---
+
+### Requirement: Provide method to retrieve all matches regardless of status
+UserDatabase SHALL provide a get_all_matches_for_player() method that returns active AND finished matches.
+
+**Rationale:** Enable friendly_battle_page to display finished matches until players dismiss them.
+
+#### Scenario: Retrieve both active and finished matches
+**Given** Player A has 2 active matches and 1 finished match  
+**When** get_all_matches_for_player("PlayerA") is called  
+**Then** an array with 3 matches is returned  
+**And** the array includes matches with status="active"  
+**And** the array includes matches with status="finished"
+
+#### Scenario: Filter by player but not by status
+**Given** Player A has 1 finished match and Player B has 1 finished match  
+**When** get_all_matches_for_player("PlayerA") is called  
+**Then** only Player A's match is returned  
+**And** Player B's match is excluded  
+**And** status field is not used as filter criteria
+
+#### Scenario: Return empty array when player has no matches
+**Given** Player C has no matches in the database  
+**When** get_all_matches_for_player("PlayerC") is called  
+**Then** an empty array is returned
+
+---
+
+### Requirement: Filter dismissed matches from player view
+The friendly_battle_page SHALL exclude matches where the current player is in the dismissed_by array.
+
+**Rationale:** Allow players to dismiss finished matches from their view independently.
+
+#### Scenario: Hide dismissed match from player who dismissed it
+**Given** Player A has finished a match and added themselves to dismissed_by  
+**When** Player A views friendly_battle_page  
+**Then** the dismissed match is not displayed  
+**And** only matches where Player A is NOT in dismissed_by are shown
+
+#### Scenario: Show finished match to player who hasn't dismissed it
+**Given** Player A dismissed a finished match  
+**And** Player B has not dismissed it yet  
+**When** Player B views friendly_battle_page  
+**Then** the match is displayed with "Game Finished" label  
+**And** Player B can click it to view final scores
+
+---
+
+### Requirement: Preserve get_active_matches_for_player() behavior
+UserDatabase SHALL maintain the existing get_active_matches_for_player() method with unchanged behavior.
+
+**Rationale:** Avoid breaking other systems that may rely on active-only filtering.
+
+#### Scenario: get_active_matches_for_player excludes finished matches
+**Given** Player A has 2 active matches and 1 finished match  
+**When** get_active_matches_for_player("PlayerA") is called  
+**Then** an array with 2 matches is returned  
+**And** the array includes only matches with status="active"  
+**And** matches with status="finished" are excluded
+
+---
+
+### Requirement: Track Statistics Processing Status
+The system SHALL include a `stats_processed` boolean field in each match record to prevent duplicate statistics updates.
+
+**Rationale:** Ensure player statistics (wins/losses/streaks) are updated exactly once per match, even if multiple systems query match completion status.
+
+**Constraints:**
+- `stats_processed` SHALL be a boolean type
+- Default value SHALL be `false` when match is created
+- SHALL be set to `true` after statistics are updated
+- SHALL persist across database saves/loads
+
+#### Scenario: Initialize stats_processed to false
+**Given** two players agree to play  
+**When** `create_match(inviter, invitee, rounds, questions)` is called  
+**Then** the match record includes `stats_processed: false`  
+**And** the match is saved to the database
+
+#### Scenario: Persist stats_processed flag
+**Given** a match exists with `stats_processed: true`  
+**When** the database is saved to disk  
+**And** the game is restarted  
+**And** the database is loaded  
+**Then** the match retains `stats_processed: true`
+
+#### Scenario: Mark statistics as processed after update
+**Given** a match is complete with both players finishing all rounds  
+**And** the match has `stats_processed: false`  
+**When** statistics are updated via `UserDatabase.update_player_statistics(match_data)`  
+**Then** the match `stats_processed` field is set to `true`  
+**And** the updated match data is saved via `update_match(match_data)`
+
+#### Scenario: Prevent duplicate statistics updates
+**Given** a match has `stats_processed: true`  
+**When** `UserDatabase.update_player_statistics(match_data)` is called  
+**Then** the method detects the flag and returns early  
+**And** no player statistics are modified  
+**And** a warning is logged
+

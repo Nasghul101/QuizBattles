@@ -204,7 +204,8 @@ func create_user(username: String, password: String, email: String) -> Dictionar
         "friends": [],
         "wins": 0,
         "losses": 0,
-        "current_streak": 0
+        "current_streak": 0,
+        "friend_wins": {}
     }
     _users[username] = user_data
     _save_database()
@@ -353,7 +354,7 @@ func get_user_by_username(username: String) -> Dictionary:
 
 ## Get user data safe for display in UI (excludes sensitive data).
 ##
-## Returns username, avatar_path, wins, losses, current_streak.
+## Returns username, avatar_path, wins, losses, current_streak, friend_wins.
 ## Explicitly excludes password_hash and email for security.
 ##
 ## @param username: Username to look up
@@ -368,7 +369,8 @@ func get_user_data_for_display(username: String) -> Dictionary:
         "avatar_path": user_data.get("avatar_path", DEFAULT_AVATAR_PATH),
         "wins": user_data.get("wins", 0),
         "losses": user_data.get("losses", 0),
-        "current_streak": user_data.get("current_streak", 0)
+        "current_streak": user_data.get("current_streak", 0),
+        "friend_wins": user_data.get("friend_wins", {})
     }
 
 
@@ -790,6 +792,8 @@ func create_match(inviter: String, invitee: String, rounds: int, questions: int)
         "current_turn": inviter,  # Inviter always starts
         "current_round": 1,
         "status": "active",
+        "dismissed_by": [],  # Track which players have dismissed the finished match
+        "stats_processed": false,  # Track if statistics have been updated
         "rounds_data": [],
         "created_at": Time.get_unix_time_from_system()
     }
@@ -842,6 +846,23 @@ func get_active_matches_for_player(username: String) -> Array:
     
     for match in data.multiplayer_matches:
         if match.status == "active" and username in match.players:
+            player_matches.append(match)
+    
+    return player_matches
+
+
+## Get all matches (active and finished) for a specific player
+##
+## Unlike get_active_matches_for_player(), this returns matches regardless of status.
+## Useful for displaying finished matches that haven't been dismissed yet.
+##
+## @param username: Player's username
+## @return Array[Dictionary]: List of all matches where player is participant
+func get_all_matches_for_player(username: String) -> Array:
+    var player_matches: Array = []
+    
+    for match in data.multiplayer_matches:
+        if username in match.players:
             player_matches.append(match)
     
     return player_matches
@@ -908,6 +929,123 @@ func _on_game_invite_accepted(inviter_username: String, invitee_username: String
     
     # Emit signal to notify UI of new match
     GlobalSignalBus.match_created.emit(match_id, inviter_username, invitee_username)
+
+
+## ============================================================================
+## Player Statistics Management
+## ============================================================================
+
+## Update player statistics after a multiplayer match completes.
+##
+## Calculates winner/loser based on correct answers, updates wins/losses/streaks,
+## tracks friend-specific wins, and emits signals for UI updates.
+## Uses stats_processed flag to ensure single execution per match.
+##
+## @param match_data: Complete match Dictionary with results for both players
+func update_player_statistics(match_data: Dictionary) -> void:
+    # Validate match data
+    if not match_data.has("match_id"):
+        push_error("Cannot update statistics: missing match_id")
+        return
+    
+    if not match_data.has("players") or match_data.players.size() != 2:
+        push_error("Cannot update statistics: invalid players array")
+        return
+    
+    # Check if statistics already processed
+    if match_data.get("stats_processed", false):
+        push_warning("Statistics already processed for match %s" % match_data.match_id)
+        return
+    
+    # Calculate winner
+    var result: Dictionary = _calculate_match_winner(match_data)
+    
+    if result.is_draw:
+        # Draw - no stats change, but mark as processed
+        print("Match %s ended in draw - no statistics updated" % match_data.match_id)
+        match_data.stats_processed = true
+        update_match(match_data)
+        return
+    
+    var winner: String = result.winner
+    var loser: String = result.loser
+    
+    # Verify both users exist
+    if not user_exists(winner):
+        push_error("Cannot update statistics: winner '%s' not found" % winner)
+        return
+    
+    if not user_exists(loser):
+        push_error("Cannot update statistics: loser '%s' not found" % loser)
+        return
+    
+    # Update winner statistics
+    _users[winner].wins += 1
+    _users[winner].current_streak += 1
+    
+    # Update loser statistics
+    _users[loser].losses += 1
+    _users[loser].current_streak = 0
+    
+    # Update friend wins if players are friends
+    if are_friends(winner, loser):
+        if not _users[winner].has("friend_wins"):
+            _users[winner].friend_wins = {}
+        
+        var current_friend_wins: int = _users[winner].friend_wins.get(loser, 0)
+        _users[winner].friend_wins[loser] = current_friend_wins + 1
+        
+        print("Friend win recorded: %s now has %d wins vs %s" % [winner, _users[winner].friend_wins[loser], loser])
+    
+    # Mark statistics as processed
+    match_data.stats_processed = true
+    
+    # Save changes
+    _save_database()
+    update_match(match_data)
+    
+    # Emit signals for both players
+    GlobalSignalBus.player_stats_updated.emit(winner)
+    GlobalSignalBus.player_stats_updated.emit(loser)
+    
+    print("Statistics updated for match %s: %s won, %s lost" % [match_data.match_id, winner, loser])
+
+
+## Calculate the winner of a completed match based on total correct answers.
+##
+## @param match_data: Complete match Dictionary with player answers
+## @return Dictionary with winner, loser, and is_draw fields
+func _calculate_match_winner(match_data: Dictionary) -> Dictionary:
+    var players: Array = match_data.players
+    var player1: String = players[0]
+    var player2: String = players[1]
+    
+    var score1: int = 0
+    var score2: int = 0
+    
+    # Count correct answers across all rounds
+    for round_data: Dictionary in match_data.rounds_data:
+        # Count player1 correct answers
+        if round_data.player_answers.has(player1):
+            var p1_results: Array = round_data.player_answers[player1].get("results", [])
+            for result: Dictionary in p1_results:
+                if result.get("was_correct", false):
+                    score1 += 1
+        
+        # Count player2 correct answers
+        if round_data.player_answers.has(player2):
+            var p2_results: Array = round_data.player_answers[player2].get("results", [])
+            for result: Dictionary in p2_results:
+                if result.get("was_correct", false):
+                    score2 += 1
+    
+    # Determine winner
+    if score1 > score2:
+        return {"winner": player1, "loser": player2, "is_draw": false}
+    elif score2 > score1:
+        return {"winner": player2, "loser": player1, "is_draw": false}
+    else:
+        return {"winner": "", "loser": "", "is_draw": true}
 
 
 ## Save the user database to a JSON file.
@@ -991,7 +1129,7 @@ func _load_database() -> void:
 
 ## Migrate existing user data to include new fields.
 ##
-## Adds wins, losses, current_streak fields with default value 0 to existing users
+## Adds wins, losses, current_streak, friend_wins fields with default values to existing users
 ## that don't have these fields. Ensures backward compatibility.
 func _migrate_user_data() -> void:
     var migrated_count: int = 0
@@ -1013,6 +1151,11 @@ func _migrate_user_data() -> void:
         # Add current_streak field if missing
         if not user_data.has("current_streak"):
             user_data.current_streak = 0
+            needs_migration = true
+        
+        # Add friend_wins field if missing
+        if not user_data.has("friend_wins"):
+            user_data.friend_wins = {}
             needs_migration = true
         
         if needs_migration:

@@ -36,3 +36,9 @@ signal game_invite_accepted(inviter_username: String, invitee_username: String)
 ## [param player2] String - Username of second player
 ## This signal allows UI components to update when new matches are available.
 signal match_created(match_id: String, player1: String, player2: String)
+
+## Emitted when a player's statistics are updated after match completion.
+## [param username] String - Username of the player whose statistics changed
+## This signal notifies UI components (profile screens, lobby displays, leaderboards)
+## to refresh displayed statistics including wins, losses, current_streak, and friend_wins.
+signal player_stats_updated(username: String)
