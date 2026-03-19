@@ -36,6 +36,7 @@ theme_override_constants/separation = 5
 alignment = 1
 
 [node name="Category" type="TextureRect" parent="PanelContainer/MarginContainer/VBoxContainer"]
+self_modulate = Color(0.19215687, 0, 0.24313726, 1)
 layout_mode = 2
 size_flags_vertical = 3
 texture = ExtResource("2_kxe5e")
@@ -58,6 +59,7 @@ vertical_alignment = 1
 autowrap_mode = 3
 
 [node name="QuestionPanel" type="TextureRect" parent="PanelContainer/MarginContainer/VBoxContainer"]
+self_modulate = Color(0.19215687, 0, 0.24313726, 1)
 layout_mode = 2
 size_flags_vertical = 3
 texture = ExtResource("2_tlp48")
@@ -88,20 +90,24 @@ columns = 2
 [node name="AnswerButton1" parent="PanelContainer/MarginContainer/VBoxContainer/AnswersGrid" instance=ExtResource("2_answer_button")]
 layout_mode = 2
 texture_normal = ExtResource("3_fmtuc")
+neutral_color = Color(0.19215687, 0, 0.24313726, 1)
 
 [node name="AnswerButton2" parent="PanelContainer/MarginContainer/VBoxContainer/AnswersGrid" instance=ExtResource("2_answer_button")]
 layout_mode = 2
 texture_normal = ExtResource("3_fmtuc")
 flip_h = true
+neutral_color = Color(0.19215687, 0, 0.24313726, 1)
 
 [node name="AnswerButton3" parent="PanelContainer/MarginContainer/VBoxContainer/AnswersGrid" instance=ExtResource("2_answer_button")]
 layout_mode = 2
 texture_normal = ExtResource("4_tlp48")
+neutral_color = Color(0.19215687, 0, 0.24313726, 1)
 
 [node name="AnswerButton4" parent="PanelContainer/MarginContainer/VBoxContainer/AnswersGrid" instance=ExtResource("2_answer_button")]
 layout_mode = 2
 texture_normal = ExtResource("4_tlp48")
 flip_h = true
+neutral_color = Color(0.19215687, 0, 0.24313726, 1)
 
 [node name="TimeLimitBar" type="ProgressBar" parent="PanelContainer/MarginContainer/VBoxContainer"]
 layout_mode = 2

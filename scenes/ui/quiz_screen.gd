@@ -29,8 +29,9 @@ signal next_question_requested
 
 # Node references
 @onready var question_label: Label = %QuestionLabel
+@onready var category_label: Label = $PanelContainer/MarginContainer/VBoxContainer/Category/CategoryLabel
 @onready var answers_grid: GridContainer = %AnswersGrid
-@onready var answer_buttons: Array[Button]
+@onready var answer_buttons: Array[TextureButton]
 @onready var next_question_button: Button = $NextQuestion 
 
 # Internal state
@@ -81,6 +82,10 @@ func load_question(data: Dictionary) -> void:
     # Display question text
     question_label.text = data["question"]
     
+    # Display category (if available)
+    if data.has("category"):
+        category_label.text = data["category"]
+    
     # Store correct answer for validation
     correct_answer_text = data["correct_answer"]
     
@@ -108,8 +113,8 @@ func _on_answer_selected(answer_index: int) -> void:
     has_answered = true
     
     # Get the selected button and its answer text
-    var selected_button: Button = answer_buttons[answer_index]
-    var selected_answer_text: String = selected_button.text
+    var selected_button: TextureButton = answer_buttons[answer_index]
+    var selected_answer_text: String = selected_button.answer_text
     
     # Validate if answer is correct
     var is_correct: bool = (selected_answer_text == correct_answer_text)
@@ -137,7 +142,7 @@ func _on_next_question_pressed() -> void:
 func _reveal_all_buttons() -> void:
     for button in answer_buttons:
         # Check if this button has the correct answer
-        if button.text == correct_answer_text:
+        if button.answer_text == correct_answer_text:
             button.reveal_correct()
         else:
             button.reveal_wrong()

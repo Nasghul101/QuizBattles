@@ -4,27 +4,18 @@
 TBD - created by archiving change add-answer-button-component. Update Purpose after archive.
 ## Requirements
 ### Requirement: The component SHALL display answer text dynamically
-The component SHALL display answer text that can be set at runtime.
+The component SHALL display answer text that can be set at runtime via a child Label node.
 
 #### Scenario: Setting answer text
 **Given** an answer button component instance  
-**When** `set_answer_text(text: String)` is called  
-**Then** the button label displays the provided text
-
-#### Scenario: Setting answer with index
-**Given** an answer button component instance  
 **When** `set_answer(text: String, index: int)` is called  
-**Then** the button label displays the text AND stores the answer index
+**Then** the AnswerLabel child node displays the provided text  
+**And** the answer text is accessible via the `answer_text` property
 
----
-
-### Requirement: The component SHALL start in neutral state by default
-The component SHALL start in a neutral visual state before user interaction.
-
-#### Scenario: Initial appearance
-**Given** an answer button component is instantiated  
-**When** the component loads  
-**Then** the button displays with grey background color (or exported neutral_color)
+#### Scenario: Reading answer text
+**Given** an answer button with text "Paris"  
+**When** external code reads `button.answer_text`  
+**Then** the value "Paris" is returned
 
 ---
 
@@ -130,4 +121,60 @@ The component SHALL be implemented as a reusable scene file.
 **Given** a parent scene needs answer buttons  
 **When** the parent scene loads  
 **Then** 4 instances of answer_button.tscn can be added without conflicts
+
+### Requirement: The component SHALL use TextureButton as base class
+The component SHALL extend TextureButton instead of Button to support custom texture-based visuals.
+
+#### Scenario: Base class implementation
+**Given** the answer button component script  
+**When** checking the class definition  
+**Then** the script uses `extends TextureButton`  
+**And** all TextureButton properties are available (texture_normal, texture_pressed, flip_h, etc.)
+
+---
+
+### Requirement: The component SHALL use modulate for color feedback
+The component SHALL use `self_modulate` to tint the button texture for correct/wrong states, preparing for future shader implementation.
+
+#### Scenario: Show correct state with modulate
+**Given** an answer button in any state  
+**When** `reveal_correct()` is called  
+**Then** `self_modulate` animates to green tint Color(0.2, 0.8, 0.2, 1.0)  
+**And** the animation duration respects the exported `animation_duration` property
+
+#### Scenario: Show wrong state with modulate
+**Given** an answer button in any state  
+**When** `reveal_wrong()` is called  
+**Then** `self_modulate` animates to red tint Color(0.8, 0.2, 0.2, 1.0)  
+**And** the animation duration respects the exported `animation_duration` property
+
+#### Scenario: Reset modulate to neutral
+**Given** an answer button showing correct or wrong state  
+**When** `reset()` is called  
+**Then** `self_modulate` is set to neutral color  
+**And** the button returns to its neutral appearance
+
+---
+
+### Requirement: The component SHALL expose answer text as readable property
+The component SHALL provide read-only access to the current answer text for validation purposes.
+
+#### Scenario: Property exposure
+**Given** an answer button component in the editor or code  
+**When** accessing the `answer_text` property  
+**Then** the current answer text is returned  
+**And** the property cannot be set directly (read-only)
+
+---
+
+### Requirement: The component SHALL maintain compatibility for shader integration
+The component SHALL use a color approach that can be easily replaced with shader-based effects in the future.
+
+#### Scenario: Shader-ready implementation
+**Given** future shader implementation for color effects  
+**When** replacing `self_modulate` approach with shader material  
+**Then** the change requires minimal code modification  
+**Because** `self_modulate` and shader materials both affect visual appearance in compatible ways
+
+---
 
