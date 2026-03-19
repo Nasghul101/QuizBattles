@@ -2,16 +2,11 @@
 
 [ext_resource type="Script" uid="uid://dqkw4pjvr5f6m" path="res://scenes/ui/components/answer_button.gd" id="1_answer_button"]
 
-[node name="AnswerButton" type="Button"]
-custom_minimum_size = Vector2(0, 60)
-anchors_preset = 15
-anchor_right = 1.0
-anchor_bottom = 1.0
-grow_horizontal = 2
-grow_vertical = 2
+[node name="AnswerButton" type="TextureButton"]
+custom_minimum_size = Vector2(100, 100)
+offset_bottom = 60.0
 size_flags_horizontal = 3
 size_flags_vertical = 3
-theme_override_font_sizes/font_size = 18
-text = "Answer Text"
-clip_text = true
+ignore_texture_size = true
+stretch_mode = 0
 script = ExtResource("1_answer_button")

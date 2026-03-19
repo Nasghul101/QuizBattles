@@ -1,13 +1,18 @@
-[gd_scene load_steps=3 format=3 uid="uid://b5n5d733kj2v5"]
+[gd_scene load_steps=7 format=3 uid="uid://b5n5d733kj2v5"]
 
 [ext_resource type="Script" uid="uid://dnejqrkpdbaum" path="res://scenes/ui/quiz_screen.gd" id="1_script"]
 [ext_resource type="PackedScene" uid="uid://bwx7yjvxq8cxl" path="res://scenes/ui/components/answer_button.tscn" id="2_answer_button"]
+[ext_resource type="Texture2D" uid="uid://pdcqnwbq6stv" path="res://assets/ui/QuizScreen_Header.svg" id="2_kxe5e"]
+[ext_resource type="Texture2D" uid="uid://drlc8ros4gnwr" path="res://assets/ui/QuizScreen_Questionare.svg" id="2_tlp48"]
+[ext_resource type="Texture2D" uid="uid://bxxeoxan1fdmw" path="res://assets/ui/QuizScreen_Button_Top.svg" id="3_fmtuc"]
+[ext_resource type="Texture2D" uid="uid://skhm0qwrkcrn" path="res://assets/ui/QuizScreen_Button_Bottom.svg" id="4_tlp48"]
 
 [node name="QuizScreen" type="Control"]
 layout_mode = 3
 anchors_preset = 15
 anchor_right = 1.0
 anchor_bottom = 1.0
+offset_right = 3.0
 grow_horizontal = 2
 grow_vertical = 2
 script = ExtResource("1_script")
@@ -16,8 +21,6 @@ script = ExtResource("1_script")
 layout_mode = 0
 offset_right = 1152.0
 offset_bottom = 648.0
-grow_horizontal = 2
-grow_vertical = 2
 
 [node name="MarginContainer" type="MarginContainer" parent="PanelContainer"]
 custom_minimum_size = Vector2(110, 110)
@@ -29,12 +32,36 @@ theme_override_constants/margin_bottom = 40
 
 [node name="VBoxContainer" type="VBoxContainer" parent="PanelContainer/MarginContainer"]
 layout_mode = 2
-theme_override_constants/separation = 29
+theme_override_constants/separation = 5
 alignment = 1
 
-[node name="QuestionPanel" type="Panel" parent="PanelContainer/MarginContainer/VBoxContainer"]
+[node name="Category" type="TextureRect" parent="PanelContainer/MarginContainer/VBoxContainer"]
 layout_mode = 2
 size_flags_vertical = 3
+texture = ExtResource("2_kxe5e")
+expand_mode = 1
+
+[node name="CategoryLabel" type="Label" parent="PanelContainer/MarginContainer/VBoxContainer/Category"]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_left = 20.0
+offset_top = 26.0
+offset_right = -20.0
+offset_bottom = -14.0
+grow_horizontal = 2
+grow_vertical = 2
+text = "Category will appear here"
+horizontal_alignment = 1
+vertical_alignment = 1
+autowrap_mode = 3
+
+[node name="QuestionPanel" type="TextureRect" parent="PanelContainer/MarginContainer/VBoxContainer"]
+layout_mode = 2
+size_flags_vertical = 3
+texture = ExtResource("2_tlp48")
+expand_mode = 1
 
 [node name="QuestionLabel" type="Label" parent="PanelContainer/MarginContainer/VBoxContainer/QuestionPanel"]
 unique_name_in_owner = true
@@ -56,25 +83,25 @@ autowrap_mode = 3
 [node name="AnswersGrid" type="GridContainer" parent="PanelContainer/MarginContainer/VBoxContainer"]
 unique_name_in_owner = true
 layout_mode = 2
-theme_override_constants/h_separation = 25
-theme_override_constants/v_separation = 30
 columns = 2
 
 [node name="AnswerButton1" parent="PanelContainer/MarginContainer/VBoxContainer/AnswersGrid" instance=ExtResource("2_answer_button")]
-custom_minimum_size = Vector2(300, 120)
 layout_mode = 2
+texture_normal = ExtResource("3_fmtuc")
 
 [node name="AnswerButton2" parent="PanelContainer/MarginContainer/VBoxContainer/AnswersGrid" instance=ExtResource("2_answer_button")]
-custom_minimum_size = Vector2(300, 120)
 layout_mode = 2
+texture_normal = ExtResource("3_fmtuc")
+flip_h = true
 
 [node name="AnswerButton3" parent="PanelContainer/MarginContainer/VBoxContainer/AnswersGrid" instance=ExtResource("2_answer_button")]
-custom_minimum_size = Vector2(300, 120)
 layout_mode = 2
+texture_normal = ExtResource("4_tlp48")
 
 [node name="AnswerButton4" parent="PanelContainer/MarginContainer/VBoxContainer/AnswersGrid" instance=ExtResource("2_answer_button")]
-custom_minimum_size = Vector2(300, 120)
 layout_mode = 2
+texture_normal = ExtResource("4_tlp48")
+flip_h = true
 
 [node name="TimeLimitBar" type="ProgressBar" parent="PanelContainer/MarginContainer/VBoxContainer"]
 layout_mode = 2
