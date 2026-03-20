@@ -1,0 +1,173 @@
+[gd_scene load_steps=3 format=3 uid="uid://cqv8y3jm5xbxu"]
+
+[ext_resource type="Shader" path="res://shaders/outline_shader.gdshader" id="1_outline_shader"]
+[ext_resource type="Texture2D" uid="uid://c54pukvq26baw" path="res://assets/profile_pictures/man_standard.png" id="2_test_texture"]
+
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_basic"]
+shader = ExtResource("1_outline_shader")
+shader_parameter/color = Color(1, 1, 1, 1)
+shader_parameter/width = 2.0
+shader_parameter/pattern = 0
+shader_parameter/inside = false
+shader_parameter/add_margins = true
+shader_parameter/enable_pulsating = false
+shader_parameter/pulsating_color = Color(0, 1, 1, 1)
+shader_parameter/pulsating_thickness = 1.0
+shader_parameter/pulsating_speed = 1.0
+shader_parameter/pulsating_clockwise = false
+shader_parameter/aa_strength = 1.0
+
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_pulsating"]
+shader = ExtResource("1_outline_shader")
+shader_parameter/color = Color(1, 0.5, 0, 1)
+shader_parameter/width = 3.0
+shader_parameter/pattern = 1
+shader_parameter/inside = false
+shader_parameter/add_margins = true
+shader_parameter/enable_pulsating = true
+shader_parameter/pulsating_color = Color(0, 1, 1, 1)
+shader_parameter/pulsating_thickness = 2.0
+shader_parameter/pulsating_speed = 1.5
+shader_parameter/pulsating_clockwise = false
+shader_parameter/aa_strength = 1.5
+
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_clockwise"]
+shader = ExtResource("1_outline_shader")
+shader_parameter/color = Color(0, 1, 0, 1)
+shader_parameter/width = 2.5
+shader_parameter/pattern = 2
+shader_parameter/inside = false
+shader_parameter/add_margins = true
+shader_parameter/enable_pulsating = true
+shader_parameter/pulsating_color = Color(1, 0, 1, 1)
+shader_parameter/pulsating_thickness = 1.5
+shader_parameter/pulsating_speed = 2.0
+shader_parameter/pulsating_clockwise = true
+shader_parameter/aa_strength = 0.5
+
+[node name="OutlineShaderTest" type="Control"]
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="ColorRect" type="ColorRect" parent="."]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+color = Color(0.2, 0.2, 0.25, 1)
+
+[node name="Label" type="Label" parent="."]
+layout_mode = 1
+anchors_preset = 10
+anchor_right = 1.0
+offset_bottom = 40.0
+grow_horizontal = 2
+text = "Outline Shader Test - Various CanvasItem Types"
+horizontal_alignment = 1
+vertical_alignment = 1
+
+[node name="HBoxContainer" type="HBoxContainer" parent="."]
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -400.0
+offset_top = -150.0
+offset_right = 400.0
+offset_bottom = 150.0
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_constants/separation = 40
+
+[node name="VBoxContainer1" type="VBoxContainer" parent="HBoxContainer"]
+layout_mode = 2
+size_flags_horizontal = 3
+theme_override_constants/separation = 20
+
+[node name="Label1" type="Label" parent="HBoxContainer/VBoxContainer1"]
+layout_mode = 2
+text = "Basic Outline (Static)"
+horizontal_alignment = 1
+
+[node name="TextureRect1" type="TextureRect" parent="HBoxContainer/VBoxContainer1"]
+material = SubResource("ShaderMaterial_basic")
+layout_mode = 2
+size_flags_vertical = 3
+texture = ExtResource("2_test_texture")
+expand_mode = 1
+stretch_mode = 5
+
+[node name="Info1" type="Label" parent="HBoxContainer/VBoxContainer1"]
+layout_mode = 2
+text = "Pattern: Diamond
+Width: 2.0
+Pulsating: Off"
+horizontal_alignment = 1
+
+[node name="VBoxContainer2" type="VBoxContainer" parent="HBoxContainer"]
+layout_mode = 2
+size_flags_horizontal = 3
+theme_override_constants/separation = 20
+
+[node name="Label2" type="Label" parent="HBoxContainer/VBoxContainer2"]
+layout_mode = 2
+text = "Pulsating (Counterclockwise)"
+horizontal_alignment = 1
+
+[node name="Sprite2D" type="Sprite2D" parent="HBoxContainer/VBoxContainer2"]
+material = SubResource("ShaderMaterial_pulsating")
+position = Vector2(125, 125)
+texture = ExtResource("2_test_texture")
+
+[node name="Info2" type="Label" parent="HBoxContainer/VBoxContainer2"]
+layout_mode = 2
+text = "Pattern: Circle
+Width: 3.0
+Pulsating: On (speed 1.5)"
+horizontal_alignment = 1
+
+[node name="VBoxContainer3" type="VBoxContainer" parent="HBoxContainer"]
+layout_mode = 2
+size_flags_horizontal = 3
+theme_override_constants/separation = 20
+
+[node name="Label3" type="Label" parent="HBoxContainer/VBoxContainer3"]
+layout_mode = 2
+text = "Pulsating (Clockwise)"
+horizontal_alignment = 1
+
+[node name="Panel" type="Panel" parent="HBoxContainer/VBoxContainer3"]
+material = SubResource("ShaderMaterial_clockwise")
+custom_minimum_size = Vector2(200, 200)
+layout_mode = 2
+size_flags_vertical = 3
+
+[node name="TextureRect" type="TextureRect" parent="HBoxContainer/VBoxContainer3/Panel"]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_left = 25.0
+offset_top = 25.0
+offset_right = -25.0
+offset_bottom = -25.0
+grow_horizontal = 2
+grow_vertical = 2
+texture = ExtResource("2_test_texture")
+expand_mode = 1
+stretch_mode = 5
+
+[node name="Info3" type="Label" parent="HBoxContainer/VBoxContainer3"]
+layout_mode = 2
+text = "Pattern: Square
+Width: 2.5
+Pulsating: On (speed 2.0, CW)"
+horizontal_alignment = 1
