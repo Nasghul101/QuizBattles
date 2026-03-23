@@ -1,9 +1,10 @@
-[gd_scene load_steps=6 format=3 uid="uid://bwx7yjvxq8cxl"]
+[gd_scene load_steps=7 format=3 uid="uid://bwx7yjvxq8cxl"]
 
 [ext_resource type="Script" uid="uid://dqkw4pjvr5f6m" path="res://scenes/ui/components/answer_button.gd" id="1_answer_button"]
 [ext_resource type="Texture2D" uid="uid://dhcx1iywao3ot" path="res://assets/ui/QuizScreen_Button_Top_Outline.svg" id="1_noyet"]
 [ext_resource type="Shader" uid="uid://dtvwdbl5lb1q" path="res://shaders/predefined_outline_shader.gdshader" id="1_ux1it"]
 [ext_resource type="Texture2D" uid="uid://beucm7ecx63i1" path="res://assets/CircleFade.svg" id="2_iths6"]
+[ext_resource type="FontFile" uid="uid://cdt5m65uglln" path="res://assets/Font/exo/Exo-SemiBold.otf" id="5_iths6"]
 
 [sub_resource type="ShaderMaterial" id="ShaderMaterial_65ii4"]
 shader = ExtResource("1_ux1it")
@@ -11,21 +12,22 @@ shader_parameter/outline_color = Color(1, 1, 1, 1)
 shader_parameter/outline_threshold = 0.6250000296875
 shader_parameter/enable_pulsating = true
 shader_parameter/fade_texture = ExtResource("2_iths6")
-shader_parameter/pulsating_color = Color(0, 0.9607843, 0.47843137, 1)
+shader_parameter/pulsating_color = Color(0.1882353, 1, 0.48235294, 1)
 shader_parameter/pulsating_size = 0.56900002376762
 shader_parameter/pulsating_speed = 1.36700006167262
 shader_parameter/pulsating_clockwise = false
 
 [node name="AnswerButton" type="TextureButton"]
-self_modulate = Color(0.47381246, 0.00016123801, 0.4750852, 1)
+self_modulate = Color(0.19215687, 0, 0.24313726, 1)
 material = SubResource("ShaderMaterial_65ii4")
 custom_minimum_size = Vector2(100, 100)
-offset_bottom = 60.0
+offset_right = 100.0
+offset_bottom = 100.0
 size_flags_horizontal = 3
 size_flags_vertical = 3
 texture_normal = ExtResource("1_noyet")
 ignore_texture_size = true
-stretch_mode = 0
+stretch_mode = 5
 script = ExtResource("1_answer_button")
 
 [node name="AnswerLabel" type="Label" parent="."]
@@ -33,12 +35,11 @@ layout_mode = 1
 anchors_preset = 15
 anchor_right = 1.0
 anchor_bottom = 1.0
-offset_left = 163.0
-offset_top = 30.0
-offset_right = 236.0
-offset_bottom = 30.0
 grow_horizontal = 2
 grow_vertical = 2
+theme_override_fonts/font = ExtResource("5_iths6")
+theme_override_font_sizes/font_size = 50
 text = "Answer text goes here"
 horizontal_alignment = 1
 vertical_alignment = 1
+autowrap_mode = 2

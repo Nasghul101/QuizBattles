@@ -1,69 +1,110 @@
-[gd_scene load_steps=7 format=3 uid="uid://b5n5d733kj2v5"]
+[gd_scene load_steps=14 format=3 uid="uid://b5n5d733kj2v5"]
 
 [ext_resource type="Script" uid="uid://dnejqrkpdbaum" path="res://scenes/ui/quiz_screen.gd" id="1_script"]
 [ext_resource type="PackedScene" uid="uid://bwx7yjvxq8cxl" path="res://scenes/ui/components/answer_button.tscn" id="2_answer_button"]
-[ext_resource type="Texture2D" uid="uid://pdcqnwbq6stv" path="res://assets/ui/QuizScreen_Header.svg" id="2_kxe5e"]
-[ext_resource type="Texture2D" uid="uid://drlc8ros4gnwr" path="res://assets/ui/QuizScreen_Questionare.svg" id="2_tlp48"]
-[ext_resource type="Texture2D" uid="uid://bxxeoxan1fdmw" path="res://assets/ui/QuizScreen_Button_Top.svg" id="3_fmtuc"]
-[ext_resource type="Texture2D" uid="uid://skhm0qwrkcrn" path="res://assets/ui/QuizScreen_Button_Bottom.svg" id="4_tlp48"]
+[ext_resource type="Shader" uid="uid://dtvwdbl5lb1q" path="res://shaders/predefined_outline_shader.gdshader" id="2_kxe5e"]
+[ext_resource type="Texture2D" uid="uid://dnpu1spscyv0s" path="res://assets/ui/QuizScreen_Header_Outline.svg" id="2_tlp48"]
+[ext_resource type="Texture2D" uid="uid://bm4noncww6swl" path="res://assets/ui/QuizScreen_Questionare_Outline.svg" id="3_kxe5e"]
+[ext_resource type="Shader" uid="uid://bfim5jv6q8qev" path="res://shaders/gradient_color.gdshader" id="4_dh7g3"]
+[ext_resource type="FontFile" uid="uid://c8memnki1ydnd" path="res://assets/Font/exo/Exo-Bold.otf" id="4_t872d"]
+[ext_resource type="Texture2D" uid="uid://duyv4yur5hrwg" path="res://assets/ui/QuizScreen_Button_Bottom_Outline.svg" id="5_tlp48"]
+[ext_resource type="FontFile" uid="uid://c2546x0aealwc" path="res://assets/Font/exo/Exo-ExtraBold.otf" id="6_dh7g3"]
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_x0u3n"]
+bg_color = Color(0.14509805, 0, 0.16862746, 1)
+
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_t872d"]
+shader = ExtResource("2_kxe5e")
+shader_parameter/outline_color = Color(1, 1, 1, 1)
+shader_parameter/outline_threshold = 0.6330000300675
+shader_parameter/enable_pulsating = false
+shader_parameter/pulsating_color = Color(0, 1, 1, 1)
+shader_parameter/pulsating_size = 1.0
+shader_parameter/pulsating_speed = 1.0
+shader_parameter/pulsating_clockwise = false
+
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_f45mr"]
+shader = ExtResource("4_dh7g3")
+shader_parameter/intensity = 0.41
+shader_parameter/x = true
+shader_parameter/r_horizontal = 22.47
+shader_parameter/g_horizontal = 26.365
+shader_parameter/b_horizontal = 24.92
+shader_parameter/y = true
+shader_parameter/r_vertical = 4.18
+shader_parameter/g_vertical = 5.8149999999999995
+shader_parameter/b_vertical = 3.6550000000000002
+
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_dh7g3"]
+shader = ExtResource("2_kxe5e")
+shader_parameter/outline_color = Color(1, 1, 1, 1)
+shader_parameter/outline_threshold = 0.8330000395675
+shader_parameter/enable_pulsating = false
+shader_parameter/pulsating_color = Color(0, 1, 1, 1)
+shader_parameter/pulsating_size = 1.0
+shader_parameter/pulsating_speed = 1.0
+shader_parameter/pulsating_clockwise = false
 
 [node name="QuizScreen" type="Control"]
 layout_mode = 3
 anchors_preset = 15
 anchor_right = 1.0
 anchor_bottom = 1.0
-offset_right = 3.0
 grow_horizontal = 2
 grow_vertical = 2
 script = ExtResource("1_script")
 
 [node name="PanelContainer" type="PanelContainer" parent="."]
-layout_mode = 0
-offset_right = 1152.0
-offset_bottom = 648.0
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_styles/panel = SubResource("StyleBoxFlat_x0u3n")
 
 [node name="MarginContainer" type="MarginContainer" parent="PanelContainer"]
 custom_minimum_size = Vector2(110, 110)
 layout_mode = 2
 theme_override_constants/margin_left = 40
-theme_override_constants/margin_top = 40
+theme_override_constants/margin_top = 150
 theme_override_constants/margin_right = 40
-theme_override_constants/margin_bottom = 40
+theme_override_constants/margin_bottom = 100
 
 [node name="VBoxContainer" type="VBoxContainer" parent="PanelContainer/MarginContainer"]
 layout_mode = 2
-theme_override_constants/separation = 5
 alignment = 1
 
 [node name="Category" type="TextureRect" parent="PanelContainer/MarginContainer/VBoxContainer"]
 self_modulate = Color(0.19215687, 0, 0.24313726, 1)
+material = SubResource("ShaderMaterial_t872d")
 layout_mode = 2
-size_flags_vertical = 3
-texture = ExtResource("2_kxe5e")
-expand_mode = 1
+texture = ExtResource("2_tlp48")
+expand_mode = 5
+stretch_mode = 5
 
-[node name="CategoryLabel" type="Label" parent="PanelContainer/MarginContainer/VBoxContainer/Category"]
+[node name="Label" type="Label" parent="PanelContainer/MarginContainer/VBoxContainer/Category"]
+material = SubResource("ShaderMaterial_f45mr")
 layout_mode = 1
 anchors_preset = 15
 anchor_right = 1.0
 anchor_bottom = 1.0
-offset_left = 20.0
-offset_top = 26.0
-offset_right = -20.0
-offset_bottom = -14.0
 grow_horizontal = 2
 grow_vertical = 2
-text = "Category will appear here"
+theme_override_fonts/font = ExtResource("6_dh7g3")
+theme_override_font_sizes/font_size = 80
+text = "Category text will appear here"
 horizontal_alignment = 1
 vertical_alignment = 1
 autowrap_mode = 3
 
 [node name="QuestionPanel" type="TextureRect" parent="PanelContainer/MarginContainer/VBoxContainer"]
 self_modulate = Color(0.19215687, 0, 0.24313726, 1)
+material = SubResource("ShaderMaterial_dh7g3")
 layout_mode = 2
-size_flags_vertical = 3
-texture = ExtResource("2_tlp48")
-expand_mode = 1
+texture = ExtResource("3_kxe5e")
+expand_mode = 5
+stretch_mode = 5
 
 [node name="QuestionLabel" type="Label" parent="PanelContainer/MarginContainer/VBoxContainer/QuestionPanel"]
 unique_name_in_owner = true
@@ -77,40 +118,51 @@ offset_right = -20.0
 offset_bottom = -14.0
 grow_horizontal = 2
 grow_vertical = 2
+theme_override_fonts/font = ExtResource("4_t872d")
+theme_override_font_sizes/font_size = 60
 text = "Question text will appear here"
 horizontal_alignment = 1
 vertical_alignment = 1
-autowrap_mode = 3
+autowrap_mode = 2
 
-[node name="AnswersGrid" type="GridContainer" parent="PanelContainer/MarginContainer/VBoxContainer"]
+[node name="MarginContainer2" type="MarginContainer" parent="PanelContainer/MarginContainer/VBoxContainer"]
+layout_mode = 2
+size_flags_vertical = 3
+theme_override_constants/margin_top = -110
+theme_override_constants/margin_bottom = 35
+
+[node name="AnswersGrid" type="GridContainer" parent="PanelContainer/MarginContainer/VBoxContainer/MarginContainer2"]
 unique_name_in_owner = true
 layout_mode = 2
+theme_override_constants/h_separation = 10
+theme_override_constants/v_separation = -265
 columns = 2
 
-[node name="AnswerButton1" parent="PanelContainer/MarginContainer/VBoxContainer/AnswersGrid" instance=ExtResource("2_answer_button")]
+[node name="AnswerButton1" parent="PanelContainer/MarginContainer/VBoxContainer/MarginContainer2/AnswersGrid" instance=ExtResource("2_answer_button")]
 layout_mode = 2
-texture_normal = ExtResource("3_fmtuc")
-neutral_color = Color(0.19215687, 0, 0.24313726, 1)
 
-[node name="AnswerButton2" parent="PanelContainer/MarginContainer/VBoxContainer/AnswersGrid" instance=ExtResource("2_answer_button")]
+[node name="AnswerButton2" parent="PanelContainer/MarginContainer/VBoxContainer/MarginContainer2/AnswersGrid" instance=ExtResource("2_answer_button")]
 layout_mode = 2
-texture_normal = ExtResource("3_fmtuc")
 flip_h = true
-neutral_color = Color(0.19215687, 0, 0.24313726, 1)
 
-[node name="AnswerButton3" parent="PanelContainer/MarginContainer/VBoxContainer/AnswersGrid" instance=ExtResource("2_answer_button")]
+[node name="AnswerButton3" parent="PanelContainer/MarginContainer/VBoxContainer/MarginContainer2/AnswersGrid" instance=ExtResource("2_answer_button")]
 layout_mode = 2
-texture_normal = ExtResource("4_tlp48")
-neutral_color = Color(0.19215687, 0, 0.24313726, 1)
+size_flags_vertical = 1
+texture_normal = ExtResource("5_tlp48")
 
-[node name="AnswerButton4" parent="PanelContainer/MarginContainer/VBoxContainer/AnswersGrid" instance=ExtResource("2_answer_button")]
+[node name="AnswerButton4" parent="PanelContainer/MarginContainer/VBoxContainer/MarginContainer2/AnswersGrid" instance=ExtResource("2_answer_button")]
 layout_mode = 2
-texture_normal = ExtResource("4_tlp48")
+texture_normal = ExtResource("5_tlp48")
 flip_h = true
-neutral_color = Color(0.19215687, 0, 0.24313726, 1)
 
-[node name="TimeLimitBar" type="ProgressBar" parent="PanelContainer/MarginContainer/VBoxContainer"]
+[node name="MarginContainer" type="MarginContainer" parent="PanelContainer/MarginContainer/VBoxContainer"]
 layout_mode = 2
+size_flags_vertical = 8
+theme_override_constants/margin_top = 170
+
+[node name="TimeLimitBar" type="ProgressBar" parent="PanelContainer/MarginContainer/VBoxContainer/MarginContainer"]
+layout_mode = 2
+size_flags_vertical = 4
 
 [node name="NextQuestion" type="Button" parent="."]
 visible = false

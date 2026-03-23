@@ -14,7 +14,7 @@ extends TextureButton
 signal answer_selected(index: int)
 
 # Exported color properties for customization
-@export var neutral_color: Color = Color(0.5, 0.5, 0.5, 1.0)  # Grey
+var neutral_color: Color
 @export var correct_color: Color = Color(0.2, 0.8, 0.2, 1.0)  # Green
 @export var wrong_color: Color = Color(0.8, 0.2, 0.2, 1.0)    # Red
 @export var selected_outline_color: Color = Color(1.0, 1.0, 1.0, 1.0)  # White
@@ -32,7 +32,7 @@ var answer_text: String:
 
 func _ready() -> void:
     # Set initial neutral color tint
-    self_modulate = neutral_color
+    neutral_color = get_self_modulate()
     
     # Connect button press to internal handler
     pressed.connect(_on_button_pressed)

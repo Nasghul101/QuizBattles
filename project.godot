@@ -22,3 +22,11 @@ NavigationUtils="*res://autoload/navigation_utils.gd"
 TransitionManager="*res://autoload/transition_manager.gd"
 TriviaQuestionService="*res://autoload/trivia_question_service.gd"
 UserDatabase="*res://autoload/user_database.gd"
+
+[display]
+
+window/size/viewport_width=1179
+window/size/viewport_height=2556
+window/size/window_width_override=400
+window/size/window_height_override=867
+window/stretch/mode="canvas_items"
