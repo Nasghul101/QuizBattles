@@ -1,14 +1,13 @@
-[gd_scene load_steps=14 format=3 uid="uid://b5n5d733kj2v5"]
+[gd_scene load_steps=12 format=3 uid="uid://b5n5d733kj2v5"]
 
 [ext_resource type="Script" uid="uid://dnejqrkpdbaum" path="res://scenes/ui/quiz_screen.gd" id="1_script"]
 [ext_resource type="PackedScene" uid="uid://bwx7yjvxq8cxl" path="res://scenes/ui/components/answer_button.tscn" id="2_answer_button"]
 [ext_resource type="Shader" uid="uid://dtvwdbl5lb1q" path="res://shaders/predefined_outline_shader.gdshader" id="2_kxe5e"]
 [ext_resource type="Texture2D" uid="uid://dnpu1spscyv0s" path="res://assets/ui/QuizScreen_Header_Outline.svg" id="2_tlp48"]
 [ext_resource type="Texture2D" uid="uid://bm4noncww6swl" path="res://assets/ui/QuizScreen_Questionare_Outline.svg" id="3_kxe5e"]
-[ext_resource type="Shader" uid="uid://bfim5jv6q8qev" path="res://shaders/gradient_color.gdshader" id="4_dh7g3"]
+[ext_resource type="PackedScene" uid="uid://b3sw6thf2vfki" path="res://scenes/ui/components/gradient_label.tscn" id="4_dh7g3"]
 [ext_resource type="FontFile" uid="uid://c8memnki1ydnd" path="res://assets/Font/exo/Exo-Bold.otf" id="4_t872d"]
 [ext_resource type="Texture2D" uid="uid://duyv4yur5hrwg" path="res://assets/ui/QuizScreen_Button_Bottom_Outline.svg" id="5_tlp48"]
-[ext_resource type="FontFile" uid="uid://c2546x0aealwc" path="res://assets/Font/exo/Exo-ExtraBold.otf" id="6_dh7g3"]
 
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_x0u3n"]
 bg_color = Color(0.14509805, 0, 0.16862746, 1)
@@ -22,18 +21,6 @@ shader_parameter/pulsating_color = Color(0, 1, 1, 1)
 shader_parameter/pulsating_size = 1.0
 shader_parameter/pulsating_speed = 1.0
 shader_parameter/pulsating_clockwise = false
-
-[sub_resource type="ShaderMaterial" id="ShaderMaterial_f45mr"]
-shader = ExtResource("4_dh7g3")
-shader_parameter/intensity = 0.41
-shader_parameter/x = true
-shader_parameter/r_horizontal = 22.47
-shader_parameter/g_horizontal = 26.365
-shader_parameter/b_horizontal = 24.92
-shader_parameter/y = true
-shader_parameter/r_vertical = 4.18
-shader_parameter/g_vertical = 5.8149999999999995
-shader_parameter/b_vertical = 3.6550000000000002
 
 [sub_resource type="ShaderMaterial" id="ShaderMaterial_dh7g3"]
 shader = ExtResource("2_kxe5e")
@@ -83,20 +70,9 @@ texture = ExtResource("2_tlp48")
 expand_mode = 5
 stretch_mode = 5
 
-[node name="Label" type="Label" parent="PanelContainer/MarginContainer/VBoxContainer/Category"]
-material = SubResource("ShaderMaterial_f45mr")
-layout_mode = 1
-anchors_preset = 15
-anchor_right = 1.0
-anchor_bottom = 1.0
-grow_horizontal = 2
-grow_vertical = 2
-theme_override_fonts/font = ExtResource("6_dh7g3")
-theme_override_font_sizes/font_size = 80
-text = "Category text will appear here"
-horizontal_alignment = 1
-vertical_alignment = 1
-autowrap_mode = 3
+[node name="Label" parent="PanelContainer/MarginContainer/VBoxContainer/Category" instance=ExtResource("4_dh7g3")]
+layout_mode = 0
+anchors_preset = 0
 
 [node name="QuestionPanel" type="TextureRect" parent="PanelContainer/MarginContainer/VBoxContainer"]
 self_modulate = Color(0.19215687, 0, 0.24313726, 1)
