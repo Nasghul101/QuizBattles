@@ -70,9 +70,9 @@ texture = ExtResource("2_tlp48")
 expand_mode = 5
 stretch_mode = 5
 
-[node name="Label" parent="PanelContainer/MarginContainer/VBoxContainer/Category" instance=ExtResource("4_dh7g3")]
-layout_mode = 0
-anchors_preset = 0
+[node name="CategoryLabel" parent="PanelContainer/MarginContainer/VBoxContainer/Category" instance=ExtResource("4_dh7g3")]
+unique_name_in_owner = true
+layout_mode = 1
 
 [node name="QuestionPanel" type="TextureRect" parent="PanelContainer/MarginContainer/VBoxContainer"]
 self_modulate = Color(0.19215687, 0, 0.24313726, 1)

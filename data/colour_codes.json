@@ -1,0 +1,25 @@
+{
+    "_note": "Color codes used throughout the project. Null values indicate colors not yet decided.",
+    "category_colors": {
+        "General Knowledge": null,
+        "Entertainment": "#DA242B",
+        "Science": "#00B8E8",
+        "History": null,
+        "Geography": "#00F116",
+        "Sports": "#CFDD27",
+        "Art": null,
+        "Animals": null,
+        "Mythology": null,
+        "Politics": null,
+        "Celebrities": null,
+        "Vehicles": null
+    },
+    "miscellaneous": {
+        "Right answer": "#1F6E0D",
+        "Wrong answer": "#600C10",
+        "Notification": "#D6B100",
+        "App background": "#25002B",
+        "App gray": "#4F4350",
+        "App foreground": "#31003E"
+    }
+}

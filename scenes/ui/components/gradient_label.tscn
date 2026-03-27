@@ -8,8 +8,8 @@ colors = PackedColorArray(0.8117647, 0.8666667, 0.15294118, 1, 1, 1, 1, 1)
 
 [sub_resource type="GradientTexture2D" id="GradientTexture2D_30mq0"]
 gradient = SubResource("Gradient_b6rbf")
-fill_from = Vector2(0, 0.5470086)
-fill_to = Vector2(0, 0.5)
+fill_from = Vector2(0, 0.7307692)
+fill_to = Vector2(0, 0.3974359)
 
 [node name="Label" type="Label"]
 clip_children = 2
@@ -19,7 +19,7 @@ anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
 theme_override_fonts/font = ExtResource("2_xn8xq")
-theme_override_font_sizes/font_size = 80
+theme_override_font_sizes/font_size = 100
 text = "Category text will appear here"
 horizontal_alignment = 1
 vertical_alignment = 1
