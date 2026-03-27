@@ -29,7 +29,7 @@ signal next_question_requested
 
 # Node references
 @onready var question_label: Label = %QuestionLabel
-@onready var category_label: Label = $PanelContainer/MarginContainer/VBoxContainer/Category/CategoryLabel
+@onready var category_label: Label = %CategoryLabel
 @onready var answers_grid: GridContainer = %AnswersGrid
 @onready var answer_buttons: Array[TextureButton]
 @onready var next_question_button: Button = $NextQuestion 
