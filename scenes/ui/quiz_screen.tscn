@@ -1,4 +1,4 @@
-[gd_scene load_steps=12 format=3 uid="uid://b5n5d733kj2v5"]
+[gd_scene format=3 uid="uid://b5n5d733kj2v5"]
 
 [ext_resource type="Script" uid="uid://dnejqrkpdbaum" path="res://scenes/ui/quiz_screen.gd" id="1_script"]
 [ext_resource type="PackedScene" uid="uid://bwx7yjvxq8cxl" path="res://scenes/ui/components/answer_button.tscn" id="2_answer_button"]
@@ -32,7 +32,7 @@ shader_parameter/pulsating_size = 1.0
 shader_parameter/pulsating_speed = 1.0
 shader_parameter/pulsating_clockwise = false
 
-[node name="QuizScreen" type="Control"]
+[node name="QuizScreen" type="Control" unique_id=1357529642]
 layout_mode = 3
 anchors_preset = 15
 anchor_right = 1.0
@@ -41,7 +41,7 @@ grow_horizontal = 2
 grow_vertical = 2
 script = ExtResource("1_script")
 
-[node name="PanelContainer" type="PanelContainer" parent="."]
+[node name="PanelContainer" type="PanelContainer" parent="." unique_id=759263277]
 layout_mode = 1
 anchors_preset = 15
 anchor_right = 1.0
@@ -50,7 +50,7 @@ grow_horizontal = 2
 grow_vertical = 2
 theme_override_styles/panel = SubResource("StyleBoxFlat_x0u3n")
 
-[node name="MarginContainer" type="MarginContainer" parent="PanelContainer"]
+[node name="MarginContainer" type="MarginContainer" parent="PanelContainer" unique_id=554432777]
 custom_minimum_size = Vector2(110, 110)
 layout_mode = 2
 theme_override_constants/margin_left = 40
@@ -58,11 +58,11 @@ theme_override_constants/margin_top = 150
 theme_override_constants/margin_right = 40
 theme_override_constants/margin_bottom = 100
 
-[node name="VBoxContainer" type="VBoxContainer" parent="PanelContainer/MarginContainer"]
+[node name="VBoxContainer" type="VBoxContainer" parent="PanelContainer/MarginContainer" unique_id=959071403]
 layout_mode = 2
 alignment = 1
 
-[node name="Category" type="TextureRect" parent="PanelContainer/MarginContainer/VBoxContainer"]
+[node name="Category" type="TextureRect" parent="PanelContainer/MarginContainer/VBoxContainer" unique_id=270733299]
 self_modulate = Color(0.19215687, 0, 0.24313726, 1)
 material = SubResource("ShaderMaterial_t872d")
 layout_mode = 2
@@ -70,11 +70,11 @@ texture = ExtResource("2_tlp48")
 expand_mode = 5
 stretch_mode = 5
 
-[node name="CategoryLabel" parent="PanelContainer/MarginContainer/VBoxContainer/Category" instance=ExtResource("4_dh7g3")]
+[node name="CategoryLabel" parent="PanelContainer/MarginContainer/VBoxContainer/Category" unique_id=1036388009 instance=ExtResource("4_dh7g3")]
 unique_name_in_owner = true
 layout_mode = 1
 
-[node name="QuestionPanel" type="TextureRect" parent="PanelContainer/MarginContainer/VBoxContainer"]
+[node name="QuestionPanel" type="TextureRect" parent="PanelContainer/MarginContainer/VBoxContainer" unique_id=1147497453]
 self_modulate = Color(0.19215687, 0, 0.24313726, 1)
 material = SubResource("ShaderMaterial_dh7g3")
 layout_mode = 2
@@ -82,7 +82,7 @@ texture = ExtResource("3_kxe5e")
 expand_mode = 5
 stretch_mode = 5
 
-[node name="QuestionLabel" type="Label" parent="PanelContainer/MarginContainer/VBoxContainer/QuestionPanel"]
+[node name="QuestionLabel" type="Label" parent="PanelContainer/MarginContainer/VBoxContainer/QuestionPanel" unique_id=334353469]
 unique_name_in_owner = true
 layout_mode = 1
 anchors_preset = 15
@@ -101,46 +101,46 @@ horizontal_alignment = 1
 vertical_alignment = 1
 autowrap_mode = 2
 
-[node name="MarginContainer2" type="MarginContainer" parent="PanelContainer/MarginContainer/VBoxContainer"]
+[node name="MarginContainer2" type="MarginContainer" parent="PanelContainer/MarginContainer/VBoxContainer" unique_id=1275754386]
 layout_mode = 2
 size_flags_vertical = 3
 theme_override_constants/margin_top = -110
 theme_override_constants/margin_bottom = 35
 
-[node name="AnswersGrid" type="GridContainer" parent="PanelContainer/MarginContainer/VBoxContainer/MarginContainer2"]
+[node name="AnswersGrid" type="GridContainer" parent="PanelContainer/MarginContainer/VBoxContainer/MarginContainer2" unique_id=1040865186]
 unique_name_in_owner = true
 layout_mode = 2
 theme_override_constants/h_separation = 10
 theme_override_constants/v_separation = -265
 columns = 2
 
-[node name="AnswerButton1" parent="PanelContainer/MarginContainer/VBoxContainer/MarginContainer2/AnswersGrid" instance=ExtResource("2_answer_button")]
+[node name="AnswerButton1" parent="PanelContainer/MarginContainer/VBoxContainer/MarginContainer2/AnswersGrid" unique_id=1148935281 instance=ExtResource("2_answer_button")]
 layout_mode = 2
 
-[node name="AnswerButton2" parent="PanelContainer/MarginContainer/VBoxContainer/MarginContainer2/AnswersGrid" instance=ExtResource("2_answer_button")]
+[node name="AnswerButton2" parent="PanelContainer/MarginContainer/VBoxContainer/MarginContainer2/AnswersGrid" unique_id=1756245460 instance=ExtResource("2_answer_button")]
 layout_mode = 2
 flip_h = true
 
-[node name="AnswerButton3" parent="PanelContainer/MarginContainer/VBoxContainer/MarginContainer2/AnswersGrid" instance=ExtResource("2_answer_button")]
+[node name="AnswerButton3" parent="PanelContainer/MarginContainer/VBoxContainer/MarginContainer2/AnswersGrid" unique_id=1256488247 instance=ExtResource("2_answer_button")]
 layout_mode = 2
 size_flags_vertical = 1
 texture_normal = ExtResource("5_tlp48")
 
-[node name="AnswerButton4" parent="PanelContainer/MarginContainer/VBoxContainer/MarginContainer2/AnswersGrid" instance=ExtResource("2_answer_button")]
+[node name="AnswerButton4" parent="PanelContainer/MarginContainer/VBoxContainer/MarginContainer2/AnswersGrid" unique_id=1259839459 instance=ExtResource("2_answer_button")]
 layout_mode = 2
 texture_normal = ExtResource("5_tlp48")
 flip_h = true
 
-[node name="MarginContainer" type="MarginContainer" parent="PanelContainer/MarginContainer/VBoxContainer"]
+[node name="MarginContainer" type="MarginContainer" parent="PanelContainer/MarginContainer/VBoxContainer" unique_id=1458855006]
 layout_mode = 2
 size_flags_vertical = 8
 theme_override_constants/margin_top = 170
 
-[node name="TimeLimitBar" type="ProgressBar" parent="PanelContainer/MarginContainer/VBoxContainer/MarginContainer"]
+[node name="TimeLimitBar" type="ProgressBar" parent="PanelContainer/MarginContainer/VBoxContainer/MarginContainer" unique_id=412357647]
 layout_mode = 2
 size_flags_vertical = 4
 
-[node name="NextQuestion" type="Button" parent="."]
+[node name="NextQuestion" type="Button" parent="." unique_id=1306289098]
 visible = false
 custom_minimum_size = Vector2(200, 100)
 layout_mode = 1
