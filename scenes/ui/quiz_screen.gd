@@ -33,6 +33,7 @@ signal next_question_requested
 @onready var answers_grid: GridContainer = %AnswersGrid
 @onready var answer_buttons: Array[TextureButton]
 @onready var next_question_button: Button = $NextQuestion 
+@onready var round_number: Label = %RoundNumber
 
 # Internal state
 var correct_answer_text: String = ""

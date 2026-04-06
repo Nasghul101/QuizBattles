@@ -20,6 +20,7 @@
         "Notification": "#D6B100",
         "App background": "#25002B",
         "App gray": "#4F4350",
-        "App foreground": "#31003E"
+        "App foreground": "#31003E",
+        "App white": "#FBDCF3"
     }
 }

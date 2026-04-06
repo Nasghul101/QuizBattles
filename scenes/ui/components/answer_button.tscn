@@ -8,7 +8,7 @@
 
 [sub_resource type="ShaderMaterial" id="ShaderMaterial_65ii4"]
 shader = ExtResource("1_ux1it")
-shader_parameter/outline_color = Color(1, 1, 1, 1)
+shader_parameter/outline_color = Color(0.9843137, 0.8627451, 0.9529412, 1)
 shader_parameter/outline_threshold = 0.6250000296875
 shader_parameter/enable_pulsating = true
 shader_parameter/fade_texture = ExtResource("2_iths6")
@@ -40,23 +40,10 @@ anchor_right = 1.0
 anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
+theme_override_colors/font_color = Color(0.9843137, 0.8627451, 0.9529412, 1)
 theme_override_fonts/font = ExtResource("5_iths6")
-theme_override_font_sizes/font_size = 50
+theme_override_font_sizes/font_size = 65
 text = "Answer text goes here"
 horizontal_alignment = 1
 vertical_alignment = 1
 autowrap_mode = 2
-
-[node name="Shine" type="TextureRect" parent="AnswerLabel" unique_id=130396032]
-self_modulate = Color(1, 1, 1, 0.078431375)
-layout_mode = 1
-anchors_preset = -1
-anchor_top = 0.223
-anchor_right = 1.0
-anchor_bottom = 0.92600006
-offset_top = 1.0119629
-offset_bottom = 1.1437988
-grow_horizontal = 2
-grow_vertical = 2
-texture = ExtResource("2_iths6")
-expand_mode = 1

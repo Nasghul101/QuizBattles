@@ -1,32 +1,33 @@
-[gd_scene load_steps=5 format=3 uid="uid://b3sw6thf2vfki"]
+[gd_scene format=3 uid="uid://b3sw6thf2vfki"]
 
 [ext_resource type="Script" uid="uid://hxka11rnrhvq" path="res://scenes/ui/components/gradient_label.gd" id="2_30mq0"]
 [ext_resource type="FontFile" uid="uid://c2546x0aealwc" path="res://assets/Font/exo/Exo-ExtraBold.otf" id="2_xn8xq"]
 
 [sub_resource type="Gradient" id="Gradient_b6rbf"]
-colors = PackedColorArray(0.8117647, 0.8666667, 0.15294118, 1, 1, 1, 1, 1)
+colors = PackedColorArray(0.8117647, 0.8666667, 0.15294118, 1, 0.9843137, 0.8627451, 0.9529412, 1)
 
 [sub_resource type="GradientTexture2D" id="GradientTexture2D_30mq0"]
 gradient = SubResource("Gradient_b6rbf")
 fill_from = Vector2(0, 0.7307692)
 fill_to = Vector2(0, 0.3974359)
 
-[node name="Label" type="Label"]
+[node name="Label" type="Label" unique_id=1077587627]
 clip_children = 2
 anchors_preset = 15
 anchor_right = 1.0
 anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
+theme_override_colors/font_color = Color(0.9843137, 0.8627451, 0.9529412, 1)
 theme_override_fonts/font = ExtResource("2_xn8xq")
-theme_override_font_sizes/font_size = 100
+theme_override_font_sizes/font_size = 120
 text = "Category text will appear here"
 horizontal_alignment = 1
 vertical_alignment = 1
 autowrap_mode = 3
 script = ExtResource("2_30mq0")
 
-[node name="Gradient" type="TextureRect" parent="."]
+[node name="Gradient" type="TextureRect" parent="." unique_id=841663199]
 unique_name_in_owner = true
 layout_mode = 1
 anchors_preset = 15
