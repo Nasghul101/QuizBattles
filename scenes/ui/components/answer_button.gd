@@ -74,6 +74,28 @@ func reset() -> void:
     if _tween:
         _tween.kill()
 
+## Enable or disable the pulsating animation on the shader material
+##
+## Args:
+##   enabled: Whether pulsating should be active
+func set_pulsating_enabled(enabled: bool) -> void:
+    var mat := self.material as ShaderMaterial
+    if mat == null:
+        push_warning("answer_button: material is not a ShaderMaterial; set_pulsating_enabled is a no-op")
+        return
+    mat.set_shader_parameter("enable_pulsating", enabled)
+
+## Set the outline color on the shader material
+##
+## Args:
+##   color: The outline color to apply
+func set_shader_outline_color(color: Color) -> void:
+    var mat := self.material as ShaderMaterial
+    if mat == null:
+        push_warning("answer_button: material is not a ShaderMaterial; set_shader_outline_color is a no-op")
+        return
+    mat.set_shader_parameter("outline_color", color)
+
 ## Smoothly animate the button's modulate tint
 ##
 ## Args:

@@ -1,4 +1,4 @@
-extends Button
+extends TextureButton
 ## Result button component for displaying answer outcome indicators
 ##
 ## A reusable button component that displays correct/incorrect icons for quiz answers.
@@ -16,18 +16,17 @@ signal result_clicked(question_index: int, question_data: Dictionary)
 # Internal state
 var question_index: int = -1
 var question_data: Dictionary = {}
-@export var icon_right: Texture2D
-@export var icon_wrong: Texture2D
-@export var icon_hidden: Texture2D
+
+# Color utils
+var colors = Utils.get_color_codes()
+
+# Node ref
+@onready var hidden_icon: TextureRect = %HiddenIcon
 
 func _ready() -> void:
-    # Set default visual properties
-    custom_minimum_size = Vector2(30, 30)
-    expand_icon = true
-    icon_alignment = HORIZONTAL_ALIGNMENT_CENTER
-    
     # Connect internal button signal
     pressed.connect(_on_button_pressed)
+    hidden_icon.visible = false
 
 
 ## Load question data for this button
@@ -45,9 +44,9 @@ func load_question_data(index: int, data: Dictionary) -> void:
 ## Sets the button to show the correct icon, enables interaction,
 ## and resets modulation to full color.
 func set_correct_state() -> void:
-    icon = icon_right
+    hidden_icon.visible = false
     disabled = false
-    modulate = Color(1.0, 1.0, 1.0)
+    self_modulate = Color(colors["miscellaneous"]["Right answer"])
 
 
 ## Configure button to display incorrect answer state
@@ -55,19 +54,19 @@ func set_correct_state() -> void:
 ## Sets the button to show the incorrect icon, enables interaction,
 ## and resets modulation to full color.
 func set_incorrect_state() -> void:
-    icon = icon_wrong
+    hidden_icon.visible = false
     disabled = false
-    modulate = Color(1.0, 1.0, 1.0)
-
+    self_modulate = Color(colors["miscellaneous"]["Wrong answer"])
 
 ## Configure button to display empty/disabled state
 ##
 ## Sets the button to a disabled, grey appearance with no icon.
 ## Used for unused button slots before results are loaded.
 func set_empty_state() -> void:
-    icon = null
+    visible = true
+    hidden_icon.visible = false
     disabled = true
-    modulate = Color(0.5, 0.5, 0.5)
+    self_modulate = Color(colors["miscellaneous"]["App gray"])
 
 
 ## Configure button to display hidden state
@@ -75,12 +74,34 @@ func set_empty_state() -> void:
 ## Sets the button to show the hidden icon and disables interaction.
 ## Used when opponent results should not be visible until both players complete the round.
 func set_hidden_state() -> void:
-    icon = icon_hidden
+    hidden_icon.visible = true
     disabled = true
-    modulate = Color(1.0, 1.0, 1.0)
+    self_modulate = Color(colors["miscellaneous"]["App gray"])
 
 
 ## Handle button press and emit custom signal
 func _on_button_pressed() -> void:
     if question_index >= 0 and not question_data.is_empty():
         result_clicked.emit(question_index, question_data)
+
+
+var _state_timer: float = 0.0
+var _current_state: int = 0
+const _STATES = ["correct", "incorrect", "empty", "hidden"]
+
+#for testing the differenct state looks
+#func _process(delta: float) -> void:
+    #_state_timer += delta
+    #if _state_timer >= 5.0:
+        #_state_timer = 0.0
+        #_current_state = (_current_state + 1) % _STATES.size()
+        #match _STATES[_current_state]:
+            #"correct":
+                #set_correct_state()
+            #"incorrect":
+                #set_incorrect_state()
+            #"empty":
+                #set_empty_state()
+            #"hidden":
+                #set_hidden_state()
+    #

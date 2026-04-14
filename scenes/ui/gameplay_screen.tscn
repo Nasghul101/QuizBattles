@@ -1,9 +1,10 @@
-[gd_scene load_steps=3 format=3 uid="uid://ctegsm4qv7ren"]
+[gd_scene format=3 uid="uid://ctegsm4qv7ren"]
 
 [ext_resource type="Script" uid="uid://offlje3jpa8l" path="res://scenes/ui/gameplay_screen.gd" id="1_k5m8p"]
+[ext_resource type="FontFile" uid="uid://c8memnki1ydnd" path="res://assets/Font/exo/Exo-Bold.otf" id="2_6la4g"]
 [ext_resource type="Texture2D" uid="uid://c6geyqup74lo4" path="res://assets/versus.png" id="3_6la4g"]
 
-[node name="GameplayScreen" type="Control"]
+[node name="GameplayScreen" type="Control" unique_id=1789219856]
 layout_mode = 3
 anchors_preset = 15
 anchor_right = 1.0
@@ -12,78 +13,88 @@ grow_horizontal = 2
 grow_vertical = 2
 script = ExtResource("1_k5m8p")
 
-[node name="MarginContainer" type="MarginContainer" parent="."]
+[node name="MarginContainer" type="MarginContainer" parent="." unique_id=764582239]
 layout_mode = 1
 anchors_preset = 15
 anchor_right = 1.0
 anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
-theme_override_constants/margin_top = 30
-theme_override_constants/margin_bottom = 30
+theme_override_constants/margin_left = 40
+theme_override_constants/margin_top = 80
+theme_override_constants/margin_right = 40
+theme_override_constants/margin_bottom = 80
 
-[node name="HBoxContainer" type="HBoxContainer" parent="MarginContainer"]
+[node name="VBoxContainer" type="VBoxContainer" parent="MarginContainer" unique_id=1613375006]
 layout_mode = 2
 theme_override_constants/separation = 64
 alignment = 1
 
-[node name="ResultContainerL" type="VBoxContainer" parent="MarginContainer/HBoxContainer"]
-unique_name_in_owner = true
-layout_mode = 2
-alignment = 1
-
-[node name="VBoxContainer3" type="VBoxContainer" parent="MarginContainer/HBoxContainer"]
-layout_mode = 2
-
-[node name="Label" type="Label" parent="MarginContainer/HBoxContainer/VBoxContainer3"]
-layout_mode = 2
-size_flags_vertical = 2
-text = "Results"
-horizontal_alignment = 1
-vertical_alignment = 1
-
-[node name="HBoxContainer" type="HBoxContainer" parent="MarginContainer/HBoxContainer/VBoxContainer3"]
-custom_minimum_size = Vector2(100, 0)
+[node name="Header" type="HBoxContainer" parent="MarginContainer/VBoxContainer" unique_id=1851216535]
 layout_mode = 2
 size_flags_horizontal = 4
-size_flags_vertical = 3
-theme_override_constants/separation = 14
-alignment = 1
-
-[node name="ScoreP1" type="Label" parent="MarginContainer/HBoxContainer/VBoxContainer3/HBoxContainer"]
-layout_mode = 2
 size_flags_vertical = 0
-theme_override_font_sizes/font_size = 20
-horizontal_alignment = 1
-vertical_alignment = 1
+theme_override_constants/separation = 87
 
-[node name="TextureRect" type="TextureRect" parent="MarginContainer/HBoxContainer/VBoxContainer3/HBoxContainer"]
-custom_minimum_size = Vector2(30, 30)
+[node name="NameP1" type="Label" parent="MarginContainer/VBoxContainer/Header" unique_id=1436313272]
+unique_name_in_owner = true
 layout_mode = 2
-size_flags_vertical = 0
+theme_override_colors/font_color = Color(0.9843137, 0.8627451, 0.9529412, 1)
+theme_override_fonts/font = ExtResource("2_6la4g")
+theme_override_font_sizes/font_size = 60
+text = "Name Player 1"
+
+[node name="TextureRect" type="TextureRect" parent="MarginContainer/VBoxContainer/Header" unique_id=498838148]
+custom_minimum_size = Vector2(100, 100)
+layout_mode = 2
 texture = ExtResource("3_6la4g")
 expand_mode = 1
+stretch_mode = 5
 
-[node name="ScoreP2" type="Label" parent="MarginContainer/HBoxContainer/VBoxContainer3/HBoxContainer"]
+[node name="NameP2" type="Label" parent="MarginContainer/VBoxContainer/Header" unique_id=628140435]
+unique_name_in_owner = true
 layout_mode = 2
+theme_override_colors/font_color = Color(0.9843137, 0.8627451, 0.9529412, 1)
+theme_override_fonts/font = ExtResource("2_6la4g")
+theme_override_font_sizes/font_size = 60
+text = "Name Player 1"
+horizontal_alignment = 2
+
+[node name="ResultContainer" type="VBoxContainer" parent="MarginContainer/VBoxContainer" unique_id=2019155437]
+unique_name_in_owner = true
+layout_mode = 2
+size_flags_vertical = 3
+
+[node name="HBoxContainer" type="HBoxContainer" parent="MarginContainer/VBoxContainer" unique_id=2068593404]
+layout_mode = 2
+
+[node name="ScoreP1" type="Label" parent="MarginContainer/VBoxContainer/HBoxContainer" unique_id=1897759551]
+unique_name_in_owner = true
+layout_mode = 2
+size_flags_horizontal = 2
 size_flags_vertical = 0
 theme_override_font_sizes/font_size = 20
 horizontal_alignment = 1
 vertical_alignment = 1
 
-[node name="PlayButton" type="Button" parent="MarginContainer/HBoxContainer/VBoxContainer3"]
+[node name="ScoreP2" type="Label" parent="MarginContainer/VBoxContainer/HBoxContainer" unique_id=573150703]
 unique_name_in_owner = true
-custom_minimum_size = Vector2(70, 50)
+layout_mode = 2
+size_flags_horizontal = 10
+size_flags_vertical = 0
+theme_override_font_sizes/font_size = 20
+horizontal_alignment = 1
+vertical_alignment = 1
+
+[node name="PlayButton" type="Button" parent="MarginContainer/VBoxContainer" unique_id=1554595459]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(200, 100)
 layout_mode = 2
 size_flags_horizontal = 4
-size_flags_vertical = 8
+size_flags_vertical = 0
 text = "Play"
 
-[node name="ResultContainerR" type="VBoxContainer" parent="MarginContainer/HBoxContainer"]
-unique_name_in_owner = true
-layout_mode = 2
-
-[node name="BackButton" type="Button" parent="."]
+[node name="BackButton" type="Button" parent="." unique_id=807316909]
 custom_minimum_size = Vector2(50, 50)
 layout_mode = 0
 offset_right = 50.0
@@ -91,7 +102,7 @@ offset_bottom = 50.0
 size_flags_horizontal = 0
 text = "Back"
 
-[node name="FinishGamePopup" type="MarginContainer" parent="."]
+[node name="FinishGamePopup" type="MarginContainer" parent="." unique_id=1838578546]
 visible = false
 layout_mode = 1
 anchors_preset = 15
@@ -104,17 +115,18 @@ theme_override_constants/margin_top = 100
 theme_override_constants/margin_right = 100
 theme_override_constants/margin_bottom = 100
 
-[node name="ModalOverlay" type="ColorRect" parent="FinishGamePopup"]
+[node name="ModalOverlay" type="ColorRect" parent="FinishGamePopup" unique_id=2018505671]
 layout_mode = 2
 color = Color(0, 0, 0, 0.5)
 
-[node name="PanelContainer" type="PanelContainer" parent="FinishGamePopup"]
+[node name="PanelContainer" type="PanelContainer" parent="FinishGamePopup" unique_id=1833649012]
 layout_mode = 2
 
-[node name="VBoxContainer" type="VBoxContainer" parent="FinishGamePopup/PanelContainer"]
+[node name="VBoxContainer" type="VBoxContainer" parent="FinishGamePopup/PanelContainer" unique_id=710845754]
 layout_mode = 2
 
-[node name="WinnerDisplay" type="Label" parent="FinishGamePopup/PanelContainer/VBoxContainer"]
+[node name="WinnerDisplay" type="Label" parent="FinishGamePopup/PanelContainer/VBoxContainer" unique_id=597474134]
+unique_name_in_owner = true
 layout_mode = 2
 size_flags_horizontal = 4
 size_flags_vertical = 6
@@ -122,7 +134,8 @@ theme_override_font_sizes/font_size = 50
 horizontal_alignment = 1
 vertical_alignment = 1
 
-[node name="FinishGameButton" type="Button" parent="FinishGamePopup/PanelContainer/VBoxContainer"]
+[node name="FinishGameButton" type="Button" parent="FinishGamePopup/PanelContainer/VBoxContainer" unique_id=1536251671]
+unique_name_in_owner = true
 custom_minimum_size = Vector2(100, 50)
 layout_mode = 2
 size_flags_horizontal = 4
@@ -130,4 +143,5 @@ size_flags_vertical = 10
 theme_override_font_sizes/font_size = 40
 text = "Finish"
 
+[connection signal="pressed" from="MarginContainer/VBoxContainer/PlayButton" to="." method="_on_play_button_pressed"]
 [connection signal="pressed" from="BackButton" to="." method="_on_back_button_pressed"]

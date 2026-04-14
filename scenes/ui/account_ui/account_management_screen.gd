@@ -52,7 +52,7 @@ func _display_current_avatar() -> void:
 
 ## Handle BackButton press - return to main lobby
 func _on_back_button_pressed() -> void:
-    NavigationUtils.navigate_to_scene("main_lobby")
+    Utils.navigate_to_scene("main_lobby")
 
 
 ## Handle LogOffButton press - log out user and return to login screen
@@ -68,7 +68,7 @@ func _on_log_off_button_pressed() -> void:
     print("User %s logged out" % username)
     
     # Navigate to register/login screen
-    NavigationUtils.navigate_to_scene("register_login")
+    Utils.navigate_to_scene("register_login")
 
 
 ## Handle UserAvatar button press - populate and show avatar chooser popup

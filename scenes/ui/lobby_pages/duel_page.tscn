@@ -1,10 +1,10 @@
-[gd_scene load_steps=3 format=3 uid="uid://db55cjof2f4uv"]
+[gd_scene format=3 uid="uid://db55cjof2f4uv"]
 
 [ext_resource type="Script" uid="uid://cvey2h22svmcj" path="res://scenes/ui/lobby_pages/duel_page.gd" id="1_ruj8i"]
 
 [sub_resource type="PlaceholderTexture2D" id="PlaceholderTexture2D_d3alh"]
 
-[node name="DuelPage" type="Control"]
+[node name="DuelPage" type="Control" unique_id=232069626]
 layout_mode = 3
 anchors_preset = 15
 anchor_right = 1.0
@@ -13,7 +13,7 @@ grow_horizontal = 2
 grow_vertical = 2
 script = ExtResource("1_ruj8i")
 
-[node name="VBoxContainer" type="VBoxContainer" parent="."]
+[node name="VBoxContainer" type="VBoxContainer" parent="." unique_id=1206572494]
 layout_mode = 1
 anchors_preset = 15
 anchor_right = 1.0
@@ -21,12 +21,12 @@ anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
 
-[node name="TextureRect" type="TextureRect" parent="VBoxContainer"]
+[node name="TextureRect" type="TextureRect" parent="VBoxContainer" unique_id=1876390701]
 layout_mode = 2
 size_flags_vertical = 3
 texture = SubResource("PlaceholderTexture2D_d3alh")
 
-[node name="PlayButton" type="Button" parent="VBoxContainer"]
+[node name="PlayButton" type="Button" parent="VBoxContainer" unique_id=1940099630]
 custom_minimum_size = Vector2(200, 100)
 layout_mode = 2
 size_flags_horizontal = 4

@@ -67,7 +67,7 @@ func _update_button_state() -> void:
 
 
 func _on_back_button_pressed() -> void:
-    NavigationUtils.navigate_to_scene("register_login")
+    Utils.navigate_to_scene("register_login")
 
 ## Handle Create Account button press
 func _on_create_account_button_pressed() -> void:
@@ -92,10 +92,10 @@ func _on_create_account_button_pressed() -> void:
         var sign_in_result: Dictionary = UserDatabase.sign_in(username, password)
         if sign_in_result.success:
             print("User automatically logged in")
-            NavigationUtils.navigate_to_scene("account_management", "register_login")
+            Utils.navigate_to_scene("account_management", "register_login")
         else:
             print("ERROR: Failed to log in after account creation: ", sign_in_result.message)
-            NavigationUtils.navigate_to_scene("register_login")
+            Utils.navigate_to_scene("register_login")
     else:
         # Error - log the error message
         print("ERROR: ", result.message)

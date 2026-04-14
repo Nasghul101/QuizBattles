@@ -3,10 +3,10 @@
 [ext_resource type="Script" uid="uid://dnejqrkpdbaum" path="res://scenes/ui/quiz_screen.gd" id="1_script"]
 [ext_resource type="PackedScene" uid="uid://bwx7yjvxq8cxl" path="res://scenes/ui/components/answer_button.tscn" id="2_answer_button"]
 [ext_resource type="Shader" uid="uid://dtvwdbl5lb1q" path="res://shaders/predefined_outline_shader.gdshader" id="2_kxe5e"]
-[ext_resource type="Texture2D" uid="uid://bm4noncww6swl" path="res://assets/ui/QuizScreen_Questionare_Outline.svg" id="3_kxe5e"]
 [ext_resource type="Texture2D" uid="uid://cb8fn4o52ee5o" path="res://assets/ui/Quizscreen_Header_Outline.png" id="3_t872d"]
 [ext_resource type="PackedScene" uid="uid://b3sw6thf2vfki" path="res://scenes/ui/components/gradient_label.tscn" id="4_dh7g3"]
 [ext_resource type="FontFile" uid="uid://c8memnki1ydnd" path="res://assets/Font/exo/Exo-Bold.otf" id="4_t872d"]
+[ext_resource type="Texture2D" uid="uid://c5kx04t7qxaqm" path="res://assets/ui/QuizScreen_Questionare.png" id="5_f45mr"]
 [ext_resource type="Texture2D" uid="uid://b005etrilpxw0" path="res://assets/ui/QuizScreen_Button_Top_Outline.png" id="8_dh7g3"]
 [ext_resource type="Texture2D" uid="uid://cjeupu2xrdrwi" path="res://assets/ui/QuizScreen_Button_Bottom_Outline.png" id="9_f45mr"]
 [ext_resource type="Shader" uid="uid://c6shv0xpxc3t5" path="res://shaders/trailing_progress_bar.gdshader" id="10_r8m2p"]
@@ -114,7 +114,7 @@ layout_mode = 1
 self_modulate = Color(0.19215687, 0, 0.24313726, 1)
 material = SubResource("ShaderMaterial_dh7g3")
 layout_mode = 2
-texture = ExtResource("3_kxe5e")
+texture = ExtResource("5_f45mr")
 expand_mode = 5
 stretch_mode = 5
 

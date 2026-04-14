@@ -1,28 +1,73 @@
-[gd_scene load_steps=3 format=3 uid="uid://ecpnqmdso02q"]
+[gd_scene format=3 uid="uid://ecpnqmdso02q"]
 
 [ext_resource type="Script" uid="uid://djws13w7oh7wy" path="res://scenes/ui/components/answer_review_screen.gd" id="1_3y6kc"]
 [ext_resource type="PackedScene" uid="uid://bwx7yjvxq8cxl" path="res://scenes/ui/components/answer_button.tscn" id="1_h8w4e"]
+[ext_resource type="Texture2D" uid="uid://ceo5gdjdxvtp2" path="res://assets/ui/AnswerReview_Question.png" id="2_nllv5"]
+[ext_resource type="Shader" uid="uid://dtvwdbl5lb1q" path="res://shaders/predefined_outline_shader.gdshader" id="2_pqysq"]
+[ext_resource type="FontFile" uid="uid://c8memnki1ydnd" path="res://assets/Font/exo/Exo-Bold.otf" id="4_tsca3"]
+[ext_resource type="Texture2D" uid="uid://cjeupu2xrdrwi" path="res://assets/ui/QuizScreen_Button_Bottom_Outline.png" id="4_yj114"]
+[ext_resource type="Texture2D" uid="uid://pj7nlpjyhaax" path="res://assets/ui/PlayButton.png" id="7_tsca3"]
 
-[node name="AnswerReviewScreen" type="Control"]
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_tsca3"]
+bg_color = Color(0.30980393, 0.2627451, 0.3137255, 1)
+border_width_left = 10
+border_width_top = 10
+border_width_right = 10
+border_width_bottom = 10
+border_color = Color(0.9843137, 0.8627451, 0.9529412, 1)
+corner_radius_top_left = 5
+corner_radius_top_right = 5
+corner_radius_bottom_right = 5
+corner_radius_bottom_left = 5
+
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_b8k4c"]
+shader = ExtResource("2_pqysq")
+shader_parameter/outline_color = Color(0.9843137, 0.8627451, 0.9529412, 1)
+shader_parameter/outline_threshold = 0.2
+shader_parameter/enable_pulsating = false
+shader_parameter/pulsating_color = Color(0, 1, 1, 1)
+shader_parameter/pulsating_size = 1.0
+shader_parameter/pulsating_speed = 1.0
+shader_parameter/pulsating_clockwise = false
+
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_0ksqu"]
+shader = ExtResource("2_pqysq")
+shader_parameter/outline_color = Color(0.9843137, 0.8627451, 0.9529412, 1)
+shader_parameter/outline_threshold = 0.2
+shader_parameter/enable_pulsating = false
+shader_parameter/pulsating_color = Color(0, 1, 1, 1)
+shader_parameter/pulsating_size = 1.0
+shader_parameter/pulsating_speed = 1.0
+shader_parameter/pulsating_clockwise = false
+
+[node name="AnswerReviewScreen" type="Control" unique_id=804361677]
 layout_mode = 3
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -589.5
+offset_top = -1273.59
+offset_right = 210.5
+offset_bottom = 26.410034
+grow_horizontal = 2
+grow_vertical = 2
+pivot_offset = Vector2(400, 1000)
+size_flags_horizontal = 4
+size_flags_vertical = 4
+script = ExtResource("1_3y6kc")
+
+[node name="PanelContainer" type="PanelContainer" parent="." unique_id=1243429419]
+layout_mode = 1
 anchors_preset = 15
 anchor_right = 1.0
 anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
-size_flags_horizontal = 0
-size_flags_vertical = 0
-script = ExtResource("1_3y6kc")
-metadata/_edit_use_anchors_ = true
+theme_override_styles/panel = SubResource("StyleBoxFlat_tsca3")
 
-[node name="PanelContainer" type="PanelContainer" parent="."]
-layout_mode = 0
-offset_right = 1152.0
-offset_bottom = 648.0
-grow_horizontal = 2
-grow_vertical = 2
-
-[node name="MarginContainer" type="MarginContainer" parent="PanelContainer"]
+[node name="MarginContainer" type="MarginContainer" parent="PanelContainer" unique_id=1921159411]
 custom_minimum_size = Vector2(110, 110)
 layout_mode = 2
 theme_override_constants/margin_left = 40
@@ -30,16 +75,19 @@ theme_override_constants/margin_top = 40
 theme_override_constants/margin_right = 40
 theme_override_constants/margin_bottom = 40
 
-[node name="VBoxContainer" type="VBoxContainer" parent="PanelContainer/MarginContainer"]
+[node name="VBoxContainer" type="VBoxContainer" parent="PanelContainer/MarginContainer" unique_id=1727112978]
 layout_mode = 2
-theme_override_constants/separation = 29
 alignment = 1
 
-[node name="QuestionPanel" type="Panel" parent="PanelContainer/MarginContainer/VBoxContainer"]
+[node name="QuestionPanel" type="TextureRect" parent="PanelContainer/MarginContainer/VBoxContainer" unique_id=425343705]
+self_modulate = Color(0.19215687, 0, 0.24313726, 1)
+material = SubResource("ShaderMaterial_b8k4c")
 layout_mode = 2
-size_flags_vertical = 3
+texture = ExtResource("2_nllv5")
+expand_mode = 5
+stretch_mode = 5
 
-[node name="QuestionLabel" type="Label" parent="PanelContainer/MarginContainer/VBoxContainer/QuestionPanel"]
+[node name="QuestionLabel" type="Label" parent="PanelContainer/MarginContainer/VBoxContainer/QuestionPanel" unique_id=525312773]
 unique_name_in_owner = true
 layout_mode = 1
 anchors_preset = 15
@@ -51,38 +99,68 @@ offset_right = -20.0
 offset_bottom = -14.0
 grow_horizontal = 2
 grow_vertical = 2
-theme_override_font_sizes/font_size = 20
+theme_override_colors/font_color = Color(0.9843137, 0.8627451, 0.9529412, 1)
+theme_override_fonts/font = ExtResource("4_tsca3")
+theme_override_font_sizes/font_size = 60
 text = "Question text will appear here"
 horizontal_alignment = 1
 vertical_alignment = 1
 autowrap_mode = 3
 
-[node name="AnswersGrid" type="GridContainer" parent="PanelContainer/MarginContainer/VBoxContainer"]
+[node name="MarginContainer" type="MarginContainer" parent="PanelContainer/MarginContainer/VBoxContainer" unique_id=1832116399]
+layout_mode = 2
+size_flags_vertical = 3
+theme_override_constants/margin_top = -72
+
+[node name="AnswersGrid" type="GridContainer" parent="PanelContainer/MarginContainer/VBoxContainer/MarginContainer" unique_id=1878279193]
 unique_name_in_owner = true
 layout_mode = 2
-theme_override_constants/h_separation = 25
-theme_override_constants/v_separation = 30
+size_flags_vertical = 3
+theme_override_constants/v_separation = -84
 columns = 2
 
-[node name="AnswerButton1" parent="PanelContainer/MarginContainer/VBoxContainer/AnswersGrid" instance=ExtResource("1_h8w4e")]
+[node name="AnswerButton1" parent="PanelContainer/MarginContainer/VBoxContainer/MarginContainer/AnswersGrid" unique_id=2092759514 instance=ExtResource("1_h8w4e")]
 custom_minimum_size = Vector2(300, 120)
 layout_mode = 2
 
-[node name="AnswerButton2" parent="PanelContainer/MarginContainer/VBoxContainer/AnswersGrid" instance=ExtResource("1_h8w4e")]
+[node name="AnswerButton2" parent="PanelContainer/MarginContainer/VBoxContainer/MarginContainer/AnswersGrid" unique_id=1319528786 instance=ExtResource("1_h8w4e")]
 custom_minimum_size = Vector2(300, 120)
 layout_mode = 2
+flip_h = true
 
-[node name="AnswerButton3" parent="PanelContainer/MarginContainer/VBoxContainer/AnswersGrid" instance=ExtResource("1_h8w4e")]
+[node name="AnswerButton3" parent="PanelContainer/MarginContainer/VBoxContainer/MarginContainer/AnswersGrid" unique_id=811083456 instance=ExtResource("1_h8w4e")]
 custom_minimum_size = Vector2(300, 120)
 layout_mode = 2
+texture_normal = ExtResource("4_yj114")
 
-[node name="AnswerButton4" parent="PanelContainer/MarginContainer/VBoxContainer/AnswersGrid" instance=ExtResource("1_h8w4e")]
+[node name="AnswerButton4" parent="PanelContainer/MarginContainer/VBoxContainer/MarginContainer/AnswersGrid" unique_id=79033506 instance=ExtResource("1_h8w4e")]
 custom_minimum_size = Vector2(300, 120)
 layout_mode = 2
+texture_normal = ExtResource("4_yj114")
+flip_h = true
 
-[node name="BackButton" type="Button" parent="PanelContainer/MarginContainer/VBoxContainer"]
-custom_minimum_size = Vector2(0, 50)
+[node name="BackButton" type="TextureButton" parent="PanelContainer/MarginContainer/VBoxContainer" unique_id=577944624]
+self_modulate = Color(0.19215687, 0, 0.24313726, 1)
+material = SubResource("ShaderMaterial_0ksqu")
+custom_minimum_size = Vector2(0, 150)
 layout_mode = 2
+texture_normal = ExtResource("7_tsca3")
+ignore_texture_size = true
+stretch_mode = 5
+
+[node name="Label" type="Label" parent="PanelContainer/MarginContainer/VBoxContainer/BackButton" unique_id=1675569056]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_colors/font_color = Color(0.9843137, 0.8627451, 0.9529412, 1)
+theme_override_fonts/font = ExtResource("4_tsca3")
+theme_override_font_sizes/font_size = 60
 text = "Back"
+horizontal_alignment = 1
+vertical_alignment = 1
+metadata/_edit_use_anchors_ = true
 
 [connection signal="pressed" from="PanelContainer/MarginContainer/VBoxContainer/BackButton" to="." method="_on_back_button_pressed"]

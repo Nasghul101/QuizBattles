@@ -1,5 +1,6 @@
 {
     "_note": "Color codes used throughout the project. Null values indicate colors not yet decided.",
+    "_note_usage": "To access color codes from a GDScript: var file = FileAccess.open('res://data/color_codes.json', FileAccess.READ); var json = JSON.new(); json.parse(file.get_as_text()); var colors = json.data. Then access values like: Color(colors['miscellaneous']['App background']) or colors['category_colors']['Science'].",
     "category_colors": {
         "General Knowledge": null,
         "Entertainment": "#DA242B",

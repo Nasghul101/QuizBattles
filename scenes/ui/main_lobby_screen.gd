@@ -174,10 +174,10 @@ func _on_social_page_pressed() -> void:
 func _on_account_button_pressed() -> void:
     if UserDatabase.is_signed_in():
         # User is logged in - navigate to account management
-        NavigationUtils.navigate_to_scene("account_management")
+        Utils.navigate_to_scene("account_management")
     else:
         # User is not logged in - navigate to register/login
-        NavigationUtils.navigate_to_scene("register_login")
+        Utils.navigate_to_scene("register_login")
 
 
 ## Open notifications popup

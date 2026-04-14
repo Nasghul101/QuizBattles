@@ -55,12 +55,12 @@ func _update_button_state() -> void:
 
 ## Handle BackButton press - return to main lobby
 func _on_back_button_pressed() -> void:
-    NavigationUtils.navigate_to_scene("main_lobby")
+    Utils.navigate_to_scene("main_lobby")
 
 
 ## Handle NewAccountButton press - navigate to account registration
 func _on_new_account_button_pressed() -> void:
-    NavigationUtils.navigate_to_scene("account_registration")
+    Utils.navigate_to_scene("account_registration")
 
 
 func _on_log_in_button_pressed() -> void:
@@ -72,7 +72,7 @@ func _on_log_in_button_pressed() -> void:
     
     if result.success:
         # Success - navigate to account management
-        NavigationUtils.navigate_to_scene("account_management", "main_lobby")
+        Utils.navigate_to_scene("account_management", "main_lobby")
     else:
         # Error - log the error message
         print("ERROR: ", result.message)

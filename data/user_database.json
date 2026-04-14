@@ -1,255 +1,583 @@
 {
-    "multiplayer_matches": [
-        {
-            "config": {
-                "questions": 3,
-                "rounds": 5
-            },
-            "created_at": 1772628984.4,
-            "current_round": 1,
-            "current_turn": "linus",
-            "dismissed_by": [],
-            "inviter": "robin",
-            "match_id": "match_1772628984",
-            "players": [
-                "robin",
+	"multiplayer_matches": [
+		{
+			"config": {
+				"questions": 5.0,
+				"rounds": 3.0
+			},
+			"created_at": 1775761319.129,
+			"current_round": 3.0,
+			"current_turn": "robin",
+			"dismissed_by": [],
+			"inviter": "robin",
+			"match_id": "match_1775761319",
+			"players": [
+				"robin",
 				"linus"
-            ],
-            "rounds_data": [
-                {
-                    "category": "Politics",
-                    "category_chooser": "robin",
-                    "player_answers": {
-                        "linus": {
-                            "answered": false,
-                            "results": []
-                        },
-                        "robin": {
-                            "answered": true,
-                            "results": [
-                                {
-                                    "player_answer": "True Republican Radio",
-                                    "question_data": {
-                                        "category": "Politics",
-                                        "correct_answer": "True Conservative Radio",
-                                        "difficulty": "medium",
-                                        "incorrect_answers": [
-                                            "True Republican Radio",
-                                            "Texan Capitalist Radio",
-											"United Capitalists"
-                                        ],
-                                        "question": "Before 2011, &quot;True Capitalist Radio&quot; was known by a different name. What was that name?",
-                                        "type": "multiple"
-                                    },
-                                    "was_correct": false
-                                },
-                                {
-                                    "player_answer": "Remaining politically neutral.",
-                                    "question_data": {
-                                        "category": "Politics",
-                                        "correct_answer": " Concentration of power and authority in a central organization.",
-                                        "difficulty": "hard",
-                                        "incorrect_answers": [
-                                            "Conforming to one single common political agenda.",
-                                            "Remaining politically neutral.",
-											"The grey area in the spectrum of political left and right."
-                                        ],
-                                        "question": "What is centralism?",
-                                        "type": "multiple"
-                                    },
-                                    "was_correct": false
-                                },
-                                {
-                                    "player_answer": "George Bush",
-                                    "question_data": {
-                                        "category": "Politics",
-                                        "correct_answer": "Donald Trump",
-                                        "difficulty": "easy",
-                                        "incorrect_answers": [
-                                            "Barack Obama",
-                                            "Bill Clinton",
-											"George Bush"
-                                        ],
-                                        "question": "Who was the 45th President of the United States?",
-                                        "type": "multiple"
-                                    },
-                                    "was_correct": false
-                                }
-                            ]
-                        }
-                    },
-                    "questions": [
-                        {
-                            "category": "Politics",
-                            "correct_answer": "True Conservative Radio",
-                            "difficulty": "medium",
-                            "incorrect_answers": [
-                                "True Republican Radio",
-                                "Texan Capitalist Radio",
-								"United Capitalists"
-                            ],
-                            "question": "Before 2011, &quot;True Capitalist Radio&quot; was known by a different name. What was that name?",
-                            "type": "multiple"
-                        },
-                        {
-                            "category": "Politics",
-                            "correct_answer": " Concentration of power and authority in a central organization.",
-                            "difficulty": "hard",
-                            "incorrect_answers": [
-                                "Conforming to one single common political agenda.",
-                                "Remaining politically neutral.",
-								"The grey area in the spectrum of political left and right."
-                            ],
-                            "question": "What is centralism?",
-                            "type": "multiple"
-                        },
-                        {
-                            "category": "Politics",
-                            "correct_answer": "Donald Trump",
-                            "difficulty": "easy",
-                            "incorrect_answers": [
-                                "Barack Obama",
-                                "Bill Clinton",
-								"George Bush"
-                            ],
-                            "question": "Who was the 45th President of the United States?",
-                            "type": "multiple"
-                        }
-                    ],
-                    "round_number": 1
-                },
-                {
-                    "category": "",
-                    "category_chooser": "linus",
-                    "player_answers": {
-                        "linus": {
-                            "answered": false,
-                            "results": []
-                        },
-                        "robin": {
-                            "answered": false,
-                            "results": []
-                        }
-                    },
-                    "questions": [],
-                    "round_number": 2
-                },
-                {
-                    "category": "",
-                    "category_chooser": "robin",
-                    "player_answers": {
-                        "linus": {
-                            "answered": false,
-                            "results": []
-                        },
-                        "robin": {
-                            "answered": false,
-                            "results": []
-                        }
-                    },
-                    "questions": [],
-                    "round_number": 3
-                },
-                {
-                    "category": "",
-                    "category_chooser": "linus",
-                    "player_answers": {
-                        "linus": {
-                            "answered": false,
-                            "results": []
-                        },
-                        "robin": {
-                            "answered": false,
-                            "results": []
-                        }
-                    },
-                    "questions": [],
-                    "round_number": 4
-                },
-                {
-                    "category": "",
-                    "category_chooser": "robin",
-                    "player_answers": {
-                        "linus": {
-                            "answered": false,
-                            "results": []
-                        },
-                        "robin": {
-                            "answered": false,
-                            "results": []
-                        }
-                    },
-                    "questions": [],
-                    "round_number": 5
-                }
-            ],
-            "stats_processed": false,
-            "status": "active"
-        }
-    ],
-    "users": {
-        "linus": {
-            "avatar_path": "res://assets/profile_pictures/man_standard.png",
-            "current_streak": 0.0,
-            "email": "l@test.de",
-            "friend_wins": {
+			],
+			"rounds_data": [
+				{
+					"category": "Mythology",
+					"category_chooser": "robin",
+					"player_answers": {
+						"linus": {
+							"answered": true,
+							"results": [
+								{
+									"player_answer": "Ares",
+									"question_data": {
+										"category": "Mythology",
+										"correct_answer": "Eris",
+										"difficulty": "medium",
+										"incorrect_answers": [
+											"Hades",
+											"Ares",
+											"Artemis"
+										],
+										"question": "Which greek god/goddess tossed a golden apple with the words &quot;for the fairest&quot; into the middle of the feast of the gods?",
+										"type": "multiple"
+									},
+									"was_correct": false
+								},
+								{
+									"player_answer": "Calf",
+									"question_data": {
+										"category": "Mythology",
+										"correct_answer": "Heel",
+										"difficulty": "easy",
+										"incorrect_answers": [
+											"Neck",
+											"Back",
+											"Calf"
+										],
+										"question": "What weakpoint of Achilles was expoited by the Trojan prince, Paris?",
+										"type": "multiple"
+									},
+									"was_correct": false
+								},
+								{
+									"player_answer": "Pegasus",
+									"question_data": {
+										"category": "Mythology",
+										"correct_answer": "Centaur",
+										"difficulty": "easy",
+										"incorrect_answers": [
+											"Minotaur",
+											"Pegasus",
+											"Gorgon"
+										],
+										"question": "Which of these mythological creatures is said to be half-man and half-horse?",
+										"type": "multiple"
+									},
+									"was_correct": false
+								},
+								{
+									"player_answer": "Mermaids",
+									"question_data": {
+										"category": "Mythology",
+										"correct_answer": "Harpies",
+										"difficulty": "easy",
+										"incorrect_answers": [
+											"Mermaids",
+											"Nymph",
+											"Lilith"
+										],
+										"question": "What mytological creatures have women&#039;s faces and vultures&#039; bodies?",
+										"type": "multiple"
+									},
+									"was_correct": false
+								},
+								{
+									"player_answer": "Mars",
+									"question_data": {
+										"category": "Mythology",
+										"correct_answer": "Janus",
+										"difficulty": "medium",
+										"incorrect_answers": [
+											"Vulcan",
+											"Juno",
+											"Mars"
+										],
+										"question": "Which of these Roman gods doesn&#039;t have a counterpart in Greek mythology?",
+										"type": "multiple"
+									},
+									"was_correct": false
+								}
+							]
+						},
+						"robin": {
+							"answered": true,
+							"results": [
+								{
+									"player_answer": "Ares",
+									"question_data": {
+										"category": "Mythology",
+										"correct_answer": "Eris",
+										"difficulty": "medium",
+										"incorrect_answers": [
+											"Hades",
+											"Ares",
+											"Artemis"
+										],
+										"question": "Which greek god/goddess tossed a golden apple with the words &quot;for the fairest&quot; into the middle of the feast of the gods?",
+										"type": "multiple"
+									},
+									"was_correct": false
+								},
+								{
+									"player_answer": "Neck",
+									"question_data": {
+										"category": "Mythology",
+										"correct_answer": "Heel",
+										"difficulty": "easy",
+										"incorrect_answers": [
+											"Neck",
+											"Back",
+											"Calf"
+										],
+										"question": "What weakpoint of Achilles was expoited by the Trojan prince, Paris?",
+										"type": "multiple"
+									},
+									"was_correct": false
+								},
+								{
+									"player_answer": "Minotaur",
+									"question_data": {
+										"category": "Mythology",
+										"correct_answer": "Centaur",
+										"difficulty": "easy",
+										"incorrect_answers": [
+											"Minotaur",
+											"Pegasus",
+											"Gorgon"
+										],
+										"question": "Which of these mythological creatures is said to be half-man and half-horse?",
+										"type": "multiple"
+									},
+									"was_correct": false
+								},
+								{
+									"player_answer": "Harpies",
+									"question_data": {
+										"category": "Mythology",
+										"correct_answer": "Harpies",
+										"difficulty": "easy",
+										"incorrect_answers": [
+											"Mermaids",
+											"Nymph",
+											"Lilith"
+										],
+										"question": "What mytological creatures have women&#039;s faces and vultures&#039; bodies?",
+										"type": "multiple"
+									},
+									"was_correct": true
+								},
+								{
+									"player_answer": "Mars",
+									"question_data": {
+										"category": "Mythology",
+										"correct_answer": "Janus",
+										"difficulty": "medium",
+										"incorrect_answers": [
+											"Vulcan",
+											"Juno",
+											"Mars"
+										],
+										"question": "Which of these Roman gods doesn&#039;t have a counterpart in Greek mythology?",
+										"type": "multiple"
+									},
+									"was_correct": false
+								}
+							]
+						}
+					},
+					"questions": [
+						{
+							"category": "Mythology",
+							"correct_answer": "Eris",
+							"difficulty": "medium",
+							"incorrect_answers": [
+								"Hades",
+								"Ares",
+								"Artemis"
+							],
+							"question": "Which greek god/goddess tossed a golden apple with the words &quot;for the fairest&quot; into the middle of the feast of the gods?",
+							"type": "multiple"
+						},
+						{
+							"category": "Mythology",
+							"correct_answer": "Heel",
+							"difficulty": "easy",
+							"incorrect_answers": [
+								"Neck",
+								"Back",
+								"Calf"
+							],
+							"question": "What weakpoint of Achilles was expoited by the Trojan prince, Paris?",
+							"type": "multiple"
+						},
+						{
+							"category": "Mythology",
+							"correct_answer": "Centaur",
+							"difficulty": "easy",
+							"incorrect_answers": [
+								"Minotaur",
+								"Pegasus",
+								"Gorgon"
+							],
+							"question": "Which of these mythological creatures is said to be half-man and half-horse?",
+							"type": "multiple"
+						},
+						{
+							"category": "Mythology",
+							"correct_answer": "Harpies",
+							"difficulty": "easy",
+							"incorrect_answers": [
+								"Mermaids",
+								"Nymph",
+								"Lilith"
+							],
+							"question": "What mytological creatures have women&#039;s faces and vultures&#039; bodies?",
+							"type": "multiple"
+						},
+						{
+							"category": "Mythology",
+							"correct_answer": "Janus",
+							"difficulty": "medium",
+							"incorrect_answers": [
+								"Vulcan",
+								"Juno",
+								"Mars"
+							],
+							"question": "Which of these Roman gods doesn&#039;t have a counterpart in Greek mythology?",
+							"type": "multiple"
+						}
+					],
+					"round_number": 1.0
+				},
+				{
+					"category": "Celebrities",
+					"category_chooser": "linus",
+					"player_answers": {
+						"linus": {
+							"answered": true,
+							"results": [
+								{
+									"player_answer": "Allison Harvard",
+									"question_data": {
+										"category": "Celebrities",
+										"correct_answer": "Christopher Poole",
+										"difficulty": "medium",
+										"incorrect_answers": [
+											"Mark Zuckerberg",
+											"Allison Harvard",
+											"Catie Wayne"
+										],
+										"question": "What is the real name of &quot;moot&quot;, founder of the imageboard 4chan?",
+										"type": "multiple"
+									},
+									"was_correct": false
+								},
+								{
+									"player_answer": "Bullying",
+									"question_data": {
+										"category": "Celebrities",
+										"correct_answer": "Bullying",
+										"difficulty": "medium",
+										"incorrect_answers": [
+											"Criminal Record",
+											"Nomination for Worst Actor",
+											"Racism"
+										],
+										"question": "What caused Jake Lloyd who played Anakin Skywalker in The Phantom Menace to quit acting?",
+										"type": "multiple"
+									},
+									"was_correct": true
+								},
+								{
+									"player_answer": "Kings International College",
+									"question_data": {
+										"category": "Celebrities",
+										"correct_answer": "Collingwood College",
+										"difficulty": "hard",
+										"incorrect_answers": [
+											"Tomlinscote School",
+											"Kings International College",
+											"Lyndhurst School"
+										],
+										"question": "Which school in Surrey, England did Steve Backshall attend?",
+										"type": "multiple"
+									},
+									"was_correct": false
+								},
+								{
+									"player_answer": "New York",
+									"question_data": {
+										"category": "Celebrities",
+										"correct_answer": "New York",
+										"difficulty": "hard",
+										"incorrect_answers": [
+											"Arizona",
+											"California",
+											"Georgia"
+										],
+										"question": "Billy Herrington is from which US state?",
+										"type": "multiple"
+									},
+									"was_correct": true
+								},
+								{
+									"player_answer": "Attempting to enter the Dakota Apartments building",
+									"question_data": {
+										"category": "Celebrities",
+										"correct_answer": "Attempting to enter the Dakota Apartments building",
+										"difficulty": "medium",
+										"incorrect_answers": [
+											"During an impromptu walk through Central Park",
+											"Signing an autograph outside the Record Plant studio",
+											"Waiting outside a music venue in Manhattan following a gig"
+										],
+										"question": "In which situation was musician John Lennon assassinated?",
+										"type": "multiple"
+									},
+									"was_correct": true
+								}
+							]
+						},
+						"robin": {
+							"answered": true,
+							"results": [
+								{
+									"player_answer": "Christopher Poole",
+									"question_data": {
+										"category": "Celebrities",
+										"correct_answer": "Christopher Poole",
+										"difficulty": "medium",
+										"incorrect_answers": [
+											"Mark Zuckerberg",
+											"Allison Harvard",
+											"Catie Wayne"
+										],
+										"question": "What is the real name of &quot;moot&quot;, founder of the imageboard 4chan?",
+										"type": "multiple"
+									},
+									"was_correct": true
+								},
+								{
+									"player_answer": "Nomination for Worst Actor",
+									"question_data": {
+										"category": "Celebrities",
+										"correct_answer": "Bullying",
+										"difficulty": "medium",
+										"incorrect_answers": [
+											"Criminal Record",
+											"Nomination for Worst Actor",
+											"Racism"
+										],
+										"question": "What caused Jake Lloyd who played Anakin Skywalker in The Phantom Menace to quit acting?",
+										"type": "multiple"
+									},
+									"was_correct": false
+								},
+								{
+									"player_answer": "Tomlinscote School",
+									"question_data": {
+										"category": "Celebrities",
+										"correct_answer": "Collingwood College",
+										"difficulty": "hard",
+										"incorrect_answers": [
+											"Tomlinscote School",
+											"Kings International College",
+											"Lyndhurst School"
+										],
+										"question": "Which school in Surrey, England did Steve Backshall attend?",
+										"type": "multiple"
+									},
+									"was_correct": false
+								},
+								{
+									"player_answer": "New York",
+									"question_data": {
+										"category": "Celebrities",
+										"correct_answer": "New York",
+										"difficulty": "hard",
+										"incorrect_answers": [
+											"Arizona",
+											"California",
+											"Georgia"
+										],
+										"question": "Billy Herrington is from which US state?",
+										"type": "multiple"
+									},
+									"was_correct": true
+								},
+								{
+									"player_answer": "Attempting to enter the Dakota Apartments building",
+									"question_data": {
+										"category": "Celebrities",
+										"correct_answer": "Attempting to enter the Dakota Apartments building",
+										"difficulty": "medium",
+										"incorrect_answers": [
+											"During an impromptu walk through Central Park",
+											"Signing an autograph outside the Record Plant studio",
+											"Waiting outside a music venue in Manhattan following a gig"
+										],
+										"question": "In which situation was musician John Lennon assassinated?",
+										"type": "multiple"
+									},
+									"was_correct": true
+								}
+							]
+						}
+					},
+					"questions": [
+						{
+							"category": "Celebrities",
+							"correct_answer": "Christopher Poole",
+							"difficulty": "medium",
+							"incorrect_answers": [
+								"Mark Zuckerberg",
+								"Allison Harvard",
+								"Catie Wayne"
+							],
+							"question": "What is the real name of &quot;moot&quot;, founder of the imageboard 4chan?",
+							"type": "multiple"
+						},
+						{
+							"category": "Celebrities",
+							"correct_answer": "Bullying",
+							"difficulty": "medium",
+							"incorrect_answers": [
+								"Criminal Record",
+								"Nomination for Worst Actor",
+								"Racism"
+							],
+							"question": "What caused Jake Lloyd who played Anakin Skywalker in The Phantom Menace to quit acting?",
+							"type": "multiple"
+						},
+						{
+							"category": "Celebrities",
+							"correct_answer": "Collingwood College",
+							"difficulty": "hard",
+							"incorrect_answers": [
+								"Tomlinscote School",
+								"Kings International College",
+								"Lyndhurst School"
+							],
+							"question": "Which school in Surrey, England did Steve Backshall attend?",
+							"type": "multiple"
+						},
+						{
+							"category": "Celebrities",
+							"correct_answer": "New York",
+							"difficulty": "hard",
+							"incorrect_answers": [
+								"Arizona",
+								"California",
+								"Georgia"
+							],
+							"question": "Billy Herrington is from which US state?",
+							"type": "multiple"
+						},
+						{
+							"category": "Celebrities",
+							"correct_answer": "Attempting to enter the Dakota Apartments building",
+							"difficulty": "medium",
+							"incorrect_answers": [
+								"During an impromptu walk through Central Park",
+								"Signing an autograph outside the Record Plant studio",
+								"Waiting outside a music venue in Manhattan following a gig"
+							],
+							"question": "In which situation was musician John Lennon assassinated?",
+							"type": "multiple"
+						}
+					],
+					"round_number": 2.0
+				},
+				{
+					"category": "",
+					"category_chooser": "robin",
+					"player_answers": {
+						"linus": {
+							"answered": false,
+							"results": []
+						},
+						"robin": {
+							"answered": false,
+							"results": []
+						}
+					},
+					"questions": [],
+					"round_number": 3.0
+				}
+			],
+			"stats_processed": false,
+			"status": "active"
+		}
+	],
+	"users": {
+		"linus": {
+			"avatar_path": "res://assets/profile_pictures/man_standard.png",
+			"current_streak": 0.0,
+			"email": "l@test.de",
+			"friend_wins": {
 
-            },
-            "friends": [
+			},
+			"friends": [
 				"robin"
-            ],
-            "losses": 1.0,
-            "notifications": [],
-            "password_hash": "a665a45920422f9d417e4867efdc4fb8a04a1f3fff1fa07e998e86f7f7a27ae3",
-            "username": "linus",
-            "wins": 0.0
-        },
-        "merlin": {
-            "avatar_path": "res://assets/profile_pictures/man_standard.png",
-            "current_streak": 0.0,
-            "email": "m@test.de",
-            "friend_wins": {
+			],
+			"losses": 1.0,
+			"notifications": [],
+			"password_hash": "a665a45920422f9d417e4867efdc4fb8a04a1f3fff1fa07e998e86f7f7a27ae3",
+			"username": "linus",
+			"wins": 0.0
+		},
+		"merlin": {
+			"avatar_path": "res://assets/profile_pictures/man_standard.png",
+			"current_streak": 0.0,
+			"email": "m@test.de",
+			"friend_wins": {
 
-            },
-            "friends": [],
-            "losses": 0.0,
-            "notifications": [],
-            "password_hash": "a665a45920422f9d417e4867efdc4fb8a04a1f3fff1fa07e998e86f7f7a27ae3",
-            "username": "merlin",
-            "wins": 0.0
-        },
-        "robin": {
-            "avatar_path": "res://assets/profile_pictures/man_suit.png",
-            "current_streak": 1.0,
-            "email": "r@test.de",
-            "friend_wins": {
-                "linus": 1.0
-            },
-            "friends": [
-                "linus",
+			},
+			"friends": [],
+			"losses": 0.0,
+			"notifications": [],
+			"password_hash": "a665a45920422f9d417e4867efdc4fb8a04a1f3fff1fa07e998e86f7f7a27ae3",
+			"username": "merlin",
+			"wins": 0.0
+		},
+		"robin": {
+			"avatar_path": "res://assets/profile_pictures/man_suit.png",
+			"current_streak": 1.0,
+			"email": "r@test.de",
+			"friend_wins": {
+				"linus": 1.0
+			},
+			"friends": [
+				"linus",
 				"tobias"
-            ],
-            "losses": 0.0,
-            "notifications": [],
-            "password_hash": "a665a45920422f9d417e4867efdc4fb8a04a1f3fff1fa07e998e86f7f7a27ae3",
-            "username": "robin",
-            "wins": 1.0
-        },
-        "tobias": {
-            "avatar_path": "res://assets/profile_pictures/man_beard.png",
-            "current_streak": 0.0,
-            "email": "tobi@test.de",
-            "friend_wins": {
+			],
+			"losses": 0.0,
+			"notifications": [],
+			"password_hash": "a665a45920422f9d417e4867efdc4fb8a04a1f3fff1fa07e998e86f7f7a27ae3",
+			"username": "robin",
+			"wins": 1.0
+		},
+		"tobias": {
+			"avatar_path": "res://assets/profile_pictures/man_beard.png",
+			"current_streak": 0.0,
+			"email": "tobi@test.de",
+			"friend_wins": {
 
-            },
-            "friends": [
+			},
+			"friends": [
 				"robin"
-            ],
-            "losses": 0.0,
-            "notifications": [],
-            "password_hash": "a665a45920422f9d417e4867efdc4fb8a04a1f3fff1fa07e998e86f7f7a27ae3",
-            "username": "tobias",
-            "wins": 0.0
-        }
-    }
+			],
+			"losses": 0.0,
+			"notifications": [],
+			"password_hash": "a665a45920422f9d417e4867efdc4fb8a04a1f3fff1fa07e998e86f7f7a27ae3",
+			"username": "tobias",
+			"wins": 0.0
+		}
+	}
 }

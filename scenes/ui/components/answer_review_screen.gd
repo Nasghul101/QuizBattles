@@ -68,27 +68,14 @@ func load_review_data(question_data: Dictionary) -> void:
         var button = answer_buttons[i]
         var answer_text: String = all_answers[i]
         
-        # Set button text
-        button.text = answer_text
+        # Populate via component API
+        button.set_answer(answer_text, i)
         
         # Disable interaction
         button.disabled = true
         
-        # Get the button's style box
-        var style_box: StyleBoxFlat = button.get_theme_stylebox("normal")
-        if not style_box:
-            # If no existing style, create one (fallback)
-            style_box = StyleBoxFlat.new()
-            button.add_theme_stylebox_override("normal", style_box)
-            button.add_theme_stylebox_override("hover", style_box)
-            button.add_theme_stylebox_override("pressed", style_box)
-            button.add_theme_stylebox_override("disabled", style_box)
-        
-        # Reset borders first
-        style_box.border_width_left = 0
-        style_box.border_width_right = 0
-        style_box.border_width_top = 0
-        style_box.border_width_bottom = 0
+        # Disable pulsating animation for static review display
+        button.set_pulsating_enabled(false)
         
         # Set color based on correctness
         if answer_text == correct_answer:
@@ -96,13 +83,9 @@ func load_review_data(question_data: Dictionary) -> void:
         else:
             button.reveal_wrong()
         
-        # Add white outline if this was the player's choice
+        # Add white shader outline if this was the player's choice
         if answer_text == player_answer:
-            style_box.border_width_left = 3
-            style_box.border_width_right = 3
-            style_box.border_width_top = 3
-            style_box.border_width_bottom = 3
-            style_box.border_color = Color(1.0, 1.0, 1.0, 1.0)
+            button.set_shader_outline_color(Color.WHITE)
 
 
 ## Show the review screen as a modal overlay

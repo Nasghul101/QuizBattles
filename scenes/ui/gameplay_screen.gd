@@ -16,10 +16,9 @@ var num_rounds: int = 0
 ## Number of questions per round
 var num_questions: int = 0
 
-# Multiplayer state variables
+# Match state variables
 var match_id: String = ""
 var match_data: Dictionary = {}
-var is_multiplayer: bool = false
 var opponent_username: String = ""
 
 # State variables
@@ -30,14 +29,15 @@ var current_round_results: Array = []
 var selected_category: String = ""
 
 # Node references
-@onready var result_container_l: VBoxContainer = %ResultContainerL
-@onready var result_container_r: VBoxContainer = %ResultContainerR
+@onready var result_container: VBoxContainer = %ResultContainer
+@onready var name_p1_label: Label = %NameP1
+@onready var name_p2_label: Label = %NameP2
 @onready var play_button: Button = %PlayButton
-@onready var score_p1_label: Label = get_node("MarginContainer/HBoxContainer/VBoxContainer3/HBoxContainer/ScoreP1")
-@onready var score_p2_label: Label = get_node("MarginContainer/HBoxContainer/VBoxContainer3/HBoxContainer/ScoreP2")
+@onready var score_p1_label: Label = %ScoreP1
+@onready var score_p2_label: Label = %ScoreP2
 @onready var finish_game_popup: MarginContainer = $FinishGamePopup
-@onready var winner_display: Label = $FinishGamePopup/PanelContainer/VBoxContainer/WinnerDisplay
-@onready var finish_game_button: Button = $FinishGamePopup/PanelContainer/VBoxContainer/FinishGameButton
+@onready var winner_display: Label = %WinnerDisplay
+@onready var finish_game_button: Button = %FinishGameButton
 
 # Scene references
 var result_component_scene: PackedScene = preload("res://scenes/ui/components/result_component.tscn")
@@ -45,7 +45,6 @@ var category_popup: Control
 var category_popup_scene: PackedScene = preload("res://scenes/ui/components/category_popup_component.tscn")
 var quiz_screen: Control
 var quiz_screen_scene: PackedScene = preload("res://scenes/ui/quiz_screen.tscn")
-var icon_placeholder: Texture2D = preload("res://icon.svg")
 
 
 func _ready() -> void:
@@ -69,24 +68,24 @@ func _ready() -> void:
     TriviaQuestionService.questions_ready.connect(_on_questions_ready)
     TriviaQuestionService.api_failed.connect(_on_api_failed)
     
-    # Connect PlayButton
-    play_button.pressed.connect(_on_play_button_pressed)
-    
     # Connect FinishGameButton
     finish_game_button.pressed.connect(_on_finish_game_button_pressed)
     
     # Remove existing result components and create new ones
     _initialize_result_components()
     
-    # Setup multiplayer-specific state
-    if is_multiplayer:
-        _update_play_button_state()
-        _load_existing_match_state()
-        _update_score_labels()
-        
-        # If match is finished, show popup immediately
-        if match_data.status == "finished":
-            _show_finish_popup()
+    # Populate player name labels
+    name_p1_label.text = UserDatabase.current_user.username
+    name_p2_label.text = opponent_username
+    
+    # Setup match state
+    _update_play_button_state()
+    _load_existing_match_state()
+    _update_score_labels()
+    
+    # If match is finished, show popup immediately
+    if match_data.status == "finished":
+        _show_finish_popup()
     
     # Display current configuration for debugging
     if num_rounds > 0 and num_questions > 0:
@@ -99,66 +98,46 @@ func _initialize_result_components() -> void:
     if num_rounds == 0:
         return
     
-    # Clear left container
-    for child in result_container_l.get_children():
+    # Clear result container
+    for child in result_container.get_children():
         child.queue_free()
     
-    # Clear right container
-    for child in result_container_r.get_children():
-        child.queue_free()
-    
-    # Create num_rounds components for each side
+    # Create num_rounds components
     for i in range(num_rounds):
-        # Left container
-        var component_l = result_component_scene.instantiate()
-        result_container_l.add_child(component_l)
-        component_l.initialize_empty(num_questions)
-        
-        # Right container
-        var component_r = result_component_scene.instantiate()
-        result_container_r.add_child(component_r)
-        component_r.initialize_empty(num_questions)
-    
+        var component = result_component_scene.instantiate()
+        result_container.add_child(component)
+        component.initialize_empty(num_questions)
+        component.set_round(i + 1)
+
     # Wait one frame for layout to update
     await get_tree().process_frame
 
 
 ## Initializes the gameplay screen with game configuration
 ##
-## Called by TransitionManager when transitioning from setup screen or friendly_battle_page.
+## Called by TransitionManager when transitioning from friendly_battle_page.
 ## Stores configuration for use by future game logic.
 ##
-## @param params: Dictionary with either:
-##   - "match_id": String for multiplayer mode
-##   - "rounds": int and "questions": int for single-player mode
+## @param params: Dictionary with "match_id": String
 func initialize(params: Dictionary) -> void:
-    if params.has("match_id"):
-        # Multiplayer mode
-        match_id = params["match_id"]
-        is_multiplayer = true
-        
-        # Load match data
-        match_data = UserDatabase.get_match(match_id)
-        if match_data.is_empty():
-            push_error("Match not found: %s" % match_id)
-            TransitionManager.change_scene("res://scenes/ui/main_lobby_screen.tscn")
-            return
-        
-        # Set configuration from match
-        num_rounds = match_data.config.rounds
-        num_questions = match_data.config.questions
-        
-        # Determine opponent
-        for player in match_data.players:
-            if player != UserDatabase.current_user.username:
-                opponent_username = player
-                break
+    match_id = params["match_id"]
     
-    elif params.has("rounds") and params.has("questions"):
-        # Single-player mode (existing behavior)
-        is_multiplayer = false
-        num_rounds = params["rounds"]
-        num_questions = params["questions"]
+    # Load match data
+    match_data = UserDatabase.get_match(match_id)
+    if match_data.is_empty():
+        push_error("Match not found: %s" % match_id)
+        TransitionManager.change_scene("res://scenes/ui/main_lobby_screen.tscn")
+        return
+    
+    # Set configuration from match
+    num_rounds = match_data.config.rounds
+    num_questions = match_data.config.questions
+    
+    # Determine opponent
+    for player in match_data.players:
+        if player != UserDatabase.current_user.username:
+            opponent_username = player
+            break
     
     # Note: _initialize_result_components() will be called from _ready()
     # after @onready variables are initialized
@@ -166,38 +145,11 @@ func initialize(params: Dictionary) -> void:
 
 ## Handle PlayButton press - Start category selection
 func _on_play_button_pressed() -> void:
-    if is_multiplayer:
-        var current_round_idx = match_data.current_round - 1
-        var round_data = match_data.rounds_data[current_round_idx]
-        
-        if round_data.category == "":
-            # I'm the category chooser - show selection
-            var all_categories = TriviaQuestionService.get_available_categories()
-            var random_categories: Array = []
-            
-            var available = all_categories.duplicate()
-            available.shuffle()
-            for i in range(min(3, available.size())):
-                random_categories.append(available[i])
-            
-            category_popup.show_categories(random_categories)
-            play_button.visible = false
-        
-        else:
-            # Opponent already chose category - load questions directly
-            selected_category = round_data.category
-            fetched_questions = round_data.questions.duplicate(true)
-            
-            # Start quiz immediately
-            current_question_index = 0
-            current_round_results = []
-            current_round += 1  # Track locally for display
-            
-            quiz_screen.visible = true
-            quiz_screen.load_question(fetched_questions[0])
+    var current_round_idx = match_data.current_round - 1
+    var round_data = match_data.rounds_data[current_round_idx]
     
-    else:
-        # Single-player mode (existing behavior)
+    if round_data.category == "":
+        # I'm the category chooser - show selection
         var all_categories = TriviaQuestionService.get_available_categories()
         var random_categories: Array = []
         
@@ -208,6 +160,19 @@ func _on_play_button_pressed() -> void:
         
         category_popup.show_categories(random_categories)
         play_button.visible = false
+    
+    else:
+        # Opponent already chose category - load questions directly
+        selected_category = round_data.category
+        fetched_questions = round_data.questions.duplicate(true)
+        
+        # Start quiz immediately
+        current_question_index = 0
+        current_round_results = []
+        current_round += 1  # Track locally for display
+        
+        quiz_screen.visible = true
+        quiz_screen.load_question(fetched_questions[0])
 
 
 ## Handle category selection
@@ -239,12 +204,11 @@ func _on_questions_ready(questions: Array) -> void:
     if questions.size() < num_questions:
         push_warning("Received %d questions but requested %d. Using available questions." % [questions.size(), num_questions])
     
-    # If multiplayer, store in match data
-    if is_multiplayer:
-        var current_round_idx = match_data.current_round - 1
-        match_data.rounds_data[current_round_idx].category = selected_category
-        match_data.rounds_data[current_round_idx].questions = questions.duplicate(true)
-        UserDatabase.update_match(match_data)
+    # Store in match data
+    var current_round_idx = match_data.current_round - 1
+    match_data.rounds_data[current_round_idx].category = selected_category
+    match_data.rounds_data[current_round_idx].questions = questions.duplicate(true)
+    UserDatabase.update_match(match_data)
     
     # Hide category popup
     category_popup.hide_popup()
@@ -258,7 +222,7 @@ func _on_questions_ready(questions: Array) -> void:
     # Show quiz screen with first question
     quiz_screen.visible = true
     quiz_screen.load_question(fetched_questions[0])
-
+    
 
 ## Handle question answered
 func _on_question_answered(was_correct: bool, player_answer: String) -> void:
@@ -285,84 +249,55 @@ func _on_next_question_requested() -> void:
     else:
         # All questions answered, complete the round
         _handle_round_completion()
-
-
-## Complete the current round and update results
-func _complete_round() -> void:
-    # Hide quiz screen
-    quiz_screen.visible = false
-    
-    # Get result component for current round (0-indexed) - only left side for single-player
-    var result_l = result_container_l.get_child(current_round - 1)
-    
-    # Load results into left component (logged-in player side)
-    result_l.load_result_data(icon_placeholder, current_round_results)
-    
-    # Check if all rounds are complete
-    if current_round >= num_rounds:
-        # Game over - hide PlayButton
-        play_button.visible = false
-        print("All rounds complete! Game over.")
-    else:
-        # Increment round counter for next round
-        current_round += 1
-        # Show PlayButton for next round
-        play_button.visible = true
-
+        
 
 ## Handle completion of current round by current player
 func _handle_round_completion() -> void:
     quiz_screen.visible = false
     
-    if is_multiplayer:
-        # Store my answers in match data (deep copy to prevent reference issues)
-        var current_round_idx = match_data.current_round - 1
-        var my_username = UserDatabase.current_user.username
+    # Store my answers in match data (deep copy to prevent reference issues)
+    var current_round_idx = match_data.current_round - 1
+    var my_username = UserDatabase.current_user.username
+    
+    match_data.rounds_data[current_round_idx].player_answers[my_username].answered = true
+    match_data.rounds_data[current_round_idx].player_answers[my_username].results = current_round_results.duplicate(true)
+    
+    # Display results for this round (both players)
+    _display_round_results(current_round_idx)
+    
+    # Check if opponent also answered
+    var opponent_answered = match_data.rounds_data[current_round_idx].player_answers[opponent_username].answered
+    
+    if opponent_answered:
+        # Both answered - advance round
         
-        match_data.rounds_data[current_round_idx].player_answers[my_username].answered = true
-        match_data.rounds_data[current_round_idx].player_answers[my_username].results = current_round_results.duplicate(true)
-        
-        # Display my results on left side
-        _display_round_results(current_round_idx, my_username, "left")
-        
-        # Check if opponent also answered
-        var opponent_answered = match_data.rounds_data[current_round_idx].player_answers[opponent_username].answered
-        
-        if opponent_answered:
-            # Both answered - reveal opponent results and advance round
-            _display_round_results(current_round_idx, opponent_username, "right")
-            
-            # Check if more rounds remain
-            if match_data.current_round < num_rounds:
-                # Advance to next round
-                match_data.current_round += 1
-                var next_round_idx = match_data.current_round - 1
-                match_data.current_turn = match_data.rounds_data[next_round_idx].category_chooser
-            
-            else:
-                # Match complete - update statistics before finishing
-                UserDatabase.update_player_statistics(match_data)
-                
-                # Set status to finished and show popup
-                match_data.status = "finished"
-                UserDatabase.update_match(match_data)
-                _update_score_labels()
-                _show_finish_popup()
-                return
+        # Check if more rounds remain
+        if match_data.current_round < num_rounds:
+            # Advance to next round
+            match_data.current_round += 1
+            var next_round_idx = match_data.current_round - 1
+            match_data.current_turn = match_data.rounds_data[next_round_idx].category_chooser
         
         else:
-            # Only I answered - switch turn to opponent
-            match_data.current_turn = opponent_username
-        
-        # Save match state
-        UserDatabase.update_match(match_data)
-        
-        # Update play button state
-        _update_play_button_state()
+            # Match complete - update statistics before finishing
+            UserDatabase.update_player_statistics(match_data)
+            
+            # Set status to finished and show popup
+            match_data.status = "finished"
+            UserDatabase.update_match(match_data)
+            _update_score_labels()
+            _show_finish_popup()
+            return
     
     else:
-        # Single-player mode (existing behavior)
-        _complete_round()
+        # Only I answered - switch turn to opponent
+        match_data.current_turn = opponent_username
+    
+    # Save match state
+    UserDatabase.update_match(match_data)
+    
+    # Update play button state
+    _update_play_button_state()
 
 
 ## Handle API failure
@@ -373,10 +308,6 @@ func _on_api_failed() -> void:
 
 ## Update play button enabled/disabled state based on turn
 func _update_play_button_state() -> void:
-    if not is_multiplayer:
-        play_button.disabled = false
-        return
-    
     # Check if it's my turn
     var is_my_turn = (match_data.current_turn == UserDatabase.current_user.username)
     
@@ -390,77 +321,66 @@ func _update_play_button_state() -> void:
     play_button.disabled = not (is_my_turn and not my_answered)
 
 
-## Display round results in appropriate result_component
+## Display round results in result_component for both players
 ##
 ## @param round_idx: 0-based round index
-## @param username: Player whose results to display
-## @param side: "left" or "right" container
-func _display_round_results(round_idx: int, username: String, side: String) -> void:
-    var results = match_data.rounds_data[round_idx].player_answers[username].results
+func _display_round_results(round_idx: int) -> void:
+    var my_username = UserDatabase.current_user.username
+    var category_name = match_data.rounds_data[round_idx].category
+    var p1_results = match_data.rounds_data[round_idx].player_answers[my_username].results
+    var p2_results = match_data.rounds_data[round_idx].player_answers[opponent_username].results
     
-    # Get appropriate container
-    var container = result_container_r if side == "right" else result_container_l
-    
-    # Get result_component at round_idx
-    if round_idx >= container.get_child_count():
+    if round_idx >= result_container.get_child_count():
         push_warning("Round index out of bounds: %d" % round_idx)
         return
     
-    var result_component = container.get_child(round_idx)
+    var result_component = result_container.get_child(round_idx)
+    result_component.load_result_data(category_name, p1_results, p2_results)
     
-    # Load results using the component's proper method
-    result_component.load_result_data(icon_placeholder, results)
+    # Reveal P2 buttons only when both players have answered; otherwise keep them hidden
+    var opponent_answered = match_data.rounds_data[round_idx].player_answers[opponent_username].answered
+    if opponent_answered:
+        result_component.show_results()
+    else:
+        result_component.hide_results()
     
-    # Update score labels after displaying results
-    if is_multiplayer:
-        _update_score_labels()
+    _update_score_labels()
 
 
 ## Load and display existing match state from database
 func _load_existing_match_state() -> void:
-    if not is_multiplayer:
-        return
-    
     var my_username = UserDatabase.current_user.username
     
     # Iterate through rounds and display completed results
     for round_idx in range(match_data.rounds_data.size()):
         var round_data = match_data.rounds_data[round_idx]
         
-        # Display my results if I've answered
-        if round_data.player_answers[my_username].answered:
-            _display_round_results(round_idx, my_username, "left")
-        
-        # Handle opponent results based on round completion status
-        var opponent_answered = round_data.player_answers[opponent_username].answered
         var my_answered = round_data.player_answers[my_username].answered
+        var opponent_answered = round_data.player_answers[opponent_username].answered
         
-        if opponent_answered:
-            # Display opponent results
-            _display_round_results(round_idx, opponent_username, "right")
+        if my_answered:
+            # Load both players' results (p2 may be empty if opponent hasn't answered)
+            _display_round_results(round_idx)
+        elif opponent_answered:
+            # Opponent answered but I haven't — show P2 buttons in hidden state only
+            result_container.get_child(round_idx).hide_results()
             
-            # If opponent answered but I haven't, hide their results
-            if not my_answered:
-                var opponent_container = result_container_r
-                var opponent_result_component = opponent_container.get_child(round_idx)
-                opponent_result_component.hide_results()
-
 
 func _on_back_button_pressed() -> void:
-    NavigationUtils.navigate_to_scene("main_lobby")
+    Utils.navigate_to_scene("main_lobby")
 
-
-## Calculate score from result components in a container
+## Calculate score from result components
 ##
-## @param container: VBoxContainer with result_components
+## @param side: "p1" or "p2"
 ## @return int: Total number of correct answers
-func _calculate_score_from_results(container: VBoxContainer) -> int:
+func _calculate_score_from_results(side: String) -> int:
     var score = 0
-    for result_component in container.get_children():
+    for result_component in result_container.get_children():
         if result_component.is_empty:
             continue
         
-        for result_data in result_component.stored_results:
+        var results = result_component.stored_results_p1 if side == "p1" else result_component.stored_results_p2
+        for result_data in results:
             if result_data.was_correct:
                 score += 1
     
@@ -469,11 +389,8 @@ func _calculate_score_from_results(container: VBoxContainer) -> int:
 
 ## Update score labels based on current result components
 func _update_score_labels() -> void:
-    if not is_multiplayer:
-        return
-    
-    var p1_score = _calculate_score_from_results(result_container_l)
-    var p2_score = _calculate_score_from_results(result_container_r)
+    var p1_score = _calculate_score_from_results("p1")
+    var p2_score = _calculate_score_from_results("p2")
     
     score_p1_label.text = str(p1_score)
     score_p2_label.text = str(p2_score)
@@ -481,8 +398,8 @@ func _update_score_labels() -> void:
 
 ## Show finish game popup with winner determination
 func _show_finish_popup() -> void:
-    var p1_score = _calculate_score_from_results(result_container_l)
-    var p2_score = _calculate_score_from_results(result_container_r)
+    var p1_score = _calculate_score_from_results("p1")
+    var p2_score = _calculate_score_from_results("p2")
     
     var my_username = UserDatabase.current_user.username
     var winner_text = ""

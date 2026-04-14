@@ -1,9 +1,22 @@
-[gd_scene load_steps=3 format=3 uid="uid://cx7jsysa3rfi4"]
+[gd_scene format=3 uid="uid://cx7jsysa3rfi4"]
 
-[ext_resource type="Texture2D" uid="uid://pv35sp2h3w1p" path="res://icon.svg" id="1_i2ipg"]
 [ext_resource type="Script" uid="uid://cefdono8km11m" path="res://scenes/ui/components/result_component.gd" id="1_script"]
+[ext_resource type="Shader" uid="uid://dtvwdbl5lb1q" path="res://shaders/predefined_outline_shader.gdshader" id="2_4hqmc"]
+[ext_resource type="FontFile" uid="uid://dx2f8n2lbb35r" path="res://assets/Font/exo/Exo-Light.otf" id="2_c7imr"]
+[ext_resource type="Texture2D" uid="uid://my6lsby1ke6l" path="res://assets/ui/Resultcomponent_Base.png" id="2_h0u5f"]
+[ext_resource type="PackedScene" uid="uid://b3sw6thf2vfki" path="res://scenes/ui/components/gradient_label.tscn" id="3_h0u5f"]
 
-[node name="ResultComponent" type="PanelContainer"]
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_i5rc3"]
+shader = ExtResource("2_4hqmc")
+shader_parameter/outline_color = Color(0.9843137, 0.8627451, 0.9529412, 1)
+shader_parameter/outline_threshold = 0.2
+shader_parameter/enable_pulsating = false
+shader_parameter/pulsating_color = Color(0, 1, 1, 1)
+shader_parameter/pulsating_size = 1.0
+shader_parameter/pulsating_speed = 1.0
+shader_parameter/pulsating_clockwise = false
+
+[node name="ResultComponent" type="PanelContainer" unique_id=1273355206]
 custom_minimum_size = Vector2(100, 100)
 anchors_preset = 15
 anchor_right = 1.0
@@ -14,20 +27,68 @@ size_flags_horizontal = 0
 size_flags_vertical = 6
 script = ExtResource("1_script")
 
-[node name="VBoxContainer" type="VBoxContainer" parent="."]
+[node name="TextureRect" type="TextureRect" parent="." unique_id=544704173]
+self_modulate = Color(0.19215687, 0, 0.24313726, 1)
+material = SubResource("ShaderMaterial_i5rc3")
 layout_mode = 2
-theme_override_constants/separation = 30
-
-[node name="CategorySymbol" type="TextureRect" parent="VBoxContainer"]
-unique_name_in_owner = true
-custom_minimum_size = Vector2(30, 30)
-layout_mode = 2
-size_flags_horizontal = 4
 size_flags_vertical = 0
-texture = ExtResource("1_i2ipg")
-expand_mode = 1
+texture = ExtResource("2_h0u5f")
 
-[node name="AnswerButtonContainer" type="HBoxContainer" parent="VBoxContainer"]
+[node name="MarginContainer" type="MarginContainer" parent="TextureRect" unique_id=2115546797]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_constants/margin_left = 30
+theme_override_constants/margin_top = 21
+theme_override_constants/margin_right = 30
+
+[node name="HBoxContainer" type="HBoxContainer" parent="TextureRect/MarginContainer" unique_id=1123072283]
+layout_mode = 2
+
+[node name="MarginContainer2" type="MarginContainer" parent="TextureRect/MarginContainer/HBoxContainer" unique_id=450921523]
+layout_mode = 2
+size_flags_horizontal = 3
+theme_override_constants/margin_top = 40
+theme_override_constants/margin_bottom = 40
+
+[node name="ResultButtonContainerP1" type="HBoxContainer" parent="TextureRect/MarginContainer/HBoxContainer/MarginContainer2" unique_id=1713749661]
 unique_name_in_owner = true
 layout_mode = 2
-alignment = 1
+size_flags_horizontal = 3
+
+[node name="MarginContainer" type="MarginContainer" parent="TextureRect/MarginContainer/HBoxContainer" unique_id=1146798133]
+layout_mode = 2
+
+[node name="VBoxContainer" type="VBoxContainer" parent="TextureRect/MarginContainer/HBoxContainer/MarginContainer" unique_id=530025994]
+layout_mode = 2
+theme_override_constants/separation = 18
+
+[node name="RoundLabel" type="Label" parent="TextureRect/MarginContainer/HBoxContainer/MarginContainer/VBoxContainer" unique_id=1659140515]
+unique_name_in_owner = true
+layout_mode = 2
+theme_override_fonts/font = ExtResource("2_c7imr")
+theme_override_font_sizes/font_size = 30
+text = "Current Round"
+horizontal_alignment = 1
+vertical_alignment = 1
+
+[node name="CategoryLabel" parent="TextureRect/MarginContainer/HBoxContainer/MarginContainer/VBoxContainer" unique_id=1077587627 instance=ExtResource("3_h0u5f")]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(300, 50)
+layout_mode = 2
+theme_override_font_sizes/font_size = 45
+text = "Category"
+
+[node name="MarginContainer3" type="MarginContainer" parent="TextureRect/MarginContainer/HBoxContainer" unique_id=1420324466]
+layout_mode = 2
+size_flags_horizontal = 3
+theme_override_constants/margin_top = 40
+theme_override_constants/margin_bottom = 40
+
+[node name="ResultButtonContainerP2" type="HBoxContainer" parent="TextureRect/MarginContainer/HBoxContainer/MarginContainer3" unique_id=145233334]
+unique_name_in_owner = true
+layout_mode = 2
+size_flags_horizontal = 3

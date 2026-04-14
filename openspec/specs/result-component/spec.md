@@ -3,18 +3,18 @@
 ## Purpose
 TBD - created by archiving change add-result-component. Update Purpose after archive.
 ## Requirements
-### Requirement: The component SHALL display a category texture
-The result component SHALL display a category symbol/icon as a TextureRect at the top of the component.
+### Requirement: The component SHALL display the category name as text
+The result component SHALL set `CategoryLabel.text` to the category name string passed via `load_result_data()`. The old `CategorySymbol` TextureRect is no longer part of the component.
 
-#### Scenario: Category texture display
-**Given** a result component is instantiated  
-**When** `load_result_data(texture, results)` is called with a valid Texture2D  
-**Then** the CategorySymbol TextureRect displays the provided texture
+#### Scenario: Category label text set on load
+**Given** a result component with initialized buttons  
+**When** `load_result_data("Science", p1_results, p2_results)` is called  
+**Then** `CategoryLabel.text` equals `"Science"`
 
-#### Scenario: Category texture node structure
+#### Scenario: No category_symbol node required
 **Given** the result_component.tscn scene  
 **When** the scene loads  
-**Then** a TextureRect node named "CategorySymbol" exists in the scene hierarchy
+**Then** no node named "CategorySymbol" is required or accessed by the script
 
 ---
 
@@ -89,47 +89,76 @@ The result component SHALL adhere to the official GDScript style guide and proje
 #### Scenario: Static typing
 **Given** the result_component.gd script  
 **When** declaring variables and function parameters  
-**Then** static type hints are used where possible (e.g., `var texture: Texture2D`, `func load_result_data(texture: Texture2D, results: Array) -> void`)
+**Then** static type hints are used where possible (e.g., `var category_name: String`, `func load_result_data(category_name: String, p1_results: Array, p2_results: Array) -> void`)
 
 ---
 
-### Requirement: The component SHALL display answer outcome buttons
-The result component SHALL dynamically instantiate ResultButtonComponent instances to indicate correct or incorrect answers, with the quantity determined by the number of questions.
+### Requirement: The component SHALL display both players' answer outcome buttons in separate containers
+The result component SHALL populate **two** HBoxContainers — `ResultButtonContainerP1` and `ResultButtonContainerP2` — each holding the same number of `ResultButtonComponent` instances. The quantity is determined by the call to `initialize_empty(num_answer_buttons)`.
 
-#### Scenario: Button instantiation in initialize_empty
-**Given** a result component at game start
-**When** `initialize_empty(num_answer_buttons)` is called with count N
-**Then** exactly N ResultButtonComponent instances are created and added to the AnswerButtonContainer
+#### Scenario: Button instantiation in initialize_empty — P1
+**Given** a result component at game start  
+**When** `initialize_empty(num_answer_buttons)` is called with count N  
+**Then** exactly N ResultButtonComponent instances are created and added to `ResultButtonContainerP1`
 
-#### Scenario: Button layout structure
-**Given** a result component scene
-**When** the scene loads
-**Then** an HBoxContainer named "AnswerButtonContainer" exists to hold dynamically created ResultButtonComponent instances
+#### Scenario: Button instantiation in initialize_empty — P2
+**Given** a result component at game start  
+**When** `initialize_empty(num_answer_buttons)` is called with count N  
+**Then** exactly N ResultButtonComponent instances are created and added to `ResultButtonContainerP2`
+
+#### Scenario: Equal button counts
+**Given** `initialize_empty(N)` is called  
+**When** the component is ready  
+**Then** `ResultButtonContainerP1.get_child_count()` equals `ResultButtonContainerP2.get_child_count()` equals N
 
 #### Scenario: Variable button count support
-**Given** a result component
-**When** `initialize_empty()` is called with different counts (1, 3, 5, etc.)
-**Then** the component creates the specified number of ResultButtonComponent instances
+**Given** a result component  
+**When** `initialize_empty()` is called with different counts (1, 3, 5, etc.)  
+**Then** both containers each hold the specified number of ResultButtonComponent instances
 
 ---
 
-### Requirement: The component SHALL accept result data for questions
-The result component SHALL accept an array of question result entries and configure ResultButtonComponent instances accordingly, supporting variable question counts.
+### Requirement: The component SHALL display the round number via set_round()
+The result component SHALL expose a `set_round(round_number: int) -> void` method that sets `RoundLabel.text` to `"Round %d" % round_number`. The caller (gameplay screen) is responsible for passing the correct round number after instantiation.
 
-#### Scenario: Load result data with variable size
-**Given** a result component instance
-**When** `load_result_data(texture, results)` is called with an Array of N result dictionaries
-**Then** the first N ResultButtonComponent instances are configured with result data
+#### Scenario: Set round label text
+**Given** a result component is instantiated  
+**When** `set_round(3)` is called  
+**Then** `RoundLabel.text` equals `"Round 3"`
+
+#### Scenario: First round
+**Given** a result component  
+**When** `set_round(1)` is called  
+**Then** `RoundLabel.text` equals `"Round 1"`
+
+---
+
+### Requirement: The component SHALL accept separate P1 and P2 result data
+The result component SHALL accept two result arrays — one per player — and configure the respective button containers.
+
+New method signature: `load_result_data(category_name: String, p1_results: Array, p2_results: Array) -> void`
+
+Both arrays must be non-empty and equal in size, and must not exceed the number of initialized buttons.
+
+#### Scenario: Load P1 and P2 results
+**Given** a result component with N initialized buttons per container  
+**When** `load_result_data("History", p1_results, p2_results)` is called with arrays of size N  
+**Then** P1 buttons are updated from `p1_results` and P2 buttons are updated from `p2_results`
+
+#### Scenario: Arrays must be equal size
+**Given** `p1_results.size() != p2_results.size()`  
+**When** `load_result_data()` is called  
+**Then** the component logs an error and does not process the invalid data
 
 #### Scenario: Handle fewer results than buttons
-**Given** a result component with more button instances than results
-**When** `load_result_data()` is called
-**Then** unused ResultButtonComponent instances remain in empty state
+**Given** both arrays have size M < N (fewer results than buttons)  
+**When** `load_result_data()` is called  
+**Then** the first M buttons in each container are configured; remaining buttons stay in empty state
 
-#### Scenario: Validate array size constraints
-**Given** a result component receiving data
-**When** `load_result_data()` is called with more results than button instances
-**Then** the component logs an error and does not process the invalid data
+#### Scenario: Validate array size is not larger than button count
+**Given** `p1_results.size() > answer_buttons_p1.size()`  
+**When** `load_result_data()` is called  
+**Then** the component logs an error and does not process the data
 
 ---
 
@@ -163,38 +192,33 @@ The result component SHALL connect to the ResultButtonComponent's "result_clicke
 
 ---
 
-### Requirement: The component SHALL provide a utility method to hide all results
-The result_component SHALL expose a `hide_results()` method that sets all ResultButtonComponent instances to hidden state, used by gameplay_screen when opponent results should not be visible.
+### Requirement: The component SHALL hide only P2 buttons when hide_results() is called
+`hide_results()` SHALL call `set_hidden_state()` only on `answer_buttons_p2` (opponent). P1 buttons (local player) are always visible.
 
-**Rationale:** Enable caller (gameplay_screen) to hide opponent results without requiring result_component to know about player/opponent concepts. Maintains separation of concerns and component modularity.
-
-#### Scenario: Hide all result buttons
-**Given** a result_component with N loaded ResultButtonComponent instances
-**When** `hide_results()` is called
-**Then** `set_hidden_state()` is called on each of the N ResultButtonComponent instances
+#### Scenario: Hide only P2 buttons
+**Given** a result_component with loaded P1 and P2 ResultButtonComponent instances  
+**When** `hide_results()` is called  
+**Then** `set_hidden_state()` is called on each P2 button  
+**And** P1 buttons retain their current state
 
 #### Scenario: Hide works regardless of current state
-**Given** a result_component with buttons in mixed states (correct, incorrect, empty)
-**When** `hide_results()` is called
-**Then** all buttons transition to hidden state
-**And** previous states are overridden
-
-#### Scenario: Hide works on empty components
-**Given** a result_component initialized with `initialize_empty()`
-**When** `hide_results()` is called before `load_result_data()`
-**Then** all buttons transition to hidden state without errors
-
-#### Scenario: Hide persists until explicitly changed
-**Given** a result_component with hidden buttons
-**When** time passes without calling other methods
-**Then** the buttons remain in hidden state
-**And** clicking them produces no response
-
-#### Scenario: Method has proper documentation
-**Given** the result_component.gd script
-**When** reviewing the `hide_results()` method
-**Then** a `##` doc comment explains the method's purpose
-**And** the comment mentions use case for hiding opponent results
+**Given** P2 buttons in mixed states (correct, incorrect, empty)  
+**When** `hide_results()` is called  
+**Then** all P2 buttons transition to hidden state
 
 ---
 
+### Requirement: stored_results_p1 and stored_results_p2 SHALL replace the former stored_results array
+Internal result storage is split into two arrays to support per-player score retrieval.
+
+#### Scenario: stored_results_p1 accessible after load
+**Given** `load_result_data()` has been called with valid p1_results  
+**When** external code reads `stored_results_p1`  
+**Then** it returns the stored p1 results array
+
+#### Scenario: stored_results_p2 accessible after load
+**Given** `load_result_data()` has been called with valid p2_results  
+**When** external code reads `stored_results_p2`  
+**Then** it returns the stored p2 results array
+
+---
