@@ -6,6 +6,7 @@
 [ext_resource type="Shader" uid="uid://dtvwdbl5lb1q" path="res://shaders/predefined_outline_shader.gdshader" id="2_pqysq"]
 [ext_resource type="FontFile" uid="uid://c8memnki1ydnd" path="res://assets/Font/exo/Exo-Bold.otf" id="4_tsca3"]
 [ext_resource type="Texture2D" uid="uid://cjeupu2xrdrwi" path="res://assets/ui/QuizScreen_Button_Bottom_Outline.png" id="4_yj114"]
+[ext_resource type="Script" uid="uid://bttgnk3bb2a8i" path="res://addons/font_auto_size_labels/auto_size_label.gd" id="5_b8k4c"]
 [ext_resource type="Texture2D" uid="uid://pj7nlpjyhaax" path="res://assets/ui/PlayButton.png" id="7_tsca3"]
 
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_tsca3"]
@@ -87,7 +88,7 @@ texture = ExtResource("2_nllv5")
 expand_mode = 5
 stretch_mode = 5
 
-[node name="QuestionLabel" type="Label" parent="PanelContainer/MarginContainer/VBoxContainer/QuestionPanel" unique_id=525312773]
+[node name="QuestionLabel" type="Label" parent="PanelContainer/MarginContainer/VBoxContainer/QuestionPanel" unique_id=44562827]
 unique_name_in_owner = true
 layout_mode = 1
 anchors_preset = 15
@@ -100,12 +101,19 @@ offset_bottom = -14.0
 grow_horizontal = 2
 grow_vertical = 2
 theme_override_colors/font_color = Color(0.9843137, 0.8627451, 0.9529412, 1)
+theme_override_constants/outline_size = 13
 theme_override_fonts/font = ExtResource("4_tsca3")
-theme_override_font_sizes/font_size = 60
+theme_override_font_sizes/font_size = 64
 text = "Question text will appear here"
 horizontal_alignment = 1
 vertical_alignment = 1
 autowrap_mode = 3
+clip_text = true
+script = ExtResource("5_b8k4c")
+_current_font_size = 64
+_size_just_modified_by_autosizer = true
+_editor_defaults_set = true
+metadata/_custom_type_script = "uid://bttgnk3bb2a8i"
 
 [node name="MarginContainer" type="MarginContainer" parent="PanelContainer/MarginContainer/VBoxContainer" unique_id=1832116399]
 layout_mode = 2

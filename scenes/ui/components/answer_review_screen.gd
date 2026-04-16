@@ -20,7 +20,7 @@ extends Control
 ##   }
 
 # Node references
-@onready var question_label: Label = %QuestionLabel
+@onready var question_label: AutoSizeLabel = %QuestionLabel
 @onready var answers_grid: GridContainer = %AnswersGrid
 
 # Answer button references

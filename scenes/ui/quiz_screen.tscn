@@ -7,6 +7,7 @@
 [ext_resource type="PackedScene" uid="uid://b3sw6thf2vfki" path="res://scenes/ui/components/gradient_label.tscn" id="4_dh7g3"]
 [ext_resource type="FontFile" uid="uid://c8memnki1ydnd" path="res://assets/Font/exo/Exo-Bold.otf" id="4_t872d"]
 [ext_resource type="Texture2D" uid="uid://c5kx04t7qxaqm" path="res://assets/ui/QuizScreen_Questionare.png" id="5_f45mr"]
+[ext_resource type="Script" uid="uid://bttgnk3bb2a8i" path="res://addons/font_auto_size_labels/auto_size_label.gd" id="7_h5ymd"]
 [ext_resource type="Texture2D" uid="uid://b005etrilpxw0" path="res://assets/ui/QuizScreen_Button_Top_Outline.png" id="8_dh7g3"]
 [ext_resource type="Texture2D" uid="uid://cjeupu2xrdrwi" path="res://assets/ui/QuizScreen_Button_Bottom_Outline.png" id="9_f45mr"]
 [ext_resource type="Shader" uid="uid://c6shv0xpxc3t5" path="res://shaders/trailing_progress_bar.gdshader" id="10_r8m2p"]
@@ -118,7 +119,7 @@ texture = ExtResource("5_f45mr")
 expand_mode = 5
 stretch_mode = 5
 
-[node name="QuestionLabel" type="Label" parent="PanelContainer/MarginContainer/VBoxContainer/QuestionPanel" unique_id=334353469]
+[node name="QuestionLabel" type="Label" parent="PanelContainer/MarginContainer/VBoxContainer/QuestionPanel" unique_id=1312887903]
 unique_name_in_owner = true
 layout_mode = 1
 anchors_preset = 15
@@ -131,12 +132,19 @@ offset_bottom = -14.0
 grow_horizontal = 2
 grow_vertical = 2
 theme_override_colors/font_color = Color(0.9843137, 0.8627451, 0.9529412, 1)
+theme_override_constants/outline_size = 16
 theme_override_fonts/font = ExtResource("4_t872d")
 theme_override_font_sizes/font_size = 80
 text = "Question text will appear here"
 horizontal_alignment = 1
 vertical_alignment = 1
-autowrap_mode = 2
+autowrap_mode = 3
+clip_text = true
+script = ExtResource("7_h5ymd")
+_max_size = 80
+_current_font_size = 80
+_editor_defaults_set = true
+metadata/_custom_type_script = "uid://bttgnk3bb2a8i"
 
 [node name="MarginContainer2" type="MarginContainer" parent="PanelContainer/MarginContainer/VBoxContainer" unique_id=1275754386]
 layout_mode = 2

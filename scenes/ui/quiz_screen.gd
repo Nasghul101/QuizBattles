@@ -28,7 +28,7 @@ signal question_answered(was_correct: bool, player_answer: String)
 signal next_question_requested
 
 # Node references
-@onready var question_label: Label = %QuestionLabel
+@onready var question_label: AutoSizeLabel = %QuestionLabel
 @onready var category_label: Label = %CategoryLabel
 @onready var answers_grid: GridContainer = %AnswersGrid
 @onready var answer_buttons: Array[TextureButton]

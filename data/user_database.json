@@ -495,7 +495,7 @@
 					"round_number": 2.0
 				},
 				{
-					"category": "",
+					"category": "General Knowledge",
 					"category_chooser": "robin",
 					"player_answers": {
 						"linus": {
@@ -507,7 +507,68 @@
 							"results": []
 						}
 					},
-					"questions": [],
+					"questions": [
+						{
+							"category": "General Knowledge",
+							"correct_answer": "The Milky Way Galaxy",
+							"difficulty": "easy",
+							"incorrect_answers": [
+								"The Mars Galaxy",
+								"The Galaxy Note",
+								"The Black Hole"
+							],
+							"question": "Earth is located in which galaxy?",
+							"type": "multiple"
+						},
+						{
+							"category": "General Knowledge",
+							"correct_answer": "Philosophy",
+							"difficulty": "medium",
+							"incorrect_answers": [
+								"Psychology",
+								"Phrenology",
+								"Physical Therapy"
+							],
+							"question": "A doctor with a PhD is a doctor of what?",
+							"type": "multiple"
+						},
+						{
+							"category": "General Knowledge",
+							"correct_answer": "Aconcagua, Argentina",
+							"difficulty": "medium",
+							"incorrect_answers": [
+								"Ojos del Salado, Argentina/Chile border",
+								"Monte Pissis, Argentina",
+								"Huascar&aacute;n, Peru"
+							],
+							"question": "Which mountain has the highest peak in South America?",
+							"type": "multiple"
+						},
+						{
+							"category": "General Knowledge",
+							"correct_answer": "Three",
+							"difficulty": "medium",
+							"incorrect_answers": [
+								"Four",
+								"Five",
+								"Six"
+							],
+							"question": "What is the highest number of Michelin stars a restaurant can receive?",
+							"type": "multiple"
+						},
+						{
+							"category": "General Knowledge",
+							"correct_answer": "Tardar Sauce",
+							"difficulty": "medium",
+							"incorrect_answers": [
+								"Lil Bub",
+								"Maru",
+								"Colonel Meow"
+							],
+							"question": "What is the real name of viral internet meme Grumpy Cat?",
+							"type": "multiple"
+						}
+					],
 					"round_number": 3.0
 				}
 			],

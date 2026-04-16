@@ -25,6 +25,8 @@ var answer_index: int = -1
 var _answer_text: String = ""
 var _tween: Tween
 
+@onready var answer_label: AutoSizeLabel = %AnswerLabel
+
 # Property to expose answer text as read-only
 var answer_text: String:
     get:
@@ -44,7 +46,7 @@ func _ready() -> void:
 ##   index: The index of this answer (0-3)
 func set_answer(answer_text: String, index: int) -> void:
     _answer_text = answer_text
-    $AnswerLabel.text = answer_text
+    answer_label.text = answer_text
     answer_index = index
 
 ## Handle button press: disable and emit signal
