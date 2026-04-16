@@ -27,17 +27,25 @@ signal question_answered(was_correct: bool, player_answer: String)
 # Signal emitted when the NextQuestion button is pressed
 signal next_question_requested
 
+## Time in seconds the player has to answer each question
+@export var time_limit: float = 30.0
+
 # Node references
 @onready var question_label: AutoSizeLabel = %QuestionLabel
-@onready var category_label: Label = %CategoryLabel
+@onready var category_label: GradientLabel = %CategoryLabel
 @onready var answers_grid: GridContainer = %AnswersGrid
 @onready var answer_buttons: Array[TextureButton]
-@onready var next_question_button: Button = $NextQuestion 
+@onready var next_question_button: Button = %NextQuestion 
 @onready var round_number: Label = %RoundNumber
+@onready var time_limit_bar: ProgressBar = %TimeLimitBar
 
 # Internal state
 var correct_answer_text: String = ""
 var has_answered: bool = false
+
+# Timer state
+var _time_remaining: float = 0.0
+var _timer_running: bool = false
 
 
 func _ready() -> void:
@@ -53,6 +61,25 @@ func _ready() -> void:
     
     # Hide NextQuestion button initially
     next_question_button.visible = false
+    time_limit_bar.max_value = time_limit
+
+
+func _process(delta: float) -> void:
+    if not _timer_running:
+        return
+    _time_remaining = maxf(_time_remaining - delta, 0.0)
+    time_limit_bar.value = _time_remaining
+    if _time_remaining <= 0.0:
+        _timer_running = false
+        _on_timer_expired()
+
+
+## Set the round number displayed on screen
+##
+## Args:
+##   round: The current round number (1-based)
+func set_round_number(round: int) -> void:
+    round_number.text = str(round)
 
 
 ## Load and display a quiz question with answers
@@ -83,9 +110,11 @@ func load_question(data: Dictionary) -> void:
     # Display question text
     question_label.text = data["question"]
     
-    # Display category (if available)
-    if data.has("category"):
-        category_label.text = data["category"]
+    # Display category (if available) and apply accent colour
+    var category: String = data.get("category", "")
+    if not category.is_empty():
+        category_label.text = category
+    _apply_category_color(category)
     
     # Store correct answer for validation
     correct_answer_text = data["correct_answer"]
@@ -100,6 +129,12 @@ func load_question(data: Dictionary) -> void:
     # Assign shuffled answers to buttons
     for i in range(answer_buttons.size()):
         answer_buttons[i].set_answer(all_answers[i], i)
+    
+    # Start countdown timer
+    _time_remaining = time_limit
+    _timer_running = true
+    time_limit_bar.max_value = time_limit
+    time_limit_bar.value = time_limit
 
 
 ## Handle answer button selection
@@ -112,8 +147,9 @@ func _on_answer_selected(answer_index: int) -> void:
         return
     
     has_answered = true
+    # Stop countdown timer immediately
+    _timer_running = false
     
-    # Get the selected button and its answer text
     var selected_button: TextureButton = answer_buttons[answer_index]
     var selected_answer_text: String = selected_button.answer_text
     
@@ -137,6 +173,44 @@ func _on_answer_selected(answer_index: int) -> void:
 ## Handle NextQuestion button press
 func _on_next_question_pressed() -> void:
     next_question_requested.emit()
+
+
+## Auto-select a random wrong answer when the timer expires
+func _on_timer_expired() -> void:
+    var wrong_buttons: Array[TextureButton] = []
+    for button in answer_buttons:
+        if button.answer_text != correct_answer_text:
+            wrong_buttons.append(button)
+    if wrong_buttons.is_empty():
+        return
+    wrong_buttons.shuffle()
+    _on_answer_selected(wrong_buttons[0].answer_index)
+
+
+
+## Resolve the accent Color for a category name from color_codes.json
+##
+## Returns Color.WHITE when the category is unknown or has no defined color.
+func _resolve_category_color(category: String) -> Color:
+    var codes: Dictionary = Utils.get_color_codes()
+    var category_colors: Dictionary = codes.get("category_colors", {})
+    if not category_colors.has(category):
+        return Color.WHITE
+    var value = category_colors[category]
+    if value == null:
+        return Color.WHITE
+    return Color(value)
+
+
+## Apply the category accent Color to the gradient label and all answer buttons
+##
+## Args:
+##   category: The category name from question data (empty string uses fallback)
+func _apply_category_color(category: String) -> void:
+    var color: Color = _resolve_category_color(category)
+    category_label.set_accent_color(color)
+    for button: TextureButton in answer_buttons:
+        button.set_pulsating_color(color)
 
 
 ## Reveal the correct/wrong state of all answer buttons

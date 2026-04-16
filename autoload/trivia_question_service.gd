@@ -91,7 +91,7 @@ func fetch_questions(category: String, amount: int) -> void:
         if cached.size() > 0:
             # Return cached questions immediately
             print("[TriviaService] Returning %d cached questions for category: %s (requested: %d)" % [cached.size(), category, amount])
-            questions_ready.emit(cached)
+            questions_ready.emit(_normalize_categories(cached, category))
             return
     
     # Get category ID for API request
@@ -100,7 +100,7 @@ func fetch_questions(category: String, amount: int) -> void:
         push_error("Invalid category: %s" % category)
         # Fall back to local questions
         var fallback: Array = _load_fallback_questions(category, amount)
-        questions_ready.emit(fallback)
+        questions_ready.emit(_normalize_categories(fallback, category))
         return
     
     # Store metadata for response handler
@@ -248,6 +248,58 @@ func _cache_questions(category: String, questions: Array) -> void:
     _total_cached_questions += questions.size()
 
 
+## Overwrite the "category" field on each question with the top-level category name.
+## This prevents API subcategory strings like "Entertainment: Film" from leaking into the UI.
+## Also decodes HTML entities returned by the Open Trivia DB API.
+func _normalize_categories(questions: Array, top_category: String) -> Array:
+    var normalized: Array = []
+    for q in questions:
+        var copy: Dictionary = (q as Dictionary).duplicate()
+        copy["category"] = top_category
+        copy["question"] = _html_unescape(copy.get("question", ""))
+        copy["correct_answer"] = _html_unescape(copy.get("correct_answer", ""))
+        var decoded_incorrect: Array = []
+        for ans in copy.get("incorrect_answers", []):
+            decoded_incorrect.append(_html_unescape(ans))
+        copy["incorrect_answers"] = decoded_incorrect
+        normalized.append(copy)
+    return normalized
+
+
+## Decode common HTML entities into their plain-text equivalents.
+## The Open Trivia DB API encodes special characters as HTML entities.
+func _html_unescape(text: String) -> String:
+    # Numeric decimal entities (e.g. &#039; &#8217;)
+    var result: String = text
+    var regex: RegEx = RegEx.new()
+    regex.compile("&#(\\d+);")
+    for m in regex.search_all(result):
+        var code: int = m.get_string(1).to_int()
+        result = result.replace(m.get_string(), char(code))
+    # Named entities
+    var entities: Dictionary = {
+        "&amp;": "&", "&lt;": "<", "&gt;": ">",
+        "&quot;": '"', "&apos;": "'", "&#039;": "'",
+        "&auml;": "ä", "&Auml;": "Ä",
+        "&ouml;": "ö", "&Ouml;": "Ö",
+        "&uuml;": "ü", "&Uuml;": "Ü",
+        "&szlig;": "ß",
+        "&eacute;": "é", "&egrave;": "è", "&ecirc;": "ê", "&euml;": "ë",
+        "&aacute;": "á", "&agrave;": "à", "&acirc;": "â",
+        "&iacute;": "í", "&igrave;": "ì", "&icirc;": "î",
+        "&oacute;": "ó", "&ograve;": "ò", "&ocirc;": "ô",
+        "&uacute;": "ú", "&ugrave;": "ù", "&ucirc;": "û",
+        "&ntilde;": "ñ", "&ccedil;": "ç",
+        "&lsquo;": "\u2018", "&rsquo;": "\u2019",
+        "&ldquo;": "\u201C", "&rdquo;": "\u201D",
+        "&ndash;": "\u2013", "&mdash;": "\u2014",
+        "&hellip;": "\u2026", "&nbsp;": " "
+    }
+    for entity: String in entities.keys():
+        result = result.replace(entity, entities[entity])
+    return result
+
+
 ## Evict the oldest cache entry (FIFO)
 func _evict_oldest_cache_entry() -> void:
     if _question_cache.is_empty():
@@ -286,7 +338,7 @@ func _on_request_completed(result: int, response_code: int, _headers: PackedStri
         push_warning("API returned error code: %d" % response_code)
         api_failed.emit()
         var fallback = _load_fallback_questions(category, amount)
-        questions_ready.emit(fallback)
+        questions_ready.emit(_normalize_categories(fallback, category))
         return
     
     # Parse JSON response
@@ -298,7 +350,7 @@ func _on_request_completed(result: int, response_code: int, _headers: PackedStri
         push_warning("Failed to parse API response: %s" % json.get_error_message())
         api_failed.emit()
         var fallback: Array = _load_fallback_questions(category, amount)
-        questions_ready.emit(fallback)
+        questions_ready.emit(_normalize_categories(fallback, category))
         return
     
     var data = json.get_data()
@@ -308,7 +360,7 @@ func _on_request_completed(result: int, response_code: int, _headers: PackedStri
         push_warning("Invalid API response structure")
         api_failed.emit()
         var fallback: Array = _load_fallback_questions(category, amount)
-        questions_ready.emit(fallback)
+        questions_ready.emit(_normalize_categories(fallback, category))
         return
     
     var results: Array = data["results"]
@@ -334,7 +386,7 @@ func _on_request_completed(result: int, response_code: int, _headers: PackedStri
         push_warning("No valid questions in API response")
         api_failed.emit()
         var fallback: Array = _load_fallback_questions(category, amount)
-        questions_ready.emit(fallback)
+        questions_ready.emit(_normalize_categories(fallback, category))
         return
     
     # Cache successful results
@@ -343,4 +395,4 @@ func _on_request_completed(result: int, response_code: int, _headers: PackedStri
     print("[TriviaService] API returned %d valid questions for category: %s (requested: %d)" % [valid_questions.size(), category, amount])
     
     # Emit success signal
-    questions_ready.emit(valid_questions)
+    questions_ready.emit(_normalize_categories(valid_questions, category))
