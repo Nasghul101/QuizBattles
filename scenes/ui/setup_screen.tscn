@@ -1,8 +1,45 @@
-[gd_scene load_steps=2 format=3 uid="uid://mhewb3r1p5f0"]
+[gd_scene format=3 uid="uid://mhewb3r1p5f0"]
 
 [ext_resource type="Script" uid="uid://yw4amno58glr" path="res://scenes/ui/setup_screen.gd" id="1_w8j3x"]
+[ext_resource type="StyleBox" uid="uid://bprlsfswn38in" path="res://Styles/App_Background_Stylebox.tres" id="2_1t1qp"]
+[ext_resource type="FontFile" uid="uid://c8memnki1ydnd" path="res://assets/Font/exo/Exo-Bold.otf" id="2_mq2t8"]
+[ext_resource type="FontFile" uid="uid://p3ayy83ug584" path="res://assets/Font/exo/Exo-Black.otf" id="2_tsdpv"]
+[ext_resource type="Texture2D" uid="uid://d0ghoc44v4qo" path="res://assets/ui/Grabber.png" id="3_tsdpv"]
+[ext_resource type="Shader" uid="uid://dtvwdbl5lb1q" path="res://shaders/predefined_outline_shader.gdshader" id="6_2xxdv"]
+[ext_resource type="Texture2D" uid="uid://pj7nlpjyhaax" path="res://assets/ui/PlayButton.png" id="7_7tavt"]
 
-[node name="SetupScreen" type="Control"]
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_jlylp"]
+bg_color = Color(0.30980393, 0.2627451, 0.3137255, 1)
+border_width_left = 8
+border_width_top = 8
+border_width_right = 8
+border_width_bottom = 8
+border_color = Color(0.9843137, 0.8627451, 0.9529412, 1)
+corner_radius_top_left = 8
+corner_radius_top_right = 8
+corner_radius_bottom_right = 8
+corner_radius_bottom_left = 8
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_1t1qp"]
+bg_color = Color(0.9843137, 0.8627451, 0.9529412, 1)
+corner_radius_top_left = 10
+corner_radius_top_right = 10
+corner_radius_bottom_right = 10
+corner_radius_bottom_left = 10
+expand_margin_top = 5.0
+expand_margin_bottom = 5.0
+
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_nvpir"]
+shader = ExtResource("6_2xxdv")
+shader_parameter/outline_color = Color(0.9843137, 0.8627451, 0.9529412, 1)
+shader_parameter/outline_threshold = 0.2
+shader_parameter/enable_pulsating = false
+shader_parameter/pulsating_color = Color(0, 1, 1, 1)
+shader_parameter/pulsating_size = 1.0
+shader_parameter/pulsating_speed = 1.0
+shader_parameter/pulsating_clockwise = false
+
+[node name="SetupScreen" type="Control" unique_id=1760584114]
 layout_mode = 3
 anchors_preset = 15
 anchor_right = 1.0
@@ -11,92 +48,163 @@ grow_horizontal = 2
 grow_vertical = 2
 script = ExtResource("1_w8j3x")
 
-[node name="VBoxContainer" type="VBoxContainer" parent="."]
+[node name="Panel" type="Panel" parent="." unique_id=159161686]
 layout_mode = 1
 anchors_preset = 15
 anchor_right = 1.0
 anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
-theme_override_constants/separation = 30
+theme_override_styles/panel = ExtResource("2_1t1qp")
 
-[node name="Label" type="Label" parent="VBoxContainer"]
+[node name="MarginContainer3" type="MarginContainer" parent="Panel" unique_id=882502919]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_constants/margin_left = 40
+theme_override_constants/margin_top = 150
+theme_override_constants/margin_right = 40
+theme_override_constants/margin_bottom = 100
+
+[node name="VBoxContainer" type="VBoxContainer" parent="Panel/MarginContainer3" unique_id=1207248450]
 layout_mode = 2
-theme_override_font_sizes/font_size = 36
-text = "Game Options"
+theme_override_constants/separation = 88
+
+[node name="Headline" type="Label" parent="Panel/MarginContainer3/VBoxContainer" unique_id=1056105742]
+custom_minimum_size = Vector2(0, 100)
+layout_mode = 2
+theme_override_fonts/font = ExtResource("2_tsdpv")
+theme_override_font_sizes/font_size = 80
+text = "Game Setup"
 horizontal_alignment = 1
 vertical_alignment = 1
 
-[node name="MarginContainer" type="MarginContainer" parent="VBoxContainer"]
+[node name="Panel" type="Panel" parent="Panel/MarginContainer3/VBoxContainer" unique_id=1760725692]
+custom_minimum_size = Vector2(0, 100)
 layout_mode = 2
-theme_override_constants/margin_left = 10
-theme_override_constants/margin_right = 10
+theme_override_styles/panel = SubResource("StyleBoxFlat_jlylp")
 
-[node name="HBoxContainer" type="HBoxContainer" parent="VBoxContainer/MarginContainer"]
-layout_mode = 2
-theme_override_constants/separation = 100
+[node name="MarginContainer" type="MarginContainer" parent="Panel/MarginContainer3/VBoxContainer/Panel" unique_id=1075436900]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_constants/margin_left = 20
+theme_override_constants/margin_right = 20
 
-[node name="NumberOfRounds" type="Label" parent="VBoxContainer/MarginContainer/HBoxContainer"]
+[node name="HBoxContainer" type="HBoxContainer" parent="Panel/MarginContainer3/VBoxContainer/Panel/MarginContainer" unique_id=1887450268]
 layout_mode = 2
-size_flags_horizontal = 8
+theme_override_constants/separation = 70
+
+[node name="NumberOfRounds" type="Label" parent="Panel/MarginContainer3/VBoxContainer/Panel/MarginContainer/HBoxContainer" unique_id=1795029364]
+layout_mode = 2
+size_flags_horizontal = 0
+theme_override_fonts/font = ExtResource("2_mq2t8")
+theme_override_font_sizes/font_size = 25
 text = "Number of Rounds:"
 vertical_alignment = 1
 
-[node name="RoundsSlider" type="HSlider" parent="VBoxContainer/MarginContainer/HBoxContainer"]
+[node name="RoundsSlider" type="HSlider" parent="Panel/MarginContainer3/VBoxContainer/Panel/MarginContainer/HBoxContainer" unique_id=1848598507]
 unique_name_in_owner = true
 custom_minimum_size = Vector2(0, 30)
 layout_mode = 2
 size_flags_horizontal = 3
 size_flags_vertical = 1
+theme_override_icons/grabber = ExtResource("3_tsdpv")
+theme_override_icons/grabber_highlight = ExtResource("3_tsdpv")
+theme_override_icons/grabber_disabled = ExtResource("3_tsdpv")
+theme_override_styles/slider = SubResource("StyleBoxFlat_1t1qp")
 max_value = 6.0
 value = 5.0
 
-[node name="RoundsAmount" type="Label" parent="VBoxContainer/MarginContainer/HBoxContainer"]
+[node name="RoundsAmount" type="Label" parent="Panel/MarginContainer3/VBoxContainer/Panel/MarginContainer/HBoxContainer" unique_id=1420588910]
 unique_name_in_owner = true
 custom_minimum_size = Vector2(30, 30)
 layout_mode = 2
 size_flags_horizontal = 8
+theme_override_fonts/font = ExtResource("2_mq2t8")
+theme_override_font_sizes/font_size = 25
 horizontal_alignment = 2
 vertical_alignment = 1
 
-[node name="MarginContainer2" type="MarginContainer" parent="VBoxContainer"]
+[node name="Panel2" type="Panel" parent="Panel/MarginContainer3/VBoxContainer" unique_id=1535146119]
+custom_minimum_size = Vector2(0, 100)
 layout_mode = 2
-theme_override_constants/margin_left = 10
-theme_override_constants/margin_right = 10
+theme_override_styles/panel = SubResource("StyleBoxFlat_jlylp")
 
-[node name="HBoxContainer" type="HBoxContainer" parent="VBoxContainer/MarginContainer2"]
-layout_mode = 2
-theme_override_constants/separation = 80
+[node name="MarginContainer" type="MarginContainer" parent="Panel/MarginContainer3/VBoxContainer/Panel2" unique_id=1041888882]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_constants/margin_left = 20
+theme_override_constants/margin_right = 20
 
-[node name="NumberOfQuestions" type="Label" parent="VBoxContainer/MarginContainer2/HBoxContainer"]
-custom_minimum_size = Vector2(30, 30)
+[node name="HBoxContainer" type="HBoxContainer" parent="Panel/MarginContainer3/VBoxContainer/Panel2/MarginContainer" unique_id=546752539]
 layout_mode = 2
-size_flags_horizontal = 8
+theme_override_constants/separation = 42
+
+[node name="NumberOfQuestions" type="Label" parent="Panel/MarginContainer3/VBoxContainer/Panel2/MarginContainer/HBoxContainer" unique_id=1018899052]
+layout_mode = 2
+size_flags_horizontal = 0
+theme_override_fonts/font = ExtResource("2_mq2t8")
+theme_override_font_sizes/font_size = 25
 text = "Number of Questions:"
 vertical_alignment = 1
 
-[node name="QuestionsSlider" type="HSlider" parent="VBoxContainer/MarginContainer2/HBoxContainer"]
+[node name="QuestionsSlider" type="HSlider" parent="Panel/MarginContainer3/VBoxContainer/Panel2/MarginContainer/HBoxContainer" unique_id=2038962434]
 unique_name_in_owner = true
 custom_minimum_size = Vector2(0, 30)
 layout_mode = 2
 size_flags_horizontal = 3
 size_flags_vertical = 1
-max_value = 4.0
-value = 3.0
+theme_override_icons/grabber = ExtResource("3_tsdpv")
+theme_override_icons/grabber_highlight = ExtResource("3_tsdpv")
+theme_override_icons/grabber_disabled = ExtResource("3_tsdpv")
+theme_override_styles/slider = SubResource("StyleBoxFlat_1t1qp")
+max_value = 6.0
+value = 5.0
 
-[node name="QuestionsAmount" type="Label" parent="VBoxContainer/MarginContainer2/HBoxContainer"]
+[node name="QuestionsAmount" type="Label" parent="Panel/MarginContainer3/VBoxContainer/Panel2/MarginContainer/HBoxContainer" unique_id=1907399929]
 unique_name_in_owner = true
-custom_minimum_size = Vector2(30, 30)
+custom_minimum_size = Vector2(55, 30)
 layout_mode = 2
 size_flags_horizontal = 8
+theme_override_fonts/font = ExtResource("2_mq2t8")
+theme_override_font_sizes/font_size = 25
 horizontal_alignment = 2
 vertical_alignment = 1
 
-[node name="StartGameButton" type="Button" parent="VBoxContainer"]
-custom_minimum_size = Vector2(100, 50)
+[node name="StartGameButton" type="TextureButton" parent="Panel/MarginContainer3/VBoxContainer" unique_id=1389189538]
+self_modulate = Color(0.19215687, 0, 0.24313726, 1)
+material = SubResource("ShaderMaterial_nvpir")
+custom_minimum_size = Vector2(0, 150)
 layout_mode = 2
-size_flags_horizontal = 4
-size_flags_vertical = 8
-text = "Start Game"
+size_flags_vertical = 10
+texture_normal = ExtResource("7_7tavt")
+ignore_texture_size = true
+stretch_mode = 5
 
-[connection signal="pressed" from="VBoxContainer/StartGameButton" to="." method="_on_start_game_button_pressed"]
+[node name="Label" type="Label" parent="Panel/MarginContainer3/VBoxContainer/StartGameButton" unique_id=2039444739]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_colors/font_color = Color(0.9843137, 0.8627451, 0.9529412, 1)
+theme_override_fonts/font = ExtResource("2_mq2t8")
+theme_override_font_sizes/font_size = 60
+text = "Start"
+horizontal_alignment = 1
+vertical_alignment = 1
+metadata/_edit_use_anchors_ = true
+
+[connection signal="pressed" from="Panel/MarginContainer3/VBoxContainer/StartGameButton" to="." method="_on_start_game_button_pressed"]

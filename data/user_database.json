@@ -5,19 +5,19 @@
 				"questions": 5,
 				"rounds": 3
 			},
-			"created_at": 1776338479.945,
+			"created_at": 1776348304.875,
 			"current_round": 1,
-			"current_turn": "linus",
+			"current_turn": "robin",
 			"dismissed_by": [],
 			"inviter": "robin",
-			"match_id": "match_1776338479",
+			"match_id": "match_1776348304",
 			"players": [
 				"robin",
 				"linus"
 			],
 			"rounds_data": [
 				{
-					"category": "General Knowledge",
+					"category": "",
 					"category_chooser": "robin",
 					"player_answers": {
 						"linus": {
@@ -25,153 +25,11 @@
 							"results": []
 						},
 						"robin": {
-							"answered": true,
-							"results": [
-								{
-									"player_answer": "Guitar Hero Live",
-									"question_data": {
-										"category": "General Knowledge",
-										"correct_answer": "Rock Band",
-										"difficulty": "easy",
-										"incorrect_answers": [
-											"Meat Beat Mania",
-											"Guitar Hero Live",
-											"Dance Dance Revolution"
-										],
-										"question": "Which one of the following rhythm games was made by Harmonix?",
-										"type": "multiple"
-									},
-									"was_correct": false
-								},
-								{
-									"player_answer": "Truth",
-									"question_data": {
-										"category": "General Knowledge",
-										"correct_answer": "Truth",
-										"difficulty": "easy",
-										"incorrect_answers": [
-											"Answer",
-											"Cause",
-											"Source"
-										],
-										"question": "According to Sherlock Holmes, \"If you eliminate the impossible, whatever remains, however improbable, must be the...\"",
-										"type": "multiple"
-									},
-									"was_correct": true
-								},
-								{
-									"player_answer": "1923",
-									"question_data": {
-										"category": "General Knowledge",
-										"correct_answer": "1926",
-										"difficulty": "hard",
-										"incorrect_answers": [
-											"1923",
-											"1929",
-											"1930"
-										],
-										"question": "What year was Queen Elizabeth II born?",
-										"type": "multiple"
-									},
-									"was_correct": false
-								},
-								{
-									"player_answer": "Burger King",
-									"question_data": {
-										"category": "General Knowledge",
-										"correct_answer": "Arby's",
-										"difficulty": "easy",
-										"incorrect_answers": [
-											"McDonald's",
-											"Burger King",
-											"Wendy's"
-										],
-										"question": "In which fast food chain can you order a Jamocha Shake?",
-										"type": "multiple"
-									},
-									"was_correct": false
-								},
-								{
-									"player_answer": "Kitt Khan",
-									"question_data": {
-										"category": "General Knowledge",
-										"correct_answer": "Sal Khan",
-										"difficulty": "hard",
-										"incorrect_answers": [
-											"Ben Khan",
-											"Kitt Khan",
-											"Adel Khan"
-										],
-										"question": "Who founded the Khan Academy?",
-										"type": "multiple"
-									},
-									"was_correct": false
-								}
-							]
+							"answered": false,
+							"results": []
 						}
 					},
-					"questions": [
-						{
-							"category": "General Knowledge",
-							"correct_answer": "Rock Band",
-							"difficulty": "easy",
-							"incorrect_answers": [
-								"Meat Beat Mania",
-								"Guitar Hero Live",
-								"Dance Dance Revolution"
-							],
-							"question": "Which one of the following rhythm games was made by Harmonix?",
-							"type": "multiple"
-						},
-						{
-							"category": "General Knowledge",
-							"correct_answer": "Truth",
-							"difficulty": "easy",
-							"incorrect_answers": [
-								"Answer",
-								"Cause",
-								"Source"
-							],
-							"question": "According to Sherlock Holmes, \"If you eliminate the impossible, whatever remains, however improbable, must be the...\"",
-							"type": "multiple"
-						},
-						{
-							"category": "General Knowledge",
-							"correct_answer": "1926",
-							"difficulty": "hard",
-							"incorrect_answers": [
-								"1923",
-								"1929",
-								"1930"
-							],
-							"question": "What year was Queen Elizabeth II born?",
-							"type": "multiple"
-						},
-						{
-							"category": "General Knowledge",
-							"correct_answer": "Arby's",
-							"difficulty": "easy",
-							"incorrect_answers": [
-								"McDonald's",
-								"Burger King",
-								"Wendy's"
-							],
-							"question": "In which fast food chain can you order a Jamocha Shake?",
-							"type": "multiple"
-						},
-						{
-							"category": "General Knowledge",
-							"correct_answer": "Sal Khan",
-							"difficulty": "hard",
-							"incorrect_answers": [
-								"Ben Khan",
-								"Kitt Khan",
-								"Adel Khan"
-							],
-							"question": "Who founded the Khan Academy?",
-							"type": "multiple"
-						}
-					],
+					"questions": [],
 					"round_number": 1
 				},
 				{
@@ -270,7 +128,23 @@
 				"robin"
 			],
 			"losses": 0.0,
-			"notifications": [],
+			"notifications": [
+				{
+					"action_data": {
+						"inviter_id": "robin",
+						"questions": 5,
+						"rounds": 3,
+						"type": "game_invite"
+					},
+					"has_actions": true,
+					"id": "30570_7863",
+					"is_read": false,
+					"message": "robin invites you to a duel (3 rounds, 5 questions)",
+					"recipient_username": "tobias",
+					"sender": "robin",
+					"timestamp": 1776348331.202
+				}
+			],
 			"password_hash": "a665a45920422f9d417e4867efdc4fb8a04a1f3fff1fa07e998e86f7f7a27ae3",
 			"username": "tobias",
 			"wins": 0.0
