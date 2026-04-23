@@ -1,123 +1,75 @@
-[gd_scene load_steps=4 format=3 uid="uid://crnu6goxc6w28"]
+[gd_scene format=3 uid="uid://c8xykm15dq8kc"]
 
-[ext_resource type="Script" uid="uid://b83dqaa5lkynv" path="res://scenes/ui/lobby_pages/socials_page.gd" id="1_xpe0s"]
-[ext_resource type="PackedScene" uid="uid://deyncocxwp1mp" path="res://scenes/ui/components/drag_handle_component.tscn" id="2_hfrco"]
-[ext_resource type="PackedScene" uid="uid://dnr83p3aukr5k" path="res://scenes/ui/account_ui/account_popup.tscn" id="3_6lj5o"]
+[ext_resource type="Shader" uid="uid://dtvwdbl5lb1q" path="res://shaders/predefined_outline_shader.gdshader" id="1_6lj5o"]
+[ext_resource type="Texture2D" uid="uid://cgybwrud0436v" path="res://assets/ui/SocialScreen_BG.png" id="1_xpe0s"]
+[ext_resource type="PackedScene" uid="uid://c7l31g3fc4kr8" path="res://scenes/ui/components/friend_display_component.tscn" id="3_6lj5o"]
 
-[node name="SocialsPage" type="Control"]
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_6rgj1"]
+shader = ExtResource("1_6lj5o")
+shader_parameter/outline_color = Color(1, 1, 1, 1)
+shader_parameter/outline_threshold = 0.2
+shader_parameter/enable_pulsating = false
+shader_parameter/pulsating_color = Color(0, 1, 1, 1)
+shader_parameter/pulsating_size = 1.0
+shader_parameter/pulsating_speed = 1.0
+shader_parameter/pulsating_clockwise = false
+
+[node name="SocialsPage" type="Control" unique_id=1992299022]
 layout_mode = 3
 anchors_preset = 15
 anchor_right = 1.0
 anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
-script = ExtResource("1_xpe0s")
 
-[node name="PopupOverlay" type="ColorRect" parent="."]
-unique_name_in_owner = true
-visible = false
+[node name="TextureRect" type="TextureRect" parent="." unique_id=849032615]
+self_modulate = Color(0.19215687, 0, 0.24313726, 1)
+clip_children = 2
+material = SubResource("ShaderMaterial_6rgj1")
 layout_mode = 1
 anchors_preset = 15
 anchor_right = 1.0
 anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
-color = Color(0, 0, 0, 0)
+texture = ExtResource("1_xpe0s")
+expand_mode = 5
+stretch_mode = 5
 
-[node name="VBoxContainer" type="VBoxContainer" parent="."]
+[node name="ScrollContainer" type="ScrollContainer" parent="TextureRect" unique_id=2104392725]
 layout_mode = 1
-anchors_preset = 15
+anchors_preset = -1
+anchor_top = 0.13223787
 anchor_right = 1.0
-anchor_bottom = 1.0
+anchor_bottom = 0.86776215
 grow_horizontal = 2
 grow_vertical = 2
-theme_override_constants/separation = 59
+metadata/_edit_use_anchors_ = true
 
-[node name="Label" type="Label" parent="VBoxContainer"]
+[node name="VBoxContainer" type="VBoxContainer" parent="TextureRect/ScrollContainer" unique_id=1528463651]
 layout_mode = 2
-size_flags_horizontal = 4
-size_flags_vertical = 0
-theme_override_font_sizes/font_size = 60
-text = "Socials Page"
-horizontal_alignment = 1
-vertical_alignment = 1
-
-[node name="FriendsList" type="GridContainer" parent="VBoxContainer"]
-unique_name_in_owner = true
-layout_mode = 2
-size_flags_horizontal = 4
+size_flags_horizontal = 3
 size_flags_vertical = 3
-theme_override_constants/h_separation = 150
-theme_override_constants/v_separation = 100
-columns = 2
+theme_override_constants/separation = -113
+metadata/_edit_use_anchors_ = true
 
-[node name="AddNewFriendButton" type="Button" parent="VBoxContainer"]
-custom_minimum_size = Vector2(150, 50)
+[node name="FriendDisplayComponent" parent="TextureRect/ScrollContainer/VBoxContainer" unique_id=1413633874 instance=ExtResource("3_6lj5o")]
 layout_mode = 2
-size_flags_horizontal = 4
-text = "Add new friend"
 
-[node name="AddFriendsPopup" type="Panel" parent="."]
-unique_name_in_owner = true
-visible = false
-layout_mode = 1
-anchors_preset = 15
-anchor_right = 1.0
-anchor_bottom = 1.0
-grow_horizontal = 2
-grow_vertical = 2
-
-[node name="VBoxContainer" type="VBoxContainer" parent="AddFriendsPopup"]
-layout_mode = 1
-anchors_preset = 15
-anchor_right = 1.0
-anchor_bottom = 1.0
-offset_top = 60.0
-grow_horizontal = 2
-grow_vertical = 2
-theme_override_constants/separation = 54
-
-[node name="NameInput" type="TextEdit" parent="AddFriendsPopup/VBoxContainer"]
-unique_name_in_owner = true
-custom_minimum_size = Vector2(0, 50)
+[node name="FriendDisplayComponent2" parent="TextureRect/ScrollContainer/VBoxContainer" unique_id=1121015991 instance=ExtResource("3_6lj5o")]
 layout_mode = 2
-placeholder_text = "Input name"
 
-[node name="MarginContainer" type="MarginContainer" parent="AddFriendsPopup/VBoxContainer"]
+[node name="FriendDisplayComponent3" parent="TextureRect/ScrollContainer/VBoxContainer" unique_id=1959285000 instance=ExtResource("3_6lj5o")]
 layout_mode = 2
-size_flags_vertical = 3
-theme_override_constants/margin_left = 84
 
-[node name="SearchResults" type="GridContainer" parent="AddFriendsPopup/VBoxContainer/MarginContainer"]
-unique_name_in_owner = true
+[node name="FriendDisplayComponent4" parent="TextureRect/ScrollContainer/VBoxContainer" unique_id=389221748 instance=ExtResource("3_6lj5o")]
 layout_mode = 2
-size_flags_vertical = 3
-theme_override_constants/h_separation = 100
-theme_override_constants/v_separation = 124
-columns = 10
 
-[node name="AddFriendButton" type="Button" parent="AddFriendsPopup/VBoxContainer"]
-custom_minimum_size = Vector2(150, 50)
+[node name="FriendDisplayComponent6" parent="TextureRect/ScrollContainer/VBoxContainer" unique_id=122703240 instance=ExtResource("3_6lj5o")]
 layout_mode = 2
-size_flags_horizontal = 4
-text = "Add friend"
 
-[node name="DragHandleComponent" parent="AddFriendsPopup" instance=ExtResource("2_hfrco")]
-z_index = 4
-layout_mode = 0
-anchor_right = 0.0
-anchor_bottom = 0.0
-offset_right = 1152.0
-offset_bottom = 60.0
-grow_horizontal = 1
-grow_vertical = 1
+[node name="FriendDisplayComponent7" parent="TextureRect/ScrollContainer/VBoxContainer" unique_id=1315171459 instance=ExtResource("3_6lj5o")]
+layout_mode = 2
 
-[node name="AccountPopup" parent="." instance=ExtResource("3_6lj5o")]
-visible = false
-layout_mode = 1
-
-[connection signal="pressed" from="VBoxContainer/AddNewFriendButton" to="." method="_on_add_new_friend_button_pressed"]
-[connection signal="pressed" from="AddFriendsPopup/VBoxContainer/AddFriendButton" to="." method="_on_add_friend_button_pressed"]
-[connection signal="drag_ended" from="AddFriendsPopup/DragHandleComponent" to="." method="_on_drag_handle_component_drag_ended"]
-[connection signal="drag_started" from="AddFriendsPopup/DragHandleComponent" to="." method="_on_drag_handle_component_drag_started"]
-[connection signal="drag_updated" from="AddFriendsPopup/DragHandleComponent" to="." method="_on_drag_handle_component_drag_updated"]
+[node name="FriendDisplayComponent8" parent="TextureRect/ScrollContainer/VBoxContainer" unique_id=1407782890 instance=ExtResource("3_6lj5o")]
+layout_mode = 2

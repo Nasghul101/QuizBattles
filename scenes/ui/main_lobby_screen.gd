@@ -15,7 +15,7 @@ const NOTIFICATION_COMPONENT = preload("res://scenes/ui/components/notification_
 ## Reference to the container holding page content
 @onready var page_clip_container: Control = %PageClipContainer
 @onready var pages_container: HBoxContainer = %PagesContainer
-@onready var notifications_button: Button = $VBoxContainer/PanelContainer/HBoxContainer/HBoxContainer/NotificationsButton
+@onready var notifications_button: Button = $VBoxContainer/TextureRect/HBoxContainer/NotificationsButton
 @onready var notifications_popup: Panel = $NotificationsPopUp
 @onready var notification_list_container: VBoxContainer = %NotificationListContainer
 

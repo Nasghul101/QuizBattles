@@ -1,0 +1,185 @@
+[gd_scene format=3 uid="uid://c7l31g3fc4kr8"]
+
+[ext_resource type="Script" uid="uid://ffdpcdlf42s0" path="res://scenes/ui/components/friend_display_component.gd" id="1_1efg2"]
+[ext_resource type="Texture2D" uid="uid://nipogsfah5jj" path="res://assets/ui/SozialScreen_FriendBG.png" id="1_vs3t8"]
+[ext_resource type="FontFile" uid="uid://c8memnki1ydnd" path="res://assets/Font/exo/Exo-Bold.otf" id="2_a5k5g"]
+[ext_resource type="Texture2D" uid="uid://o0ugal510vq1" path="res://assets/ui/SozialScreen_NameField.png" id="2_ge81x"]
+[ext_resource type="Script" uid="uid://bttgnk3bb2a8i" path="res://addons/font_auto_size_labels/auto_size_label.gd" id="4_ge81x"]
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_a5k5g"]
+bg_color = Color(0.84763587, 0, 0.09776681, 1)
+border_width_left = 2
+border_width_top = 2
+border_width_right = 2
+border_width_bottom = 2
+border_color = Color(1, 0.7042588, 0.6918811, 1)
+corner_radius_top_left = 15
+corner_radius_top_right = 15
+corner_radius_bottom_right = 15
+corner_radius_bottom_left = 15
+shadow_color = Color(1, 0.6210423, 0.56365764, 0.6)
+shadow_size = 4
+
+[node name="FriendDisplayComponent" type="Control" unique_id=1413633874]
+custom_minimum_size = Vector2(0, 433.21)
+layout_mode = 3
+anchor_right = 1.0
+anchor_bottom = 0.17595463
+grow_horizontal = 2
+grow_vertical = 2
+script = ExtResource("1_1efg2")
+metadata/_edit_use_anchors_ = true
+
+[node name="Texture" type="TextureRect" parent="." unique_id=1612559488]
+unique_name_in_owner = true
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+texture = ExtResource("1_vs3t8")
+expand_mode = 5
+stretch_mode = 5
+
+[node name="HBoxContainer" type="HBoxContainer" parent="Texture" unique_id=1265144443]
+layout_mode = 1
+anchors_preset = -1
+anchor_left = 0.36810857
+anchor_top = 0.14253898
+anchor_right = 0.6318914
+anchor_bottom = 0.8663697
+offset_bottom = 3.0517578e-05
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_constants/separation = 1
+metadata/_edit_use_anchors_ = true
+
+[node name="CategoryWrapper2" type="Control" parent="Texture/HBoxContainer" unique_id=316283116]
+layout_mode = 2
+size_flags_horizontal = 3
+
+[node name="SecondPlayedCategory" type="Panel" parent="Texture/HBoxContainer/CategoryWrapper2" unique_id=1174703323]
+unique_name_in_owner = true
+layout_mode = 1
+anchors_preset = -1
+anchor_top = 0.31384614
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+size_flags_horizontal = 3
+theme_override_styles/panel = SubResource("StyleBoxFlat_a5k5g")
+
+[node name="CategoryWrapper1" type="Control" parent="Texture/HBoxContainer" unique_id=1978650375]
+layout_mode = 2
+size_flags_horizontal = 3
+
+[node name="FirstPlayedCategory" type="Panel" parent="Texture/HBoxContainer/CategoryWrapper1" unique_id=1734436827]
+unique_name_in_owner = true
+layout_mode = 1
+anchors_preset = -1
+anchor_top = 0.14461538
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+size_flags_horizontal = 3
+theme_override_styles/panel = SubResource("StyleBoxFlat_a5k5g")
+
+[node name="CategoryWrapper3" type="Control" parent="Texture/HBoxContainer" unique_id=477284428]
+layout_mode = 2
+size_flags_horizontal = 3
+
+[node name="ThirdPlayedCategory" type="Panel" parent="Texture/HBoxContainer/CategoryWrapper3" unique_id=1308243858]
+unique_name_in_owner = true
+layout_mode = 1
+anchors_preset = -1
+anchor_top = 0.4553846
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+size_flags_horizontal = 3
+theme_override_styles/panel = SubResource("StyleBoxFlat_a5k5g")
+
+[node name="NameBG" type="TextureRect" parent="Texture" unique_id=19391509]
+layout_mode = 1
+anchors_preset = -1
+anchor_left = 0.342
+anchor_top = 0.23346822
+anchor_right = 0.6581849
+anchor_bottom = 1.2334682
+grow_horizontal = 2
+grow_vertical = 2
+texture = ExtResource("2_ge81x")
+expand_mode = 5
+stretch_mode = 5
+metadata/_edit_use_anchors_ = true
+
+[node name="Name" type="Label" parent="Texture/NameBG" unique_id=809420134]
+unique_name_in_owner = true
+layout_mode = 1
+anchors_preset = -1
+anchor_left = 0.197
+anchor_top = 0.43691912
+anchor_right = 0.80300003
+anchor_bottom = 0.6159114
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_colors/font_color = Color(0.9843137, 0.8627451, 0.9529412, 1)
+theme_override_fonts/font = ExtResource("2_a5k5g")
+theme_override_font_sizes/font_size = 50
+text = "Name"
+horizontal_alignment = 1
+vertical_alignment = 1
+autowrap_mode = 3
+clip_text = true
+script = ExtResource("4_ge81x")
+_max_size = 50
+_outline_ratio = 0.0
+_current_font_size = 50
+_editor_defaults_set = true
+metadata/_custom_type_script = "uid://bttgnk3bb2a8i"
+metadata/_edit_use_anchors_ = true
+
+[node name="WinCount" type="Label" parent="." unique_id=1910022141]
+unique_name_in_owner = true
+clip_children = 2
+layout_mode = 1
+anchors_preset = -1
+anchor_left = 0.6700594
+anchor_top = 0.10228131
+anchor_right = 0.7567566
+anchor_bottom = 0.34281585
+offset_right = 89.00006
+offset_bottom = 108.00003
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_colors/font_color = Color(0.9843137, 0.8627451, 0.9529412, 1)
+theme_override_fonts/font = ExtResource("2_a5k5g")
+theme_override_font_sizes/font_size = 80
+text = "77"
+horizontal_alignment = 1
+vertical_alignment = 1
+metadata/_edit_use_anchors_ = true
+
+[node name="LossCount" type="Label" parent="." unique_id=1276565085]
+unique_name_in_owner = true
+layout_mode = 1
+anchors_preset = -1
+anchor_left = 0.8736217
+anchor_top = 0.5233853
+anchor_right = 0.9779474
+anchor_bottom = 0.8017817
+offset_right = 89.0
+offset_bottom = 108.0
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_colors/font_color = Color(0.9843137, 0.8627451, 0.9529412, 1)
+theme_override_fonts/font = ExtResource("2_a5k5g")
+theme_override_font_sizes/font_size = 80
+text = "77"
+horizontal_alignment = 1
+vertical_alignment = 1
+metadata/_edit_use_anchors_ = true

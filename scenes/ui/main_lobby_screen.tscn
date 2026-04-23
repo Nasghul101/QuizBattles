@@ -1,14 +1,16 @@
-[gd_scene load_steps=8 format=3 uid="uid://mt4cflygcn3b"]
+[gd_scene format=3 uid="uid://mt4cflygcn3b"]
 
 [ext_resource type="Texture2D" uid="uid://pv35sp2h3w1p" path="res://icon.svg" id="1_f1jjt"]
 [ext_resource type="Script" uid="uid://b11jdqaf8o7sv" path="res://scenes/ui/main_lobby_screen.gd" id="1_m4p3a"]
 [ext_resource type="Texture2D" uid="uid://ep6jekuw6lka" path="res://assets/profile_pictures/man_suit.png" id="2_4wv0w"]
+[ext_resource type="Texture2D" uid="uid://bc7u7qil0eq2c" path="res://assets/ui/MainLobbyHeader.png" id="2_qq38p"]
 [ext_resource type="PackedScene" uid="uid://db55cjof2f4uv" path="res://scenes/ui/lobby_pages/duel_page.tscn" id="3_1l6go"]
+[ext_resource type="FontFile" uid="uid://c8memnki1ydnd" path="res://assets/Font/exo/Exo-Bold.otf" id="3_wn6oh"]
 [ext_resource type="PackedScene" uid="uid://cxkr8w47uveic" path="res://scenes/ui/lobby_pages/friendly_battle_page.tscn" id="4_4wv0w"]
-[ext_resource type="PackedScene" uid="uid://crnu6goxc6w28" path="res://scenes/ui/lobby_pages/socials_page.tscn" id="5_6xylg"]
+[ext_resource type="PackedScene" uid="uid://crnu6goxc6w28" path="res://scenes/ui/test_ui/socials_page_depricated.tscn" id="5_6xylg"]
 [ext_resource type="Texture2D" uid="uid://bwiby0r7dcp7d" path="res://assets/icon_wrong.png" id="7_6xylg"]
 
-[node name="MainLobbyScreen" type="Control"]
+[node name="MainLobbyScreen" type="Control" unique_id=873557019]
 layout_mode = 3
 anchors_preset = 15
 anchor_right = 1.0
@@ -17,7 +19,7 @@ grow_horizontal = 2
 grow_vertical = 2
 script = ExtResource("1_m4p3a")
 
-[node name="Background" type="TextureRect" parent="."]
+[node name="Background" type="TextureRect" parent="." unique_id=2044691668]
 layout_mode = 1
 anchors_preset = 15
 anchor_right = 1.0
@@ -26,7 +28,7 @@ grow_horizontal = 2
 grow_vertical = 2
 size_flags_vertical = 3
 
-[node name="VBoxContainer" type="VBoxContainer" parent="."]
+[node name="VBoxContainer" type="VBoxContainer" parent="." unique_id=1563071575]
 layout_mode = 1
 anchors_preset = 15
 anchor_right = 1.0
@@ -35,33 +37,23 @@ grow_horizontal = 2
 grow_vertical = 2
 theme_override_constants/separation = 14
 
-[node name="PanelContainer" type="PanelContainer" parent="VBoxContainer"]
-custom_minimum_size = Vector2(0, 100)
+[node name="TextureRect" type="TextureRect" parent="VBoxContainer" unique_id=1136827235]
 layout_mode = 2
+texture = ExtResource("2_qq38p")
+expand_mode = 5
+stretch_mode = 5
 
-[node name="HBoxContainer" type="HBoxContainer" parent="VBoxContainer/PanelContainer"]
-layout_mode = 2
-
-[node name="Label" type="Label" parent="VBoxContainer/PanelContainer/HBoxContainer"]
-layout_mode = 2
-size_flags_horizontal = 6
-theme_override_font_sizes/font_size = 41
-text = "Quiz Battles"
-
-[node name="HBoxContainer" type="HBoxContainer" parent="VBoxContainer/PanelContainer/HBoxContainer"]
-layout_mode = 2
+[node name="HBoxContainer" type="HBoxContainer" parent="VBoxContainer/TextureRect" unique_id=507901675]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
 size_flags_horizontal = 10
 theme_override_constants/separation = 30
 
-[node name="NotificationsButton" type="Button" parent="VBoxContainer/PanelContainer/HBoxContainer/HBoxContainer"]
-custom_minimum_size = Vector2(50, 50)
-layout_mode = 2
-size_flags_horizontal = 10
-size_flags_vertical = 4
-icon = ExtResource("2_4wv0w")
-expand_icon = true
-
-[node name="AccountButton" type="Button" parent="VBoxContainer/PanelContainer/HBoxContainer/HBoxContainer"]
+[node name="AccountButton" type="Button" parent="VBoxContainer/TextureRect/HBoxContainer" unique_id=2076028799]
 custom_minimum_size = Vector2(50, 50)
 layout_mode = 2
 size_flags_horizontal = 10
@@ -69,12 +61,30 @@ size_flags_vertical = 4
 icon = ExtResource("1_f1jjt")
 expand_icon = true
 
-[node name="PageClipContainer" type="Control" parent="VBoxContainer"]
+[node name="PageName" type="Label" parent="VBoxContainer/TextureRect/HBoxContainer" unique_id=875561421]
+unique_name_in_owner = true
+layout_mode = 2
+size_flags_horizontal = 4
+theme_override_fonts/font = ExtResource("3_wn6oh")
+theme_override_font_sizes/font_size = 80
+text = "Page Name"
+horizontal_alignment = 1
+vertical_alignment = 1
+
+[node name="NotificationsButton" type="Button" parent="VBoxContainer/TextureRect/HBoxContainer" unique_id=590581063]
+custom_minimum_size = Vector2(50, 50)
+layout_mode = 2
+size_flags_horizontal = 10
+size_flags_vertical = 4
+icon = ExtResource("2_4wv0w")
+expand_icon = true
+
+[node name="PageClipContainer" type="Control" parent="VBoxContainer" unique_id=2114572303]
 unique_name_in_owner = true
 layout_mode = 2
 size_flags_vertical = 3
 
-[node name="PagesContainer" type="HBoxContainer" parent="VBoxContainer/PageClipContainer"]
+[node name="PagesContainer" type="HBoxContainer" parent="VBoxContainer/PageClipContainer" unique_id=792530406]
 unique_name_in_owner = true
 layout_mode = 1
 anchors_preset = 15
@@ -84,43 +94,43 @@ grow_horizontal = 2
 grow_vertical = 2
 theme_override_constants/separation = 0
 
-[node name="DuelPage" parent="VBoxContainer/PageClipContainer/PagesContainer" instance=ExtResource("3_1l6go")]
+[node name="DuelPage" parent="VBoxContainer/PageClipContainer/PagesContainer" unique_id=1034330464 instance=ExtResource("3_1l6go")]
 layout_mode = 2
 size_flags_horizontal = 3
 
-[node name="FriendlyBattlePage" parent="VBoxContainer/PageClipContainer/PagesContainer" instance=ExtResource("4_4wv0w")]
+[node name="FriendlyBattlePage" parent="VBoxContainer/PageClipContainer/PagesContainer" unique_id=201743618 instance=ExtResource("4_4wv0w")]
 layout_mode = 2
 size_flags_horizontal = 3
 
-[node name="SocialsPage" parent="VBoxContainer/PageClipContainer/PagesContainer" instance=ExtResource("5_6xylg")]
+[node name="SocialsPage" parent="VBoxContainer/PageClipContainer/PagesContainer" unique_id=70997977 instance=ExtResource("5_6xylg")]
 layout_mode = 2
 size_flags_horizontal = 3
 
-[node name="PanelContainer3" type="PanelContainer" parent="VBoxContainer"]
+[node name="PanelContainer3" type="PanelContainer" parent="VBoxContainer" unique_id=448103944]
 custom_minimum_size = Vector2(0, 100)
 layout_mode = 2
 size_flags_vertical = 8
 
-[node name="HBoxContainer" type="HBoxContainer" parent="VBoxContainer/PanelContainer3"]
+[node name="HBoxContainer" type="HBoxContainer" parent="VBoxContainer/PanelContainer3" unique_id=1857853422]
 layout_mode = 2
 
-[node name="DuelPage" type="Button" parent="VBoxContainer/PanelContainer3/HBoxContainer"]
+[node name="DuelPage" type="Button" parent="VBoxContainer/PanelContainer3/HBoxContainer" unique_id=1621608083]
 layout_mode = 2
 size_flags_horizontal = 3
 text = "Duel"
 
-[node name="Page2" type="Button" parent="VBoxContainer/PanelContainer3/HBoxContainer"]
+[node name="Page2" type="Button" parent="VBoxContainer/PanelContainer3/HBoxContainer" unique_id=450773864]
 layout_mode = 2
 size_flags_horizontal = 3
 text = "Page2
 "
 
-[node name="SocialPage" type="Button" parent="VBoxContainer/PanelContainer3/HBoxContainer"]
+[node name="SocialPage" type="Button" parent="VBoxContainer/PanelContainer3/HBoxContainer" unique_id=1774616578]
 layout_mode = 2
 size_flags_horizontal = 3
 text = "Socials"
 
-[node name="NotificationsPopUp" type="Panel" parent="."]
+[node name="NotificationsPopUp" type="Panel" parent="." unique_id=927153535]
 visible = false
 custom_minimum_size = Vector2(300, 500)
 layout_mode = 1
@@ -136,7 +146,7 @@ offset_bottom = 20.0
 grow_horizontal = 2
 grow_vertical = 2
 
-[node name="MarginContainer" type="MarginContainer" parent="NotificationsPopUp"]
+[node name="MarginContainer" type="MarginContainer" parent="NotificationsPopUp" unique_id=2140860605]
 layout_mode = 1
 anchors_preset = 15
 anchor_right = 1.0
@@ -148,40 +158,40 @@ theme_override_constants/margin_top = 10
 theme_override_constants/margin_right = 10
 theme_override_constants/margin_bottom = 10
 
-[node name="NotificationContainer" type="VBoxContainer" parent="NotificationsPopUp/MarginContainer"]
+[node name="NotificationContainer" type="VBoxContainer" parent="NotificationsPopUp/MarginContainer" unique_id=1138940207]
 layout_mode = 2
 
-[node name="HBoxContainer" type="HBoxContainer" parent="NotificationsPopUp/MarginContainer/NotificationContainer"]
+[node name="HBoxContainer" type="HBoxContainer" parent="NotificationsPopUp/MarginContainer/NotificationContainer" unique_id=853234964]
 layout_mode = 2
 size_flags_vertical = 0
 
-[node name="Label" type="Label" parent="NotificationsPopUp/MarginContainer/NotificationContainer/HBoxContainer"]
+[node name="Label" type="Label" parent="NotificationsPopUp/MarginContainer/NotificationContainer/HBoxContainer" unique_id=855476525]
 layout_mode = 2
 theme_override_font_sizes/font_size = 30
 text = "Notifications"
 
-[node name="ClosePopUpButton" type="Button" parent="NotificationsPopUp/MarginContainer/NotificationContainer/HBoxContainer"]
+[node name="ClosePopUpButton" type="Button" parent="NotificationsPopUp/MarginContainer/NotificationContainer/HBoxContainer" unique_id=31311946]
 custom_minimum_size = Vector2(50, 50)
 layout_mode = 2
 size_flags_horizontal = 10
 icon = ExtResource("7_6xylg")
 expand_icon = true
 
-[node name="NotificationScrollContainer" type="ScrollContainer" parent="NotificationsPopUp/MarginContainer/NotificationContainer"]
+[node name="NotificationScrollContainer" type="ScrollContainer" parent="NotificationsPopUp/MarginContainer/NotificationContainer" unique_id=2008242561]
 unique_name_in_owner = true
 layout_mode = 2
 size_flags_vertical = 3
 horizontal_scroll_mode = 0
 
-[node name="NotificationListContainer" type="VBoxContainer" parent="NotificationsPopUp/MarginContainer/NotificationContainer/NotificationScrollContainer"]
+[node name="NotificationListContainer" type="VBoxContainer" parent="NotificationsPopUp/MarginContainer/NotificationContainer/NotificationScrollContainer" unique_id=168871047]
 unique_name_in_owner = true
 layout_mode = 2
 size_flags_horizontal = 3
 size_flags_vertical = 3
 theme_override_constants/separation = 10
 
-[connection signal="pressed" from="VBoxContainer/PanelContainer/HBoxContainer/HBoxContainer/NotificationsButton" to="." method="_on_notifications_button_pressed"]
-[connection signal="pressed" from="VBoxContainer/PanelContainer/HBoxContainer/HBoxContainer/AccountButton" to="." method="_on_account_button_pressed"]
+[connection signal="pressed" from="VBoxContainer/TextureRect/HBoxContainer/AccountButton" to="." method="_on_account_button_pressed"]
+[connection signal="pressed" from="VBoxContainer/TextureRect/HBoxContainer/NotificationsButton" to="." method="_on_notifications_button_pressed"]
 [connection signal="pressed" from="VBoxContainer/PanelContainer3/HBoxContainer/DuelPage" to="." method="_on_duel_page_pressed"]
 [connection signal="pressed" from="VBoxContainer/PanelContainer3/HBoxContainer/Page2" to="." method="_on_page_2_pressed"]
 [connection signal="pressed" from="VBoxContainer/PanelContainer3/HBoxContainer/SocialPage" to="." method="_on_social_page_pressed"]

@@ -1,0 +1,123 @@
+[gd_scene format=3 uid="uid://crnu6goxc6w28"]
+
+[ext_resource type="Script" uid="uid://b83dqaa5lkynv" path="res://scenes/ui/test_ui/socials_page_depricated.gd" id="1_xpe0s"]
+[ext_resource type="PackedScene" uid="uid://deyncocxwp1mp" path="res://scenes/ui/components/drag_handle_component.tscn" id="2_hfrco"]
+[ext_resource type="PackedScene" uid="uid://dnr83p3aukr5k" path="res://scenes/ui/account_ui/account_popup.tscn" id="3_6lj5o"]
+
+[node name="SocialsPage" type="Control" unique_id=1014053241]
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+script = ExtResource("1_xpe0s")
+
+[node name="PopupOverlay" type="ColorRect" parent="." unique_id=1809975560]
+unique_name_in_owner = true
+visible = false
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+color = Color(0, 0, 0, 0)
+
+[node name="VBoxContainer" type="VBoxContainer" parent="." unique_id=1534120824]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_constants/separation = 59
+
+[node name="Label" type="Label" parent="VBoxContainer" unique_id=567638419]
+layout_mode = 2
+size_flags_horizontal = 4
+size_flags_vertical = 0
+theme_override_font_sizes/font_size = 60
+text = "Socials Page"
+horizontal_alignment = 1
+vertical_alignment = 1
+
+[node name="FriendsList" type="GridContainer" parent="VBoxContainer" unique_id=614189068]
+unique_name_in_owner = true
+layout_mode = 2
+size_flags_horizontal = 4
+size_flags_vertical = 3
+theme_override_constants/h_separation = 150
+theme_override_constants/v_separation = 100
+columns = 2
+
+[node name="AddNewFriendButton" type="Button" parent="VBoxContainer" unique_id=1329945212]
+custom_minimum_size = Vector2(150, 50)
+layout_mode = 2
+size_flags_horizontal = 4
+text = "Add new friend"
+
+[node name="AddFriendsPopup" type="Panel" parent="." unique_id=87230070]
+unique_name_in_owner = true
+visible = false
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="VBoxContainer" type="VBoxContainer" parent="AddFriendsPopup" unique_id=902134731]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_top = 60.0
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_constants/separation = 54
+
+[node name="NameInput" type="TextEdit" parent="AddFriendsPopup/VBoxContainer" unique_id=103943258]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(0, 50)
+layout_mode = 2
+placeholder_text = "Input name"
+
+[node name="MarginContainer" type="MarginContainer" parent="AddFriendsPopup/VBoxContainer" unique_id=2072645836]
+layout_mode = 2
+size_flags_vertical = 3
+theme_override_constants/margin_left = 84
+
+[node name="SearchResults" type="GridContainer" parent="AddFriendsPopup/VBoxContainer/MarginContainer" unique_id=373064479]
+unique_name_in_owner = true
+layout_mode = 2
+size_flags_vertical = 3
+theme_override_constants/h_separation = 100
+theme_override_constants/v_separation = 124
+columns = 10
+
+[node name="AddFriendButton" type="Button" parent="AddFriendsPopup/VBoxContainer" unique_id=737783186]
+custom_minimum_size = Vector2(150, 50)
+layout_mode = 2
+size_flags_horizontal = 4
+text = "Add friend"
+
+[node name="DragHandleComponent" parent="AddFriendsPopup" unique_id=1004647022 instance=ExtResource("2_hfrco")]
+z_index = 4
+layout_mode = 0
+anchor_right = 0.0
+anchor_bottom = 0.0
+offset_right = 1152.0
+offset_bottom = 60.0
+grow_horizontal = 1
+grow_vertical = 1
+
+[node name="AccountPopup" parent="." unique_id=752328863 instance=ExtResource("3_6lj5o")]
+visible = false
+layout_mode = 1
+
+[connection signal="pressed" from="VBoxContainer/AddNewFriendButton" to="." method="_on_add_new_friend_button_pressed"]
+[connection signal="pressed" from="AddFriendsPopup/VBoxContainer/AddFriendButton" to="." method="_on_add_friend_button_pressed"]
+[connection signal="drag_ended" from="AddFriendsPopup/DragHandleComponent" to="." method="_on_drag_handle_component_drag_ended"]
+[connection signal="drag_started" from="AddFriendsPopup/DragHandleComponent" to="." method="_on_drag_handle_component_drag_started"]
+[connection signal="drag_updated" from="AddFriendsPopup/DragHandleComponent" to="." method="_on_drag_handle_component_drag_updated"]
