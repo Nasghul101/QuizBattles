@@ -4,21 +4,10 @@
 [ext_resource type="StyleBox" uid="uid://bprlsfswn38in" path="res://Styles/App_Background_Stylebox.tres" id="2_1t1qp"]
 [ext_resource type="FontFile" uid="uid://c8memnki1ydnd" path="res://assets/Font/exo/Exo-Bold.otf" id="2_mq2t8"]
 [ext_resource type="FontFile" uid="uid://p3ayy83ug584" path="res://assets/Font/exo/Exo-Black.otf" id="2_tsdpv"]
+[ext_resource type="Theme" uid="uid://cxninrmdvbey6" path="res://Styles/BasicTheme.tres" id="3_7tavt"]
 [ext_resource type="Texture2D" uid="uid://d0ghoc44v4qo" path="res://assets/ui/Grabber.png" id="3_tsdpv"]
 [ext_resource type="Shader" uid="uid://dtvwdbl5lb1q" path="res://shaders/predefined_outline_shader.gdshader" id="6_2xxdv"]
 [ext_resource type="Texture2D" uid="uid://pj7nlpjyhaax" path="res://assets/ui/PlayButton.png" id="7_7tavt"]
-
-[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_jlylp"]
-bg_color = Color(0.30980393, 0.2627451, 0.3137255, 1)
-border_width_left = 8
-border_width_top = 8
-border_width_right = 8
-border_width_bottom = 8
-border_color = Color(0.9843137, 0.8627451, 0.9529412, 1)
-corner_radius_top_left = 8
-corner_radius_top_right = 8
-corner_radius_bottom_right = 8
-corner_radius_bottom_left = 8
 
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_1t1qp"]
 bg_color = Color(0.9843137, 0.8627451, 0.9529412, 1)
@@ -76,6 +65,7 @@ theme_override_constants/separation = 88
 [node name="Headline" type="Label" parent="Panel/MarginContainer3/VBoxContainer" unique_id=1056105742]
 custom_minimum_size = Vector2(0, 100)
 layout_mode = 2
+theme = ExtResource("3_7tavt")
 theme_override_fonts/font = ExtResource("2_tsdpv")
 theme_override_font_sizes/font_size = 80
 text = "Game Setup"
@@ -85,7 +75,7 @@ vertical_alignment = 1
 [node name="Panel" type="Panel" parent="Panel/MarginContainer3/VBoxContainer" unique_id=1760725692]
 custom_minimum_size = Vector2(0, 100)
 layout_mode = 2
-theme_override_styles/panel = SubResource("StyleBoxFlat_jlylp")
+theme = ExtResource("3_7tavt")
 
 [node name="MarginContainer" type="MarginContainer" parent="Panel/MarginContainer3/VBoxContainer/Panel" unique_id=1075436900]
 layout_mode = 1
@@ -135,7 +125,7 @@ vertical_alignment = 1
 [node name="Panel2" type="Panel" parent="Panel/MarginContainer3/VBoxContainer" unique_id=1535146119]
 custom_minimum_size = Vector2(0, 100)
 layout_mode = 2
-theme_override_styles/panel = SubResource("StyleBoxFlat_jlylp")
+theme = ExtResource("3_7tavt")
 
 [node name="MarginContainer" type="MarginContainer" parent="Panel/MarginContainer3/VBoxContainer/Panel2" unique_id=1041888882]
 layout_mode = 1

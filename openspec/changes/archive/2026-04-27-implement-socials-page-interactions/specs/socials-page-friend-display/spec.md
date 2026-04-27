@@ -1,44 +1,16 @@
-# socials-page-friend-display Specification
+# socials-page-friend-display Specification Delta
 
-## Purpose
-TBD - created by archiving change add-friend-list-management. Update Purpose after archive.
-## Requirements
-### Requirement: Real-Time Friend List Update
-The socials page SHALL update the displayed friend list immediately when a new friendship is created while the page is open.
+## REMOVED Requirements
 
-**Cross-reference**: Listens to `global-signal-bus.notification_action_taken`.
+### Requirement: Display Friends on Page Load
+Replaced by "Display Friends with Statistics" to include win/loss records and category preferences.
 
-#### Scenario: Add friend while page is open
-**Given** user "alice" is signed in with friends ["bob"]  
-**And** the socials page is open displaying 1 avatar (bob)  
-**And** user "charlie" sends alice a friend request  
-**When** alice accepts the friend request via notification  
-**And** GlobalSignalBus.notification_action_taken emits with action "accept" and type "friend_request"  
-**Then** the FriendsList SHALL be cleared and repopulated  
-**And** 2 avatar components SHALL now be displayed (bob and charlie)  
-**And** charlie's avatar SHALL show their correct name and picture
-
-#### Scenario: Ignore non-friend-request notifications
-**Given** the socials page is open  
-**When** GlobalSignalBus.notification_action_taken emits with action_data.type "game_invite"  
-**Then** the FriendsList SHALL NOT be updated  
-**And** no repopulation SHALL occur
+### Requirement: Avatar Component Instantiation
+Replaced by friend_display_component usage with statistics display.
 
 ---
 
-### Requirement: Clear Friends List Before Repopulation
-The socials page SHALL clear all existing avatar components from FriendsList before repopulating to prevent duplicates.
-
-**Cross-reference**: Ensures clean state for `socials-page-friend-display`.
-
-#### Scenario: Clear existing avatars before refresh
-**Given** the FriendsList contains 3 avatar components  
-**When** `_populate_friends_list()` is called  
-**Then** all 3 existing avatar components SHALL be freed via queue_free()  
-**And** the FriendsList SHALL have 0 children before new avatars are added  
-**And** new avatar components SHALL be instantiated based on current friend data
-
----
+## ADDED Requirements
 
 ### Requirement: Display Friends with Statistics
 The socials page SHALL instantiate friend_display_component instances (not avatar_component) and populate them with player statistics including win/loss records and top 3 most-played categories.
@@ -162,4 +134,3 @@ The socials page SHALL use placeholder category statistics when a friend's categ
 **And** a comment SHALL note this is placeholder data
 
 ---
-

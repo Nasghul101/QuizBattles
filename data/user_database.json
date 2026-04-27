@@ -2,11 +2,11 @@
     "multiplayer_matches": [
         {
             "config": {
-                "questions": 5,
-                "rounds": 3
+                "questions": 5.0,
+                "rounds": 3.0
             },
             "created_at": 1776348304.875,
-            "current_round": 1,
+            "current_round": 1.0,
             "current_turn": "robin",
             "dismissed_by": [],
             "inviter": "robin",
@@ -30,7 +30,7 @@
                         }
                     },
                     "questions": [],
-                    "round_number": 1
+                    "round_number": 1.0
                 },
                 {
                     "category": "",
@@ -46,7 +46,7 @@
                         }
                     },
                     "questions": [],
-                    "round_number": 2
+                    "round_number": 2.0
                 },
                 {
                     "category": "",
@@ -62,7 +62,7 @@
                         }
                     },
                     "questions": [],
-                    "round_number": 3
+                    "round_number": 3.0
                 }
             ],
             "stats_processed": false,
@@ -72,6 +72,9 @@
     "users": {
         "linus": {
             "avatar_path": "res://assets/profile_pictures/man_standard.png",
+            "category_stats": {
+
+            },
             "current_streak": 0.0,
             "email": "l@test.de",
             "friend_wins": {
@@ -88,6 +91,9 @@
         },
         "merlin": {
             "avatar_path": "res://assets/profile_pictures/man_standard.png",
+            "category_stats": {
+
+            },
             "current_streak": 0.0,
             "email": "m@test.de",
             "friend_wins": {
@@ -102,6 +108,9 @@
         },
         "robin": {
             "avatar_path": "res://assets/profile_pictures/man_suit.png",
+            "category_stats": {
+
+            },
             "current_streak": 1.0,
             "email": "r@test.de",
             "friend_wins": {
@@ -119,6 +128,9 @@
         },
         "tobias": {
             "avatar_path": "res://assets/profile_pictures/man_beard.png",
+            "category_stats": {
+
+            },
             "current_streak": 0.0,
             "email": "tobi@test.de",
             "friend_wins": {
@@ -132,8 +144,8 @@
                 {
                     "action_data": {
                         "inviter_id": "robin",
-                        "questions": 5,
-                        "rounds": 3,
+                        "questions": 5.0,
+                        "rounds": 3.0,
                         "type": "game_invite"
                     },
                     "has_actions": true,

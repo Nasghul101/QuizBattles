@@ -1,18 +1,25 @@
 [gd_scene format=3 uid="uid://c8xykm15dq8kc"]
 
-[ext_resource type="Shader" uid="uid://dtvwdbl5lb1q" path="res://shaders/predefined_outline_shader.gdshader" id="1_6lj5o"]
+[ext_resource type="Script" uid="uid://bv8ekus16f4oy" path="res://scenes/ui/lobby_pages/socials_page.gd" id="1_6rgj1"]
 [ext_resource type="Texture2D" uid="uid://cgybwrud0436v" path="res://assets/ui/SocialScreen_BG.png" id="1_xpe0s"]
-[ext_resource type="PackedScene" uid="uid://c7l31g3fc4kr8" path="res://scenes/ui/components/friend_display_component.tscn" id="3_6lj5o"]
+[ext_resource type="StyleBox" uid="uid://bprlsfswn38in" path="res://Styles/App_Background_Stylebox.tres" id="2_rx60n"]
+[ext_resource type="Texture2D" uid="uid://bmem6ia1yawim" path="res://assets/ui/SozialScreen_NewFriendButton.png" id="4_6rgj1"]
+[ext_resource type="Texture2D" uid="uid://c7iksc2clc1a5" path="res://assets/ui/SocialScreen_BG_BorderOnly.png" id="5_p37ba"]
+[ext_resource type="Texture2D" uid="uid://bwiby0r7dcp7d" path="res://assets/icon_wrong.png" id="6_npdnn"]
+[ext_resource type="Theme" uid="uid://cxninrmdvbey6" path="res://Styles/BasicTheme.tres" id="7_5n5qj"]
+[ext_resource type="Texture2D" uid="uid://blen8fg2q6x2c" path="res://assets/icons8-share-144.png" id="7_rx60n"]
 
-[sub_resource type="ShaderMaterial" id="ShaderMaterial_6rgj1"]
-shader = ExtResource("1_6lj5o")
-shader_parameter/outline_color = Color(1, 1, 1, 1)
-shader_parameter/outline_threshold = 0.2
-shader_parameter/enable_pulsating = false
-shader_parameter/pulsating_color = Color(0, 1, 1, 1)
-shader_parameter/pulsating_size = 1.0
-shader_parameter/pulsating_speed = 1.0
-shader_parameter/pulsating_clockwise = false
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_npdnn"]
+bg_color = Color(0.30980393, 0.2627451, 0.3137255, 1)
+border_width_left = 10
+border_width_top = 10
+border_width_right = 10
+border_width_bottom = 10
+border_color = Color(0.9843137, 0.8627451, 0.9529412, 1)
+corner_radius_top_left = 40
+corner_radius_top_right = 40
+corner_radius_bottom_right = 40
+corner_radius_bottom_left = 40
 
 [node name="SocialsPage" type="Control" unique_id=1992299022]
 layout_mode = 3
@@ -21,11 +28,21 @@ anchor_right = 1.0
 anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
+script = ExtResource("1_6rgj1")
 
-[node name="TextureRect" type="TextureRect" parent="." unique_id=849032615]
+[node name="Panel" type="Panel" parent="." unique_id=1799415717]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_styles/panel = ExtResource("2_rx60n")
+
+[node name="BGTexture" type="TextureRect" parent="." unique_id=849032615]
+unique_name_in_owner = true
 self_modulate = Color(0.19215687, 0, 0.24313726, 1)
 clip_children = 2
-material = SubResource("ShaderMaterial_6rgj1")
 layout_mode = 1
 anchors_preset = 15
 anchor_right = 1.0
@@ -36,7 +53,7 @@ texture = ExtResource("1_xpe0s")
 expand_mode = 5
 stretch_mode = 5
 
-[node name="ScrollContainer" type="ScrollContainer" parent="TextureRect" unique_id=2104392725]
+[node name="ScrollContainer" type="ScrollContainer" parent="BGTexture" unique_id=2104392725]
 layout_mode = 1
 anchors_preset = -1
 anchor_top = 0.13223787
@@ -44,32 +61,141 @@ anchor_right = 1.0
 anchor_bottom = 0.86776215
 grow_horizontal = 2
 grow_vertical = 2
+theme = ExtResource("7_5n5qj")
 metadata/_edit_use_anchors_ = true
 
-[node name="VBoxContainer" type="VBoxContainer" parent="TextureRect/ScrollContainer" unique_id=1528463651]
+[node name="FriendDisplayContainer" type="VBoxContainer" parent="BGTexture/ScrollContainer" unique_id=1528463651]
+unique_name_in_owner = true
 layout_mode = 2
 size_flags_horizontal = 3
 size_flags_vertical = 3
 theme_override_constants/separation = -113
 metadata/_edit_use_anchors_ = true
 
-[node name="FriendDisplayComponent" parent="TextureRect/ScrollContainer/VBoxContainer" unique_id=1413633874 instance=ExtResource("3_6lj5o")]
+[node name="AddNewFriendsButton" type="TextureButton" parent="BGTexture/ScrollContainer/FriendDisplayContainer" unique_id=193793223]
+custom_minimum_size = Vector2(0, 446.375)
 layout_mode = 2
+size_flags_vertical = 10
+texture_normal = ExtResource("4_6rgj1")
+stretch_mode = 4
 
-[node name="FriendDisplayComponent2" parent="TextureRect/ScrollContainer/VBoxContainer" unique_id=1121015991 instance=ExtResource("3_6lj5o")]
-layout_mode = 2
+[node name="BGOutline" type="TextureRect" parent="BGTexture" unique_id=1992923695]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+mouse_filter = 2
+texture = ExtResource("5_p37ba")
+expand_mode = 5
+stretch_mode = 5
 
-[node name="FriendDisplayComponent3" parent="TextureRect/ScrollContainer/VBoxContainer" unique_id=1959285000 instance=ExtResource("3_6lj5o")]
-layout_mode = 2
+[node name="AddFriendsPopup" type="MarginContainer" parent="." unique_id=1931475607]
+unique_name_in_owner = true
+visible = false
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_constants/margin_left = 120
+theme_override_constants/margin_top = 500
+theme_override_constants/margin_right = 120
+theme_override_constants/margin_bottom = 500
 
-[node name="FriendDisplayComponent4" parent="TextureRect/ScrollContainer/VBoxContainer" unique_id=389221748 instance=ExtResource("3_6lj5o")]
+[node name="Background" type="Panel" parent="AddFriendsPopup" unique_id=1361208122]
 layout_mode = 2
+theme = ExtResource("7_5n5qj")
+theme_override_styles/panel = SubResource("StyleBoxFlat_npdnn")
+metadata/_edit_use_anchors_ = true
 
-[node name="FriendDisplayComponent6" parent="TextureRect/ScrollContainer/VBoxContainer" unique_id=122703240 instance=ExtResource("3_6lj5o")]
-layout_mode = 2
+[node name="MarginContainer" type="MarginContainer" parent="AddFriendsPopup/Background" unique_id=938900351]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+size_flags_vertical = 3
+theme_override_constants/margin_left = 45
+theme_override_constants/margin_top = 50
+theme_override_constants/margin_right = 45
+theme_override_constants/margin_bottom = 50
 
-[node name="FriendDisplayComponent7" parent="TextureRect/ScrollContainer/VBoxContainer" unique_id=1315171459 instance=ExtResource("3_6lj5o")]
+[node name="VBoxContainer" type="VBoxContainer" parent="AddFriendsPopup/Background/MarginContainer" unique_id=385067035]
 layout_mode = 2
+theme_override_constants/separation = 33
 
-[node name="FriendDisplayComponent8" parent="TextureRect/ScrollContainer/VBoxContainer" unique_id=1407782890 instance=ExtResource("3_6lj5o")]
+[node name="HBoxContainer2" type="HBoxContainer" parent="AddFriendsPopup/Background/MarginContainer/VBoxContainer" unique_id=645687455]
 layout_mode = 2
+theme_override_constants/separation = 114
+alignment = 2
+
+[node name="Header" type="Label" parent="AddFriendsPopup/Background/MarginContainer/VBoxContainer/HBoxContainer2" unique_id=668620643]
+layout_mode = 2
+size_flags_horizontal = 4
+theme = ExtResource("7_5n5qj")
+theme_override_font_sizes/font_size = 60
+text = "Add new friend"
+horizontal_alignment = 1
+vertical_alignment = 1
+
+[node name="BackButton" type="Button" parent="AddFriendsPopup/Background/MarginContainer/VBoxContainer/HBoxContainer2" unique_id=1166689970]
+layout_mode = 2
+theme = ExtResource("7_5n5qj")
+icon = ExtResource("6_npdnn")
+
+[node name="NameInput" type="TextEdit" parent="AddFriendsPopup/Background/MarginContainer/VBoxContainer" unique_id=663383509]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(0, 70)
+layout_mode = 2
+theme = ExtResource("7_5n5qj")
+placeholder_text = "Input name"
+
+[node name="Panel" type="Panel" parent="AddFriendsPopup/Background/MarginContainer/VBoxContainer" unique_id=1141816307]
+layout_mode = 2
+size_flags_vertical = 3
+theme = ExtResource("7_5n5qj")
+
+[node name="ScrollContainer" type="ScrollContainer" parent="AddFriendsPopup/Background/MarginContainer/VBoxContainer/Panel" unique_id=1858221402]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+theme = ExtResource("7_5n5qj")
+
+[node name="FriendsContainer" type="VBoxContainer" parent="AddFriendsPopup/Background/MarginContainer/VBoxContainer/Panel/ScrollContainer" unique_id=367796185]
+unique_name_in_owner = true
+layout_mode = 2
+size_flags_horizontal = 3
+size_flags_vertical = 3
+theme_override_constants/separation = -6
+
+[node name="HBoxContainer" type="HBoxContainer" parent="AddFriendsPopup/Background/MarginContainer/VBoxContainer" unique_id=379157860]
+layout_mode = 2
+theme_override_constants/separation = 68
+alignment = 2
+
+[node name="SendFriendRequestButton" type="Button" parent="AddFriendsPopup/Background/MarginContainer/VBoxContainer/HBoxContainer" unique_id=1514516218]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(400, 150)
+layout_mode = 2
+size_flags_vertical = 4
+theme = ExtResource("7_5n5qj")
+text = "Send friend request"
+
+[node name="ShareButton" type="Button" parent="AddFriendsPopup/Background/MarginContainer/VBoxContainer/HBoxContainer" unique_id=2067300042]
+layout_mode = 2
+size_flags_horizontal = 8
+theme = ExtResource("7_5n5qj")
+icon = ExtResource("7_rx60n")
+icon_alignment = 1
+
+[connection signal="pressed" from="BGTexture/ScrollContainer/FriendDisplayContainer/AddNewFriendsButton" to="." method="_on_add_new_friends_button_pressed"]
+[connection signal="pressed" from="AddFriendsPopup/Background/MarginContainer/VBoxContainer/HBoxContainer2/BackButton" to="." method="_on_back_button_pressed"]
+[connection signal="pressed" from="AddFriendsPopup/Background/MarginContainer/VBoxContainer/HBoxContainer/SendFriendRequestButton" to="." method="_on_send_friend_request_button_pressed"]
+[connection signal="pressed" from="AddFriendsPopup/Background/MarginContainer/VBoxContainer/HBoxContainer/ShareButton" to="." method="_on_share_button_pressed"]

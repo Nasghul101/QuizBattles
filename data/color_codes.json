@@ -16,9 +16,9 @@
         "Vehicles": null
     },
     "miscellaneous": {
-        "Right answer": "#1F6E0D",
-        "Wrong answer": "#600C10",
-        "Notification": "#D6B100",
+        "Right answer": "#00B83A",
+        "Wrong answer": "#CC1811",
+        "Notification": "#17D7FF",
         "App background": "#25002B",
         "App gray": "#4F4350",
         "App foreground": "#31003E",

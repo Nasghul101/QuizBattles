@@ -44,7 +44,7 @@ func navigate_to_scene(scene_key: String, fallback_key: String = "") -> void:
 ##   - "miscellaneous": Dictionary mapping color names to hex color strings
 ##
 ## Example usage:
-##   var colors = Utils.get_color_codes()
+##   var colors: Dictionary = Utils.get_color_codes()
 ##   var bg_color = Color(colors["miscellaneous"]["App background"])
 ##   var science_color = Color(colors["category_colors"]["Science"])
 func get_color_codes() -> Dictionary:

@@ -1,0 +1,16 @@
+[gd_scene load_steps=2 format=3 uid="uid://dmurbnqcwds2c"]
+
+[ext_resource type="Theme" uid="uid://cxninrmdvbey6" path="res://Styles/BasicTheme.tres" id="1_2aol4"]
+[ext_resource type="Script" path="res://scenes/ui/components/name_display_button.gd" id="2_script"]
+
+[node name="NameDisplayButton" type="Button" unique_id=61103892]
+script = ExtResource("2_script")
+custom_minimum_size = Vector2(0, 120)
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+theme = ExtResource("1_2aol4")
+theme_override_font_sizes/font_size = 40
+text = "Name displays here"

@@ -7,8 +7,8 @@
 [ext_resource type="PackedScene" uid="uid://db55cjof2f4uv" path="res://scenes/ui/lobby_pages/duel_page.tscn" id="3_1l6go"]
 [ext_resource type="FontFile" uid="uid://c8memnki1ydnd" path="res://assets/Font/exo/Exo-Bold.otf" id="3_wn6oh"]
 [ext_resource type="PackedScene" uid="uid://cxkr8w47uveic" path="res://scenes/ui/lobby_pages/friendly_battle_page.tscn" id="4_4wv0w"]
-[ext_resource type="PackedScene" uid="uid://crnu6goxc6w28" path="res://scenes/ui/test_ui/socials_page_depricated.tscn" id="5_6xylg"]
 [ext_resource type="Texture2D" uid="uid://bwiby0r7dcp7d" path="res://assets/icon_wrong.png" id="7_6xylg"]
+[ext_resource type="PackedScene" uid="uid://c8xykm15dq8kc" path="res://scenes/ui/lobby_pages/socials_page.tscn" id="8_wn6oh"]
 
 [node name="MainLobbyScreen" type="Control" unique_id=873557019]
 layout_mode = 3
@@ -102,7 +102,7 @@ size_flags_horizontal = 3
 layout_mode = 2
 size_flags_horizontal = 3
 
-[node name="SocialsPage" parent="VBoxContainer/PageClipContainer/PagesContainer" unique_id=70997977 instance=ExtResource("5_6xylg")]
+[node name="SocialsPage" parent="VBoxContainer/PageClipContainer/PagesContainer" unique_id=1992299022 instance=ExtResource("8_wn6oh")]
 layout_mode = 2
 size_flags_horizontal = 3
 

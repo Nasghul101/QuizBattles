@@ -205,7 +205,8 @@ func create_user(username: String, password: String, email: String) -> Dictionar
         "wins": 0,
         "losses": 0,
         "current_streak": 0,
-        "friend_wins": {}
+        "friend_wins": {},
+        "category_stats": {}
     }
     _users[username] = user_data
     _save_database()
@@ -370,7 +371,8 @@ func get_user_data_for_display(username: String) -> Dictionary:
         "wins": user_data.get("wins", 0),
         "losses": user_data.get("losses", 0),
         "current_streak": user_data.get("current_streak", 0),
-        "friend_wins": user_data.get("friend_wins", {})
+        "friend_wins": user_data.get("friend_wins", {}),
+        "category_stats": user_data.get("category_stats", {})
     }
 
 
@@ -1129,8 +1131,8 @@ func _load_database() -> void:
 
 ## Migrate existing user data to include new fields.
 ##
-## Adds wins, losses, current_streak, friend_wins fields with default values to existing users
-## that don't have these fields. Ensures backward compatibility.
+## Adds wins, losses, current_streak, friend_wins, category_stats fields with default values 
+## to existing users that don't have these fields. Ensures backward compatibility.
 func _migrate_user_data() -> void:
     var migrated_count: int = 0
     
@@ -1158,6 +1160,12 @@ func _migrate_user_data() -> void:
             user_data.friend_wins = {}
             needs_migration = true
         
+        # Add category_stats field if missing
+        # TODO: Replace placeholder data with real category tracking from gameplay_screen match completion
+        if not user_data.has("category_stats"):
+            user_data.category_stats = {}
+            needs_migration = true
+        
         if needs_migration:
             migrated_count += 1
     
@@ -1165,3 +1173,28 @@ func _migrate_user_data() -> void:
     if migrated_count > 0:
         _save_database()
         print("Migrated %d users to include statistics fields" % migrated_count)
+
+
+## Generate placeholder category statistics for testing.
+##
+## TODO: Replace with real category tracking from gameplay_screen match completion.
+## This function generates random play counts for 3 random categories to allow UI testing
+## before real gameplay tracking is implemented.
+##
+## @return Dictionary mapping category names to play counts (1-20)
+func _generate_placeholder_category_stats() -> Dictionary:
+    # TODO: Replace with real category tracking from gameplay_screen match completion
+    var categories: Array[String] = ["General Knowledge", "Entertainment", "Science", "History", "Geography", "Sports"]
+    var stats: Dictionary = {}
+    
+    # Pick 3 random categories with random play counts
+    var selected_categories: Array[String] = categories.duplicate()
+    selected_categories.shuffle()
+    
+    for i in range(3):
+        if i < selected_categories.size():
+            var category: String = selected_categories[i]
+            stats[category] = randi() % 20 + 1  # Random count 1-20
+    
+    return stats
+
