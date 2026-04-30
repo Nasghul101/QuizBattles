@@ -1,33 +1,6 @@
-# friendly-battle-page Specification
+# friendly-battle-page Spec Delta
 
-## Purpose
-The friendly_battle_page displays all active multiplayer matches for the current user, providing quick access to ongoing quiz duels with turn status indicators.
-## Requirements
-### Requirement: Refresh Match List on Visibility Change
-The friendly_battle_page SHALL reload active matches when the page becomes visible.
-
-**Rationale:** Ensure turn status labels update after players complete rounds in gameplay_screen.
-
-#### Scenario: Update turn labels after returning from gameplay
-**Given** Player A views friendly_battle_page with label "Your Turn"  
-**When** Player A plays their turn and returns to friendly_battle_page  
-**Then** the match list is reloaded  
-**And** the label updates to "[Opponent] Turn"
-
----
-
-### Requirement: Handle Signed-Out State
-The friendly_battle_page SHALL show no matches when user is not signed in.
-
-**Rationale:** Prevent errors and maintain consistent behavior with other authenticated features.
-
-#### Scenario: Clear matches when not signed in
-**Given** the user is not signed in  
-**When** friendly_battle_page loads  
-**Then** no avatar_components are displayed  
-**And** no database queries are attempted
-
----
+## ADDED Requirements
 
 ### Requirement: Display Active Multiplayer Matches with Friendly Duel Buttons
 The friendly_battle_page SHALL display friendly_duel_button_l and friendly_duel_button_r instances (alternating) for each active multiplayer match involving the current user.
@@ -154,3 +127,33 @@ Each friendly_duel_button SHALL use highlight() when it's the player's turn and 
 
 ---
 
+## REMOVED Requirements
+
+### Requirement: Display All Multiplayer Matches (Active and Finished)
+**Reason**: Page now filters to show only active matches. Finished matches are hidden to reduce clutter and focus on matches requiring player action.
+
+### Requirement: Display Opponent Information in Avatar
+**Reason**: Replaced by new friendly_duel_button requirements. Opponent information is now displayed via set_opponent_name() instead of set_avatar_picture().
+
+### Requirement: Display Turn Status or Game Finished Label
+**Reason**: Turn status is now indicated via highlight/unhighlight functions instead of text labels. Finished matches are no longer displayed on this page.
+
+### Requirement: Navigate to Gameplay Screen with Match Context
+**Reason**: Still supported but implementation changed from avatar_clicked signal to button.pressed signal with bound match_id.
+
+---
+
+## Notes
+
+### Implementation Details
+- Use `FRIENDLY_DUEL_BUTTON_L` and `FRIENDLY_DUEL_BUTTON_R` preloaded constants
+- Alternate buttons using modulo logic: `match_index % 2 == 0` → left, else → right
+- Score calculation iterates through `match.rounds_data[i].player_answers[username].results` array
+- Connect `button.pressed` signal with match_id bound via `.bind(match.match_id)`
+- Clear both `friend_list_l` and `friend_list_r` containers at the start of `_populate_active_matches()`
+
+### Backward Compatibility
+- Removes dependency on avatar_component for match display
+- Maintains compatibility with existing UserDatabase match structure
+- Navigation to gameplay_screen unchanged (still uses match_id parameter)
+- _on_match_created signal handler unchanged (still refreshes match list)

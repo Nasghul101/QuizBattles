@@ -2,16 +2,16 @@
 
 importer="texture"
 type="CompressedTexture2D"
-uid="uid://omk045c08p1x"
-path="res://.godot/imported/FriendlyDuel_Button.png-71d369ea98ae3a80cf02956fbbcaad7d.ctex"
+uid="uid://xl2n61p5urqs"
+path="res://.godot/imported/FriendlyDuel_Button_Highlighted_R.png-6c9787cfd9ecd49516dc3945e8e47418.ctex"
 metadata={
 "vram_texture": false
 }
 
 [deps]
 
-source_file="res://assets/ui/FriendlyDuel_Button.png"
-dest_files=["res://.godot/imported/FriendlyDuel_Button.png-71d369ea98ae3a80cf02956fbbcaad7d.ctex"]
+source_file="res://assets/ui/FriendlyDuel_Button_Highlighted_R.png"
+dest_files=["res://.godot/imported/FriendlyDuel_Button_Highlighted_R.png-6c9787cfd9ecd49516dc3945e8e47418.ctex"]
 
 [params]
 

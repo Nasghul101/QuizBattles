@@ -1,0 +1,136 @@
+[gd_scene format=3 uid="uid://bhctmag7xjst8"]
+
+[ext_resource type="Texture2D" uid="uid://bh30u66tqy4bw" path="res://assets/ui/FriendlyDuel_Button_R.png" id="1_nu1gk"]
+[ext_resource type="Script" uid="uid://264or4hvbnj7" path="res://scenes/ui/components/friendly_duel_button.gd" id="2_mngjo"]
+[ext_resource type="Texture2D" uid="uid://xl2n61p5urqs" path="res://assets/ui/FriendlyDuel_Button_Highlighted_R.png" id="3_nu1gk"]
+[ext_resource type="Theme" uid="uid://cxninrmdvbey6" path="res://Styles/BasicTheme.tres" id="4_odbbl"]
+[ext_resource type="Script" uid="uid://bttgnk3bb2a8i" path="res://addons/font_auto_size_labels/auto_size_label.gd" id="5_ruaml"]
+
+[node name="FriendlyDuelButton_R" type="TextureButton" unique_id=583814323]
+custom_minimum_size = Vector2(0, 400)
+anchors_preset = -1
+anchor_right = 1.0
+anchor_bottom = 0.28090766
+grow_horizontal = 2
+grow_vertical = 2
+size_flags_horizontal = 3
+texture_normal = ExtResource("1_nu1gk")
+ignore_texture_size = true
+stretch_mode = 4
+script = ExtResource("2_mngjo")
+
+[node name="HighlightTexture" type="TextureRect" parent="." unique_id=1057637957]
+unique_name_in_owner = true
+visible = false
+layout_mode = 1
+anchors_preset = -1
+anchor_left = -0.09769635
+anchor_top = -0.14585795
+anchor_right = 1.0996964
+anchor_bottom = 1.1742258
+grow_horizontal = 2
+grow_vertical = 2
+texture = ExtResource("3_nu1gk")
+expand_mode = 1
+stretch_mode = 4
+metadata/_edit_use_anchors_ = true
+
+[node name="PlayerPoints" type="Label" parent="." unique_id=1800585279]
+unique_name_in_owner = true
+layout_mode = 1
+anchors_preset = -1
+anchor_top = 0.15
+anchor_right = 0.2086514
+anchor_bottom = 0.8
+grow_horizontal = 2
+grow_vertical = 2
+theme = ExtResource("4_odbbl")
+theme_override_font_sizes/font_size = 50
+text = "4"
+horizontal_alignment = 1
+vertical_alignment = 1
+
+[node name="OpponentPoints" type="Label" parent="." unique_id=620843543]
+unique_name_in_owner = true
+layout_mode = 1
+anchors_preset = -1
+anchor_left = 0.7989822
+anchor_top = 0.15
+anchor_right = 1.0
+anchor_bottom = 0.8
+grow_horizontal = 2
+grow_vertical = 2
+theme = ExtResource("4_odbbl")
+theme_override_font_sizes/font_size = 50
+text = "4"
+horizontal_alignment = 1
+vertical_alignment = 1
+
+[node name="HBoxContainer" type="VBoxContainer" parent="." unique_id=988863643]
+layout_mode = 1
+anchors_preset = -1
+anchor_left = 0.20695505
+anchor_right = 0.79728585
+anchor_bottom = 0.8616011
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_constants/separation = -36
+
+[node name="VersusLabel" type="Label" parent="HBoxContainer" unique_id=168818720]
+custom_minimum_size = Vector2(10, 10)
+layout_mode = 2
+size_flags_horizontal = 3
+size_flags_vertical = 3
+theme = ExtResource("4_odbbl")
+theme_override_font_sizes/font_size = 40
+text = "vs."
+horizontal_alignment = 1
+vertical_alignment = 1
+autowrap_mode = 3
+clip_text = true
+script = ExtResource("5_ruaml")
+_max_size = 40
+_outline_ratio = 0.0
+_current_font_size = 40
+_editor_defaults_set = true
+metadata/_custom_type_script = "uid://bttgnk3bb2a8i"
+metadata/_edit_use_anchors_ = true
+
+[node name="OpponentName" type="Label" parent="HBoxContainer" unique_id=538173356]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(10, 10)
+layout_mode = 2
+size_flags_vertical = 3
+theme = ExtResource("4_odbbl")
+theme_override_font_sizes/font_size = 64
+text = "Opponent"
+horizontal_alignment = 1
+autowrap_mode = 3
+clip_text = true
+script = ExtResource("5_ruaml")
+_outline_ratio = 0.0
+_current_font_size = 64
+_editor_defaults_set = true
+metadata/_custom_type_script = "uid://bttgnk3bb2a8i"
+metadata/_edit_use_anchors_ = true
+
+[node name="RoundLabel" type="Label" parent="HBoxContainer" unique_id=1510414761]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(10, 10)
+layout_mode = 2
+size_flags_horizontal = 3
+size_flags_vertical = 3
+theme = ExtResource("4_odbbl")
+theme_override_font_sizes/font_size = 50
+text = "Round: "
+horizontal_alignment = 1
+vertical_alignment = 1
+autowrap_mode = 3
+clip_text = true
+script = ExtResource("5_ruaml")
+_max_size = 50
+_outline_ratio = 0.0
+_current_font_size = 50
+_editor_defaults_set = true
+metadata/_custom_type_script = "uid://bttgnk3bb2a8i"
+metadata/_edit_use_anchors_ = true

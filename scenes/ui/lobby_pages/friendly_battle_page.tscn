@@ -1,8 +1,9 @@
-[gd_scene load_steps=2 format=3 uid="uid://cxkr8w47uveic"]
+[gd_scene format=3 uid="uid://cxkr8w47uveic"]
 
 [ext_resource type="Script" uid="uid://qyyp7e5iwkwd" path="res://scenes/ui/lobby_pages/friendly_battle_page.gd" id="1_d28o3"]
+[ext_resource type="Theme" uid="uid://cxninrmdvbey6" path="res://Styles/BasicTheme.tres" id="2_kqnbk"]
 
-[node name="FriendlyBattlePage" type="Control"]
+[node name="FriendlyBattlePage" type="Control" unique_id=1302723933]
 layout_mode = 3
 anchors_preset = 15
 anchor_right = 1.0
@@ -11,31 +12,34 @@ grow_horizontal = 2
 grow_vertical = 2
 script = ExtResource("1_d28o3")
 
-[node name="VBoxContainer" type="VBoxContainer" parent="."]
+[node name="ScrollContainer" type="ScrollContainer" parent="." unique_id=205047650]
 layout_mode = 1
 anchors_preset = 15
 anchor_right = 1.0
 anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
+theme = ExtResource("2_kqnbk")
 
-[node name="Label" type="Label" parent="VBoxContainer"]
+[node name="FriendslistContainer" type="HBoxContainer" parent="ScrollContainer" unique_id=285236347]
 layout_mode = 2
-theme_override_font_sizes/font_size = 60
-text = "Friendly Battles"
-horizontal_alignment = 1
-vertical_alignment = 1
+size_flags_horizontal = 3
+size_flags_vertical = 3
+theme_override_constants/separation = 57
 
-[node name="FriendsList" type="GridContainer" parent="VBoxContainer"]
+[node name="FriendsListL" type="VBoxContainer" parent="ScrollContainer/FriendslistContainer" unique_id=246517394]
 unique_name_in_owner = true
 layout_mode = 2
-size_flags_horizontal = 4
+size_flags_horizontal = 3
 size_flags_vertical = 3
-theme_override_constants/h_separation = 150
-theme_override_constants/v_separation = 100
-columns = 2
 
-[node name="NoMatchesLabel" type="Label" parent="."]
+[node name="FriendsListR" type="VBoxContainer" parent="ScrollContainer/FriendslistContainer" unique_id=1294210755]
+unique_name_in_owner = true
+layout_mode = 2
+size_flags_horizontal = 3
+size_flags_vertical = 3
+
+[node name="NoMatchesLabel" type="Label" parent="." unique_id=1861689695]
 unique_name_in_owner = true
 layout_mode = 1
 anchors_preset = 8
@@ -49,7 +53,8 @@ offset_right = 200.0
 offset_bottom = 50.0
 grow_horizontal = 2
 grow_vertical = 2
-theme_override_font_sizes/font_size = 32
+theme = ExtResource("2_kqnbk")
+theme_override_font_sizes/font_size = 36
 text = "No active matches
 Invite friends to start playing!"
 horizontal_alignment = 1

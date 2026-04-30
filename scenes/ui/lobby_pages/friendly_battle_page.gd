@@ -1,8 +1,10 @@
 extends Control
 
-const AVATAR_COMPONENT = preload("res://scenes/ui/components/avatar_component.tscn")
+const FRIENDLY_DUEL_BUTTON_L = preload("res://scenes/ui/components/friendly_duel_button_l.tscn")
+const FRIENDLY_DUEL_BUTTON_R = preload("res://scenes/ui/components/friendly_duel_button_r.tscn")
 
-@onready var friend_list: GridContainer = %FriendsList
+@onready var friend_list_l : VBoxContainer = %FriendsListL
+@onready var friend_list_r : VBoxContainer = %FriendsListR
 
 
 func _ready() -> void:
@@ -18,14 +20,17 @@ func _notification(what: int) -> void:
             _populate_active_matches()
 
 
-## Populate friend_list with avatar_components for active multiplayer matches
+## Populate friend lists with friendly_duel_button components for active multiplayer matches
+## Buttons alternate between left (friend_list_l) and right (friend_list_r) containers
 func _populate_active_matches() -> void:
     # Return early if nodes aren't ready yet
-    if not is_node_ready() or friend_list == null:
+    if not is_node_ready() or friend_list_l == null or friend_list_r == null:
         return
     
     # Clear existing children
-    for child in friend_list.get_children():
+    for child in friend_list_l.get_children():
+        child.queue_free()
+    for child in friend_list_r.get_children():
         child.queue_free()
     
     # Return early if user is not signed in
@@ -37,11 +42,12 @@ func _populate_active_matches() -> void:
         UserDatabase.current_user.username
     )
     
-    # Filter out matches that current user has dismissed
+    # Filter out matches that current user has dismissed and finished matches
     var matches: Array = []
     for match in all_matches:
         var dismissed_by = match.get("dismissed_by", [])
-        if UserDatabase.current_user.username not in dismissed_by:
+        var is_finished = match.get("status") == "finished"
+        if UserDatabase.current_user.username not in dismissed_by and not is_finished:
             matches.append(match)
     
     # Show/hide empty state message if it exists
@@ -49,35 +55,56 @@ func _populate_active_matches() -> void:
     if no_matches_label:
         no_matches_label.visible = matches.is_empty()
     
-    # Create avatar_component for each match
+    # Create buttons for each match, alternating between left and right
+    var match_index = 0
     for match in matches:
         var opponent_username = _get_opponent_username(match)
-        var opponent_data = UserDatabase.get_user_data_for_display(opponent_username)
         
-        if opponent_data.is_empty():
-            continue  # Skip if opponent data not found
+        # Determine target container and button scene
+        var target_list = friend_list_l if match_index % 2 == 0 else friend_list_r
+        var button_scene = FRIENDLY_DUEL_BUTTON_L if match_index % 2 == 0 else FRIENDLY_DUEL_BUTTON_R
         
-        var avatar: Button = AVATAR_COMPONENT.instantiate()
-        friend_list.add_child(avatar)
+        # Instantiate and add button
+        var button = button_scene.instantiate()
+        target_list.add_child(button)
         
-        # Set avatar picture to opponent's profile
-        avatar.set_avatar_picture(opponent_data.avatar_path)
+        # Calculate scores
+        var player_score = _calculate_player_score(match, UserDatabase.current_user.username)
+        var opponent_score = _calculate_player_score(match, opponent_username)
         
-        # Set match ID for navigation context
-        avatar.set_match_id(match.match_id)
+        # Set button properties
+        button.set_player_points(player_score)
+        button.set_opponents_points(opponent_score)
+        button.set_round_count(match.current_round)
+        button.set_opponent_name(opponent_username)
         
-        # Set turn status label
-        var label_text = ""
-        if match.status == "finished":
-            label_text = "Game Finished"
-        elif match.current_turn == UserDatabase.current_user.username:
-            label_text = "Your Turn"
+        # Set highlight based on turn
+        if match.current_turn == UserDatabase.current_user.username:
+            button.highlight()
         else:
-            label_text = "%s Turn" % opponent_username
-        avatar.set_avatar_name(label_text)
+            button.un_highlight()
         
-        # Connect click signal
-        avatar.avatar_clicked.connect(_on_avatar_clicked)
+        # Connect button pressed signal
+        button.pressed.connect(_on_button_pressed.bind(match.match_id))
+        
+        match_index += 1
+
+
+## Calculate cumulative score for a player across all rounds
+##
+## @param match: Match Dictionary containing rounds_data
+## @param username: Player's username to calculate score for
+## @return int: Total number of correct answers across all rounds
+func _calculate_player_score(match: Dictionary, username: String) -> int:
+    var score = 0
+    for round_data in match.rounds_data:
+        if round_data.player_answers.has(username):
+            var player_answer = round_data.player_answers[username]
+            if player_answer.answered:
+                for result in player_answer.results:
+                    if result.was_correct:
+                        score += 1
+    return score
 
 
 ## Get opponent's username from match data
@@ -105,10 +132,10 @@ func _on_match_created(_match_id: String, player1: String, player2: String) -> v
             _populate_active_matches()
 
 
-## Handle avatar click to navigate to gameplay screen
+## Handle button press to navigate to gameplay screen
 ##
-## @param match_id: Match identifier passed from avatar component
-func _on_avatar_clicked(match_id: String) -> void:
+## @param match_id: Match identifier passed from button
+func _on_button_pressed(match_id: String) -> void:
     # Validate match exists before navigating
     var match = UserDatabase.get_match(match_id)
     if match.is_empty():

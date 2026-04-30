@@ -83,9 +83,20 @@ func _input(event: InputEvent) -> void:
                 _handle_swipe_end(event.position)
             is_swiping = false
     
-    elif event is InputEventScreenDrag or event is InputEventMouseMotion:
-        if is_swiping and event.button_mask != 0:
+    elif event is InputEventScreenDrag:
+        if is_swiping:
             # Follow finger - move container with drag
+            var drag_offset: float = event.position.x - swipe_start_pos.x
+            var target_pos: float = drag_start_container_pos + drag_offset
+            
+            # Clamp to prevent dragging beyond first/last page
+            var min_pos: float = -(page_width * (_get_total_pages() - 1))
+            var max_pos: float = 0.0
+            pages_container.position.x = clampf(target_pos, min_pos, max_pos)
+    
+    elif event is InputEventMouseMotion:
+        if is_swiping and event.button_mask != 0:
+            # Follow mouse - move container with drag
             var drag_offset: float = event.position.x - swipe_start_pos.x
             var target_pos: float = drag_start_container_pos + drag_offset
             
