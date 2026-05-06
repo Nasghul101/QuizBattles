@@ -1,165 +1,307 @@
 {
-    "multiplayer_matches": [
-        {
-            "config": {
-                "questions": 5.0,
-                "rounds": 3.0
-            },
-            "created_at": 1776348304.875,
-            "current_round": 1.0,
-            "current_turn": "robin",
-            "dismissed_by": [],
-            "inviter": "robin",
-            "match_id": "match_1776348304",
-            "players": [
-                "robin",
+	"multiplayer_matches": [
+		{
+			"config": {
+				"questions": 5,
+				"rounds": 3
+			},
+			"created_at": 1778018881.335,
+			"current_round": 1,
+			"current_turn": "linus",
+			"dismissed_by": [],
+			"inviter": "robin",
+			"match_id": "match_1778018881",
+			"players": [
+				"robin",
 				"linus"
-            ],
-            "rounds_data": [
-                {
-                    "category": "",
-                    "category_chooser": "robin",
-                    "player_answers": {
-                        "linus": {
-                            "answered": false,
-                            "results": []
-                        },
-                        "robin": {
-                            "answered": false,
-                            "results": []
-                        }
-                    },
-                    "questions": [],
-                    "round_number": 1.0
-                },
-                {
-                    "category": "",
-                    "category_chooser": "linus",
-                    "player_answers": {
-                        "linus": {
-                            "answered": false,
-                            "results": []
-                        },
-                        "robin": {
-                            "answered": false,
-                            "results": []
-                        }
-                    },
-                    "questions": [],
-                    "round_number": 2.0
-                },
-                {
-                    "category": "",
-                    "category_chooser": "robin",
-                    "player_answers": {
-                        "linus": {
-                            "answered": false,
-                            "results": []
-                        },
-                        "robin": {
-                            "answered": false,
-                            "results": []
-                        }
-                    },
-                    "questions": [],
-                    "round_number": 3.0
-                }
-            ],
-            "stats_processed": false,
-            "status": "active"
-        }
-    ],
-    "users": {
-        "linus": {
-            "avatar_path": "res://assets/profile_pictures/man_standard.png",
-            "category_stats": {
+			],
+			"rounds_data": [
+				{
+					"category": "Art",
+					"category_chooser": "robin",
+					"player_answers": {
+						"linus": {
+							"answered": false,
+							"results": []
+						},
+						"robin": {
+							"answered": true,
+							"results": [
+								{
+									"player_answer": "Donatello",
+									"question_data": {
+										"category": "Art",
+										"correct_answer": "Michelangelo",
+										"difficulty": "easy",
+										"incorrect_answers": [
+											"Gian Lorenzo Bernini",
+											"Auguste Rodin",
+											"Donatello"
+										],
+										"question": "Who sculpted the statue of David?",
+										"type": "multiple"
+									},
+									"was_correct": false
+								},
+								{
+									"player_answer": "Impressionism",
+									"question_data": {
+										"category": "Art",
+										"correct_answer": "Post-Impressionism",
+										"difficulty": "hard",
+										"incorrect_answers": [
+											"Romanticism",
+											"Neoclassical",
+											"Impressionism"
+										],
+										"question": "The painting \"The Starry Night\" by Vincent van Gogh was part of which art movement?",
+										"type": "multiple"
+									},
+									"was_correct": false
+								},
+								{
+									"player_answer": "1502",
+									"question_data": {
+										"category": "Art",
+										"correct_answer": "1502",
+										"difficulty": "hard",
+										"incorrect_answers": [
+											"1702",
+											"1402",
+											"1602"
+										],
+										"question": "What year did Albrecht Dürer create the painting \"The Young Hare\"?",
+										"type": "multiple"
+									},
+									"was_correct": true
+								},
+								{
+									"player_answer": "Vincent van Gogh",
+									"question_data": {
+										"category": "Art",
+										"correct_answer": "Vincent van Gogh",
+										"difficulty": "easy",
+										"incorrect_answers": [
+											"Pablo Picasso",
+											"Leonardo da Vinci",
+											"Michelangelo"
+										],
+										"question": "Who painted The Starry Night?",
+										"type": "multiple"
+									},
+									"was_correct": true
+								},
+								{
+									"player_answer": "The Milkmaid",
+									"question_data": {
+										"category": "Art",
+										"correct_answer": "Bacchus",
+										"difficulty": "medium",
+										"incorrect_answers": [
+											"Girl with a Pearl Earring",
+											"The Milkmaid",
+											"The Lacemaker"
+										],
+										"question": "Which of these paintings did Johannes Vermeer not paint?",
+										"type": "multiple"
+									},
+									"was_correct": false
+								}
+							]
+						}
+					},
+					"questions": [
+						{
+							"category": "Art",
+							"correct_answer": "Michelangelo",
+							"difficulty": "easy",
+							"incorrect_answers": [
+								"Gian Lorenzo Bernini",
+								"Auguste Rodin",
+								"Donatello"
+							],
+							"question": "Who sculpted the statue of David?",
+							"type": "multiple"
+						},
+						{
+							"category": "Art",
+							"correct_answer": "Post-Impressionism",
+							"difficulty": "hard",
+							"incorrect_answers": [
+								"Romanticism",
+								"Neoclassical",
+								"Impressionism"
+							],
+							"question": "The painting \"The Starry Night\" by Vincent van Gogh was part of which art movement?",
+							"type": "multiple"
+						},
+						{
+							"category": "Art",
+							"correct_answer": "1502",
+							"difficulty": "hard",
+							"incorrect_answers": [
+								"1702",
+								"1402",
+								"1602"
+							],
+							"question": "What year did Albrecht Dürer create the painting \"The Young Hare\"?",
+							"type": "multiple"
+						},
+						{
+							"category": "Art",
+							"correct_answer": "Vincent van Gogh",
+							"difficulty": "easy",
+							"incorrect_answers": [
+								"Pablo Picasso",
+								"Leonardo da Vinci",
+								"Michelangelo"
+							],
+							"question": "Who painted The Starry Night?",
+							"type": "multiple"
+						},
+						{
+							"category": "Art",
+							"correct_answer": "Bacchus",
+							"difficulty": "medium",
+							"incorrect_answers": [
+								"Girl with a Pearl Earring",
+								"The Milkmaid",
+								"The Lacemaker"
+							],
+							"question": "Which of these paintings did Johannes Vermeer not paint?",
+							"type": "multiple"
+						}
+					],
+					"round_number": 1
+				},
+				{
+					"category": "",
+					"category_chooser": "linus",
+					"player_answers": {
+						"linus": {
+							"answered": false,
+							"results": []
+						},
+						"robin": {
+							"answered": false,
+							"results": []
+						}
+					},
+					"questions": [],
+					"round_number": 2
+				},
+				{
+					"category": "",
+					"category_chooser": "robin",
+					"player_answers": {
+						"linus": {
+							"answered": false,
+							"results": []
+						},
+						"robin": {
+							"answered": false,
+							"results": []
+						}
+					},
+					"questions": [],
+					"round_number": 3
+				}
+			],
+			"stats_processed": false,
+			"status": "active"
+		}
+	],
+	"users": {
+		"linus": {
+			"avatar_path": "res://assets/profile_pictures/man_standard.png",
+			"category_stats": {
 
-            },
-            "current_streak": 0.0,
-            "email": "l@test.de",
-            "friend_wins": {
+			},
+			"current_streak": 0.0,
+			"email": "l@test.de",
+			"friend_wins": {
 
-            },
-            "friends": [
+			},
+			"friends": [
 				"robin"
-            ],
-            "losses": 1.0,
-            "notifications": [],
-            "password_hash": "a665a45920422f9d417e4867efdc4fb8a04a1f3fff1fa07e998e86f7f7a27ae3",
-            "username": "linus",
-            "wins": 0.0
-        },
-        "merlin": {
-            "avatar_path": "res://assets/profile_pictures/man_standard.png",
-            "category_stats": {
+			],
+			"losses": 1.0,
+			"notifications": [],
+			"password_hash": "a665a45920422f9d417e4867efdc4fb8a04a1f3fff1fa07e998e86f7f7a27ae3",
+			"username": "linus",
+			"wins": 0.0
+		},
+		"merlin": {
+			"avatar_path": "res://assets/profile_pictures/man_standard.png",
+			"category_stats": {
 
-            },
-            "current_streak": 0.0,
-            "email": "m@test.de",
-            "friend_wins": {
+			},
+			"current_streak": 0.0,
+			"email": "m@test.de",
+			"friend_wins": {
 
-            },
-            "friends": [],
-            "losses": 0.0,
-            "notifications": [],
-            "password_hash": "a665a45920422f9d417e4867efdc4fb8a04a1f3fff1fa07e998e86f7f7a27ae3",
-            "username": "merlin",
-            "wins": 0.0
-        },
-        "robin": {
-            "avatar_path": "res://assets/profile_pictures/man_suit.png",
-            "category_stats": {
+			},
+			"friends": [],
+			"losses": 0.0,
+			"notifications": [],
+			"password_hash": "a665a45920422f9d417e4867efdc4fb8a04a1f3fff1fa07e998e86f7f7a27ae3",
+			"username": "merlin",
+			"wins": 0.0
+		},
+		"robin": {
+			"avatar_path": "res://assets/profile_pictures/man_suit.png",
+			"category_stats": {
 
-            },
-            "current_streak": 1.0,
-            "email": "r@test.de",
-            "friend_wins": {
-                "linus": 1.0
-            },
-            "friends": [
-                "linus",
+			},
+			"current_streak": 1.0,
+			"email": "r@test.de",
+			"friend_wins": {
+				"linus": 1.0
+			},
+			"friends": [
+				"linus",
 				"tobias"
-            ],
-            "losses": 0.0,
-            "notifications": [],
-            "password_hash": "a665a45920422f9d417e4867efdc4fb8a04a1f3fff1fa07e998e86f7f7a27ae3",
-            "username": "robin",
-            "wins": 1.0
-        },
-        "tobias": {
-            "avatar_path": "res://assets/profile_pictures/man_beard.png",
-            "category_stats": {
+			],
+			"losses": 0.0,
+			"notifications": [],
+			"password_hash": "a665a45920422f9d417e4867efdc4fb8a04a1f3fff1fa07e998e86f7f7a27ae3",
+			"username": "robin",
+			"wins": 1.0
+		},
+		"tobias": {
+			"avatar_path": "res://assets/profile_pictures/man_beard.png",
+			"category_stats": {
 
-            },
-            "current_streak": 0.0,
-            "email": "tobi@test.de",
-            "friend_wins": {
+			},
+			"current_streak": 0.0,
+			"email": "tobi@test.de",
+			"friend_wins": {
 
-            },
-            "friends": [
+			},
+			"friends": [
 				"robin"
-            ],
-            "losses": 0.0,
-            "notifications": [
-                {
-                    "action_data": {
-                        "inviter_id": "robin",
-                        "questions": 5.0,
-                        "rounds": 3.0,
-                        "type": "game_invite"
-                    },
-                    "has_actions": true,
-                    "id": "30570_7863",
-                    "is_read": false,
-                    "message": "robin invites you to a duel (3 rounds, 5 questions)",
-                    "recipient_username": "tobias",
-                    "sender": "robin",
-                    "timestamp": 1776348331.202
-                }
-            ],
-            "password_hash": "a665a45920422f9d417e4867efdc4fb8a04a1f3fff1fa07e998e86f7f7a27ae3",
-            "username": "tobias",
-            "wins": 0.0
-        }
-    }
+			],
+			"losses": 0.0,
+			"notifications": [
+				{
+					"action_data": {
+						"inviter_id": "robin",
+						"questions": 5.0,
+						"rounds": 3.0,
+						"type": "game_invite"
+					},
+					"has_actions": true,
+					"id": "30570_7863",
+					"is_read": false,
+					"message": "robin invites you to a duel (3 rounds, 5 questions)",
+					"recipient_username": "tobias",
+					"sender": "robin",
+					"timestamp": 1776348331.202
+				}
+			],
+			"password_hash": "a665a45920422f9d417e4867efdc4fb8a04a1f3fff1fa07e998e86f7f7a27ae3",
+			"username": "tobias",
+			"wins": 0.0
+		}
+	}
 }

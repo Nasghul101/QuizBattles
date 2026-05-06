@@ -1197,4 +1197,3 @@ func _generate_placeholder_category_stats() -> Dictionary:
             stats[category] = randi() % 20 + 1  # Random count 1-20
     
     return stats
-

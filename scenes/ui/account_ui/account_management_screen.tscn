@@ -1,10 +1,9 @@
-[gd_scene load_steps=4 format=3 uid="uid://ysbddqt5mwwf"]
+[gd_scene format=3 uid="uid://ysbddqt5mwwf"]
 
 [ext_resource type="Script" uid="uid://crr12b7mb5suu" path="res://scenes/ui/account_ui/account_management_screen.gd" id="1_d4e5f"]
-[ext_resource type="Texture2D" uid="uid://3n1oqbk583e1" path="res://assets/profile_pictures/man_standard.png" id="2_2qluw"]
-[ext_resource type="PackedScene" uid="uid://deyncocxwp1mp" path="res://scenes/ui/components/drag_handle_component.tscn" id="2_xldbt"]
+[ext_resource type="Theme" uid="uid://cxninrmdvbey6" path="res://Styles/BasicTheme.tres" id="2_xldbt"]
 
-[node name="AccountManagementScreen" type="Control"]
+[node name="AccountManagementScreen" type="Control" unique_id=1747724632]
 layout_mode = 3
 anchors_preset = 15
 anchor_right = 1.0
@@ -13,7 +12,7 @@ grow_horizontal = 2
 grow_vertical = 2
 script = ExtResource("1_d4e5f")
 
-[node name="BackButton" type="Button" parent="."]
+[node name="BackButton" type="Button" parent="." unique_id=1667808117]
 unique_name_in_owner = true
 custom_minimum_size = Vector2(50, 50)
 layout_mode = 1
@@ -22,56 +21,43 @@ offset_bottom = 50.0
 size_flags_horizontal = 0
 text = "Back"
 
-[node name="VBoxContainer" type="VBoxContainer" parent="."]
+[node name="MarginContainer" type="MarginContainer" parent="." unique_id=2119888842]
 layout_mode = 1
 anchors_preset = 15
 anchor_right = 1.0
 anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
+theme_override_constants/margin_left = 40
+theme_override_constants/margin_top = 40
+theme_override_constants/margin_right = 40
+theme_override_constants/margin_bottom = 40
+
+[node name="VBoxContainer" type="VBoxContainer" parent="MarginContainer" unique_id=1617995342]
+layout_mode = 2
 mouse_filter = 2
 
-[node name="HeaderLabel" type="Label" parent="VBoxContainer"]
+[node name="Label" type="Label" parent="MarginContainer/VBoxContainer" unique_id=2047929309]
 layout_mode = 2
-size_flags_horizontal = 6
-theme_override_font_sizes/font_size = 50
-text = "Account"
+theme = ExtResource("2_xldbt")
+theme_override_font_sizes/font_size = 70
+text = "Player Name"
 horizontal_alignment = 1
 vertical_alignment = 1
 
-[node name="UserAvatar" type="Button" parent="VBoxContainer"]
-custom_minimum_size = Vector2(100, 100)
+[node name="HBoxContainer" type="HBoxContainer" parent="MarginContainer/VBoxContainer" unique_id=2090628934]
 layout_mode = 2
-size_flags_horizontal = 4
-icon = ExtResource("2_2qluw")
-icon_alignment = 1
-expand_icon = true
+size_flags_vertical = 3
 
-[node name="NameLabel" type="Label" parent="VBoxContainer"]
-unique_name_in_owner = true
+[node name="VBoxContainer" type="VBoxContainer" parent="MarginContainer/VBoxContainer/HBoxContainer" unique_id=1774053035]
 layout_mode = 2
-size_flags_horizontal = 6
-theme_override_font_sizes/font_size = 30
-text = "Lorem name"
-horizontal_alignment = 1
-vertical_alignment = 1
+size_flags_horizontal = 3
 
-[node name="Control" type="Control" parent="VBoxContainer"]
-custom_minimum_size = Vector2(500, 200)
+[node name="VBoxContainer2" type="VBoxContainer" parent="MarginContainer/VBoxContainer/HBoxContainer" unique_id=425000588]
 layout_mode = 2
-size_flags_horizontal = 4
-size_flags_vertical = 4
+size_flags_horizontal = 3
 
-[node name="ColorRect" type="ColorRect" parent="VBoxContainer/Control"]
-layout_mode = 1
-anchors_preset = 15
-anchor_right = 1.0
-anchor_bottom = 1.0
-grow_horizontal = 2
-grow_vertical = 2
-color = Color(1, 0.5647059, 1, 1)
-
-[node name="LogOffButton" type="Button" parent="VBoxContainer"]
+[node name="LogOffButton" type="Button" parent="MarginContainer/VBoxContainer" unique_id=295767207]
 unique_name_in_owner = true
 custom_minimum_size = Vector2(200, 0)
 layout_mode = 2
@@ -79,45 +65,3 @@ size_flags_horizontal = 4
 size_flags_vertical = 10
 theme_override_font_sizes/font_size = 30
 text = "Log off"
-
-[node name="ChooseAvatarPopup" type="PanelContainer" parent="."]
-unique_name_in_owner = true
-visible = false
-layout_mode = 1
-anchors_preset = 15
-anchor_right = 1.0
-anchor_bottom = 1.0
-grow_horizontal = 2
-grow_vertical = 2
-mouse_filter = 1
-
-[node name="VBoxContainer" type="VBoxContainer" parent="ChooseAvatarPopup"]
-layout_mode = 2
-theme_override_constants/separation = 60
-
-[node name="Label" type="Label" parent="ChooseAvatarPopup/VBoxContainer"]
-layout_mode = 2
-theme_override_font_sizes/font_size = 60
-text = "Choose your avatar"
-horizontal_alignment = 1
-vertical_alignment = 1
-
-[node name="AvatarContainer" type="GridContainer" parent="ChooseAvatarPopup/VBoxContainer"]
-unique_name_in_owner = true
-layout_mode = 2
-size_flags_horizontal = 4
-size_flags_vertical = 3
-theme_override_constants/h_separation = 90
-columns = 6
-
-[node name="DragHandle" parent="ChooseAvatarPopup" instance=ExtResource("2_xldbt")]
-custom_minimum_size = Vector2(0, 100)
-layout_mode = 2
-size_flags_vertical = 0
-
-[connection signal="pressed" from="BackButton" to="." method="_on_back_button_pressed"]
-[connection signal="pressed" from="VBoxContainer/UserAvatar" to="." method="_on_user_avatar_pressed"]
-[connection signal="pressed" from="VBoxContainer/LogOffButton" to="." method="_on_log_off_button_pressed"]
-[connection signal="drag_ended" from="ChooseAvatarPopup/DragHandle" to="." method="_on_drag_handle_drag_ended"]
-[connection signal="drag_started" from="ChooseAvatarPopup/DragHandle" to="." method="_on_drag_handle_drag_started"]
-[connection signal="drag_updated" from="ChooseAvatarPopup/DragHandle" to="." method="_on_drag_handle_drag_updated"]

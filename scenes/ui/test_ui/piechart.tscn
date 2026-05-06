@@ -1,0 +1,71 @@
+[gd_scene format=3 uid="uid://b0frkcn0f5ddu"]
+
+[ext_resource type="Shader" uid="uid://uxsrm20p3lxb" path="res://shaders/piechart.gdshader" id="1_bfn1p"]
+[ext_resource type="Script" uid="uid://caiyu3bea5dhy" path="res://scenes/ui/test_ui/piechart.gd" id="1_jyckf"]
+[ext_resource type="Theme" uid="uid://cxninrmdvbey6" path="res://Styles/BasicTheme.tres" id="3_vim5g"]
+
+[sub_resource type="Gradient" id="Gradient_bfn1p"]
+colors = PackedColorArray(0, 1, 0, 1, 0, 1, 0, 1)
+
+[sub_resource type="GradientTexture1D" id="GradientTexture1D_jyckf"]
+gradient = SubResource("Gradient_bfn1p")
+
+[sub_resource type="Gradient" id="Gradient_vim5g"]
+offsets = PackedFloat32Array(0, 0.201, 0.226, 1)
+colors = PackedColorArray(1, 0, 0, 1, 0.9180427, 0, 0.15983391, 1, 0.78039217, 1, 0, 1, 0.78039217, 1, 0, 1)
+
+[sub_resource type="GradientTexture1D" id="GradientTexture1D_rx7rt"]
+gradient = SubResource("Gradient_vim5g")
+
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_rpdrh"]
+shader = ExtResource("1_bfn1p")
+shader_parameter/value = 62.9450029898875
+shader_parameter/thickness = 29.3310013932225
+shader_parameter/fg = SubResource("GradientTexture1D_rx7rt")
+shader_parameter/bg = SubResource("GradientTexture1D_jyckf")
+shader_parameter/offset = 0.0
+shader_parameter/smoothing = 0.0
+
+[node name="Piechart" type="Control" unique_id=1069233904]
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+script = ExtResource("1_jyckf")
+label_offset = 0.843
+
+[node name="Chart" type="Panel" parent="." unique_id=317172239]
+unique_name_in_owner = true
+material = SubResource("ShaderMaterial_rpdrh")
+layout_mode = 1
+anchors_preset = -1
+anchor_right = 1.0
+anchor_bottom = 0.475
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="Win_Label" type="Label" parent="." unique_id=233298726]
+unique_name_in_owner = true
+layout_mode = 0
+offset_right = 40.0
+offset_bottom = 23.0
+theme = ExtResource("3_vim5g")
+theme_override_colors/font_color = Color(0, 0, 0, 1)
+
+[node name="Draw_Label" type="Label" parent="." unique_id=77815748]
+unique_name_in_owner = true
+layout_mode = 0
+offset_right = 40.0
+offset_bottom = 23.0
+theme = ExtResource("3_vim5g")
+theme_override_colors/font_color = Color(0, 0, 0, 1)
+
+[node name="Loss_Label" type="Label" parent="." unique_id=314679060]
+unique_name_in_owner = true
+layout_mode = 0
+offset_right = 40.0
+offset_bottom = 23.0
+theme = ExtResource("3_vim5g")
+theme_override_colors/font_color = Color(0, 0, 0, 1)
