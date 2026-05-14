@@ -13,7 +13,13 @@ var draw_percent: int
 var loose_percent: int
 
 func _ready() -> void:
-    set_chart(30, 5, 100)
+    # Wait for the parent container to finish its layout
+    await get_tree().process_frame
+    await get_tree().process_frame
+    
+    
+    # Now resize chart to be square based on the calculated width
+    chart.size.y = chart.size.x
 
 func set_chart(total_wins : int, total_draws: int, total_games_played: int) -> void:
         # Get values from text fields
@@ -47,7 +53,7 @@ func set_chart(total_wins : int, total_draws: int, total_games_played: int) -> v
                 # Offset 2 to (loose/100) + 0.01
                 if gradient.offsets.size() >= 3:
                     gradient.offsets[1] = losses / 100.0
-                    gradient.offsets[2] = (losses / 100.0) + 0.01
+                    gradient.offsets[2] = (losses / 100.0) + 0.001
                 
         # Position labels
         position_label(win_label, 0, wins, label_offset)

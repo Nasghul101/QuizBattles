@@ -2,11 +2,11 @@
 	"multiplayer_matches": [
 		{
 			"config": {
-				"questions": 5,
-				"rounds": 3
+				"questions": 5.0,
+				"rounds": 3.0
 			},
 			"created_at": 1778018881.335,
-			"current_round": 1,
+			"current_round": 1.0,
 			"current_turn": "linus",
 			"dismissed_by": [],
 			"inviter": "robin",
@@ -172,7 +172,7 @@
 							"type": "multiple"
 						}
 					],
-					"round_number": 1
+					"round_number": 1.0
 				},
 				{
 					"category": "",
@@ -188,7 +188,7 @@
 						}
 					},
 					"questions": [],
-					"round_number": 2
+					"round_number": 2.0
 				},
 				{
 					"category": "",
@@ -204,7 +204,7 @@
 						}
 					},
 					"questions": [],
-					"round_number": 3
+					"round_number": 3.0
 				}
 			],
 			"stats_processed": false,
@@ -228,6 +228,7 @@
 			"losses": 1.0,
 			"notifications": [],
 			"password_hash": "a665a45920422f9d417e4867efdc4fb8a04a1f3fff1fa07e998e86f7f7a27ae3",
+			"total_games": 0.0,
 			"username": "linus",
 			"wins": 0.0
 		},
@@ -245,6 +246,7 @@
 			"losses": 0.0,
 			"notifications": [],
 			"password_hash": "a665a45920422f9d417e4867efdc4fb8a04a1f3fff1fa07e998e86f7f7a27ae3",
+			"total_games": 0.0,
 			"username": "merlin",
 			"wins": 0.0
 		},
@@ -265,6 +267,7 @@
 			"losses": 0.0,
 			"notifications": [],
 			"password_hash": "a665a45920422f9d417e4867efdc4fb8a04a1f3fff1fa07e998e86f7f7a27ae3",
+			"total_games": 0.0,
 			"username": "robin",
 			"wins": 1.0
 		},
@@ -300,6 +303,7 @@
 				}
 			],
 			"password_hash": "a665a45920422f9d417e4867efdc4fb8a04a1f3fff1fa07e998e86f7f7a27ae3",
+			"total_games": 0.0,
 			"username": "tobias",
 			"wins": 0.0
 		}

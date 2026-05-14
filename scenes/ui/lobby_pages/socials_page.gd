@@ -66,7 +66,11 @@ func _populate_friends_list() -> void:
         # Instantiate friend display component
         var display: FriendDisplayComponent = FRIEND_DISPLAY_COMPONENT.instantiate()
         
-        # Set player name
+        # Add to container first so @onready variables are initialized
+        friend_display.add_child(display)
+        friend_display.move_child(display, friend_display.get_child_count() - 2)
+        
+        # Now set properties after component is in scene tree
         display.set_player_name(friend_username)
         
         # Calculate win/loss counts (head-to-head record)
@@ -78,16 +82,12 @@ func _populate_friends_list() -> void:
         # Get top 3 categories and set colors
         var top_categories: Array = _get_top_categories(friend_data.category_stats)
         _set_category_colors(display, top_categories)
-        
-        # Add to container (before AddNewFriendsButton)
-        friend_display.add_child(display)
-        friend_display.move_child(display, friend_display.get_child_count() - 2)
 
 
 ## Get top 3 categories sorted by play count.
 ## Generates placeholder data if category_stats is empty.
-## @param category_stats: Dictionary mapping category names to play counts
-## @return Array of category names sorted by count (up to 3)
+## @param category_stats: Dictionary mapping category names to {"played": int, "wins": int}
+## @return Array of category names sorted by played count (up to 3)
 func _get_top_categories(category_stats: Dictionary) -> Array:
     # Use placeholder data if category_stats is empty
     var stats: Dictionary = category_stats
@@ -97,7 +97,14 @@ func _get_top_categories(category_stats: Dictionary) -> Array:
     # Sort categories by play count
     var sorted_categories: Array = []
     for category_name: String in stats.keys():
-        sorted_categories.append({"name": category_name, "count": stats[category_name]})
+        var stat_value = stats[category_name]
+        # Handle both old format (int) and new format (Dictionary with "played" key)
+        var count: int = 0
+        if typeof(stat_value) == TYPE_DICTIONARY:
+            count = stat_value.get("played", 0)
+        else:
+            count = int(stat_value)
+        sorted_categories.append({"name": category_name, "count": count})
     
     # Sort by count descending
     sorted_categories.sort_custom(func(a, b): return a.count > b.count)

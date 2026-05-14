@@ -1,0 +1,203 @@
+[gd_scene format=3 uid="uid://2sxccbvvhgii"]
+
+[ext_resource type="Theme" uid="uid://cxninrmdvbey6" path="res://Styles/BasicTheme.tres" id="1_2i8nn"]
+[ext_resource type="Script" uid="uid://dqlxt3hoy3uwp" path="res://scenes/ui/components/category_statistic_dissplay.gd" id="1_bi08n"]
+[ext_resource type="Script" uid="uid://bttgnk3bb2a8i" path="res://addons/font_auto_size_labels/auto_size_label.gd" id="2_bi08n"]
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_2i8nn"]
+corner_radius_bottom_right = 15
+corner_radius_bottom_left = 15
+corner_detail = 1
+
+[sub_resource type="Gradient" id="Gradient_03tth"]
+offsets = PackedFloat32Array(0, 0.4039409, 1)
+colors = PackedColorArray(0.08235294, 1, 1, 1, 0.08235294, 1, 1, 0.46666667, 0, 0, 0, 0)
+
+[sub_resource type="GradientTexture2D" id="GradientTexture2D_wes6i"]
+gradient = SubResource("Gradient_03tth")
+fill_from = Vector2(0, 1)
+fill_to = Vector2(0, 0)
+
+[node name="CategoryStatisticDissplay" type="Control" unique_id=693794735]
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+size_flags_horizontal = 3
+size_flags_vertical = 3
+script = ExtResource("1_bi08n")
+
+[node name="Panel" type="Panel" parent="." unique_id=2048758179]
+clip_children = 1
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_styles/panel = SubResource("StyleBoxFlat_2i8nn")
+
+[node name="BG" type="TextureRect" parent="Panel" unique_id=1792303640]
+unique_name_in_owner = true
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+texture = SubResource("GradientTexture2D_wes6i")
+
+[node name="MarginContainer" type="MarginContainer" parent="Panel/BG" unique_id=1850066593]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_constants/margin_top = 60
+
+[node name="VBoxContainer" type="VBoxContainer" parent="Panel/BG/MarginContainer" unique_id=756654674]
+layout_mode = 2
+theme_override_constants/separation = 30
+alignment = 1
+
+[node name="Title" type="Label" parent="Panel/BG/MarginContainer/VBoxContainer" unique_id=1962656533]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(0, 70)
+layout_mode = 2
+size_flags_vertical = 1
+theme = ExtResource("1_2i8nn")
+theme_override_font_sizes/font_size = 30
+text = "Category"
+horizontal_alignment = 1
+vertical_alignment = 1
+autowrap_mode = 3
+clip_text = true
+script = ExtResource("2_bi08n")
+_max_size = 30
+_outline_ratio = 0.0
+_current_font_size = 30
+_editor_defaults_set = true
+metadata/_custom_type_script = "uid://bttgnk3bb2a8i"
+
+[node name="HBoxContainer" type="HBoxContainer" parent="Panel/BG/MarginContainer/VBoxContainer" unique_id=38530944]
+layout_mode = 2
+alignment = 1
+
+[node name="VBoxContainer" type="VBoxContainer" parent="Panel/BG/MarginContainer/VBoxContainer/HBoxContainer" unique_id=89684814]
+layout_mode = 2
+size_flags_horizontal = 3
+
+[node name="WinAmount" type="Label" parent="Panel/BG/MarginContainer/VBoxContainer/HBoxContainer/VBoxContainer" unique_id=87108018]
+unique_name_in_owner = true
+layout_mode = 2
+size_flags_vertical = 1
+theme = ExtResource("1_2i8nn")
+theme_override_constants/outline_size = 0
+theme_override_font_sizes/font_size = 25
+text = "0"
+horizontal_alignment = 1
+vertical_alignment = 1
+clip_text = true
+script = ExtResource("2_bi08n")
+_max_size = 25
+_outline_ratio = 0.0
+_current_font_size = 25
+_editor_defaults_set = true
+metadata/_custom_type_script = "uid://bttgnk3bb2a8i"
+
+[node name="Label" type="Label" parent="Panel/BG/MarginContainer/VBoxContainer/HBoxContainer/VBoxContainer" unique_id=1288984491]
+layout_mode = 2
+size_flags_vertical = 1
+theme = ExtResource("1_2i8nn")
+theme_override_constants/outline_size = 0
+theme_override_font_sizes/font_size = 20
+text = "Wins"
+horizontal_alignment = 1
+vertical_alignment = 1
+clip_text = true
+script = ExtResource("2_bi08n")
+_max_size = 20
+_outline_ratio = 0.0
+_current_font_size = 20
+_editor_defaults_set = true
+metadata/_custom_type_script = "uid://bttgnk3bb2a8i"
+
+[node name="VBoxContainer2" type="VBoxContainer" parent="Panel/BG/MarginContainer/VBoxContainer/HBoxContainer" unique_id=1372382406]
+layout_mode = 2
+size_flags_horizontal = 3
+
+[node name="PlayedAmount" type="Label" parent="Panel/BG/MarginContainer/VBoxContainer/HBoxContainer/VBoxContainer2" unique_id=162766555]
+unique_name_in_owner = true
+layout_mode = 2
+size_flags_vertical = 1
+theme = ExtResource("1_2i8nn")
+theme_override_constants/outline_size = 0
+theme_override_font_sizes/font_size = 25
+text = "0"
+horizontal_alignment = 1
+vertical_alignment = 1
+clip_text = true
+script = ExtResource("2_bi08n")
+_max_size = 25
+_outline_ratio = 0.0
+_current_font_size = 25
+_editor_defaults_set = true
+metadata/_custom_type_script = "uid://bttgnk3bb2a8i"
+
+[node name="Label" type="Label" parent="Panel/BG/MarginContainer/VBoxContainer/HBoxContainer/VBoxContainer2" unique_id=1894509243]
+layout_mode = 2
+size_flags_vertical = 1
+theme = ExtResource("1_2i8nn")
+theme_override_constants/outline_size = 0
+theme_override_font_sizes/font_size = 20
+text = "Played"
+horizontal_alignment = 1
+vertical_alignment = 1
+clip_text = true
+script = ExtResource("2_bi08n")
+_max_size = 20
+_outline_ratio = 0.0
+_current_font_size = 20
+_editor_defaults_set = true
+metadata/_custom_type_script = "uid://bttgnk3bb2a8i"
+
+[node name="VBoxContainer" type="VBoxContainer" parent="Panel/BG/MarginContainer/VBoxContainer" unique_id=265940920]
+layout_mode = 2
+
+[node name="WinRate" type="Label" parent="Panel/BG/MarginContainer/VBoxContainer/VBoxContainer" unique_id=166177454]
+unique_name_in_owner = true
+layout_mode = 2
+size_flags_vertical = 1
+theme = ExtResource("1_2i8nn")
+theme_override_constants/outline_size = 0
+theme_override_font_sizes/font_size = 30
+text = "0%"
+horizontal_alignment = 1
+vertical_alignment = 1
+clip_text = true
+script = ExtResource("2_bi08n")
+_max_size = 30
+_outline_ratio = 0.0
+_current_font_size = 30
+_editor_defaults_set = true
+metadata/_custom_type_script = "uid://bttgnk3bb2a8i"
+
+[node name="Label" type="Label" parent="Panel/BG/MarginContainer/VBoxContainer/VBoxContainer" unique_id=208050398]
+layout_mode = 2
+size_flags_vertical = 1
+theme = ExtResource("1_2i8nn")
+theme_override_constants/outline_size = 0
+theme_override_font_sizes/font_size = 20
+text = "Win rate"
+horizontal_alignment = 1
+vertical_alignment = 1
+clip_text = true
+script = ExtResource("2_bi08n")
+_max_size = 20
+_outline_ratio = 0.0
+_current_font_size = 20
+_editor_defaults_set = true
+metadata/_custom_type_script = "uid://bttgnk3bb2a8i"

@@ -204,6 +204,7 @@ func create_user(username: String, password: String, email: String) -> Dictionar
         "friends": [],
         "wins": 0,
         "losses": 0,
+        "total_games": 0,
         "current_streak": 0,
         "friend_wins": {},
         "category_stats": {}
@@ -370,6 +371,7 @@ func get_user_data_for_display(username: String) -> Dictionary:
         "avatar_path": user_data.get("avatar_path", DEFAULT_AVATAR_PATH),
         "wins": user_data.get("wins", 0),
         "losses": user_data.get("losses", 0),
+        "total_games": user_data.get("total_games", 0),
         "current_streak": user_data.get("current_streak", 0),
         "friend_wins": user_data.get("friend_wins", {}),
         "category_stats": user_data.get("category_stats", {})
@@ -944,6 +946,14 @@ func _on_game_invite_accepted(inviter_username: String, invitee_username: String
 ## Uses stats_processed flag to ensure single execution per match.
 ##
 ## @param match_data: Complete match Dictionary with results for both players
+## Update player statistics after match completion.
+##
+## Increments total_games for both players, updates wins/losses for winner/loser,
+## and tracks category-level played/wins statistics based on rounds_data.
+##
+## Category stats structure: {category: {"played": count, "wins": count}}
+##
+## @param match_data: Complete match Dictionary with players and rounds_data
 func update_player_statistics(match_data: Dictionary) -> void:
     # Validate match data
     if not match_data.has("match_id"):
@@ -959,27 +969,54 @@ func update_player_statistics(match_data: Dictionary) -> void:
         push_warning("Statistics already processed for match %s" % match_data.match_id)
         return
     
+    var players: Array = match_data.players
+    var player1: String = players[0]
+    var player2: String = players[1]
+    
+    # Verify both users exist
+    if not user_exists(player1):
+        push_error("Cannot update statistics: player1 '%s' not found" % player1)
+        return
+    
+    if not user_exists(player2):
+        push_error("Cannot update statistics: player2 '%s' not found" % player2)
+        return
+    
+    # Increment total_games for both players
+    _users[player1].total_games += 1
+    _users[player2].total_games += 1
+    
+    # Extract categories from rounds_data and update category stats
+    for round_data: Dictionary in match_data.rounds_data:
+        var category: String = round_data.get("category", "")
+        if category.is_empty():
+            continue
+        
+        # Initialize category stats for both players if needed
+        if not _users[player1].category_stats.has(category):
+            _users[player1].category_stats[category] = {"played": 0, "wins": 0}
+        if not _users[player2].category_stats.has(category):
+            _users[player2].category_stats[category] = {"played": 0, "wins": 0}
+        
+        # Increment played count for both players
+        _users[player1].category_stats[category]["played"] += 1
+        _users[player2].category_stats[category]["played"] += 1
+    
     # Calculate winner
     var result: Dictionary = _calculate_match_winner(match_data)
     
     if result.is_draw:
-        # Draw - no stats change, but mark as processed
-        print("Match %s ended in draw - no statistics updated" % match_data.match_id)
+        # Draw - no wins/losses change, but total_games and category stats already updated
+        print("Match %s ended in draw - total_games and category stats updated" % match_data.match_id)
         match_data.stats_processed = true
+        _save_database()
         update_match(match_data)
+        GlobalSignalBus.player_stats_updated.emit(player1)
+        GlobalSignalBus.player_stats_updated.emit(player2)
         return
     
     var winner: String = result.winner
     var loser: String = result.loser
-    
-    # Verify both users exist
-    if not user_exists(winner):
-        push_error("Cannot update statistics: winner '%s' not found" % winner)
-        return
-    
-    if not user_exists(loser):
-        push_error("Cannot update statistics: loser '%s' not found" % loser)
-        return
     
     # Update winner statistics
     _users[winner].wins += 1
@@ -988,6 +1025,15 @@ func update_player_statistics(match_data: Dictionary) -> void:
     # Update loser statistics
     _users[loser].losses += 1
     _users[loser].current_streak = 0
+    
+    # Update category wins for winner
+    for round_data: Dictionary in match_data.rounds_data:
+        var category: String = round_data.get("category", "")
+        if category.is_empty():
+            continue
+        
+        # Increment wins for winner's categories
+        _users[winner].category_stats[category]["wins"] += 1
     
     # Update friend wins if players are friends
     if are_friends(winner, loser):
@@ -1133,6 +1179,10 @@ func _load_database() -> void:
 ##
 ## Adds wins, losses, current_streak, friend_wins, category_stats fields with default values 
 ## to existing users that don't have these fields. Ensures backward compatibility.
+## Migrate existing user data to include new fields.
+##
+## Adds total_games field and converts old category_stats structure
+## from {category: count} to {category: {"played": count, "wins": 0}}.
 func _migrate_user_data() -> void:
     var migrated_count: int = 0
     
@@ -1150,6 +1200,11 @@ func _migrate_user_data() -> void:
             user_data.losses = 0
             needs_migration = true
         
+        # Add total_games field if missing
+        if not user_data.has("total_games"):
+            user_data.total_games = 0
+            needs_migration = true
+        
         # Add current_streak field if missing
         if not user_data.has("current_streak"):
             user_data.current_streak = 0
@@ -1160,11 +1215,30 @@ func _migrate_user_data() -> void:
             user_data.friend_wins = {}
             needs_migration = true
         
-        # Add category_stats field if missing
-        # TODO: Replace placeholder data with real category tracking from gameplay_screen match completion
+        # Add category_stats field if missing or migrate old structure
         if not user_data.has("category_stats"):
             user_data.category_stats = {}
             needs_migration = true
+        else:
+            # Migrate old category_stats structure {category: count} to new structure
+            var old_stats: Dictionary = user_data.category_stats
+            var needs_category_migration: bool = false
+            
+            for category: String in old_stats.keys():
+                var value = old_stats[category]
+                # Check if this is old format (int) vs new format (Dictionary)
+                if typeof(value) == TYPE_INT or typeof(value) == TYPE_FLOAT:
+                    needs_category_migration = true
+                    break
+            
+            if needs_category_migration:
+                var new_stats: Dictionary = {}
+                for category: String in old_stats.keys():
+                    var played_count: int = int(old_stats[category])
+                    new_stats[category] = {"played": played_count, "wins": 0}
+                user_data.category_stats = new_stats
+                needs_migration = true
+                print("Migrated category_stats for user %s to new structure" % username)
         
         if needs_migration:
             migrated_count += 1
@@ -1194,6 +1268,8 @@ func _generate_placeholder_category_stats() -> Dictionary:
     for i in range(3):
         if i < selected_categories.size():
             var category: String = selected_categories[i]
-            stats[category] = randi() % 20 + 1  # Random count 1-20
+            var played: int = randi() % 20 + 1  # Random count 1-20
+            var wins: int = randi() % played  # Random wins (0 to played)
+            stats[category] = {"played": played, "wins": wins}
     
     return stats

@@ -1,7 +1,45 @@
 [gd_scene format=3 uid="uid://ysbddqt5mwwf"]
 
 [ext_resource type="Script" uid="uid://crr12b7mb5suu" path="res://scenes/ui/account_ui/account_management_screen.gd" id="1_d4e5f"]
+[ext_resource type="StyleBox" uid="uid://bprlsfswn38in" path="res://Styles/App_Background_Stylebox.tres" id="2_ccxb8"]
 [ext_resource type="Theme" uid="uid://cxninrmdvbey6" path="res://Styles/BasicTheme.tres" id="2_xldbt"]
+[ext_resource type="PackedScene" uid="uid://b0frkcn0f5ddu" path="res://scenes/ui/components/piechart.tscn" id="3_3o5mh"]
+[ext_resource type="FontFile" uid="uid://c2546x0aealwc" path="res://assets/Font/exo/Exo-ExtraBold.otf" id="4_63srb"]
+[ext_resource type="PackedScene" uid="uid://2sxccbvvhgii" path="res://scenes/ui/components/category_statistic_dissplay.tscn" id="5_3o5mh"]
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_63srb"]
+bg_color = Color(0.12156863, 0.43137255, 0.050980393, 1)
+corner_radius_top_left = 20
+corner_radius_top_right = 20
+corner_radius_bottom_right = 20
+corner_radius_bottom_left = 20
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_3o5mh"]
+bg_color = Color(0.7921569, 0.43137255, 0.050980393, 1)
+corner_radius_top_left = 10
+corner_radius_top_right = 10
+corner_radius_bottom_right = 10
+corner_radius_bottom_left = 10
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_ccxb8"]
+bg_color = Color(0.43137255, 0.078431375, 0.050980393, 1)
+corner_radius_top_left = 10
+corner_radius_top_right = 10
+corner_radius_bottom_right = 10
+corner_radius_bottom_left = 10
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_wfmxi"]
+bg_color = Color(0.30980393, 0.2627451, 0.3137255, 1)
+border_width_left = 4
+border_width_top = 4
+border_width_right = 4
+border_width_bottom = 4
+border_color = Color(0.9843137, 0.8627451, 0.9529412, 1)
+corner_radius_top_left = 40
+corner_radius_top_right = 40
+corner_radius_bottom_right = 40
+corner_radius_bottom_left = 40
+corner_detail = 1
 
 [node name="AccountManagementScreen" type="Control" unique_id=1747724632]
 layout_mode = 3
@@ -12,14 +50,14 @@ grow_horizontal = 2
 grow_vertical = 2
 script = ExtResource("1_d4e5f")
 
-[node name="BackButton" type="Button" parent="." unique_id=1667808117]
-unique_name_in_owner = true
-custom_minimum_size = Vector2(50, 50)
+[node name="Panel" type="Panel" parent="." unique_id=1853636116]
 layout_mode = 1
-offset_right = 80.0
-offset_bottom = 50.0
-size_flags_horizontal = 0
-text = "Back"
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_styles/panel = ExtResource("2_ccxb8")
 
 [node name="MarginContainer" type="MarginContainer" parent="." unique_id=2119888842]
 layout_mode = 1
@@ -31,11 +69,12 @@ grow_vertical = 2
 theme_override_constants/margin_left = 40
 theme_override_constants/margin_top = 40
 theme_override_constants/margin_right = 40
-theme_override_constants/margin_bottom = 40
+theme_override_constants/margin_bottom = 111
 
 [node name="VBoxContainer" type="VBoxContainer" parent="MarginContainer" unique_id=1617995342]
 layout_mode = 2
 mouse_filter = 2
+theme_override_constants/separation = 119
 
 [node name="Label" type="Label" parent="MarginContainer/VBoxContainer" unique_id=2047929309]
 layout_mode = 2
@@ -46,22 +85,276 @@ horizontal_alignment = 1
 vertical_alignment = 1
 
 [node name="HBoxContainer" type="HBoxContainer" parent="MarginContainer/VBoxContainer" unique_id=2090628934]
+custom_minimum_size = Vector2(0, 621.19)
+layout_mode = 2
+
+[node name="PieChartContainer" type="VBoxContainer" parent="MarginContainer/VBoxContainer/HBoxContainer" unique_id=1774053035]
+layout_mode = 2
+size_flags_horizontal = 3
+
+[node name="Piechart" parent="MarginContainer/VBoxContainer/HBoxContainer/PieChartContainer" unique_id=1069233904 instance=ExtResource("3_3o5mh")]
 layout_mode = 2
 size_flags_vertical = 3
 
-[node name="VBoxContainer" type="VBoxContainer" parent="MarginContainer/VBoxContainer/HBoxContainer" unique_id=1774053035]
+[node name="HBoxContainer" type="HBoxContainer" parent="MarginContainer/VBoxContainer/HBoxContainer/PieChartContainer" unique_id=2114126727]
+layout_mode = 2
+theme_override_constants/separation = 52
+alignment = 1
+
+[node name="LegendWin" type="HBoxContainer" parent="MarginContainer/VBoxContainer/HBoxContainer/PieChartContainer/HBoxContainer" unique_id=742616523]
+layout_mode = 2
+theme_override_constants/separation = 10
+
+[node name="Panel" type="Panel" parent="MarginContainer/VBoxContainer/HBoxContainer/PieChartContainer/HBoxContainer/LegendWin" unique_id=347277809]
+custom_minimum_size = Vector2(20, 20)
+layout_mode = 2
+size_flags_vertical = 4
+theme_override_styles/panel = SubResource("StyleBoxFlat_63srb")
+
+[node name="Label" type="Label" parent="MarginContainer/VBoxContainer/HBoxContainer/PieChartContainer/HBoxContainer/LegendWin" unique_id=251199673]
+layout_mode = 2
+theme = ExtResource("2_xldbt")
+text = "Wins"
+
+[node name="LegendDraw" type="HBoxContainer" parent="MarginContainer/VBoxContainer/HBoxContainer/PieChartContainer/HBoxContainer" unique_id=1025223175]
+layout_mode = 2
+theme_override_constants/separation = 10
+
+[node name="Panel" type="Panel" parent="MarginContainer/VBoxContainer/HBoxContainer/PieChartContainer/HBoxContainer/LegendDraw" unique_id=1613858142]
+custom_minimum_size = Vector2(20, 20)
+layout_mode = 2
+size_flags_vertical = 4
+theme_override_styles/panel = SubResource("StyleBoxFlat_3o5mh")
+
+[node name="Label" type="Label" parent="MarginContainer/VBoxContainer/HBoxContainer/PieChartContainer/HBoxContainer/LegendDraw" unique_id=1486396656]
+layout_mode = 2
+theme = ExtResource("2_xldbt")
+text = "Draws"
+
+[node name="LegendLoss" type="HBoxContainer" parent="MarginContainer/VBoxContainer/HBoxContainer/PieChartContainer/HBoxContainer" unique_id=456847489]
+layout_mode = 2
+theme_override_constants/separation = 10
+
+[node name="Panel" type="Panel" parent="MarginContainer/VBoxContainer/HBoxContainer/PieChartContainer/HBoxContainer/LegendLoss" unique_id=1782026031]
+custom_minimum_size = Vector2(20, 20)
+layout_mode = 2
+size_flags_vertical = 4
+theme_override_styles/panel = SubResource("StyleBoxFlat_ccxb8")
+
+[node name="Label" type="Label" parent="MarginContainer/VBoxContainer/HBoxContainer/PieChartContainer/HBoxContainer/LegendLoss" unique_id=810292626]
+layout_mode = 2
+theme = ExtResource("2_xldbt")
+text = "Losses"
+
+[node name="MarginContainer" type="MarginContainer" parent="MarginContainer/VBoxContainer/HBoxContainer" unique_id=1538936183]
 layout_mode = 2
 size_flags_horizontal = 3
+theme_override_constants/margin_left = 70
+theme_override_constants/margin_top = 65
+theme_override_constants/margin_right = 70
 
-[node name="VBoxContainer2" type="VBoxContainer" parent="MarginContainer/VBoxContainer/HBoxContainer" unique_id=425000588]
+[node name="StatisticsContainer" type="VBoxContainer" parent="MarginContainer/VBoxContainer/HBoxContainer/MarginContainer" unique_id=425000588]
 layout_mode = 2
 size_flags_horizontal = 3
+theme_override_constants/separation = 35
 
-[node name="LogOffButton" type="Button" parent="MarginContainer/VBoxContainer" unique_id=295767207]
+[node name="VBoxContainer" type="VBoxContainer" parent="MarginContainer/VBoxContainer/HBoxContainer/MarginContainer/StatisticsContainer" unique_id=743733826]
+layout_mode = 2
+theme_override_constants/separation = -9
+
+[node name="TotalGamesAmount" type="Label" parent="MarginContainer/VBoxContainer/HBoxContainer/MarginContainer/StatisticsContainer/VBoxContainer" unique_id=629264964]
 unique_name_in_owner = true
-custom_minimum_size = Vector2(200, 0)
+layout_mode = 2
+theme = ExtResource("2_xldbt")
+theme_override_fonts/font = ExtResource("4_63srb")
+theme_override_font_sizes/font_size = 80
+text = "236"
+horizontal_alignment = 1
+vertical_alignment = 1
+
+[node name="Label" type="Label" parent="MarginContainer/VBoxContainer/HBoxContainer/MarginContainer/StatisticsContainer/VBoxContainer" unique_id=622737376]
+layout_mode = 2
+theme = ExtResource("2_xldbt")
+theme_override_font_sizes/font_size = 60
+text = "Total games"
+horizontal_alignment = 1
+vertical_alignment = 1
+
+[node name="HBoxContainer" type="HBoxContainer" parent="MarginContainer/VBoxContainer/HBoxContainer/MarginContainer/StatisticsContainer" unique_id=2001230601]
+layout_mode = 2
+theme_override_constants/separation = 58
+alignment = 1
+
+[node name="StatisticWin" type="VBoxContainer" parent="MarginContainer/VBoxContainer/HBoxContainer/MarginContainer/StatisticsContainer/HBoxContainer" unique_id=1159508169]
+layout_mode = 2
+
+[node name="WinsAmount" type="Label" parent="MarginContainer/VBoxContainer/HBoxContainer/MarginContainer/StatisticsContainer/HBoxContainer/StatisticWin" unique_id=1863323629]
+unique_name_in_owner = true
+layout_mode = 2
+theme = ExtResource("2_xldbt")
+theme_override_fonts/font = ExtResource("4_63srb")
+theme_override_font_sizes/font_size = 45
+text = "100"
+horizontal_alignment = 1
+vertical_alignment = 1
+
+[node name="Label" type="Label" parent="MarginContainer/VBoxContainer/HBoxContainer/MarginContainer/StatisticsContainer/HBoxContainer/StatisticWin" unique_id=552330284]
+layout_mode = 2
+theme = ExtResource("2_xldbt")
+theme_override_font_sizes/font_size = 30
+text = "Wins"
+horizontal_alignment = 1
+vertical_alignment = 1
+
+[node name="StatisticDraw" type="VBoxContainer" parent="MarginContainer/VBoxContainer/HBoxContainer/MarginContainer/StatisticsContainer/HBoxContainer" unique_id=1536217365]
+layout_mode = 2
+
+[node name="DrawsAmount" type="Label" parent="MarginContainer/VBoxContainer/HBoxContainer/MarginContainer/StatisticsContainer/HBoxContainer/StatisticDraw" unique_id=1661632739]
+unique_name_in_owner = true
+layout_mode = 2
+theme = ExtResource("2_xldbt")
+theme_override_fonts/font = ExtResource("4_63srb")
+theme_override_font_sizes/font_size = 45
+text = "87"
+horizontal_alignment = 1
+vertical_alignment = 1
+
+[node name="Label" type="Label" parent="MarginContainer/VBoxContainer/HBoxContainer/MarginContainer/StatisticsContainer/HBoxContainer/StatisticDraw" unique_id=35102974]
+layout_mode = 2
+theme = ExtResource("2_xldbt")
+theme_override_font_sizes/font_size = 30
+text = "Draws"
+horizontal_alignment = 1
+vertical_alignment = 1
+
+[node name="StatisticLoss" type="VBoxContainer" parent="MarginContainer/VBoxContainer/HBoxContainer/MarginContainer/StatisticsContainer/HBoxContainer" unique_id=480614976]
+layout_mode = 2
+
+[node name="LossAmount" type="Label" parent="MarginContainer/VBoxContainer/HBoxContainer/MarginContainer/StatisticsContainer/HBoxContainer/StatisticLoss" unique_id=971982883]
+unique_name_in_owner = true
+layout_mode = 2
+theme = ExtResource("2_xldbt")
+theme_override_fonts/font = ExtResource("4_63srb")
+theme_override_font_sizes/font_size = 45
+text = "49"
+horizontal_alignment = 1
+vertical_alignment = 1
+
+[node name="Label" type="Label" parent="MarginContainer/VBoxContainer/HBoxContainer/MarginContainer/StatisticsContainer/HBoxContainer/StatisticLoss" unique_id=1308697193]
+layout_mode = 2
+theme = ExtResource("2_xldbt")
+theme_override_font_sizes/font_size = 30
+text = "Losses"
+horizontal_alignment = 1
+vertical_alignment = 1
+
+[node name="Panel" type="Panel" parent="MarginContainer/VBoxContainer" unique_id=1993193982]
+layout_mode = 2
+size_flags_vertical = 3
+theme = ExtResource("2_xldbt")
+theme_override_styles/panel = SubResource("StyleBoxFlat_wfmxi")
+
+[node name="MarginContainer" type="MarginContainer" parent="MarginContainer/VBoxContainer/Panel" unique_id=559070799]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_constants/margin_left = 30
+theme_override_constants/margin_top = 30
+theme_override_constants/margin_right = 30
+theme_override_constants/margin_bottom = 30
+
+[node name="VBoxContainer" type="VBoxContainer" parent="MarginContainer/VBoxContainer/Panel/MarginContainer" unique_id=1113715862]
+layout_mode = 2
+theme_override_constants/separation = 30
+
+[node name="Label" type="Label" parent="MarginContainer/VBoxContainer/Panel/MarginContainer/VBoxContainer" unique_id=2093797450]
+layout_mode = 2
+theme = ExtResource("2_xldbt")
+theme_override_fonts/font = ExtResource("4_63srb")
+theme_override_font_sizes/font_size = 70
+text = "Categories"
+horizontal_alignment = 1
+vertical_alignment = 2
+
+[node name="CategoryStatisticsContainer" type="GridContainer" parent="MarginContainer/VBoxContainer/Panel/MarginContainer/VBoxContainer" unique_id=1702330762]
+unique_name_in_owner = true
+layout_mode = 2
+size_flags_vertical = 3
+theme_override_constants/h_separation = 20
+theme_override_constants/v_separation = -15
+columns = 4
+
+[node name="CategoryStatisticDissplay" parent="MarginContainer/VBoxContainer/Panel/MarginContainer/VBoxContainer/CategoryStatisticsContainer" unique_id=693794735 instance=ExtResource("5_3o5mh")]
+layout_mode = 2
+
+[node name="CategoryStatisticDissplay2" parent="MarginContainer/VBoxContainer/Panel/MarginContainer/VBoxContainer/CategoryStatisticsContainer" unique_id=1694243173 instance=ExtResource("5_3o5mh")]
+layout_mode = 2
+category = "Entertainment"
+
+[node name="CategoryStatisticDissplay3" parent="MarginContainer/VBoxContainer/Panel/MarginContainer/VBoxContainer/CategoryStatisticsContainer" unique_id=2013525233 instance=ExtResource("5_3o5mh")]
+layout_mode = 2
+category = "Science"
+
+[node name="CategoryStatisticDissplay4" parent="MarginContainer/VBoxContainer/Panel/MarginContainer/VBoxContainer/CategoryStatisticsContainer" unique_id=501019048 instance=ExtResource("5_3o5mh")]
+layout_mode = 2
+category = "History"
+
+[node name="CategoryStatisticDissplay5" parent="MarginContainer/VBoxContainer/Panel/MarginContainer/VBoxContainer/CategoryStatisticsContainer" unique_id=600942418 instance=ExtResource("5_3o5mh")]
+layout_mode = 2
+category = "Geography"
+
+[node name="CategoryStatisticDissplay6" parent="MarginContainer/VBoxContainer/Panel/MarginContainer/VBoxContainer/CategoryStatisticsContainer" unique_id=850906122 instance=ExtResource("5_3o5mh")]
+layout_mode = 2
+category = "Sports"
+
+[node name="CategoryStatisticDissplay7" parent="MarginContainer/VBoxContainer/Panel/MarginContainer/VBoxContainer/CategoryStatisticsContainer" unique_id=567067026 instance=ExtResource("5_3o5mh")]
+layout_mode = 2
+category = "Art"
+
+[node name="CategoryStatisticDissplay8" parent="MarginContainer/VBoxContainer/Panel/MarginContainer/VBoxContainer/CategoryStatisticsContainer" unique_id=574336392 instance=ExtResource("5_3o5mh")]
+layout_mode = 2
+category = "Animals"
+
+[node name="CategoryStatisticDissplay9" parent="MarginContainer/VBoxContainer/Panel/MarginContainer/VBoxContainer/CategoryStatisticsContainer" unique_id=1459629709 instance=ExtResource("5_3o5mh")]
+layout_mode = 2
+category = "Mythology"
+
+[node name="CategoryStatisticDissplay10" parent="MarginContainer/VBoxContainer/Panel/MarginContainer/VBoxContainer/CategoryStatisticsContainer" unique_id=1897462823 instance=ExtResource("5_3o5mh")]
+layout_mode = 2
+category = "Politics"
+
+[node name="CategoryStatisticDissplay11" parent="MarginContainer/VBoxContainer/Panel/MarginContainer/VBoxContainer/CategoryStatisticsContainer" unique_id=1431588841 instance=ExtResource("5_3o5mh")]
+layout_mode = 2
+category = "Celebrities"
+
+[node name="CategoryStatisticDissplay12" parent="MarginContainer/VBoxContainer/Panel/MarginContainer/VBoxContainer/CategoryStatisticsContainer" unique_id=892127015 instance=ExtResource("5_3o5mh")]
+layout_mode = 2
+category = "Vehicles"
+
+[node name="HBoxContainer2" type="HBoxContainer" parent="MarginContainer/VBoxContainer" unique_id=663515002]
+layout_mode = 2
+size_flags_vertical = 8
+theme_override_constants/separation = 236
+alignment = 1
+
+[node name="BackButton" type="Button" parent="MarginContainer/VBoxContainer/HBoxContainer2" unique_id=588860973]
+custom_minimum_size = Vector2(300, 100)
 layout_mode = 2
 size_flags_horizontal = 4
-size_flags_vertical = 10
-theme_override_font_sizes/font_size = 30
+size_flags_vertical = 8
+theme = ExtResource("2_xldbt")
+text = "Back"
+
+[node name="LogOffButton" type="Button" parent="MarginContainer/VBoxContainer/HBoxContainer2" unique_id=1769483899]
+custom_minimum_size = Vector2(300, 100)
+layout_mode = 2
+size_flags_horizontal = 4
+size_flags_vertical = 8
+theme = ExtResource("2_xldbt")
 text = "Log off"
+
+[connection signal="pressed" from="MarginContainer/VBoxContainer/HBoxContainer2/BackButton" to="." method="_on_back_button_pressed"]
+[connection signal="pressed" from="MarginContainer/VBoxContainer/HBoxContainer2/LogOffButton" to="." method="_on_log_off_button_pressed"]
