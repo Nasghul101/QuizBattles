@@ -1,88 +1,81 @@
-extends Panel
+class_name AccountPopup
+extends MarginContainer
 
-## Currently displayed user's username
-var current_displayed_user: String = ""
+signal friend_removed
 
-@onready var name_label: Label = %NameLabel
-@onready var player_avatar: TextureRect = %PlayerAvatar
-@onready var invite_button: Button = %InviteToGameButton
+@onready var friend_name_label: Label = %FriendName
+@onready var friend_total_games_amount: Label = %TotalGamesAmount
+@onready var friend_win_amount: Label = %WinsAmount
+@onready var friend_draw_amount: Label = %DrawsAmount
+@onready var friend_loss_amount: Label = %LossAmount
+@onready var piechart: Control = %Piechart
+@onready var unfriend_popup: MarginContainer = %UnfriendPopup
+@onready var invite_button: Button = %InviteToDuelButton
+
+var _displayed_friend_username: String = ""
+
+func _ready():
+    unfriend_popup.visible = false
 
 
-## Display account information for a specific user
-##
-## @param user_id: Username of the user to display
-func display_user(user_id: String) -> void:
-    # Fetch user data from UserDatabase
-    var user_data: Dictionary = UserDatabase.get_user_data_for_display(user_id)
-    
-    # Return early if user doesn't exist
-    if user_data.is_empty():
-        push_warning("Cannot display user: user '%s' does not exist" % user_id)
-        return
-    
-    # Update UI elements with user data
-    name_label.text = user_data.username
-    
-    # Load and set avatar texture
-    var avatar_path: String = user_data.avatar_path
-    var texture: Texture2D = load(avatar_path)
-    if texture:
-        player_avatar.texture = texture
-    
-    # Store user data for potential future use (wins, losses, current_streak)
-    # These can be displayed in additional UI elements when needed
-    current_displayed_user = user_id
-    
-    # Re-enable invite button on popup open
+func open_for_friend(friend_username: String) -> void:
+    _displayed_friend_username = friend_username
+    friend_name_label.text = friend_username
+
+    var friend_data: Dictionary = UserDatabase.get_user_data_for_display(friend_username)
+    var wins: int = friend_data.get("wins", 0)
+    var losses: int = friend_data.get("losses", 0)
+    var total_games: int = friend_data.get("total_games", 0)
+    var draws: int = total_games - wins - losses
+
+    friend_total_games_amount.text = str(total_games)
+    friend_win_amount.text = str(wins)
+    friend_draw_amount.text = str(draws)
+    friend_loss_amount.text = str(losses)
+
+    piechart.set_chart(wins, draws, total_games)
+
     invite_button.disabled = false
-    
-    # Show popup
+    unfriend_popup.visible = false
     visible = true
 
 
-## Close the popup and clear displayed user
-func close_popup() -> void:
+func _on_account_back_button_pressed():
     visible = false
-    current_displayed_user = ""
 
 
-func _on_back_button_pressed() -> void:
-    close_popup()
-
-
-## Handle clicks on the overlay to close popup when clicking outside
-func _on_overlay_gui_input(event: InputEvent) -> void:
-    if event is InputEventMouseButton:
-        var mouse_event: InputEventMouseButton = event as InputEventMouseButton
-        if mouse_event.pressed and mouse_event.button_index == MOUSE_BUTTON_LEFT:
-            # Check if click is outside popup panel bounds
-            var popup_rect: Rect2 = self.get_global_rect()
-            if not popup_rect.has_point(mouse_event.global_position):
-                close_popup()
-
-
-## Handle invite to game button press
-## Opens setup screen for configuring game parameters before sending invite
-func _on_invite_to_game_button_pressed() -> void:
-    # Check if user is signed in
+func _on_invite_to_duel_button_pressed():
     if not UserDatabase.is_signed_in():
-        push_warning("Cannot send game invite: user not signed in")
         return
-    
-    # Check if a user is displayed
-    if current_displayed_user.is_empty():
-        push_warning("Cannot send game invite: no user displayed")
-        return
-    
-    # Disable button to provide visual feedback
+    var notification_data: Dictionary = {
+        "recipient_username": _displayed_friend_username,
+        "message": "%s invites you to a duel" % [UserDatabase.current_user.username],
+        "sender": UserDatabase.current_user.username,
+        "has_actions": true,
+        "action_data": {
+            "type": "game_invite",
+            "inviter_id": UserDatabase.current_user.username
+        }
+    }
+    GlobalSignalBus.notification_received.emit(notification_data)
     invite_button.disabled = true
-    
-    # Store username before closing popup (close_popup clears current_displayed_user)
-    var invited_username: String = current_displayed_user
-    
-    # Close popup
-    close_popup()
-    
-    # Navigate to setup screen with invited player context
-    var params: Dictionary = {"invited_player": invited_username}
-    TransitionManager.change_scene("res://scenes/ui/setup_screen.tscn", params)
+
+
+func _on_unfried_buton_pressed():
+    unfriend_popup.visible = true
+
+
+func _on_yes_button_pressed():
+    if not UserDatabase.is_signed_in():
+        push_error("Cannot unfriend: no user signed in")
+        unfriend_popup.visible = false
+        visible = false
+        return
+    UserDatabase.remove_friend(UserDatabase.current_user.username, _displayed_friend_username)
+    unfriend_popup.visible = false
+    visible = false
+    friend_removed.emit()
+
+
+func _on_no_button_pressed():
+    unfriend_popup.visible = false

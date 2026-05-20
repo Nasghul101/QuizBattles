@@ -2,22 +2,22 @@
 	"multiplayer_matches": [
 		{
 			"config": {
-				"questions": 5.0,
-				"rounds": 3.0
+				"questions": 5,
+				"rounds": 3
 			},
-			"created_at": 1778018881.335,
-			"current_round": 1.0,
+			"created_at": 1778847462.379,
+			"current_round": 1,
 			"current_turn": "linus",
 			"dismissed_by": [],
 			"inviter": "robin",
-			"match_id": "match_1778018881",
+			"match_id": "match_1778847462",
 			"players": [
 				"robin",
 				"linus"
 			],
 			"rounds_data": [
 				{
-					"category": "Art",
+					"category": "General Knowledge",
 					"category_chooser": "robin",
 					"player_answers": {
 						"linus": {
@@ -28,81 +28,81 @@
 							"answered": true,
 							"results": [
 								{
-									"player_answer": "Donatello",
+									"player_answer": "Latvian",
 									"question_data": {
-										"category": "Art",
-										"correct_answer": "Michelangelo",
-										"difficulty": "easy",
-										"incorrect_answers": [
-											"Gian Lorenzo Bernini",
-											"Auguste Rodin",
-											"Donatello"
-										],
-										"question": "Who sculpted the statue of David?",
-										"type": "multiple"
-									},
-									"was_correct": false
-								},
-								{
-									"player_answer": "Impressionism",
-									"question_data": {
-										"category": "Art",
-										"correct_answer": "Post-Impressionism",
-										"difficulty": "hard",
-										"incorrect_answers": [
-											"Romanticism",
-											"Neoclassical",
-											"Impressionism"
-										],
-										"question": "The painting \"The Starry Night\" by Vincent van Gogh was part of which art movement?",
-										"type": "multiple"
-									},
-									"was_correct": false
-								},
-								{
-									"player_answer": "1502",
-									"question_data": {
-										"category": "Art",
-										"correct_answer": "1502",
-										"difficulty": "hard",
-										"incorrect_answers": [
-											"1702",
-											"1402",
-											"1602"
-										],
-										"question": "What year did Albrecht Dürer create the painting \"The Young Hare\"?",
-										"type": "multiple"
-									},
-									"was_correct": true
-								},
-								{
-									"player_answer": "Vincent van Gogh",
-									"question_data": {
-										"category": "Art",
-										"correct_answer": "Vincent van Gogh",
-										"difficulty": "easy",
-										"incorrect_answers": [
-											"Pablo Picasso",
-											"Leonardo da Vinci",
-											"Michelangelo"
-										],
-										"question": "Who painted The Starry Night?",
-										"type": "multiple"
-									},
-									"was_correct": true
-								},
-								{
-									"player_answer": "The Milkmaid",
-									"question_data": {
-										"category": "Art",
-										"correct_answer": "Bacchus",
+										"category": "General Knowledge",
+										"correct_answer": "Hungarian",
 										"difficulty": "medium",
 										"incorrect_answers": [
-											"Girl with a Pearl Earring",
-											"The Milkmaid",
-											"The Lacemaker"
+											"Russian",
+											"Greek",
+											"Latvian"
 										],
-										"question": "Which of these paintings did Johannes Vermeer not paint?",
+										"question": "Which language is NOT Indo-European?",
+										"type": "multiple"
+									},
+									"was_correct": false
+								},
+								{
+									"player_answer": "The League of Gentlemen&lrm;",
+									"question_data": {
+										"category": "General Knowledge",
+										"correct_answer": "Monty Python",
+										"difficulty": "easy",
+										"incorrect_answers": [
+											"The Goodies&lrm;",
+											"The League of Gentlemen&lrm;",
+											"The Penny Dreadfuls"
+										],
+										"question": "Terry Gilliam was an animator that worked with which British comedy group?",
+										"type": "multiple"
+									},
+									"was_correct": false
+								},
+								{
+									"player_answer": "Airplanes",
+									"question_data": {
+										"category": "General Knowledge",
+										"correct_answer": "Paper",
+										"difficulty": "easy",
+										"incorrect_answers": [
+											"Airplanes",
+											"Law books",
+											"Phone screens"
+										],
+										"question": "\"A3\", \"B1\", and \"Legal\" are typical names of sizes for what object?",
+										"type": "multiple"
+									},
+									"was_correct": false
+								},
+								{
+									"player_answer": "Model",
+									"question_data": {
+										"category": "General Knowledge",
+										"correct_answer": "Model",
+										"difficulty": "easy",
+										"incorrect_answers": [
+											"Professor",
+											"Biologist",
+											"Musician"
+										],
+										"question": "What is the profession of Elon Musk's mom, Maye Musk?",
+										"type": "multiple"
+									},
+									"was_correct": true
+								},
+								{
+									"player_answer": "Mount Kenya, Kenya",
+									"question_data": {
+										"category": "General Knowledge",
+										"correct_answer": "Mount Kilimanjaro, Tanzania",
+										"difficulty": "medium",
+										"incorrect_answers": [
+											"Mount Kenya, Kenya",
+											"Mount Stanley, DR Congo/Uganda",
+											"Mount Speke, Uganda"
+										],
+										"question": "Which mountain has the highest peak in Africa?",
 										"type": "multiple"
 									},
 									"was_correct": false
@@ -112,67 +112,67 @@
 					},
 					"questions": [
 						{
-							"category": "Art",
-							"correct_answer": "Michelangelo",
-							"difficulty": "easy",
-							"incorrect_answers": [
-								"Gian Lorenzo Bernini",
-								"Auguste Rodin",
-								"Donatello"
-							],
-							"question": "Who sculpted the statue of David?",
-							"type": "multiple"
-						},
-						{
-							"category": "Art",
-							"correct_answer": "Post-Impressionism",
-							"difficulty": "hard",
-							"incorrect_answers": [
-								"Romanticism",
-								"Neoclassical",
-								"Impressionism"
-							],
-							"question": "The painting \"The Starry Night\" by Vincent van Gogh was part of which art movement?",
-							"type": "multiple"
-						},
-						{
-							"category": "Art",
-							"correct_answer": "1502",
-							"difficulty": "hard",
-							"incorrect_answers": [
-								"1702",
-								"1402",
-								"1602"
-							],
-							"question": "What year did Albrecht Dürer create the painting \"The Young Hare\"?",
-							"type": "multiple"
-						},
-						{
-							"category": "Art",
-							"correct_answer": "Vincent van Gogh",
-							"difficulty": "easy",
-							"incorrect_answers": [
-								"Pablo Picasso",
-								"Leonardo da Vinci",
-								"Michelangelo"
-							],
-							"question": "Who painted The Starry Night?",
-							"type": "multiple"
-						},
-						{
-							"category": "Art",
-							"correct_answer": "Bacchus",
+							"category": "General Knowledge",
+							"correct_answer": "Hungarian",
 							"difficulty": "medium",
 							"incorrect_answers": [
-								"Girl with a Pearl Earring",
-								"The Milkmaid",
-								"The Lacemaker"
+								"Russian",
+								"Greek",
+								"Latvian"
 							],
-							"question": "Which of these paintings did Johannes Vermeer not paint?",
+							"question": "Which language is NOT Indo-European?",
+							"type": "multiple"
+						},
+						{
+							"category": "General Knowledge",
+							"correct_answer": "Monty Python",
+							"difficulty": "easy",
+							"incorrect_answers": [
+								"The Goodies&lrm;",
+								"The League of Gentlemen&lrm;",
+								"The Penny Dreadfuls"
+							],
+							"question": "Terry Gilliam was an animator that worked with which British comedy group?",
+							"type": "multiple"
+						},
+						{
+							"category": "General Knowledge",
+							"correct_answer": "Paper",
+							"difficulty": "easy",
+							"incorrect_answers": [
+								"Airplanes",
+								"Law books",
+								"Phone screens"
+							],
+							"question": "\"A3\", \"B1\", and \"Legal\" are typical names of sizes for what object?",
+							"type": "multiple"
+						},
+						{
+							"category": "General Knowledge",
+							"correct_answer": "Model",
+							"difficulty": "easy",
+							"incorrect_answers": [
+								"Professor",
+								"Biologist",
+								"Musician"
+							],
+							"question": "What is the profession of Elon Musk's mom, Maye Musk?",
+							"type": "multiple"
+						},
+						{
+							"category": "General Knowledge",
+							"correct_answer": "Mount Kilimanjaro, Tanzania",
+							"difficulty": "medium",
+							"incorrect_answers": [
+								"Mount Kenya, Kenya",
+								"Mount Stanley, DR Congo/Uganda",
+								"Mount Speke, Uganda"
+							],
+							"question": "Which mountain has the highest peak in Africa?",
 							"type": "multiple"
 						}
 					],
-					"round_number": 1.0
+					"round_number": 1
 				},
 				{
 					"category": "",
@@ -188,7 +188,7 @@
 						}
 					},
 					"questions": [],
-					"round_number": 2.0
+					"round_number": 2
 				},
 				{
 					"category": "",
@@ -204,7 +204,7 @@
 						}
 					},
 					"questions": [],
-					"round_number": 3.0
+					"round_number": 3
 				}
 			],
 			"stats_processed": false,

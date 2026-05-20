@@ -1,4 +1,4 @@
-[gd_scene format=3 uid="uid://c8xykm15dq8kc"]
+[gd_scene format=3 uid="uid://crnu6goxc6w28"]
 
 [ext_resource type="Script" uid="uid://bv8ekus16f4oy" path="res://scenes/ui/lobby_pages/socials_page.gd" id="1_6rgj1"]
 [ext_resource type="Texture2D" uid="uid://cgybwrud0436v" path="res://assets/ui/SocialScreen_BG.png" id="1_xpe0s"]
@@ -8,6 +8,7 @@
 [ext_resource type="Texture2D" uid="uid://bwiby0r7dcp7d" path="res://assets/icon_wrong.png" id="6_npdnn"]
 [ext_resource type="Theme" uid="uid://cxninrmdvbey6" path="res://Styles/BasicTheme.tres" id="7_5n5qj"]
 [ext_resource type="Texture2D" uid="uid://blen8fg2q6x2c" path="res://assets/icons8-share-144.png" id="7_rx60n"]
+[ext_resource type="PackedScene" uid="uid://dnr83p3aukr5k" path="res://scenes/ui/account_ui/account_popup.tscn" id="10_8i3sq"]
 
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_npdnn"]
 bg_color = Color(0.30980393, 0.2627451, 0.3137255, 1)
@@ -51,18 +52,15 @@ grow_horizontal = 2
 grow_vertical = 2
 texture = ExtResource("1_xpe0s")
 expand_mode = 5
-stretch_mode = 5
 
 [node name="ScrollContainer" type="ScrollContainer" parent="BGTexture" unique_id=2104392725]
 layout_mode = 1
-anchors_preset = -1
-anchor_top = 0.13223787
+anchors_preset = 15
 anchor_right = 1.0
-anchor_bottom = 0.86776215
+anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
 theme = ExtResource("7_5n5qj")
-metadata/_edit_use_anchors_ = true
 
 [node name="FriendDisplayContainer" type="VBoxContainer" parent="BGTexture/ScrollContainer" unique_id=1528463651]
 unique_name_in_owner = true
@@ -89,7 +87,6 @@ grow_vertical = 2
 mouse_filter = 2
 texture = ExtResource("5_p37ba")
 expand_mode = 5
-stretch_mode = 5
 
 [node name="AddFriendsPopup" type="MarginContainer" parent="." unique_id=1931475607]
 unique_name_in_owner = true
@@ -194,6 +191,11 @@ size_flags_horizontal = 8
 theme = ExtResource("7_5n5qj")
 icon = ExtResource("7_rx60n")
 icon_alignment = 1
+
+[node name="AccountPopup" parent="." unique_id=1182344581 instance=ExtResource("10_8i3sq")]
+unique_name_in_owner = true
+visible = false
+layout_mode = 1
 
 [connection signal="pressed" from="BGTexture/ScrollContainer/FriendDisplayContainer/AddNewFriendsButton" to="." method="_on_add_new_friends_button_pressed"]
 [connection signal="pressed" from="AddFriendsPopup/Background/MarginContainer/VBoxContainer/HBoxContainer2/BackButton" to="." method="_on_back_button_pressed"]

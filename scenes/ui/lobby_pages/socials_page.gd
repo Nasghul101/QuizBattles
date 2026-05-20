@@ -6,6 +6,9 @@ extends Control
 @onready var name_input: TextEdit = %NameInput
 @onready var friends_container: VBoxContainer = %FriendsContainer
 @onready var send_friend_request_button: Button = %SendFriendRequestButton
+@onready var account_popup: AccountPopup = %AccountPopup
+
+
 
 # Preload friend display component scene
 const FRIEND_DISPLAY_COMPONENT = preload("res://scenes/ui/components/friend_display_component.tscn")
@@ -28,6 +31,9 @@ func _ready() -> void:
     
     # Connect to notification actions for friend list updates
     GlobalSignalBus.notification_action_taken.connect(_on_friendship_changed)
+    
+    # Refresh friend list when account popup removes a friend
+    account_popup.friend_removed.connect(_populate_friends_list)
     
     # Connect to name input for search-as-you-type
     name_input.text_changed.connect(_on_name_input_text_changed)
@@ -82,6 +88,13 @@ func _populate_friends_list() -> void:
         # Get top 3 categories and set colors
         var top_categories: Array = _get_top_categories(friend_data.category_stats)
         _set_category_colors(display, top_categories)
+        
+        # Connect pressed signal to open account popup
+        display.pressed.connect(_on_friend_display_pressed.bind(friend_username))
+
+
+func _on_friend_display_pressed(friend_username: String) -> void:
+    account_popup.open_for_friend(friend_username)
 
 
 ## Get top 3 categories sorted by play count.

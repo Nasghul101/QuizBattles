@@ -1,64 +1,208 @@
-[gd_scene load_steps=4 format=3 uid="uid://dnr83p3aukr5k"]
+[gd_scene format=3 uid="uid://dnr83p3aukr5k"]
 
-[ext_resource type="Script" uid="uid://cuag73iw3g4do" path="res://scenes/ui/account_ui/account_popup.gd" id="1_541jh"]
-[ext_resource type="Texture2D" uid="uid://bwiby0r7dcp7d" path="res://assets/icon_wrong.png" id="1_lspc7"]
-[ext_resource type="Texture2D" uid="uid://dncii1qdcses" path="res://assets/profile_pictures/man_beard.png" id="3_mpaho"]
+[ext_resource type="Theme" uid="uid://cxninrmdvbey6" path="res://Styles/BasicTheme.tres" id="1_mpaho"]
+[ext_resource type="Script" uid="uid://cuag73iw3g4do" path="res://scenes/ui/account_ui/account_popup.gd" id="1_p8j0m"]
+[ext_resource type="Texture2D" uid="uid://bwiby0r7dcp7d" path="res://assets/icon_wrong.png" id="2_p8j0m"]
+[ext_resource type="PackedScene" uid="uid://b0frkcn0f5ddu" path="res://scenes/ui/components/piechart.tscn" id="3_appl4"]
+[ext_resource type="FontFile" uid="uid://c2546x0aealwc" path="res://assets/Font/exo/Exo-ExtraBold.otf" id="4_cqb5n"]
 
-[node name="AccountPopup" type="Panel"]
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_npdnn"]
+bg_color = Color(0.30980393, 0.2627451, 0.3137255, 1)
+border_width_left = 10
+border_width_top = 10
+border_width_right = 10
+border_width_bottom = 10
+border_color = Color(0.9843137, 0.8627451, 0.9529412, 1)
+corner_radius_top_left = 40
+corner_radius_top_right = 40
+corner_radius_bottom_right = 40
+corner_radius_bottom_left = 40
+
+[node name="AccountPopup" type="MarginContainer" unique_id=1182344581]
 anchors_preset = 15
 anchor_right = 1.0
 anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
-script = ExtResource("1_541jh")
+theme_override_constants/margin_left = 120
+theme_override_constants/margin_top = 500
+theme_override_constants/margin_right = 120
+theme_override_constants/margin_bottom = 500
+script = ExtResource("1_p8j0m")
 
-[node name="VBoxContainer" type="VBoxContainer" parent="."]
+[node name="Background" type="Panel" parent="." unique_id=1913664982]
+layout_mode = 2
+theme = ExtResource("1_mpaho")
+theme_override_styles/panel = SubResource("StyleBoxFlat_npdnn")
+metadata/_edit_use_anchors_ = true
+
+[node name="MarginContainer" type="MarginContainer" parent="Background" unique_id=1877844057]
 layout_mode = 1
 anchors_preset = 15
 anchor_right = 1.0
 anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
+size_flags_vertical = 3
+theme_override_constants/margin_left = 45
+theme_override_constants/margin_top = 50
+theme_override_constants/margin_right = 45
+theme_override_constants/margin_bottom = 50
 
-[node name="NameLabel" type="Label" parent="VBoxContainer"]
+[node name="VBoxContainer" type="VBoxContainer" parent="Background/MarginContainer" unique_id=82197083]
+layout_mode = 2
+theme_override_constants/separation = 33
+
+[node name="HBoxContainer2" type="HBoxContainer" parent="Background/MarginContainer/VBoxContainer" unique_id=1363497169]
+layout_mode = 2
+theme_override_constants/separation = -65
+alignment = 1
+
+[node name="FriendName" type="Label" parent="Background/MarginContainer/VBoxContainer/HBoxContainer2" unique_id=1238053012]
 unique_name_in_owner = true
 layout_mode = 2
-size_flags_horizontal = 6
+size_flags_horizontal = 3
+theme = ExtResource("1_mpaho")
 theme_override_font_sizes/font_size = 60
-text = "Name"
+text = "Friend Name"
 horizontal_alignment = 1
 vertical_alignment = 1
 
-[node name="PlayerAvatar" type="TextureRect" parent="VBoxContainer"]
-unique_name_in_owner = true
-custom_minimum_size = Vector2(100, 100)
+[node name="AccountBackButton" type="Button" parent="Background/MarginContainer/VBoxContainer/HBoxContainer2" unique_id=1587206555]
 layout_mode = 2
-size_flags_horizontal = 4
-texture = ExtResource("3_mpaho")
-expand_mode = 1
+size_flags_horizontal = 8
+theme = ExtResource("1_mpaho")
+icon = ExtResource("2_p8j0m")
 
-[node name="InviteToGameButton" type="Button" parent="VBoxContainer"]
+[node name="HBoxContainer3" type="HBoxContainer" parent="Background/MarginContainer/VBoxContainer" unique_id=566442406]
+layout_mode = 2
+size_flags_vertical = 3
+
+[node name="Piechart" parent="Background/MarginContainer/VBoxContainer/HBoxContainer3" unique_id=1069233904 instance=ExtResource("3_appl4")]
 unique_name_in_owner = true
 layout_mode = 2
-size_flags_horizontal = 4
-size_flags_vertical = 10
-theme_override_font_sizes/font_size = 26
+size_flags_horizontal = 3
+
+[node name="StatisticsContainer" type="VBoxContainer" parent="Background/MarginContainer/VBoxContainer/HBoxContainer3" unique_id=346467496]
+layout_mode = 2
+size_flags_horizontal = 3
+theme_override_constants/separation = 35
+
+[node name="VBoxContainer" type="VBoxContainer" parent="Background/MarginContainer/VBoxContainer/HBoxContainer3/StatisticsContainer" unique_id=791032627]
+layout_mode = 2
+theme_override_constants/separation = -9
+
+[node name="TotalGamesAmount" type="Label" parent="Background/MarginContainer/VBoxContainer/HBoxContainer3/StatisticsContainer/VBoxContainer" unique_id=184953181]
+unique_name_in_owner = true
+layout_mode = 2
+theme = ExtResource("1_mpaho")
+theme_override_fonts/font = ExtResource("4_cqb5n")
+theme_override_font_sizes/font_size = 80
+text = "236"
+horizontal_alignment = 1
+vertical_alignment = 1
+
+[node name="Label" type="Label" parent="Background/MarginContainer/VBoxContainer/HBoxContainer3/StatisticsContainer/VBoxContainer" unique_id=1058223413]
+layout_mode = 2
+theme = ExtResource("1_mpaho")
+theme_override_font_sizes/font_size = 60
+text = "Total games"
+horizontal_alignment = 1
+vertical_alignment = 1
+
+[node name="HBoxContainer" type="HBoxContainer" parent="Background/MarginContainer/VBoxContainer/HBoxContainer3/StatisticsContainer" unique_id=1375258584]
+layout_mode = 2
+theme_override_constants/separation = 58
+alignment = 1
+
+[node name="StatisticWin" type="VBoxContainer" parent="Background/MarginContainer/VBoxContainer/HBoxContainer3/StatisticsContainer/HBoxContainer" unique_id=379113252]
+layout_mode = 2
+
+[node name="WinsAmount" type="Label" parent="Background/MarginContainer/VBoxContainer/HBoxContainer3/StatisticsContainer/HBoxContainer/StatisticWin" unique_id=1348366637]
+unique_name_in_owner = true
+layout_mode = 2
+theme = ExtResource("1_mpaho")
+theme_override_fonts/font = ExtResource("4_cqb5n")
+theme_override_font_sizes/font_size = 45
+text = "100"
+horizontal_alignment = 1
+vertical_alignment = 1
+
+[node name="Label" type="Label" parent="Background/MarginContainer/VBoxContainer/HBoxContainer3/StatisticsContainer/HBoxContainer/StatisticWin" unique_id=681635631]
+layout_mode = 2
+theme = ExtResource("1_mpaho")
+theme_override_font_sizes/font_size = 30
+text = "Wins"
+horizontal_alignment = 1
+vertical_alignment = 1
+
+[node name="StatisticDraw" type="VBoxContainer" parent="Background/MarginContainer/VBoxContainer/HBoxContainer3/StatisticsContainer/HBoxContainer" unique_id=167406621]
+layout_mode = 2
+
+[node name="DrawsAmount" type="Label" parent="Background/MarginContainer/VBoxContainer/HBoxContainer3/StatisticsContainer/HBoxContainer/StatisticDraw" unique_id=1642225440]
+unique_name_in_owner = true
+layout_mode = 2
+theme = ExtResource("1_mpaho")
+theme_override_fonts/font = ExtResource("4_cqb5n")
+theme_override_font_sizes/font_size = 45
+text = "87"
+horizontal_alignment = 1
+vertical_alignment = 1
+
+[node name="Label" type="Label" parent="Background/MarginContainer/VBoxContainer/HBoxContainer3/StatisticsContainer/HBoxContainer/StatisticDraw" unique_id=873773066]
+layout_mode = 2
+theme = ExtResource("1_mpaho")
+theme_override_font_sizes/font_size = 30
+text = "Draws"
+horizontal_alignment = 1
+vertical_alignment = 1
+
+[node name="StatisticLoss" type="VBoxContainer" parent="Background/MarginContainer/VBoxContainer/HBoxContainer3/StatisticsContainer/HBoxContainer" unique_id=2129227319]
+layout_mode = 2
+
+[node name="LossAmount" type="Label" parent="Background/MarginContainer/VBoxContainer/HBoxContainer3/StatisticsContainer/HBoxContainer/StatisticLoss" unique_id=1039453942]
+unique_name_in_owner = true
+layout_mode = 2
+theme = ExtResource("1_mpaho")
+theme_override_fonts/font = ExtResource("4_cqb5n")
+theme_override_font_sizes/font_size = 45
+text = "49"
+horizontal_alignment = 1
+vertical_alignment = 1
+
+[node name="Label" type="Label" parent="Background/MarginContainer/VBoxContainer/HBoxContainer3/StatisticsContainer/HBoxContainer/StatisticLoss" unique_id=451678558]
+layout_mode = 2
+theme = ExtResource("1_mpaho")
+theme_override_font_sizes/font_size = 30
+text = "Losses"
+horizontal_alignment = 1
+vertical_alignment = 1
+
+[node name="HBoxContainer" type="HBoxContainer" parent="Background/MarginContainer/VBoxContainer" unique_id=179408934]
+layout_mode = 2
+size_flags_vertical = 8
+theme_override_constants/separation = 68
+alignment = 2
+
+[node name="InviteToDuelButton" type="Button" parent="Background/MarginContainer/VBoxContainer/HBoxContainer" unique_id=1826118509]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(0, 150)
+layout_mode = 2
+size_flags_horizontal = 3
+size_flags_vertical = 4
+theme = ExtResource("1_mpaho")
 text = "Invite to duel"
 
-[node name="BackButton" type="Button" parent="."]
-custom_minimum_size = Vector2(80, 80)
-layout_mode = 1
-anchors_preset = 1
-anchor_left = 1.0
-anchor_right = 1.0
-offset_left = -80.0
-offset_bottom = 80.0
-grow_horizontal = 0
-size_flags_horizontal = 8
-icon = ExtResource("1_lspc7")
-expand_icon = true
+[node name="UnfriedButon" type="Button" parent="Background/MarginContainer/VBoxContainer/HBoxContainer" unique_id=765703830]
+custom_minimum_size = Vector2(0, 150)
+layout_mode = 2
+size_flags_horizontal = 3
+theme = ExtResource("1_mpaho")
+text = "unfriend"
+icon_alignment = 1
 
-[node name="Overlay" type="ColorRect" parent="."]
+[node name="UnfriendPopup" type="MarginContainer" parent="Background" unique_id=361426179]
+unique_name_in_owner = true
 visible = false
 layout_mode = 1
 anchors_preset = 15
@@ -66,8 +210,59 @@ anchor_right = 1.0
 anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
-color = Color(0, 0, 0, 0.4)
+theme_override_constants/margin_left = 100
+theme_override_constants/margin_top = 500
+theme_override_constants/margin_right = 100
+theme_override_constants/margin_bottom = 500
 
-[connection signal="pressed" from="VBoxContainer/InviteToGameButton" to="." method="_on_invite_to_game_button_pressed"]
-[connection signal="pressed" from="BackButton" to="." method="_on_back_button_pressed"]
-[connection signal="gui_input" from="Overlay" to="." method="_on_overlay_gui_input"]
+[node name="Panel" type="Panel" parent="Background/UnfriendPopup" unique_id=1304776263]
+layout_mode = 2
+theme = ExtResource("1_mpaho")
+
+[node name="MarginContainer" type="MarginContainer" parent="Background/UnfriendPopup/Panel" unique_id=326465448]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_constants/margin_left = 40
+theme_override_constants/margin_top = 40
+theme_override_constants/margin_right = 40
+theme_override_constants/margin_bottom = 40
+
+[node name="VBoxContainer" type="VBoxContainer" parent="Background/UnfriendPopup/Panel/MarginContainer" unique_id=1519473791]
+layout_mode = 2
+
+[node name="Label" type="Label" parent="Background/UnfriendPopup/Panel/MarginContainer/VBoxContainer" unique_id=262559196]
+custom_minimum_size = Vector2(100, 100)
+layout_mode = 2
+size_flags_vertical = 3
+theme = ExtResource("1_mpaho")
+theme_override_font_sizes/font_size = 70
+text = "Do you really want to unfriend that Player?"
+autowrap_mode = 3
+
+[node name="HBoxContainer" type="HBoxContainer" parent="Background/UnfriendPopup/Panel/MarginContainer/VBoxContainer" unique_id=1745829710]
+layout_mode = 2
+theme_override_constants/separation = 70
+
+[node name="YesButton" type="Button" parent="Background/UnfriendPopup/Panel/MarginContainer/VBoxContainer/HBoxContainer" unique_id=1697482307]
+custom_minimum_size = Vector2(0, 100)
+layout_mode = 2
+size_flags_horizontal = 3
+theme = ExtResource("1_mpaho")
+text = "Yes"
+
+[node name="NoButton" type="Button" parent="Background/UnfriendPopup/Panel/MarginContainer/VBoxContainer/HBoxContainer" unique_id=955623822]
+custom_minimum_size = Vector2(0, 100)
+layout_mode = 2
+size_flags_horizontal = 3
+theme = ExtResource("1_mpaho")
+text = "No"
+
+[connection signal="pressed" from="Background/MarginContainer/VBoxContainer/HBoxContainer2/AccountBackButton" to="." method="_on_account_back_button_pressed"]
+[connection signal="pressed" from="Background/MarginContainer/VBoxContainer/HBoxContainer/InviteToDuelButton" to="." method="_on_invite_to_duel_button_pressed"]
+[connection signal="pressed" from="Background/MarginContainer/VBoxContainer/HBoxContainer/UnfriedButon" to="." method="_on_unfried_buton_pressed"]
+[connection signal="pressed" from="Background/UnfriendPopup/Panel/MarginContainer/VBoxContainer/HBoxContainer/YesButton" to="." method="_on_yes_button_pressed"]
+[connection signal="pressed" from="Background/UnfriendPopup/Panel/MarginContainer/VBoxContainer/HBoxContainer/NoButton" to="." method="_on_no_button_pressed"]

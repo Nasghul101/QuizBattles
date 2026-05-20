@@ -1,6 +1,8 @@
 class_name FriendDisplayComponent
 extends Control
 
+signal pressed
+
 @onready var base_texture: TextureButton = %FriendDisplayButton
 @onready var first_category: Panel = %FirstPlayedCategory
 @onready var second_category: Panel = %SecondPlayedCategory
@@ -8,6 +10,12 @@ extends Control
 @onready var player_name: AutoSizeLabel = %Name
 @onready var win_count: Label = %WinCount
 @onready var loss_count: Label = %LossCount
+
+func _ready() -> void:
+    base_texture.pressed.connect(_on_friend_display_button_pressed)
+
+func _on_friend_display_button_pressed() -> void:
+    pressed.emit()
 
 func set_new_texture(new_texture: CompressedTexture2D) -> void:
     base_texture.texture_normal = new_texture

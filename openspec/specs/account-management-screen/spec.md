@@ -3,30 +3,17 @@
 ## Purpose
 TBD - created by archiving change add-account-screen-navigation. Update Purpose after archive.
 ## Requirements
-### Requirement: Back Navigation to Main Lobby
-The account management screen SHALL provide navigation back to the main lobby screen.
+### Requirement: Navigate Back to Main Lobby on Back Button Press
+The account management screen SHALL navigate back to the main lobby screen when the BackButton is pressed.
 
-**Rationale:** Allow users to return to the main lobby after viewing or managing account settings.
+**Rationale:** Users need to return to the main lobby after viewing their account information.
 
-#### Scenario: Navigate back to main lobby
-**GIVEN** the user is on the account management screen  
-**WHEN** the BackButton is pressed  
-**THEN** the screen SHALL transition to `res://scenes/ui/main_lobby_screen.tscn` using TransitionManager  
-**AND** the transition SHALL include fade effects
-
----
-
-### Requirement: Navigation Error Handling
-The account management screen SHALL handle navigation failures gracefully by returning to the main lobby.
-
-**Rationale:** Ensure users can recover from navigation errors and have a safe fallback screen.
-
-#### Scenario: Handle transition failure and return to main lobby
-**GIVEN** a scene transition is initiated  
-**WHEN** the transition fails (e.g., scene path not found)  
-**THEN** the screen SHALL log an error to the console using `push_error()`  
-**AND** the screen SHALL transition back to `res://scenes/ui/main_lobby_screen.tscn`  
-**AND** the fallback transition SHALL use TransitionManager with fade effects
+#### Scenario: Back button returns to main lobby
+**Given** the account management screen is visible  
+**And** user is on the account management screen  
+**When** the user presses the BackButton  
+**Then** the screen SHALL call `Utils.navigate_to_scene("main_lobby")`  
+**And** the user SHALL be navigated to the main lobby screen
 
 ### Requirement: Display Current User Username
 The account management screen SHALL display the currently logged-in user's username in the NameLabel when the screen loads.
@@ -47,24 +34,27 @@ The account management screen SHALL display the currently logged-in user's usern
 
 ---
 
-### Requirement: Log Off Functionality
-The account management screen SHALL provide a LogOffButton that logs out the current user and returns to the login screen.
+### Requirement: Log Off and Navigate to Main Lobby on Log Off Button Press
+The account management screen SHALL sign out the current user and navigate to the main lobby screen when the LogOffButton is pressed.
 
-**Rationale:** Users need the ability to log out from their account to switch users or secure their session.
+**Rationale:** Users need to log out of their account from the account management screen.
 
-#### Scenario: User logs off successfully
-**GIVEN** a user is logged in and on the account management screen  
-**WHEN** the LogOffButton is pressed  
-**THEN** the screen SHALL call `UserDatabase.sign_out()` to clear the user session  
-**AND** the screen SHALL log a message to the console confirming logout with the username  
-**AND** the screen SHALL transition to `res://scenes/ui/account_ui/register_login_screen.tscn` using TransitionManager  
-**AND** the transition SHALL include fade effects
+**Cross-reference:** Uses `local-user-database.sign_out()`.
 
-#### Scenario: Console logging on logout
-**GIVEN** a user named "TestUser" is logged in  
-**WHEN** the LogOffButton is pressed  
-**THEN** a message SHALL be logged to the console indicating the user logged out  
-**AND** the message SHALL include the username (e.g., "User TestUser logged out")
+#### Scenario: Log off button signs out and returns to main lobby
+**Given** user "Player123" is logged in  
+**And** the account management screen is visible  
+**When** the user presses the LogOffButton  
+**Then** the screen SHALL call `UserDatabase.sign_out()`  
+**And** the current user session SHALL be cleared  
+**And** the screen SHALL call `Utils.navigate_to_scene("main_lobby")`  
+**And** the user SHALL be navigated to the main lobby screen as a guest
+
+#### Scenario: Main lobby shows login screen after log off
+**Given** user was logged in and pressed LogOffButton  
+**When** the user presses the AccountButton on the main lobby  
+**Then** the user SHALL be navigated to the register/login screen (not account management)  
+**And** this verifies the log off was successful
 
 ### Requirement: Display Current User Avatar in UserAvatar Button
 The `UserAvatar` button SHALL display the current user's profile picture from their avatar_path field.
@@ -216,6 +206,175 @@ When the "Invite to Game" button is pressed on account_popup, the popup SHALL cl
 **Then** the button becomes disabled  
 **And** remains disabled while navigating to setup_screen  
 **And** re-enables when popup is reopened later (existing behavior)
+
+---
+
+### Requirement: Populate User Statistics on Screen Load
+The account management screen SHALL fetch and display the current logged-in user's statistics when the screen becomes ready, including total games, wins, losses, draws (calculated), pie chart visualization, and per-category statistics.
+
+**Rationale:** Users need to view their performance data when accessing the account management screen. All UI components are already in place with proper unique names, but lack data population logic.
+
+**Cross-reference:** Uses `local-user-database.get_user_data_for_display()` and `local-user-database.total_games` field.
+
+#### Scenario: Display statistics for user with game history
+**Given** user "Player123" is logged in with `total_games: 50`, `wins: 30`, `losses: 15`  
+**And** user has `category_stats: {"History": {"played": 20, "wins": 12}, "Science": {"played": 15, "wins": 8}}`  
+**When** the account management screen `_ready()` function executes  
+**Then** the player name label SHALL display "Player123"  
+**And** total games label SHALL display "50"  
+**And** wins label SHALL display "30"  
+**And** draws label SHALL display "5" (calculated as 50 - 30 - 15)  
+**And** losses label SHALL display "15"  
+**And** the pie chart SHALL be populated by calling `set_chart(30, 5, 50)`  
+**And** the History category component SHALL show 12 wins, 20 played, 60% win rate  
+**And** the Science category component SHALL show 8 wins, 15 played, 53% win rate  
+**And** categories not in `category_stats` SHALL show 0 wins, 0 played, 0% win rate
+
+#### Scenario: Display empty state for new user
+**Given** user "NewPlayer" is logged in with `total_games: 0`, `wins: 0`, `losses: 0`  
+**And** user has `category_stats: {}`  
+**When** the account management screen `_ready()` function executes  
+**Then** the player name label SHALL display "NewPlayer"  
+**And** total games label SHALL display "0"  
+**And** wins label SHALL display "0"  
+**And** draws label SHALL display "0"  
+**And** losses label SHALL display "0"  
+**And** the pie chart SHALL display inspector default values (not call `set_chart()` or call with zeros)  
+**And** all category components SHALL show 0 wins, 0 played, 0% win rate
+
+#### Scenario: Calculate draws correctly
+**Given** user has `total_games: 100`, `wins: 60`, `losses: 30`  
+**When** the account management screen calculates draws  
+**Then** draws SHALL equal `100 - 60 - 30 = 10`  
+**And** the draws label SHALL display "10"
+
+---
+
+### Requirement: Populate Category Statistics from User Data
+The account management screen SHALL iterate through all category statistic display components and populate each with the corresponding category data from the user's `category_stats` dictionary.
+
+**Rationale:** Users need to see their performance breakdown by category to understand their strengths and weaknesses.
+
+**Cross-reference:** Uses restructured `local-user-database.category_stats` with nested `{"played": int, "wins": int}` structure.
+
+#### Scenario: Populate multiple categories with data
+**Given** user has `category_stats: {"History": {"played": 25, "wins": 18}, "Geography": {"played": 10, "wins": 4}, "Sports": {"played": 8, "wins": 8}}`  
+**When** the account management screen populates category statistics  
+**Then** the History component SHALL call `set_win_amount(18)`, `set_played_amount(25)`, and `set_win_rate()` resulting in 72% display  
+**And** the Geography component SHALL call `set_win_amount(4)`, `set_played_amount(10)`, and `set_win_rate()` resulting in 40% display  
+**And** the Sports component SHALL call `set_win_amount(8)`, `set_played_amount(8)`, and `set_win_rate()` resulting in 100% display  
+**And** all other category components SHALL show 0, 0, 0%
+
+#### Scenario: Handle missing category data gracefully
+**Given** user has `category_stats: {"History": {"played": 5, "wins": 3}}`  
+**And** 11 other categories have no data  
+**When** the account management screen populates category statistics  
+**Then** the History component SHALL show 3 wins, 5 played, 60% win rate  
+**And** all 11 other category components SHALL show 0 wins, 0 played, 0% win rate  
+**And** no errors SHALL occur for missing categories
+
+#### Scenario: Iterate through all category components
+**Given** the CategoryStatisticsContainer has 12 child category components  
+**When** the account management screen populates statistics  
+**Then** the screen SHALL iterate through all 12 children  
+**And** for each child, extract the `category` export variable  
+**And** look up that category in user's `category_stats`  
+**And** populate the component with the data (or zeros if not found)
+
+---
+
+### Requirement: Open AccountPopup and Populate Friend Data
+AccountPopup SHALL expose an `open_for_friend(friend_username: String)` method that populates all UI elements and shows the popup.
+
+**Rationale:** Centralise popup population logic in one callable method so callers (SocialsPage) stay simple.
+
+**Cross-reference**: Triggered by `socials-page-friend-display` friend press interaction.
+
+#### Scenario: Open popup for friend with stats
+**Given** user "alice" is signed in  
+**And** alice has friend "bob" with `wins = 12`, `losses = 5`, `total_games = 20`  
+**When** `AccountPopup.open_for_friend("bob")` is called  
+**Then** the `FriendName` label SHALL display "bob"  
+**And** `TotalGamesAmount` label SHALL display "20"  
+**And** `WinsAmount` label SHALL display "12"  
+**And** `LossAmount` label SHALL display "5"  
+**And** `DrawsAmount` label SHALL display "3" (20 - 12 - 5)  
+**And** `Piechart.set_chart(12, 3, 20)` SHALL be called  
+**And** the AccountPopup `visible` property SHALL be set to `true`
+
+#### Scenario: Open popup resets invite button state
+**Given** the "Invite to duel" button was disabled in a previous popup session  
+**When** `open_for_friend(friend_username)` is called  
+**Then** the "Invite to duel" button SHALL be re-enabled (`disabled = false`)  
+**And** the `UnfriendPopup` SHALL remain hidden
+
+#### Scenario: Open popup for friend with zero total games
+**Given** friend "charlie" has `total_games = 0`  
+**When** `open_for_friend("charlie")` is called  
+**Then** `TotalGamesAmount` SHALL display "0"  
+**And** `WinsAmount`, `DrawsAmount`, `LossAmount` SHALL all display "0"  
+**And** no division-by-zero error SHALL occur  
+**And** the piechart SHALL be called with `set_chart(0, 0, 0)`
+
+---
+
+### Requirement: Close AccountPopup on Back Button Press
+AccountPopup SHALL hide itself when the back button is pressed.
+
+#### Scenario: Back button hides the popup
+**Given** the AccountPopup is visible  
+**When** the user presses the back (AccountBackButton) button  
+**Then** the AccountPopup `visible` property SHALL be set to `false`  
+**And** the `UnfriendPopup` SHALL NOT remain visible after the popup closes
+
+---
+
+### Requirement: Show Unfriend Confirmation Popup
+AccountPopup SHALL show `UnfriendPopup` when the unfriend button is pressed and hide it when the No button is pressed.
+
+#### Scenario: Unfriend button shows confirmation popup
+**Given** the AccountPopup is visible  
+**When** the user presses the "Unfriend" button  
+**Then** `UnfriendPopup.visible` SHALL be set to `true`
+
+#### Scenario: No button dismisses confirmation popup
+**Given** `UnfriendPopup` is visible  
+**When** the user presses the "No" button  
+**Then** `UnfriendPopup.visible` SHALL be set to `false`  
+**And** the AccountPopup SHALL remain visible  
+**And** the friendship SHALL remain intact
+
+---
+
+### Requirement: Confirm Unfriend Removes Friendship Bidirectionally
+When the user confirms unfriending by pressing "Yes" in UnfriendPopup, AccountPopup SHALL remove the friendship bidirectionally and close both popups.
+
+**Cross-reference**: Uses `local-user-database.remove_friend()`. Triggers friend list refresh in `socials-page-friend-display`.
+
+#### Scenario: Yes button removes friendship and closes popups
+**Given** user "alice" is signed in  
+**And** alice and "bob" are friends  
+**And** `AccountPopup` is displaying "bob"'s profile  
+**And** `UnfriendPopup` is visible  
+**When** the user presses the "Yes" button  
+**Then** `UserDatabase.remove_friend(alice_username, "bob")` SHALL be called  
+**And** "bob" SHALL be removed from alice's friends array in the database  
+**And** "alice" SHALL be removed from bob's friends array in the database  
+**And** `UnfriendPopup.visible` SHALL be set to `false`  
+**And** `AccountPopup.visible` SHALL be set to `false`
+
+#### Scenario: Friend list refreshes after unfriend confirmation
+**Given** the unfriend was confirmed  
+**When** both popups close  
+**Then** the socials page FriendDisplayContainer SHALL no longer show "bob"'s component  
+**And** the refresh SHALL happen without requiring a page reload
+
+#### Scenario: Yes button when user is not signed in
+**Given** the current user is somehow not signed in at the moment Yes is pressed  
+**When** the "Yes" button is pressed  
+**Then** no crash SHALL occur  
+**And** an error SHALL be logged  
+**And** both popups SHALL still close
 
 ---
 
