@@ -81,12 +81,18 @@ size_flags_vertical = 4
 icon = ExtResource("2_4wv0w")
 expand_icon = true
 
-[node name="PageClipContainer" type="Control" parent="VBoxContainer" unique_id=2114572303]
+[node name="MarginContainer" type="MarginContainer" parent="VBoxContainer" unique_id=2059080828]
+layout_mode = 2
+size_flags_vertical = 3
+theme_override_constants/margin_left = 50
+theme_override_constants/margin_right = 50
+
+[node name="PageClipContainer" type="Control" parent="VBoxContainer/MarginContainer" unique_id=2114572303]
 unique_name_in_owner = true
 layout_mode = 2
 size_flags_vertical = 3
 
-[node name="PagesContainer" type="HBoxContainer" parent="VBoxContainer/PageClipContainer" unique_id=792530406]
+[node name="PagesContainer" type="HBoxContainer" parent="VBoxContainer/MarginContainer/PageClipContainer" unique_id=792530406]
 unique_name_in_owner = true
 layout_mode = 1
 anchors_preset = 15
@@ -96,15 +102,15 @@ grow_horizontal = 2
 grow_vertical = 2
 theme_override_constants/separation = 0
 
-[node name="DuelPage" parent="VBoxContainer/PageClipContainer/PagesContainer" unique_id=1034330464 instance=ExtResource("3_1l6go")]
+[node name="DuelPage" parent="VBoxContainer/MarginContainer/PageClipContainer/PagesContainer" unique_id=1034330464 instance=ExtResource("3_1l6go")]
 layout_mode = 2
 size_flags_horizontal = 3
 
-[node name="FriendlyBattlePage" parent="VBoxContainer/PageClipContainer/PagesContainer" unique_id=201743618 instance=ExtResource("4_4wv0w")]
+[node name="FriendlyBattlePage" parent="VBoxContainer/MarginContainer/PageClipContainer/PagesContainer" unique_id=201743618 instance=ExtResource("4_4wv0w")]
 layout_mode = 2
 size_flags_horizontal = 3
 
-[node name="SocialsPage" parent="VBoxContainer/PageClipContainer/PagesContainer" unique_id=1992299022 instance=ExtResource("8_wn6oh")]
+[node name="SocialsPage" parent="VBoxContainer/MarginContainer/PageClipContainer/PagesContainer" unique_id=1992299022 instance=ExtResource("8_wn6oh")]
 layout_mode = 2
 size_flags_horizontal = 3
 

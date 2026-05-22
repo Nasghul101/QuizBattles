@@ -279,58 +279,64 @@ text = "Categories"
 horizontal_alignment = 1
 vertical_alignment = 2
 
-[node name="CategoryStatisticsContainer" type="GridContainer" parent="MarginContainer/VBoxContainer/Panel/MarginContainer/VBoxContainer" unique_id=1702330762]
+[node name="ScrollContainer" type="ScrollContainer" parent="MarginContainer/VBoxContainer/Panel/MarginContainer/VBoxContainer" unique_id=788837626]
+layout_mode = 2
+size_flags_vertical = 3
+theme = ExtResource("2_xldbt")
+
+[node name="CategoryStatisticsContainer" type="GridContainer" parent="MarginContainer/VBoxContainer/Panel/MarginContainer/VBoxContainer/ScrollContainer" unique_id=1702330762]
 unique_name_in_owner = true
 layout_mode = 2
+size_flags_horizontal = 3
 size_flags_vertical = 3
 theme_override_constants/h_separation = 20
 theme_override_constants/v_separation = -15
-columns = 4
+columns = 3
 
-[node name="CategoryStatisticDissplay" parent="MarginContainer/VBoxContainer/Panel/MarginContainer/VBoxContainer/CategoryStatisticsContainer" unique_id=693794735 instance=ExtResource("5_3o5mh")]
+[node name="CategoryStatisticDissplay" parent="MarginContainer/VBoxContainer/Panel/MarginContainer/VBoxContainer/ScrollContainer/CategoryStatisticsContainer" unique_id=693794735 instance=ExtResource("5_3o5mh")]
 layout_mode = 2
 
-[node name="CategoryStatisticDissplay2" parent="MarginContainer/VBoxContainer/Panel/MarginContainer/VBoxContainer/CategoryStatisticsContainer" unique_id=1694243173 instance=ExtResource("5_3o5mh")]
+[node name="CategoryStatisticDissplay2" parent="MarginContainer/VBoxContainer/Panel/MarginContainer/VBoxContainer/ScrollContainer/CategoryStatisticsContainer" unique_id=1694243173 instance=ExtResource("5_3o5mh")]
 layout_mode = 2
 category = "Entertainment"
 
-[node name="CategoryStatisticDissplay3" parent="MarginContainer/VBoxContainer/Panel/MarginContainer/VBoxContainer/CategoryStatisticsContainer" unique_id=2013525233 instance=ExtResource("5_3o5mh")]
+[node name="CategoryStatisticDissplay3" parent="MarginContainer/VBoxContainer/Panel/MarginContainer/VBoxContainer/ScrollContainer/CategoryStatisticsContainer" unique_id=2013525233 instance=ExtResource("5_3o5mh")]
 layout_mode = 2
 category = "Science"
 
-[node name="CategoryStatisticDissplay4" parent="MarginContainer/VBoxContainer/Panel/MarginContainer/VBoxContainer/CategoryStatisticsContainer" unique_id=501019048 instance=ExtResource("5_3o5mh")]
+[node name="CategoryStatisticDissplay4" parent="MarginContainer/VBoxContainer/Panel/MarginContainer/VBoxContainer/ScrollContainer/CategoryStatisticsContainer" unique_id=501019048 instance=ExtResource("5_3o5mh")]
 layout_mode = 2
 category = "History"
 
-[node name="CategoryStatisticDissplay5" parent="MarginContainer/VBoxContainer/Panel/MarginContainer/VBoxContainer/CategoryStatisticsContainer" unique_id=600942418 instance=ExtResource("5_3o5mh")]
+[node name="CategoryStatisticDissplay5" parent="MarginContainer/VBoxContainer/Panel/MarginContainer/VBoxContainer/ScrollContainer/CategoryStatisticsContainer" unique_id=600942418 instance=ExtResource("5_3o5mh")]
 layout_mode = 2
 category = "Geography"
 
-[node name="CategoryStatisticDissplay6" parent="MarginContainer/VBoxContainer/Panel/MarginContainer/VBoxContainer/CategoryStatisticsContainer" unique_id=850906122 instance=ExtResource("5_3o5mh")]
+[node name="CategoryStatisticDissplay6" parent="MarginContainer/VBoxContainer/Panel/MarginContainer/VBoxContainer/ScrollContainer/CategoryStatisticsContainer" unique_id=850906122 instance=ExtResource("5_3o5mh")]
 layout_mode = 2
 category = "Sports"
 
-[node name="CategoryStatisticDissplay7" parent="MarginContainer/VBoxContainer/Panel/MarginContainer/VBoxContainer/CategoryStatisticsContainer" unique_id=567067026 instance=ExtResource("5_3o5mh")]
+[node name="CategoryStatisticDissplay7" parent="MarginContainer/VBoxContainer/Panel/MarginContainer/VBoxContainer/ScrollContainer/CategoryStatisticsContainer" unique_id=567067026 instance=ExtResource("5_3o5mh")]
 layout_mode = 2
 category = "Art"
 
-[node name="CategoryStatisticDissplay8" parent="MarginContainer/VBoxContainer/Panel/MarginContainer/VBoxContainer/CategoryStatisticsContainer" unique_id=574336392 instance=ExtResource("5_3o5mh")]
+[node name="CategoryStatisticDissplay8" parent="MarginContainer/VBoxContainer/Panel/MarginContainer/VBoxContainer/ScrollContainer/CategoryStatisticsContainer" unique_id=574336392 instance=ExtResource("5_3o5mh")]
 layout_mode = 2
 category = "Animals"
 
-[node name="CategoryStatisticDissplay9" parent="MarginContainer/VBoxContainer/Panel/MarginContainer/VBoxContainer/CategoryStatisticsContainer" unique_id=1459629709 instance=ExtResource("5_3o5mh")]
+[node name="CategoryStatisticDissplay9" parent="MarginContainer/VBoxContainer/Panel/MarginContainer/VBoxContainer/ScrollContainer/CategoryStatisticsContainer" unique_id=1459629709 instance=ExtResource("5_3o5mh")]
 layout_mode = 2
 category = "Mythology"
 
-[node name="CategoryStatisticDissplay10" parent="MarginContainer/VBoxContainer/Panel/MarginContainer/VBoxContainer/CategoryStatisticsContainer" unique_id=1897462823 instance=ExtResource("5_3o5mh")]
+[node name="CategoryStatisticDissplay10" parent="MarginContainer/VBoxContainer/Panel/MarginContainer/VBoxContainer/ScrollContainer/CategoryStatisticsContainer" unique_id=1897462823 instance=ExtResource("5_3o5mh")]
 layout_mode = 2
 category = "Politics"
 
-[node name="CategoryStatisticDissplay11" parent="MarginContainer/VBoxContainer/Panel/MarginContainer/VBoxContainer/CategoryStatisticsContainer" unique_id=1431588841 instance=ExtResource("5_3o5mh")]
+[node name="CategoryStatisticDissplay11" parent="MarginContainer/VBoxContainer/Panel/MarginContainer/VBoxContainer/ScrollContainer/CategoryStatisticsContainer" unique_id=1431588841 instance=ExtResource("5_3o5mh")]
 layout_mode = 2
 category = "Celebrities"
 
-[node name="CategoryStatisticDissplay12" parent="MarginContainer/VBoxContainer/Panel/MarginContainer/VBoxContainer/CategoryStatisticsContainer" unique_id=892127015 instance=ExtResource("5_3o5mh")]
+[node name="CategoryStatisticDissplay12" parent="MarginContainer/VBoxContainer/Panel/MarginContainer/VBoxContainer/ScrollContainer/CategoryStatisticsContainer" unique_id=892127015 instance=ExtResource("5_3o5mh")]
 layout_mode = 2
 category = "Vehicles"
 

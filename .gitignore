@@ -16,3 +16,4 @@ export_credentials.cfg
 .mono/
 data_*/
 .vscode/settings.json
+.vscode/settings.json
