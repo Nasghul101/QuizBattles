@@ -22,6 +22,7 @@
         "App background": "#25002B",
         "App gray": "#4F4350",
         "App foreground": "#31003E",
-        "App white": "#FBDCF3"
+        "App white": "#FBDCF3",
+        "App background highlighted": "#7F3795"
     }
 }

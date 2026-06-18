@@ -15,8 +15,9 @@ const NOTIFICATION_COMPONENT = preload("res://scenes/ui/components/notification_
 ## Reference to the container holding page content
 @onready var page_clip_container: Control = %PageClipContainer
 @onready var pages_container: HBoxContainer = %PagesContainer
-@onready var notifications_button: Button = $VBoxContainer/TextureRect/HBoxContainer/NotificationsButton
-@onready var notifications_popup: Panel = $NotificationsPopUp
+@onready var navigation_bar: PanelContainer = %NavigationBar
+@onready var notifications_button: Button = %NotificationsButton
+@onready var notifications_popup: Panel = %NotificationsPopUp
 @onready var notification_list_container: VBoxContainer = %NotificationListContainer
 
 ## Swipe detection state
@@ -69,22 +70,24 @@ func _get_total_pages() -> int:
 
 ## Handle input events for swipe gestures
 func _input(event: InputEvent) -> void:
-    if is_animating:
-        return
-    
     # Handle touch/mouse drag for swiping
     if event is InputEventScreenTouch or event is InputEventMouseButton:
         if event.pressed:
-            swipe_start_pos = event.position
-            drag_start_container_pos = pages_container.position.x
-            is_swiping = true
+            # Only start a swipe when the press is inside the page content area,
+            # not on the navigation bar or header, so nav button clicks are ignored.
+            if page_clip_container.get_global_rect().has_point(event.position):
+                swipe_start_pos = event.position
+                drag_start_container_pos = pages_container.position.x
+                is_swiping = true
         else:
-            if is_swiping:
+            # Always clear swiping state on release, even during animation,
+            # so is_swiping never leaks as true.
+            if is_swiping and not is_animating:
                 _handle_swipe_end(event.position)
             is_swiping = false
     
     elif event is InputEventScreenDrag:
-        if is_swiping:
+        if is_swiping and not is_animating:
             # Follow finger - move container with drag
             var drag_offset: float = event.position.x - swipe_start_pos.x
             var target_pos: float = drag_start_container_pos + drag_offset
@@ -95,7 +98,7 @@ func _input(event: InputEvent) -> void:
             pages_container.position.x = clampf(target_pos, min_pos, max_pos)
     
     elif event is InputEventMouseMotion:
-        if is_swiping and event.button_mask != 0:
+        if is_swiping and not is_animating and event.button_mask != 0:
             # Follow mouse - move container with drag
             var drag_offset: float = event.position.x - swipe_start_pos.x
             var target_pos: float = drag_start_container_pos + drag_offset
@@ -156,29 +159,12 @@ func _set_page_position(page_index: int, animate: bool = false) -> void:
 
 ## Update bottom navigation buttons to reflect current page
 func _update_page_indicator(page_index: int) -> void:
-    # Get references to bottom navigation buttons
-    var bottom_container: HBoxContainer = $VBoxContainer/PanelContainer3/HBoxContainer
-    
-    # Update button states dynamically - buttons correspond to pages by index
-    for i: int in range(bottom_container.get_child_count()):
-        var button: Button = bottom_container.get_child(i) as Button
-        if button:
-            button.disabled = (page_index == i)
+    navigation_bar.set_active_button(page_index)
 
 
-## Handle DuelPage button press
-func _on_duel_page_pressed() -> void:
-    _navigate_to_page(0)
-
-
-## Handle Page2 button press
-func _on_page_2_pressed() -> void:
-    _navigate_to_page(1)
-
-
-## Handle SocialPage button press
-func _on_social_page_pressed() -> void:
-    _navigate_to_page(2)
+## Handle NavigationBar page change
+func _on_navigation_bar_page_changed(index: int) -> void:
+    _navigate_to_page(index)
 
 
 ## Handle AccountButton press with conditional navigation based on login state

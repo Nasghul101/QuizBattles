@@ -203,7 +203,6 @@ icon_alignment = 1
 
 [node name="UnfriendPopup" type="MarginContainer" parent="Background" unique_id=361426179]
 unique_name_in_owner = true
-visible = false
 layout_mode = 1
 anchors_preset = 15
 anchor_right = 1.0
@@ -216,6 +215,7 @@ theme_override_constants/margin_right = 100
 theme_override_constants/margin_bottom = 500
 
 [node name="Panel" type="Panel" parent="Background/UnfriendPopup" unique_id=1304776263]
+visible = false
 layout_mode = 2
 theme = ExtResource("1_mpaho")
 

@@ -1,8 +1,9 @@
-[gd_scene format=3 uid="uid://7qye26trjwa6"]
+[gd_scene format=3 uid="uid://dgt40tmm1tgde"]
 
+[ext_resource type="Script" uid="uid://c4ntbjatf22a6" path="res://scenes/ui/navigation_bar.gd" id="1_3n4hc"]
 [ext_resource type="Texture2D" uid="uid://c3nr4ojlrjenv" path="res://assets/ui/NavBar_BG.png" id="1_vcijs"]
 [ext_resource type="Texture2D" uid="uid://8npwbmcskm8a" path="res://resources/icon_shop.tres" id="2_lpfq8"]
-[ext_resource type="PackedScene" uid="uid://bjevw1f76ilwb" path="res://scenes/ui/components/navigation_button.tscn" id="2_mjgia"]
+[ext_resource type="PackedScene" uid="uid://bxl6tljcfl6ps" path="res://scenes/ui/components/navigation_button.tscn" id="2_mjgia"]
 [ext_resource type="Texture2D" uid="uid://d8wk5tbdsgyf" path="res://assets/ui/NavBar_BG_BorderOnly.png" id="2_uy858"]
 [ext_resource type="Texture2D" uid="uid://6qloajqsnmxr" path="res://resources/icon_vs.tres" id="3_7jnie"]
 [ext_resource type="Texture2D" uid="uid://b7rrsuj7t8hdq" path="res://resources/icon_friends.tres" id="4_3n4hc"]
@@ -11,7 +12,7 @@
 bg_color = Color(0.60038817, 0.60038817, 0.60038817, 0)
 
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_lpfq8"]
-bg_color = Color(1, 1, 1, 1)
+bg_color = Color(0.9843137, 0.8627451, 0.9529412, 1)
 corner_radius_top_left = 40
 corner_radius_top_right = 40
 corner_radius_bottom_right = 40
@@ -25,6 +26,7 @@ offset_bottom = 0.3034668
 grow_horizontal = 2
 grow_vertical = 2
 theme_override_styles/panel = SubResource("StyleBoxFlat_mjgia")
+script = ExtResource("1_3n4hc")
 
 [node name="BG" type="TextureRect" parent="." unique_id=489628322]
 clip_children = 2
@@ -43,6 +45,7 @@ grow_horizontal = 2
 grow_vertical = 2
 
 [node name="ChallengeButton" parent="BG/HBoxContainer" unique_id=126928124 instance=ExtResource("2_mjgia")]
+unique_name_in_owner = true
 layout_mode = 2
 
 [node name="MarginContainer" type="MarginContainer" parent="BG/HBoxContainer" unique_id=1715162216]
@@ -52,10 +55,12 @@ theme_override_constants/margin_top = 40
 theme_override_constants/margin_bottom = 40
 
 [node name="Panel" type="Panel" parent="BG/HBoxContainer/MarginContainer" unique_id=67276487]
+z_index = 1
 layout_mode = 2
 theme_override_styles/panel = SubResource("StyleBoxFlat_lpfq8")
 
 [node name="ShopButton" parent="BG/HBoxContainer" unique_id=1800185860 instance=ExtResource("2_mjgia")]
+unique_name_in_owner = true
 layout_mode = 2
 
 [node name="TextureRect" parent="BG/HBoxContainer/ShopButton/MarginContainer" parent_id_path=PackedInt32Array(1800185860, 1749982375) index="0" unique_id=337857074]
@@ -68,10 +73,12 @@ theme_override_constants/margin_top = 80
 theme_override_constants/margin_bottom = 80
 
 [node name="Panel" type="Panel" parent="BG/HBoxContainer/MarginContainer2" unique_id=1190269414]
+z_index = 1
 layout_mode = 2
 theme_override_styles/panel = SubResource("StyleBoxFlat_lpfq8")
 
 [node name="VSButton" parent="BG/HBoxContainer" unique_id=1504631616 instance=ExtResource("2_mjgia")]
+unique_name_in_owner = true
 layout_mode = 2
 
 [node name="TextureRect" parent="BG/HBoxContainer/VSButton/MarginContainer" parent_id_path=PackedInt32Array(1504631616, 1749982375) index="0" unique_id=337857074]
@@ -84,20 +91,29 @@ theme_override_constants/margin_top = 40
 theme_override_constants/margin_bottom = 40
 
 [node name="Panel" type="Panel" parent="BG/HBoxContainer/MarginContainer3" unique_id=838423527]
+z_index = 1
 layout_mode = 2
 theme_override_styles/panel = SubResource("StyleBoxFlat_lpfq8")
 
 [node name="SocialButton" parent="BG/HBoxContainer" unique_id=182319815 instance=ExtResource("2_mjgia")]
+unique_name_in_owner = true
 layout_mode = 2
 
 [node name="TextureRect" parent="BG/HBoxContainer/SocialButton/MarginContainer" parent_id_path=PackedInt32Array(182319815, 1749982375) index="0" unique_id=337857074]
 texture = ExtResource("4_3n4hc")
 
 [node name="Border" type="TextureRect" parent="." unique_id=71382983]
+self_modulate = Color(0.9843137, 0.8627451, 0.9529412, 1)
 layout_mode = 2
+mouse_filter = 2
 texture = ExtResource("2_uy858")
 expand_mode = 5
 stretch_mode = 4
+
+[connection signal="pressed" from="BG/HBoxContainer/ChallengeButton" to="." method="_on_challenge_button_pressed"]
+[connection signal="pressed" from="BG/HBoxContainer/ShopButton" to="." method="_on_shop_button_pressed"]
+[connection signal="pressed" from="BG/HBoxContainer/VSButton" to="." method="_on_vs_button_pressed"]
+[connection signal="pressed" from="BG/HBoxContainer/SocialButton" to="." method="_on_social_button_pressed"]
 
 [editable path="BG/HBoxContainer/ChallengeButton"]
 [editable path="BG/HBoxContainer/ShopButton"]

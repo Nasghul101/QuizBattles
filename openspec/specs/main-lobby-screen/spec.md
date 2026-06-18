@@ -69,21 +69,25 @@ The main lobby screen SHALL handle navigation failures gracefully.
 **AND** the user SHALL be able to continue interacting with the lobby
 
 ### Requirement: Multi-Page Container Structure
-The main lobby screen SHALL use a TabContainer to manage multiple content pages with hidden tabs.
+The main lobby screen SHALL use a page container to manage four content pages.
 
-**Rationale:** Provides a robust, built-in page management system while allowing custom navigation controls.
+**Rationale:** Provides a robust page management system while allowing custom navigation controls.
 
-#### Scenario: Display TabContainer with hidden tabs
+#### Scenario: Display four pages
 **GIVEN** the main lobby screen is loaded  
 **WHEN** the scene initializes  
-**THEN** a TabContainer named "PageContainer" SHALL exist between the header and bottom navigation  
-**AND** the TabContainer's tabs_visible property SHALL be false  
-**AND** the TabContainer SHALL contain exactly 3 child page scenes
+**THEN** the `PagesContainer` HBoxContainer SHALL contain exactly 4 child page scenes  
+**AND** they SHALL appear in order: DuelPage, ShopPage, FriendlyBattlePage, SocialsPage
+
+#### Scenario: Shop dummy page content
+**GIVEN** the main lobby screen is loaded  
+**WHEN** the ShopPage is visible  
+**THEN** a centered label SHALL display the text `"Shop (Coming Soon)"`
 
 #### Scenario: Initialize to first page
 **GIVEN** the main lobby screen is loading for the first time  
 **WHEN** the scene is ready  
-**THEN** the TabContainer SHALL display page index 0 (DuelPage)  
+**THEN** the page container SHALL display page index 0 (DuelPage)  
 **AND** the bottom navigation SHALL indicate page 0 as active
 
 ---
@@ -123,65 +127,57 @@ The main lobby screen SHALL detect horizontal swipe gestures for page navigation
 **AND** the current page SHALL remain 0
 
 #### Scenario: Prevent swipe beyond last page
-**GIVEN** the user is on page 2 (last page)  
+**GIVEN** the user is on page 3 (last page)  
 **WHEN** the user swipes left  
-**THEN** the system SHALL NOT navigate to page 3  
-**AND** the current page SHALL remain 2
+**THEN** the system SHALL NOT navigate to page 4  
+**AND** the current page SHALL remain 3
 
 ---
 
-### Requirement: Bottom Navigation Page Switching
-The bottom navigation buttons SHALL directly navigate to specific pages when pressed.
+### Requirement: Bottom Navigation Component
+The main lobby screen SHALL use an instance of `res://scenes/ui/navigation_bar.tscn` as its bottom navigation control.
 
-**Rationale:** Provides quick access to any page without multiple swipes, common mobile UX pattern.
+**Rationale:** Replaces ad-hoc inline buttons with a polished, reusable NavigationBar component following the project's composition-based architecture.
 
-#### Scenario: Navigate to DuelPage via bottom button
-**GIVEN** the user is on any page in the main lobby  
-**WHEN** the user taps the "DuelPage" button in the bottom navigation  
-**THEN** the system SHALL navigate to page 0 (DuelPage)  
-**AND** the TabContainer SHALL display page 0  
-**AND** the DuelPage button SHALL show as pressed/active
+#### Scenario: NavigationBar instance present in scene
+**GIVEN** the main lobby screen scene file  
+**WHEN** the scene tree is inspected  
+**THEN** a `NavigationBar` node SHALL exist as the last child of `VBoxContainer`  
+**AND** it SHALL be an instance of `res://scenes/ui/navigation_bar.tscn`
 
-#### Scenario: Navigate to Page2 via bottom button
-**GIVEN** the user is on any page in the main lobby  
-**WHEN** the user taps the "Page2" button in the bottom navigation  
-**THEN** the system SHALL navigate to page 1 (Page2)  
-**AND** the TabContainer SHALL display page 1  
-**AND** the Page2 button SHALL show as pressed/active
-
-#### Scenario: Navigate to SocialPage via bottom button
-**GIVEN** the user is on any page in the main lobby  
-**WHEN** the user taps the "SocialPage" button in the bottom navigation  
-**THEN** the system SHALL navigate to page 2 (SocialsPage)  
-**AND** the TabContainer SHALL display page 2  
-**AND** the SocialPage button SHALL show as pressed/active
+#### Scenario: Button press navigates to correct page
+**GIVEN** the user is on any page of the main lobby  
+**WHEN** the user taps a navigation button  
+**THEN** the `NavigationBar` emits `page_changed(index)`  
+**AND** the main lobby screen SHALL navigate to the page at that index  
+**AND** `set_active_button(index)` SHALL be called on the NavigationBar
 
 ---
 
 ### Requirement: Active Page Indicator Synchronization
-The bottom navigation buttons SHALL visually indicate the currently active page.
+The NavigationBar SHALL visually indicate the currently active page using the focus style of the active button.
 
-**Rationale:** Users need clear feedback about which page they are viewing.
+**Rationale:** The `NavigationButton` component already defines a focus StyleBox (purple glow). `grab_focus()` activates it without requiring additional state management.
 
 #### Scenario: Update indicator after swipe navigation
-**GIVEN** the user is on page 0  
-**WHEN** the user swipes left to navigate to page 1  
-**THEN** the DuelPage button SHALL no longer show as pressed  
-**AND** the Page2 button SHALL show as pressed  
-**AND** the SocialPage button SHALL remain unpressed
+**GIVEN** the user is on page 0 (Challenge)  
+**WHEN** the user swipes left to navigate to page 1 (Shop)  
+**THEN** `navigation_bar.set_active_button(1)` SHALL be called  
+**AND** the Shop button SHALL have focus (purple glow)  
+**AND** all other buttons SHALL NOT have focus
 
-#### Scenario: Update indicator after button navigation
-**GIVEN** the user is on page 1  
-**WHEN** the user taps the SocialPage button  
-**THEN** the Page2 button SHALL no longer show as pressed  
-**AND** the SocialPage button SHALL show as pressed  
-**AND** the DuelPage button SHALL remain unpressed
+#### Scenario: Update indicator after button press
+**GIVEN** the user is on page 0  
+**WHEN** the user taps the Social button (index 3)  
+**THEN** `navigation_bar.set_active_button(3)` SHALL be called  
+**AND** the Social button SHALL have focus  
+**AND** all other buttons SHALL NOT have focus
 
 #### Scenario: Initialize indicator on scene load
 **GIVEN** the main lobby screen is loading  
-**WHEN** the scene is ready  
-**THEN** the DuelPage button SHALL show as pressed (page 0 is default)  
-**AND** the Page2 and SocialPage buttons SHALL be unpressed
+**WHEN** `_ready()` runs and `_update_page_indicator(0)` is called  
+**THEN** `navigation_bar.set_active_button(0)` SHALL be called  
+**AND** the Challenge button SHALL have focus on initial display
 
 ---
 
@@ -199,9 +195,9 @@ The header PanelContainer and bottom navigation PanelContainer SHALL remain stat
 #### Scenario: Maintain bottom navigation during swipe
 **GIVEN** the user is swiping between pages  
 **WHEN** the page transition animation plays  
-**THEN** the bottom PanelContainer3 SHALL NOT move or animate  
+**THEN** the NavigationBar SHALL NOT move or animate  
 **AND** the navigation buttons SHALL remain in fixed positions  
-**AND** only the button states (pressed/unpressed) SHALL change
+**AND** only the button states (focused/unfocused) SHALL change
 
 ---
 
@@ -212,21 +208,26 @@ Each page content area SHALL be implemented as an independent scene file.
 
 #### Scenario: Load DuelPage scene
 **GIVEN** the main lobby screen is initializing  
-**WHEN** the TabContainer loads its children  
-**THEN** the first tab SHALL be an instance of `res://scenes/ui/lobby_pages/duel_page.tscn`  
+**WHEN** the page container loads its children  
+**THEN** the first child SHALL be an instance of `res://scenes/ui/lobby_pages/duel_page.tscn`  
 **AND** the DuelPage scene SHALL display its content correctly
 
-#### Scenario: Load Page2 scene
+#### Scenario: Load ShopPage scene
 **GIVEN** the main lobby screen is initializing  
-**WHEN** the TabContainer loads its children  
-**THEN** the second tab SHALL be an instance of `res://scenes/ui/lobby_pages/page2.tscn`  
-**AND** the Page2 scene SHALL display placeholder content
+**WHEN** the page container loads its children  
+**THEN** the second child SHALL be an instance of `res://scenes/ui/lobby_pages/shop_page.tscn`  
+**AND** the ShopPage scene SHALL display `"Shop (Coming Soon)"` placeholder content
+
+#### Scenario: Load FriendlyBattlePage scene
+**GIVEN** the main lobby screen is initializing  
+**WHEN** the page container loads its children  
+**THEN** the third child SHALL be an instance of `res://scenes/ui/lobby_pages/friendly_battle_page.tscn`
 
 #### Scenario: Load SocialsPage scene
 **GIVEN** the main lobby screen is initializing  
-**WHEN** the TabContainer loads its children  
-**THEN** the third tab SHALL be an instance of `res://scenes/ui/lobby_pages/socials_page.tscn`  
-**AND** the SocialsPage scene SHALL display placeholder content
+**WHEN** the page container loads its children  
+**THEN** the fourth child SHALL be an instance of `res://scenes/ui/lobby_pages/socials_page.tscn`  
+**AND** the SocialsPage scene SHALL display its social content
 
 ---
 
