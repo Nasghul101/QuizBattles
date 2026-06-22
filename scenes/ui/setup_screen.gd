@@ -1,3 +1,4 @@
+# uid://yw4amno58glr
 extends Control
 ## Setup screen for configuring game settings
 ##

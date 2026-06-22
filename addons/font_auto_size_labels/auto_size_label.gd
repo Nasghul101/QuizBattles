@@ -1,3 +1,4 @@
+# uid://bttgnk3bb2a8i
 @tool
 @icon("res://addons/font_auto_size_labels/icon.svg")
 extends Label

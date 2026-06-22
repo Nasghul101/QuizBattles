@@ -1,3 +1,4 @@
+# uid://bv8ekus16f4oy
 extends Control
 
 @onready var friend_display: VBoxContainer = %FriendDisplayContainer

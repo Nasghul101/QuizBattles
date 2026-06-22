@@ -1,8 +1,8 @@
-[gd_scene load_steps=2 format=3 uid="uid://c6q8wpx2jehng"]
+[gd_scene format=3 uid="uid://c6q8wpx2jehng"]
 
 [ext_resource type="Script" uid="uid://bbvvhw0unfkrd" path="res://scenes/ui/account_ui/register_login_screen.gd" id="1_a3b4c"]
 
-[node name="RegisterLoginScreen" type="Control"]
+[node name="RegisterLoginScreen" type="Control" unique_id=18549359]
 layout_mode = 3
 anchors_preset = 15
 anchor_right = 1.0
@@ -11,7 +11,7 @@ grow_horizontal = 2
 grow_vertical = 2
 script = ExtResource("1_a3b4c")
 
-[node name="BackButton" type="Button" parent="."]
+[node name="BackButton" type="Button" parent="." unique_id=1303606550]
 custom_minimum_size = Vector2(50, 50)
 layout_mode = 1
 offset_right = 50.0
@@ -19,7 +19,7 @@ offset_bottom = 50.0
 size_flags_horizontal = 0
 text = "Back"
 
-[node name="VBoxContainer" type="VBoxContainer" parent="."]
+[node name="VBoxContainer" type="VBoxContainer" parent="." unique_id=26326116]
 layout_mode = 1
 anchors_preset = 15
 anchor_right = 1.0
@@ -29,7 +29,7 @@ grow_vertical = 2
 mouse_filter = 2
 theme_override_constants/separation = 24
 
-[node name="Label" type="Label" parent="VBoxContainer"]
+[node name="Label" type="Label" parent="VBoxContainer" unique_id=900717996]
 layout_mode = 2
 size_flags_vertical = 0
 theme_override_font_sizes/font_size = 60
@@ -37,26 +37,26 @@ text = "Log in"
 horizontal_alignment = 1
 vertical_alignment = 1
 
-[node name="UsernameInput" type="TextEdit" parent="VBoxContainer"]
+[node name="UsernameInput" type="TextEdit" parent="VBoxContainer" unique_id=225954471]
 unique_name_in_owner = true
 custom_minimum_size = Vector2(0, 50)
 layout_mode = 2
 placeholder_text = "Username"
 
-[node name="PasswordInput" type="TextEdit" parent="VBoxContainer"]
+[node name="PasswordInput" type="TextEdit" parent="VBoxContainer" unique_id=2102629611]
 unique_name_in_owner = true
 custom_minimum_size = Vector2(0, 50)
 layout_mode = 2
 placeholder_text = "Password"
 
-[node name="LogInButton" type="Button" parent="VBoxContainer"]
+[node name="LogInButton" type="Button" parent="VBoxContainer" unique_id=675563694]
 unique_name_in_owner = true
 layout_mode = 2
 size_flags_horizontal = 4
 theme_override_font_sizes/font_size = 30
 text = "Log in"
 
-[node name="NewAccountButton" type="Button" parent="VBoxContainer"]
+[node name="NewAccountButton" type="Button" parent="VBoxContainer" unique_id=1542566127]
 layout_mode = 2
 size_flags_horizontal = 4
 text = "Create new Account"

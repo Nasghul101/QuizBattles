@@ -1,3 +1,4 @@
+# uid://hxka11rnrhvq
 extends Label
 class_name GradientLabel
 

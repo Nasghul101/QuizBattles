@@ -1,3 +1,4 @@
+# uid://dv64wopb74nqq
 extends Control
 ## Test scene for TriviaQuestionService integration
 ##

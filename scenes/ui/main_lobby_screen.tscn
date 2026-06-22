@@ -1,17 +1,42 @@
 [gd_scene format=3 uid="uid://mt4cflygcn3b"]
 
-[ext_resource type="Texture2D" uid="uid://pv35sp2h3w1p" path="res://icon.svg" id="1_f1jjt"]
 [ext_resource type="Script" uid="uid://b11jdqaf8o7sv" path="res://scenes/ui/main_lobby_screen.gd" id="1_m4p3a"]
-[ext_resource type="Texture2D" uid="uid://ep6jekuw6lka" path="res://assets/profile_pictures/man_suit.png" id="2_4wv0w"]
 [ext_resource type="StyleBox" uid="uid://bprlsfswn38in" path="res://Styles/App_Background_Stylebox.tres" id="2_gy61d"]
 [ext_resource type="Texture2D" uid="uid://bc7u7qil0eq2c" path="res://assets/ui/MainLobbyHeader.png" id="2_qq38p"]
 [ext_resource type="PackedScene" uid="uid://db55cjof2f4uv" path="res://scenes/ui/lobby_pages/duel_page.tscn" id="3_1l6go"]
 [ext_resource type="FontFile" uid="uid://c8memnki1ydnd" path="res://assets/Font/exo/Exo-Bold.otf" id="3_wn6oh"]
 [ext_resource type="PackedScene" uid="uid://cxkr8w47uveic" path="res://scenes/ui/lobby_pages/friendly_battle_page.tscn" id="4_4wv0w"]
+[ext_resource type="Texture2D" uid="uid://d2oj6872a8b7u" path="res://resources/icon_profile.tres" id="4_gj36w"]
+[ext_resource type="Texture2D" uid="uid://dg1t835qf2fwf" path="res://resources/icon_notification.tres" id="6_gj36w"]
 [ext_resource type="Texture2D" uid="uid://bwiby0r7dcp7d" path="res://assets/icon_wrong.png" id="7_6xylg"]
 [ext_resource type="PackedScene" uid="uid://crnu6goxc6w28" path="res://scenes/ui/lobby_pages/socials_page.tscn" id="8_wn6oh"]
 [ext_resource type="PackedScene" uid="uid://dshoppagedumm" path="res://scenes/ui/lobby_pages/shop_page.tscn" id="9_shop1"]
 [ext_resource type="PackedScene" uid="uid://dgt40tmm1tgde" path="res://scenes/ui/navigation_bar.tscn" id="10_nv11"]
+[ext_resource type="Theme" uid="uid://cxninrmdvbey6" path="res://Styles/BasicTheme.tres" id="12_87f1m"]
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_ns136"]
+bg_color = Color(0.30980393, 0.2627451, 0.3137255, 1)
+border_width_left = 10
+border_width_top = 10
+border_width_right = 10
+border_width_bottom = 10
+border_color = Color(0.9843137, 0.8627451, 0.9529412, 1)
+corner_radius_top_left = 40
+corner_radius_top_right = 40
+corner_radius_bottom_right = 40
+corner_radius_bottom_left = 40
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_svdou"]
+bg_color = Color(0.6, 0.6, 0.6, 0)
+border_width_left = 5
+border_width_top = 5
+border_width_right = 5
+border_width_bottom = 5
+border_color = Color(0.9843137, 0.8627451, 0.9529412, 1)
+corner_radius_top_left = 20
+corner_radius_top_right = 20
+corner_radius_bottom_right = 20
+corner_radius_bottom_left = 20
 
 [node name="MainLobbyScreen" type="Control" unique_id=873557019]
 layout_mode = 3
@@ -47,42 +72,51 @@ texture = ExtResource("2_qq38p")
 expand_mode = 5
 stretch_mode = 5
 
-[node name="HBoxContainer" type="HBoxContainer" parent="VBoxContainer/TextureRect" unique_id=507901675]
+[node name="MarginContainer" type="MarginContainer" parent="VBoxContainer/TextureRect" unique_id=1348401239]
 layout_mode = 1
 anchors_preset = 15
 anchor_right = 1.0
 anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
-size_flags_horizontal = 10
+theme_override_constants/margin_left = 50
+theme_override_constants/margin_right = 50
+
+[node name="HBoxContainer" type="HBoxContainer" parent="VBoxContainer/TextureRect/MarginContainer" unique_id=507901675]
+layout_mode = 2
+size_flags_horizontal = 3
 theme_override_constants/separation = 30
 
-[node name="AccountButton" type="Button" parent="VBoxContainer/TextureRect/HBoxContainer" unique_id=2076028799]
-custom_minimum_size = Vector2(50, 50)
+[node name="AccountButton" type="TextureButton" parent="VBoxContainer/TextureRect/MarginContainer/HBoxContainer" unique_id=1086936617]
+custom_minimum_size = Vector2(200, 200)
 layout_mode = 2
-size_flags_horizontal = 10
+size_flags_horizontal = 2
 size_flags_vertical = 4
-icon = ExtResource("1_f1jjt")
-expand_icon = true
+texture_normal = ExtResource("4_gj36w")
+ignore_texture_size = true
+stretch_mode = 5
 
-[node name="PageName" type="Label" parent="VBoxContainer/TextureRect/HBoxContainer" unique_id=875561421]
+[node name="PageName" type="Label" parent="VBoxContainer/TextureRect/MarginContainer/HBoxContainer" unique_id=875561421]
 unique_name_in_owner = true
 layout_mode = 2
 size_flags_horizontal = 4
+offset_transform_enabled = true
+offset_transform_position = Vector2(0, 50)
 theme_override_fonts/font = ExtResource("3_wn6oh")
-theme_override_font_sizes/font_size = 80
+theme_override_font_sizes/font_size = 100
 text = "Page Name"
 horizontal_alignment = 1
 vertical_alignment = 1
 
-[node name="NotificationsButton" type="Button" parent="VBoxContainer/TextureRect/HBoxContainer" unique_id=590581063]
+[node name="NotificationsButton" type="TextureButton" parent="VBoxContainer/TextureRect/MarginContainer/HBoxContainer" unique_id=1059205206]
 unique_name_in_owner = true
-custom_minimum_size = Vector2(50, 50)
+custom_minimum_size = Vector2(200, 200)
 layout_mode = 2
 size_flags_horizontal = 10
 size_flags_vertical = 4
-icon = ExtResource("2_4wv0w")
-expand_icon = true
+texture_normal = ExtResource("6_gj36w")
+ignore_texture_size = true
+stretch_mode = 5
 
 [node name="MarginContainer" type="MarginContainer" parent="VBoxContainer" unique_id=2059080828]
 layout_mode = 2
@@ -132,68 +166,89 @@ theme_override_constants/margin_bottom = 50
 unique_name_in_owner = true
 layout_mode = 2
 
-[node name="NotificationsPopUp" type="Panel" parent="." unique_id=927153535]
+[node name="NotificationsPopUp" type="MarginContainer" parent="." unique_id=2140860605]
 unique_name_in_owner = true
 visible = false
-custom_minimum_size = Vector2(300, 500)
-layout_mode = 1
-anchors_preset = 8
-anchor_left = 0.5
-anchor_top = 0.5
-anchor_right = 0.5
-anchor_bottom = 0.5
-offset_left = -20.0
-offset_top = -20.0
-offset_right = 20.0
-offset_bottom = 20.0
-grow_horizontal = 2
-grow_vertical = 2
-
-[node name="MarginContainer" type="MarginContainer" parent="NotificationsPopUp" unique_id=2140860605]
 layout_mode = 1
 anchors_preset = 15
 anchor_right = 1.0
 anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
-theme_override_constants/margin_left = 10
-theme_override_constants/margin_top = 10
-theme_override_constants/margin_right = 10
-theme_override_constants/margin_bottom = 10
+theme_override_constants/margin_left = 120
+theme_override_constants/margin_top = 500
+theme_override_constants/margin_right = 120
+theme_override_constants/margin_bottom = 500
 
-[node name="NotificationContainer" type="VBoxContainer" parent="NotificationsPopUp/MarginContainer" unique_id=1138940207]
+[node name="PopUpBackground" type="Panel" parent="NotificationsPopUp" unique_id=927153535]
+custom_minimum_size = Vector2(300, 500)
 layout_mode = 2
+theme = ExtResource("12_87f1m")
+theme_override_styles/panel = SubResource("StyleBoxFlat_ns136")
 
-[node name="HBoxContainer" type="HBoxContainer" parent="NotificationsPopUp/MarginContainer/NotificationContainer" unique_id=853234964]
-layout_mode = 2
-size_flags_vertical = 0
+[node name="MarginContainer" type="MarginContainer" parent="NotificationsPopUp/PopUpBackground" unique_id=1416495028]
+layout_mode = 0
+offset_right = 939.0
+offset_bottom = 1556.0
+theme_override_constants/margin_left = 45
+theme_override_constants/margin_top = 50
+theme_override_constants/margin_right = 45
+theme_override_constants/margin_bottom = 50
 
-[node name="Label" type="Label" parent="NotificationsPopUp/MarginContainer/NotificationContainer/HBoxContainer" unique_id=855476525]
+[node name="NotificationContainer" type="VBoxContainer" parent="NotificationsPopUp/PopUpBackground/MarginContainer" unique_id=1138940207]
 layout_mode = 2
-theme_override_font_sizes/font_size = 30
+theme_override_constants/separation = 36
+
+[node name="Header" type="Label" parent="NotificationsPopUp/PopUpBackground/MarginContainer/NotificationContainer" unique_id=855476525]
+layout_mode = 2
+size_flags_horizontal = 4
+theme_override_font_sizes/font_size = 60
 text = "Notifications"
+horizontal_alignment = 1
 
-[node name="ClosePopUpButton" type="Button" parent="NotificationsPopUp/MarginContainer/NotificationContainer/HBoxContainer" unique_id=31311946]
-custom_minimum_size = Vector2(50, 50)
-layout_mode = 2
-size_flags_horizontal = 10
-icon = ExtResource("7_6xylg")
-expand_icon = true
-
-[node name="NotificationScrollContainer" type="ScrollContainer" parent="NotificationsPopUp/MarginContainer/NotificationContainer" unique_id=2008242561]
+[node name="NotificationScrollContainer" type="ScrollContainer" parent="NotificationsPopUp/PopUpBackground/MarginContainer/NotificationContainer" unique_id=2008242561]
 unique_name_in_owner = true
 layout_mode = 2
 size_flags_vertical = 3
+theme_override_styles/panel = SubResource("StyleBoxFlat_svdou")
 horizontal_scroll_mode = 0
 
-[node name="NotificationListContainer" type="VBoxContainer" parent="NotificationsPopUp/MarginContainer/NotificationContainer/NotificationScrollContainer" unique_id=168871047]
+[node name="NotificationListContainer" type="VBoxContainer" parent="NotificationsPopUp/PopUpBackground/MarginContainer/NotificationContainer/NotificationScrollContainer" unique_id=168871047]
 unique_name_in_owner = true
 layout_mode = 2
 size_flags_horizontal = 3
 size_flags_vertical = 3
 theme_override_constants/separation = 10
 
-[connection signal="pressed" from="VBoxContainer/TextureRect/HBoxContainer/AccountButton" to="." method="_on_account_button_pressed"]
-[connection signal="pressed" from="VBoxContainer/TextureRect/HBoxContainer/NotificationsButton" to="." method="_on_notifications_button_pressed"]
+[node name="HBoxContainer" type="HBoxContainer" parent="NotificationsPopUp/PopUpBackground/MarginContainer/NotificationContainer" unique_id=1148397191]
+layout_mode = 2
+theme_override_constants/separation = 68
+
+[node name="ClosePopUpButton" type="Button" parent="NotificationsPopUp/PopUpBackground/MarginContainer/NotificationContainer/HBoxContainer" unique_id=31311946]
+custom_minimum_size = Vector2(160, 0)
+layout_mode = 2
+size_flags_horizontal = 0
+icon = ExtResource("7_6xylg")
+expand_icon = true
+
+[node name="MarkAsReadButton" type="Button" parent="NotificationsPopUp/PopUpBackground/MarginContainer/NotificationContainer/HBoxContainer" unique_id=554882324]
+custom_minimum_size = Vector2(400, 150)
+layout_mode = 2
+size_flags_vertical = 4
+theme = ExtResource("12_87f1m")
+theme_override_font_sizes/font_size = 40
+text = "Mark all as read"
+
+[node name="NoNotificationsLabel" type="Label" parent="NotificationsPopUp/PopUpBackground/MarginContainer" unique_id=623958745]
+unique_name_in_owner = true
+visible = false
+layout_mode = 2
+theme_override_font_sizes/font_size = 40
+text = "No notifications"
+horizontal_alignment = 1
+vertical_alignment = 1
+
+[connection signal="pressed" from="VBoxContainer/TextureRect/MarginContainer/HBoxContainer/AccountButton" to="." method="_on_account_button_pressed"]
+[connection signal="pressed" from="VBoxContainer/TextureRect/MarginContainer/HBoxContainer/NotificationsButton" to="." method="_on_notifications_button_pressed"]
 [connection signal="page_changed" from="VBoxContainer/MarginContainer2/NavigationBar" to="." method="_on_navigation_bar_page_changed"]
-[connection signal="pressed" from="NotificationsPopUp/MarginContainer/NotificationContainer/HBoxContainer/ClosePopUpButton" to="." method="_on_close_pop_up_button_pressed"]
+[connection signal="pressed" from="NotificationsPopUp/PopUpBackground/MarginContainer/NotificationContainer/HBoxContainer/ClosePopUpButton" to="." method="_on_close_pop_up_button_pressed"]

@@ -1,3 +1,4 @@
+# uid://du2is7604h5ib
 extends Control
 ## Category selection popup component
 ##

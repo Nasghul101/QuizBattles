@@ -125,12 +125,7 @@ theme_override_constants/margin_bottom = 50
 layout_mode = 2
 theme_override_constants/separation = 33
 
-[node name="HBoxContainer2" type="HBoxContainer" parent="AddFriendsPopup/Background/MarginContainer/VBoxContainer" unique_id=645687455]
-layout_mode = 2
-theme_override_constants/separation = 114
-alignment = 2
-
-[node name="Header" type="Label" parent="AddFriendsPopup/Background/MarginContainer/VBoxContainer/HBoxContainer2" unique_id=668620643]
+[node name="Header" type="Label" parent="AddFriendsPopup/Background/MarginContainer/VBoxContainer" unique_id=668620643]
 layout_mode = 2
 size_flags_horizontal = 4
 theme = ExtResource("7_5n5qj")
@@ -138,11 +133,6 @@ theme_override_font_sizes/font_size = 60
 text = "Add new friend"
 horizontal_alignment = 1
 vertical_alignment = 1
-
-[node name="BackButton" type="Button" parent="AddFriendsPopup/Background/MarginContainer/VBoxContainer/HBoxContainer2" unique_id=1166689970]
-layout_mode = 2
-theme = ExtResource("7_5n5qj")
-icon = ExtResource("6_npdnn")
 
 [node name="NameInput" type="TextEdit" parent="AddFriendsPopup/Background/MarginContainer/VBoxContainer" unique_id=663383509]
 unique_name_in_owner = true
@@ -177,15 +167,24 @@ layout_mode = 2
 theme_override_constants/separation = 68
 alignment = 2
 
+[node name="BackButton" type="Button" parent="AddFriendsPopup/Background/MarginContainer/VBoxContainer/HBoxContainer" unique_id=1166689970]
+custom_minimum_size = Vector2(160, 0)
+layout_mode = 2
+theme = ExtResource("7_5n5qj")
+icon = ExtResource("6_npdnn")
+icon_alignment = 1
+
 [node name="SendFriendRequestButton" type="Button" parent="AddFriendsPopup/Background/MarginContainer/VBoxContainer/HBoxContainer" unique_id=1514516218]
 unique_name_in_owner = true
 custom_minimum_size = Vector2(400, 150)
 layout_mode = 2
 size_flags_vertical = 4
 theme = ExtResource("7_5n5qj")
+theme_override_font_sizes/font_size = 40
 text = "Send friend request"
 
 [node name="ShareButton" type="Button" parent="AddFriendsPopup/Background/MarginContainer/VBoxContainer/HBoxContainer" unique_id=2067300042]
+custom_minimum_size = Vector2(160, 0)
 layout_mode = 2
 size_flags_horizontal = 8
 theme = ExtResource("7_5n5qj")
@@ -198,6 +197,6 @@ visible = false
 layout_mode = 1
 
 [connection signal="pressed" from="BGTexture/ScrollContainer/FriendDisplayContainer/AddNewFriendsButton" to="." method="_on_add_new_friends_button_pressed"]
-[connection signal="pressed" from="AddFriendsPopup/Background/MarginContainer/VBoxContainer/HBoxContainer2/BackButton" to="." method="_on_back_button_pressed"]
+[connection signal="pressed" from="AddFriendsPopup/Background/MarginContainer/VBoxContainer/HBoxContainer/BackButton" to="." method="_on_back_button_pressed"]
 [connection signal="pressed" from="AddFriendsPopup/Background/MarginContainer/VBoxContainer/HBoxContainer/SendFriendRequestButton" to="." method="_on_send_friend_request_button_pressed"]
 [connection signal="pressed" from="AddFriendsPopup/Background/MarginContainer/VBoxContainer/HBoxContainer/ShareButton" to="." method="_on_share_button_pressed"]

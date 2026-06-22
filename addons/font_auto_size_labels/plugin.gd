@@ -1,3 +1,4 @@
+# uid://bmrfnvblwhxyk
 @tool
 extends EditorPlugin
 

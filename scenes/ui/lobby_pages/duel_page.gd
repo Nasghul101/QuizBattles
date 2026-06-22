@@ -1,3 +1,4 @@
+# uid://cvey2h22svmcj
 extends Control
 
 const TEST_PLAYER_1 := "robin"

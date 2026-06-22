@@ -1,3 +1,4 @@
+# uid://b11jdqaf8o7sv
 extends Control
 ## Main Lobby Screen
 ##
@@ -16,9 +17,10 @@ const NOTIFICATION_COMPONENT = preload("res://scenes/ui/components/notification_
 @onready var page_clip_container: Control = %PageClipContainer
 @onready var pages_container: HBoxContainer = %PagesContainer
 @onready var navigation_bar: PanelContainer = %NavigationBar
-@onready var notifications_button: Button = %NotificationsButton
-@onready var notifications_popup: Panel = %NotificationsPopUp
+@onready var notifications_button: TextureButton = %NotificationsButton
+@onready var notifications_popup: MarginContainer = %NotificationsPopUp
 @onready var notification_list_container: VBoxContainer = %NotificationListContainer
+@onready var no_notifications_label: Label = %NoNotificationsLabel
 
 ## Swipe detection state
 var swipe_start_pos: Vector2 = Vector2.ZERO
@@ -290,6 +292,8 @@ func _on_notification_action(notification_id: String, action: String) -> void:
 
 ## Update visual indicator on notifications button based on unread count
 func _update_notification_indicator() -> void:
+    no_notifications_label.visible = notification_components.is_empty()
+
     if not UserDatabase.is_signed_in():
         notifications_button.modulate = Color.WHITE
         return

@@ -1,3 +1,4 @@
+# uid://wxd8dqdo7l26
 extends Panel
 ## Reusable drag handle component for popup panels with drag-to-dismiss behavior.
 ##

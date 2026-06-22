@@ -1,3 +1,4 @@
+# uid://du4iogqfdmr8t
 extends Node
 
 ## GlobalSignalBus

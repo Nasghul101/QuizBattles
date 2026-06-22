@@ -1,3 +1,4 @@
+# uid://cdnh6ltwktaxr
 @tool
 extends Node
 class_name AutoSizeLabelManager

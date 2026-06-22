@@ -1,3 +1,4 @@
+# uid://co0lo02vnu10n
 @tool
 @icon("res://addons/font_auto_size_labels/icon.svg")
 extends RichTextLabel

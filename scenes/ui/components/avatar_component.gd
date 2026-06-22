@@ -1,3 +1,4 @@
+# uid://dafvxbnoojmeq
 extends Button
 ## Avatar selection component displaying a profile picture and name
 

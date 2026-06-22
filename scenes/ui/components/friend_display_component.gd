@@ -1,3 +1,4 @@
+# uid://ffdpcdlf42s0
 class_name FriendDisplayComponent
 extends Control
 

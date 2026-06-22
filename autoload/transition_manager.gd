@@ -1,3 +1,4 @@
+# uid://5k5h88kr0frx
 extends Node
 ## Manages scene transitions with fade effects
 ##

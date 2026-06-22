@@ -1,3 +1,4 @@
+# uid://qyyp7e5iwkwd
 extends Control
 
 const FRIENDLY_DUEL_BUTTON_L = preload("res://scenes/ui/components/friendly_duel_button_l.tscn")

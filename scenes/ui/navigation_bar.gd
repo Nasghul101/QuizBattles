@@ -1,3 +1,4 @@
+# uid://c4ntbjatf22a6
 extends PanelContainer
 
 signal page_changed(index: int)

@@ -1,3 +1,4 @@
+# uid://caiyu3bea5dhy
 extends Control
 
 @export_range(0,1) var label_offset: float = 0.6

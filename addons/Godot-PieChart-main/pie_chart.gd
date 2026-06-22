@@ -1,3 +1,4 @@
+# uid://bg2ib437lo5i4
 ## A configurable pie/doughnut chart node with dynamic legends and color schemes.
 ## [b]Usage:[/b] Assign data via the [code]elements[/code] property and customize styles in the inspector.
 class_name PieChart

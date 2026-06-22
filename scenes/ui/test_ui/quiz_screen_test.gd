@@ -1,3 +1,4 @@
+# uid://ll76rt4l7n4m
 extends Node2D
 ## Test scene for quiz screen component
 ##

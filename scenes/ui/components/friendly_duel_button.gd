@@ -1,3 +1,4 @@
+# uid://264or4hvbnj7
 extends TextureButton
 
 @onready var player_points: Label = %PlayerPoints

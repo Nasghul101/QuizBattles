@@ -12,6 +12,17 @@ A fully 2D, mobile-first quiz duel game inspired by Quizduell for phone apps. Pl
 - **Question Source**: Open Trivia Database (JSON-based)
 - **Architecture**: Scene-based with clear separation of logic, UI, and data
 
+## Important: GDScript UID Embedding (Godot 4.4+)
+
+Godot 4.4 changed how script UIDs are stored. UIDs must be embedded directly in `.gd` files as a comment on the **first line**:
+
+```gdscript
+# uid://caiyu3bea5dhy
+extends Control
+```
+
+**Do not rely on `.uid` sidecar files for GDScript.** When creating a new `.gd` file, Godot 4.4+ writes the inline UID automatically. If a script is created outside the editor (e.g., copied, generated, or checked out fresh), ensure it has a `# uid://...` first line or Godot will log "invalid UID" warnings and fall back to text-path resolution. See change `2026-06-22-fix-gdscript-uid-embedding` for full context.
+
 ## Project Conventions
 
 ### Code Style
