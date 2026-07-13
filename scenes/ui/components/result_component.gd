@@ -219,7 +219,7 @@ func show_results() -> void:
 ## Args:
 ##   question_index: Index of the pressed button
 ##   result_data: Complete result data from the button (includes question_data, was_correct, player_answer)
-func _on_result_button_pressed(question_index: int, result_data: Dictionary) -> void:
+func _on_result_button_pressed(_question_index: int, result_data: Dictionary) -> void:
     # Show the answer review screen with this question's data
     _show_answer_review(result_data)
 

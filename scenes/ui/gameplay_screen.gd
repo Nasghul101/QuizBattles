@@ -33,7 +33,7 @@ var selected_category: String = ""
 @onready var result_container: VBoxContainer = %ResultContainer
 @onready var name_p1_label: Label = %NameP1
 @onready var name_p2_label: Label = %NameP2
-@onready var play_button: Button = %PlayButton
+@onready var play_button: TextureButton = %PlayButton
 @onready var score_p1_label: Label = %ScoreP1
 @onready var score_p2_label: Label = %ScoreP2
 @onready var finish_game_popup: MarginContainer = $FinishGamePopup
@@ -42,21 +42,16 @@ var selected_category: String = ""
 
 # Scene references
 var result_component_scene: PackedScene = preload("res://scenes/ui/components/result_component.tscn")
-var category_popup: Control
-var category_popup_scene: PackedScene = preload("res://scenes/ui/components/category_popup_component.tscn")
+@onready var category_popup: MarginContainer = %CategoryPopup
 var quiz_screen: Control
 var quiz_screen_scene: PackedScene = preload("res://scenes/ui/quiz_screen.tscn")
 
 
+
 func _ready() -> void:
     
-    # Instantiate category popup
-    category_popup = category_popup_scene.instantiate()
-    add_child(category_popup)
-    category_popup.visible = false
+    # Connect category popup signal
     category_popup.category_selected.connect(_on_category_selected)
-    # Force layout update for proper sizing
-    await get_tree().process_frame
     
     # Instantiate quiz screen
     quiz_screen = quiz_screen_scene.instantiate()
@@ -160,7 +155,7 @@ func _on_play_button_pressed() -> void:
             random_categories.append(available[i])
         
         category_popup.show_categories(random_categories)
-        play_button.visible = false
+        play_button.disabled = true
     
     else:
         # Opponent already chose category - load questions directly
@@ -172,7 +167,7 @@ func _on_play_button_pressed() -> void:
         current_round_results = []
         current_round += 1  # Track locally for display
         
-        quiz_screen.visible = true
+        quiz_screen.disabled = false
         quiz_screen.set_round_number(current_round)
         quiz_screen.load_question(fetched_questions[0])
 
@@ -196,7 +191,7 @@ func _on_questions_ready(questions: Array) -> void:
     # Validate we received questions
     if questions.is_empty():
         push_error("No questions received from TriviaQuestionService")
-        play_button.visible = true
+        play_button.disabled = false
         return
     
     # Store questions for this round (deep copy to prevent reference sharing)

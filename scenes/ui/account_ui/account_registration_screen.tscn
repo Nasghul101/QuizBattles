@@ -1,68 +1,226 @@
-[gd_scene load_steps=2 format=3 uid="uid://bqlv4bh1t8rs8"]
+[gd_scene format=3 uid="uid://bqlv4bh1t8rs8"]
 
+[ext_resource type="Theme" uid="uid://cxninrmdvbey6" path="res://Styles/BasicTheme.tres" id="1_5uyap"]
 [ext_resource type="Script" path="res://scenes/ui/account_ui/account_registration_screen.gd" id="1_w8hqr"]
+[ext_resource type="StyleBox" uid="uid://bprlsfswn38in" path="res://Styles/App_Background_Stylebox.tres" id="3_uyjcv"]
+[ext_resource type="FontFile" uid="uid://p3ayy83ug584" path="res://assets/Font/exo/Exo-Black.otf" id="4_u0yaj"]
+[ext_resource type="PackedScene" uid="uid://ctbg4s6mn7ekg" path="res://scenes/ui/components/back_button.tscn" id="5_kxw4b"]
+[ext_resource type="Shader" uid="uid://dtvwdbl5lb1q" path="res://shaders/predefined_outline_shader.gdshader" id="5_u0yaj"]
+[ext_resource type="Texture2D" uid="uid://pj7nlpjyhaax" path="res://assets/ui/PlayButton.png" id="6_kxw4b"]
 
-[node name="AccountRegistrationScreen" type="Control"]
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_kxw4b"]
+bg_color = Color(0.30980393, 0.2627451, 0.3137255, 1)
+border_width_left = 6
+border_width_top = 6
+border_width_right = 6
+border_width_bottom = 6
+border_color = Color(0.9843137, 0.8627451, 0.9529412, 1)
+corner_radius_top_left = 10
+corner_radius_top_right = 10
+corner_radius_bottom_right = 10
+corner_radius_bottom_left = 10
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_s42hv"]
+bg_color = Color(0.30980393, 0.2627451, 0.3137255, 1)
+border_width_left = 6
+border_width_top = 6
+border_width_right = 6
+border_width_bottom = 6
+border_color = Color(0.9843137, 0.8627451, 0.9529412, 1)
+corner_radius_top_left = 10
+corner_radius_top_right = 10
+corner_radius_bottom_right = 10
+corner_radius_bottom_left = 10
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_pa4p6"]
+bg_color = Color(0.30980393, 0.2627451, 0.3137255, 1)
+border_width_left = 6
+border_width_top = 6
+border_width_right = 6
+border_width_bottom = 6
+border_color = Color(0.9843137, 0.8627451, 0.9529412, 1)
+corner_radius_top_left = 10
+corner_radius_top_right = 10
+corner_radius_bottom_right = 10
+corner_radius_bottom_left = 10
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_bmm42"]
+bg_color = Color(0.30980393, 0.2627451, 0.3137255, 1)
+border_width_left = 6
+border_width_top = 6
+border_width_right = 6
+border_width_bottom = 6
+border_color = Color(0.9843137, 0.8627451, 0.9529412, 1)
+corner_radius_top_left = 10
+corner_radius_top_right = 10
+corner_radius_bottom_right = 10
+corner_radius_bottom_left = 10
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_3uu7k"]
+bg_color = Color(0.19215687, 0, 0.24313726, 1)
+border_width_left = 6
+border_width_top = 6
+border_width_right = 6
+border_width_bottom = 6
+border_color = Color(0.9843137, 0.8627451, 0.9529412, 1)
+corner_radius_top_left = 5
+corner_radius_top_right = 5
+corner_radius_bottom_right = 5
+corner_radius_bottom_left = 5
+
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_svdou"]
+shader = ExtResource("5_u0yaj")
+shader_parameter/outline_color = Color(0.9843137, 0.8627451, 0.9529412, 1)
+shader_parameter/outline_threshold = 0.2
+shader_parameter/enable_pulsating = false
+shader_parameter/pulsating_color = Color(0, 1, 1, 1)
+shader_parameter/pulsating_size = 1.0
+shader_parameter/pulsating_speed = 1.0
+shader_parameter/pulsating_clockwise = false
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_nkt3n"]
+bg_color = Color(0.19215687, 0, 0.24313726, 1)
+border_width_left = 6
+border_width_top = 6
+border_width_right = 6
+border_width_bottom = 6
+border_color = Color(0.9843137, 0.8627451, 0.9529412, 1)
+corner_radius_top_left = 5
+corner_radius_top_right = 5
+corner_radius_bottom_right = 5
+corner_radius_bottom_left = 5
+
+[node name="AccountRegistrationScreen" type="Control" unique_id=839186813]
 layout_mode = 3
 anchors_preset = 15
 anchor_right = 1.0
 anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
+theme = ExtResource("1_5uyap")
 script = ExtResource("1_w8hqr")
 
-[node name="VBoxContainer" type="VBoxContainer" parent="."]
+[node name="BG" type="Panel" parent="." unique_id=1013187217]
 layout_mode = 1
 anchors_preset = 15
 anchor_right = 1.0
 anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
-theme_override_constants/separation = 44
+theme_override_styles/panel = ExtResource("3_uyjcv")
 
-[node name="Label" type="Label" parent="VBoxContainer"]
+[node name="MarginContainer" type="MarginContainer" parent="." unique_id=651678929]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_constants/margin_left = 40
+theme_override_constants/margin_top = 150
+theme_override_constants/margin_right = 40
+theme_override_constants/margin_bottom = 100
+
+[node name="VBoxContainer" type="VBoxContainer" parent="MarginContainer" unique_id=747164225]
 layout_mode = 2
-theme_override_font_sizes/font_size = 50
+theme_override_constants/separation = 50
+
+[node name="Label" type="Label" parent="MarginContainer/VBoxContainer" unique_id=2123038128]
+layout_mode = 2
+size_flags_vertical = 0
+theme = ExtResource("1_5uyap")
+theme_override_fonts/font = ExtResource("4_u0yaj")
+theme_override_font_sizes/font_size = 80
 text = "Create new Account"
 horizontal_alignment = 1
 vertical_alignment = 1
 
-[node name="NameInput" type="TextEdit" parent="VBoxContainer"]
+[node name="NameInput" type="TextEdit" parent="MarginContainer/VBoxContainer" unique_id=1651663220]
 unique_name_in_owner = true
-custom_minimum_size = Vector2(0, 50)
+custom_minimum_size = Vector2(0, 80)
 layout_mode = 2
+theme_override_font_sizes/font_size = 50
+theme_override_styles/normal = SubResource("StyleBoxFlat_kxw4b")
 placeholder_text = "Name"
 
-[node name="PasswordInput" type="TextEdit" parent="VBoxContainer"]
+[node name="PasswordInput" type="TextEdit" parent="MarginContainer/VBoxContainer" unique_id=934657551]
 unique_name_in_owner = true
-custom_minimum_size = Vector2(0, 50)
+custom_minimum_size = Vector2(0, 80)
 layout_mode = 2
+theme_override_font_sizes/font_size = 50
+theme_override_styles/normal = SubResource("StyleBoxFlat_s42hv")
 placeholder_text = "Password"
 
-[node name="PasswordConfirm" type="TextEdit" parent="VBoxContainer"]
+[node name="PasswordConfirm" type="TextEdit" parent="MarginContainer/VBoxContainer" unique_id=1249088703]
 unique_name_in_owner = true
-custom_minimum_size = Vector2(0, 50)
+custom_minimum_size = Vector2(0, 80)
 layout_mode = 2
+theme_override_font_sizes/font_size = 50
+theme_override_styles/normal = SubResource("StyleBoxFlat_pa4p6")
 placeholder_text = "Confirm Password"
 
-[node name="EmailInput" type="TextEdit" parent="VBoxContainer"]
+[node name="EmailInput" type="TextEdit" parent="MarginContainer/VBoxContainer" unique_id=1446578198]
 unique_name_in_owner = true
-custom_minimum_size = Vector2(0, 50)
+custom_minimum_size = Vector2(0, 80)
 layout_mode = 2
+theme_override_font_sizes/font_size = 50
+theme_override_styles/normal = SubResource("StyleBoxFlat_bmm42")
 placeholder_text = "Email"
 
-[node name="CreateAccountButton" type="Button" parent="VBoxContainer"]
-unique_name_in_owner = true
+[node name="HBoxContainer" type="HBoxContainer" parent="MarginContainer/VBoxContainer" unique_id=482033934]
 layout_mode = 2
-text = "Create Account"
+size_flags_vertical = 10
+theme_override_constants/separation = 10
 
-[node name="BackButton" type="Button" parent="."]
-custom_minimum_size = Vector2(50, 50)
-layout_mode = 0
-offset_right = 80.0
-offset_bottom = 50.0
-size_flags_horizontal = 0
-text = "Back"
+[node name="MarginContainer" type="MarginContainer" parent="MarginContainer/VBoxContainer/HBoxContainer" unique_id=2119113701]
+custom_minimum_size = Vector2(200, 0)
+layout_mode = 2
+theme_override_constants/margin_left = 35
+theme_override_constants/margin_top = 35
+theme_override_constants/margin_right = 35
+theme_override_constants/margin_bottom = 35
 
-[connection signal="pressed" from="VBoxContainer/CreateAccountButton" to="." method="_on_create_account_button_pressed"]
-[connection signal="pressed" from="BackButton" to="." method="_on_back_button_pressed"]
+[node name="BackButton" parent="MarginContainer/VBoxContainer/HBoxContainer/MarginContainer" unique_id=126928124 instance=ExtResource("5_kxw4b")]
+layout_mode = 2
+theme_override_styles/normal = SubResource("StyleBoxFlat_3uu7k")
+
+[node name="CreateAccountButton" type="TextureButton" parent="MarginContainer/VBoxContainer/HBoxContainer" unique_id=951616059]
+unique_name_in_owner = true
+self_modulate = Color(0.19215687, 0, 0.24313726, 1)
+material = SubResource("ShaderMaterial_svdou")
+custom_minimum_size = Vector2(700, 200)
+layout_mode = 2
+size_flags_horizontal = 6
+size_flags_vertical = 4
+texture_normal = ExtResource("6_kxw4b")
+ignore_texture_size = true
+stretch_mode = 5
+
+[node name="Label" type="Label" parent="MarginContainer/VBoxContainer/HBoxContainer/CreateAccountButton" unique_id=238663075]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_font_sizes/font_size = 60
+text = "Create an account"
+horizontal_alignment = 1
+vertical_alignment = 1
+
+[node name="MarginContainer2" type="MarginContainer" parent="MarginContainer/VBoxContainer/HBoxContainer" unique_id=268821978]
+custom_minimum_size = Vector2(200, 0)
+layout_mode = 2
+theme_override_constants/margin_left = 35
+theme_override_constants/margin_top = 35
+theme_override_constants/margin_right = 35
+theme_override_constants/margin_bottom = 35
+
+[node name="SignInButton" type="Button" parent="MarginContainer/VBoxContainer/HBoxContainer/MarginContainer2" unique_id=65427909]
+layout_mode = 2
+theme_override_styles/normal = SubResource("StyleBoxFlat_nkt3n")
+text = "Sign in"
+
+[connection signal="pressed" from="MarginContainer/VBoxContainer/HBoxContainer/MarginContainer/BackButton" to="." method="_on_back_button_pressed"]
+[connection signal="pressed" from="MarginContainer/VBoxContainer/HBoxContainer/CreateAccountButton" to="." method="_on_create_account_button_pressed"]
+[connection signal="pressed" from="MarginContainer/VBoxContainer/HBoxContainer/MarginContainer2/SignInButton" to="." method="_on_sign_in_button_pressed"]

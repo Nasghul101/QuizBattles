@@ -175,7 +175,7 @@ vertical_alignment = 1
 [node name="StartGameButton" type="TextureButton" parent="Panel/MarginContainer3/VBoxContainer" unique_id=1389189538]
 self_modulate = Color(0.19215687, 0, 0.24313726, 1)
 material = SubResource("ShaderMaterial_nvpir")
-custom_minimum_size = Vector2(0, 150)
+custom_minimum_size = Vector2(700, 200)
 layout_mode = 2
 size_flags_vertical = 10
 texture_normal = ExtResource("7_7tavt")

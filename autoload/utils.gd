@@ -68,3 +68,16 @@ func get_color_codes() -> Dictionary:
         return {}
 
     return json.data
+
+## Resolve the accent Color for a category name from color_codes.json
+##
+## Returns Color.WHITE when the category is unknown or has no defined color.
+func resolve_category_color(category: String) -> Color:
+    var codes: Dictionary = get_color_codes()
+    var category_colors: Dictionary = codes.get("category_colors", {})
+    if not category_colors.has(category):
+        return Color.WHITE
+    var value = category_colors[category]
+    if value == null:
+        return Color.WHITE
+    return Color(value)

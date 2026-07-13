@@ -149,14 +149,14 @@ The previous dual-container design (`ResultContainerL` / `ResultContainerR`) is 
 ---
 
 ### Requirement: Gameplay screen MUST instantiate child components on ready
-The gameplay screen SHALL create and configure category popup and quiz screen as children during initialization.
+The gameplay screen SHALL configure embedded components and instantiate remaining dynamic children during initialization.
 
-#### Scenario: Instantiate category popup
+#### Scenario: Configure embedded category popup
 **Given** the gameplay screen loads  
 **When** `_ready()` executes  
-**Then** a category_popup_component instance is created  
-**And** added as a child of gameplay screen  
-**And** set to invisible by default
+**Then** the embedded CategoryPopup MarginContainer node is accessed via `%CategoryPopup`  
+**And** the category popup is already part of the scene tree (no instantiation needed)  
+**And** the category popup's visibility is managed by toggling the `visible` property
 
 #### Scenario: Instantiate quiz screen
 **Given** the gameplay screen loads  

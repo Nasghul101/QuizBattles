@@ -18,6 +18,11 @@ corner_radius_top_right = 40
 corner_radius_bottom_right = 40
 corner_radius_bottom_left = 40
 
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_3n4hc"]
+bg_color = Color(0.49803922, 0.21568628, 0.58431375, 1)
+shadow_color = Color(0.49803922, 0.21568628, 0.58431375, 1)
+shadow_size = 42
+
 [node name="NavigationBar" type="PanelContainer" unique_id=1851897156]
 anchors_preset = -1
 anchor_right = 1.0
@@ -101,6 +106,11 @@ layout_mode = 2
 
 [node name="TextureRect" parent="BG/HBoxContainer/SocialButton/MarginContainer" parent_id_path=PackedInt32Array(182319815, 1749982375) index="0" unique_id=337857074]
 texture = ExtResource("4_3n4hc")
+
+[node name="HighlightShine" type="Panel" parent="BG" unique_id=103873922]
+unique_name_in_owner = true
+layout_mode = 1
+theme_override_styles/panel = SubResource("StyleBoxFlat_3n4hc")
 
 [node name="Border" type="TextureRect" parent="." unique_id=71382983]
 self_modulate = Color(0.9843137, 0.8627451, 0.9529412, 1)

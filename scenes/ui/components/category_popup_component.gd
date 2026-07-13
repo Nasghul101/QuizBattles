@@ -23,6 +23,9 @@ signal category_selected(category_name: String)
 @onready var category1: Button = %Category1
 @onready var category2: Button = %Category2
 @onready var category3: Button = %Category3
+@onready var bg1: TextureRect = %BG1
+@onready var bg2: TextureRect = %BG2
+@onready var bg3: TextureRect = %BG3
 @onready var progress_bar: ProgressBar = %ProgressBar
 @onready var category_container: HBoxContainer = %HBoxContainer
 
@@ -62,9 +65,24 @@ func show_categories(categories: Array) -> void:
     category2.text = categories[1]
     category3.text = categories[2]
     
+    # Color category buttons
+    set_bg_color(bg1, Utils.resolve_category_color(categories[0]))
+    set_bg_color(bg2, Utils.resolve_category_color(categories[1]))
+    set_bg_color(bg3, Utils.resolve_category_color(categories[2]))
+
     # Show the popup
     visible = true
 
+func set_bg_color(bg: TextureRect, color: Color) -> void:
+    # Duplicate the gradient texture to make it modifiable
+    var new_texture = bg.texture.duplicate(true)
+    var new_gradient = new_texture.gradient.duplicate(true)
+    var new_colors = new_gradient.colors
+    new_colors[0] = color
+    new_colors[1] = Color(color.r, color.g, color.b, 0.5)
+    new_gradient.colors = new_colors
+    new_texture.gradient = new_gradient
+    bg.texture = new_texture
 
 ## Switch to loading state with animated progress bar
 func show_loading() -> void:

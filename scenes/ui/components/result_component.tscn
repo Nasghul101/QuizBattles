@@ -6,6 +6,8 @@
 [ext_resource type="Texture2D" uid="uid://my6lsby1ke6l" path="res://assets/ui/Resultcomponent_Base.png" id="2_h0u5f"]
 [ext_resource type="PackedScene" uid="uid://b3sw6thf2vfki" path="res://scenes/ui/components/gradient_label.tscn" id="3_h0u5f"]
 
+[sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_f1ody"]
+
 [sub_resource type="ShaderMaterial" id="ShaderMaterial_i5rc3"]
 shader = ExtResource("2_4hqmc")
 shader_parameter/outline_color = Color(0.9843137, 0.8627451, 0.9529412, 1)
@@ -23,8 +25,9 @@ anchor_right = 1.0
 anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
-size_flags_horizontal = 0
-size_flags_vertical = 6
+size_flags_horizontal = 4
+size_flags_vertical = 2
+theme_override_styles/panel = SubResource("StyleBoxEmpty_f1ody")
 script = ExtResource("1_script")
 
 [node name="TextureRect" type="TextureRect" parent="." unique_id=544704173]

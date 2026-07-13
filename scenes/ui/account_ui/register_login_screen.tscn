@@ -1,6 +1,71 @@
 [gd_scene format=3 uid="uid://c6q8wpx2jehng"]
 
 [ext_resource type="Script" uid="uid://bbvvhw0unfkrd" path="res://scenes/ui/account_ui/register_login_screen.gd" id="1_a3b4c"]
+[ext_resource type="Theme" uid="uid://cxninrmdvbey6" path="res://Styles/BasicTheme.tres" id="1_yt6vx"]
+[ext_resource type="StyleBox" uid="uid://bprlsfswn38in" path="res://Styles/App_Background_Stylebox.tres" id="3_3q27b"]
+[ext_resource type="FontFile" uid="uid://p3ayy83ug584" path="res://assets/Font/exo/Exo-Black.otf" id="4_uvioe"]
+[ext_resource type="Shader" uid="uid://dtvwdbl5lb1q" path="res://shaders/predefined_outline_shader.gdshader" id="5_0rvq1"]
+[ext_resource type="PackedScene" uid="uid://ctbg4s6mn7ekg" path="res://scenes/ui/components/back_button.tscn" id="5_3q27b"]
+[ext_resource type="Texture2D" uid="uid://pj7nlpjyhaax" path="res://assets/ui/PlayButton.png" id="6_pv7bl"]
+[ext_resource type="Script" uid="uid://bttgnk3bb2a8i" path="res://addons/font_auto_size_labels/auto_size_label.gd" id="8_uvioe"]
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_tbt7s"]
+bg_color = Color(0.30980393, 0.2627451, 0.3137255, 1)
+border_width_left = 6
+border_width_top = 6
+border_width_right = 6
+border_width_bottom = 6
+border_color = Color(0.9843137, 0.8627451, 0.9529412, 1)
+corner_radius_top_left = 10
+corner_radius_top_right = 10
+corner_radius_bottom_right = 10
+corner_radius_bottom_left = 10
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_ks5sr"]
+bg_color = Color(0.30980393, 0.2627451, 0.3137255, 1)
+border_width_left = 6
+border_width_top = 6
+border_width_right = 6
+border_width_bottom = 6
+border_color = Color(0.9843137, 0.8627451, 0.9529412, 1)
+corner_radius_top_left = 10
+corner_radius_top_right = 10
+corner_radius_bottom_right = 10
+corner_radius_bottom_left = 10
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_uvioe"]
+bg_color = Color(0.19215687, 0, 0.24313726, 1)
+border_width_left = 6
+border_width_top = 6
+border_width_right = 6
+border_width_bottom = 6
+border_color = Color(0.9843137, 0.8627451, 0.9529412, 1)
+corner_radius_top_left = 5
+corner_radius_top_right = 5
+corner_radius_bottom_right = 5
+corner_radius_bottom_left = 5
+
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_svdou"]
+shader = ExtResource("5_0rvq1")
+shader_parameter/outline_color = Color(0.9843137, 0.8627451, 0.9529412, 1)
+shader_parameter/outline_threshold = 0.2
+shader_parameter/enable_pulsating = false
+shader_parameter/pulsating_color = Color(0, 1, 1, 1)
+shader_parameter/pulsating_size = 1.0
+shader_parameter/pulsating_speed = 1.0
+shader_parameter/pulsating_clockwise = false
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_0rvq1"]
+bg_color = Color(0.19215687, 0, 0.24313726, 1)
+border_width_left = 6
+border_width_top = 6
+border_width_right = 6
+border_width_bottom = 6
+border_color = Color(0.9843137, 0.8627451, 0.9529412, 1)
+corner_radius_top_left = 5
+corner_radius_top_right = 5
+corner_radius_bottom_right = 5
+corner_radius_bottom_left = 5
 
 [node name="RegisterLoginScreen" type="Control" unique_id=18549359]
 layout_mode = 3
@@ -9,58 +74,134 @@ anchor_right = 1.0
 anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
+theme = ExtResource("1_yt6vx")
 script = ExtResource("1_a3b4c")
 
-[node name="BackButton" type="Button" parent="." unique_id=1303606550]
-custom_minimum_size = Vector2(50, 50)
-layout_mode = 1
-offset_right = 50.0
-offset_bottom = 50.0
-size_flags_horizontal = 0
-text = "Back"
-
-[node name="VBoxContainer" type="VBoxContainer" parent="." unique_id=26326116]
+[node name="BG" type="Panel" parent="." unique_id=1148949498]
 layout_mode = 1
 anchors_preset = 15
 anchor_right = 1.0
 anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
-mouse_filter = 2
-theme_override_constants/separation = 24
+theme_override_styles/panel = ExtResource("3_3q27b")
 
-[node name="Label" type="Label" parent="VBoxContainer" unique_id=900717996]
+[node name="MarginContainer" type="MarginContainer" parent="." unique_id=651473523]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_constants/margin_left = 40
+theme_override_constants/margin_top = 150
+theme_override_constants/margin_right = 40
+theme_override_constants/margin_bottom = 100
+
+[node name="VBoxContainer" type="VBoxContainer" parent="MarginContainer" unique_id=26326116]
+layout_mode = 2
+mouse_filter = 2
+theme_override_constants/separation = 50
+
+[node name="Label" type="Label" parent="MarginContainer/VBoxContainer" unique_id=900717996]
 layout_mode = 2
 size_flags_vertical = 0
-theme_override_font_sizes/font_size = 60
+theme_override_fonts/font = ExtResource("4_uvioe")
+theme_override_font_sizes/font_size = 80
 text = "Log in"
 horizontal_alignment = 1
 vertical_alignment = 1
 
-[node name="UsernameInput" type="TextEdit" parent="VBoxContainer" unique_id=225954471]
+[node name="UsernameInput" type="TextEdit" parent="MarginContainer/VBoxContainer" unique_id=225954471]
 unique_name_in_owner = true
-custom_minimum_size = Vector2(0, 50)
+custom_minimum_size = Vector2(0, 80)
 layout_mode = 2
+theme_override_font_sizes/font_size = 50
+theme_override_styles/normal = SubResource("StyleBoxFlat_tbt7s")
 placeholder_text = "Username"
 
-[node name="PasswordInput" type="TextEdit" parent="VBoxContainer" unique_id=2102629611]
+[node name="PasswordInput" type="TextEdit" parent="MarginContainer/VBoxContainer" unique_id=2102629611]
 unique_name_in_owner = true
-custom_minimum_size = Vector2(0, 50)
+custom_minimum_size = Vector2(0, 80)
 layout_mode = 2
+theme_override_font_sizes/font_size = 50
+theme_override_styles/normal = SubResource("StyleBoxFlat_ks5sr")
 placeholder_text = "Password"
 
-[node name="LogInButton" type="Button" parent="VBoxContainer" unique_id=675563694]
+[node name="HBoxContainer" type="HBoxContainer" parent="MarginContainer/VBoxContainer" unique_id=1088984614]
+layout_mode = 2
+size_flags_vertical = 10
+
+[node name="MarginContainer" type="MarginContainer" parent="MarginContainer/VBoxContainer/HBoxContainer" unique_id=1462408555]
+custom_minimum_size = Vector2(200, 0)
+layout_mode = 2
+theme_override_constants/margin_left = 35
+theme_override_constants/margin_top = 35
+theme_override_constants/margin_right = 35
+theme_override_constants/margin_bottom = 35
+
+[node name="BackButton" parent="MarginContainer/VBoxContainer/HBoxContainer/MarginContainer" unique_id=126928124 instance=ExtResource("5_3q27b")]
+layout_mode = 2
+theme_override_styles/normal = SubResource("StyleBoxFlat_uvioe")
+
+[node name="LogInButton" type="TextureButton" parent="MarginContainer/VBoxContainer/HBoxContainer" unique_id=1956159644]
 unique_name_in_owner = true
+self_modulate = Color(0.19215687, 0, 0.24313726, 1)
+material = SubResource("ShaderMaterial_svdou")
+custom_minimum_size = Vector2(700, 200)
 layout_mode = 2
-size_flags_horizontal = 4
-theme_override_font_sizes/font_size = 30
-text = "Log in"
+size_flags_horizontal = 6
+texture_normal = ExtResource("6_pv7bl")
+ignore_texture_size = true
+stretch_mode = 5
 
-[node name="NewAccountButton" type="Button" parent="VBoxContainer" unique_id=1542566127]
+[node name="Label" type="Label" parent="MarginContainer/VBoxContainer/HBoxContainer/LogInButton" unique_id=1486802031]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_font_sizes/font_size = 60
+text = "Sign in"
+horizontal_alignment = 1
+vertical_alignment = 1
+
+[node name="MarginContainer2" type="MarginContainer" parent="MarginContainer/VBoxContainer/HBoxContainer" unique_id=359782826]
+custom_minimum_size = Vector2(200, 0)
 layout_mode = 2
-size_flags_horizontal = 4
+theme_override_constants/margin_left = 35
+theme_override_constants/margin_top = 35
+theme_override_constants/margin_right = 35
+theme_override_constants/margin_bottom = 35
+
+[node name="NewAccountButton" type="Button" parent="MarginContainer/VBoxContainer/HBoxContainer/MarginContainer2" unique_id=1466593513]
+layout_mode = 2
+theme_override_styles/normal = SubResource("StyleBoxFlat_0rvq1")
+autowrap_mode = 3
+
+[node name="AutoSizeLabel" type="Label" parent="MarginContainer/VBoxContainer/HBoxContainer/MarginContainer2/NewAccountButton" unique_id=1093468046]
+custom_minimum_size = Vector2(10, 10)
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_constants/outline_size = 0
+theme_override_font_sizes/font_size = 25
 text = "Create new Account"
+horizontal_alignment = 1
+vertical_alignment = 1
+autowrap_mode = 3
+clip_text = true
+script = ExtResource("8_uvioe")
+_max_size = 25
+_outline_ratio = 0.0
+_current_font_size = 25
+_editor_defaults_set = true
+metadata/_custom_type_script = "uid://bttgnk3bb2a8i"
 
-[connection signal="pressed" from="BackButton" to="." method="_on_back_button_pressed"]
-[connection signal="pressed" from="VBoxContainer/LogInButton" to="." method="_on_log_in_button_pressed"]
-[connection signal="pressed" from="VBoxContainer/NewAccountButton" to="." method="_on_new_account_button_pressed"]
+[connection signal="pressed" from="MarginContainer/VBoxContainer/HBoxContainer/MarginContainer/BackButton" to="." method="_on_back_button_pressed"]
+[connection signal="pressed" from="MarginContainer/VBoxContainer/HBoxContainer/LogInButton" to="." method="_on_log_in_button_pressed"]
+[connection signal="pressed" from="MarginContainer/VBoxContainer/HBoxContainer/MarginContainer2/NewAccountButton" to="." method="_on_new_account_button_pressed"]

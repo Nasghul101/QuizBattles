@@ -12,7 +12,7 @@ extends Control
 @onready var password_input: TextEdit = %PasswordInput
 
 ## Reference to the Log In button
-@onready var log_in_button: Button = %LogInButton
+@onready var log_in_button: TextureButton = %LogInButton
 
 ## Flag to track if login failed due to authentication error
 var _login_failed: bool = false

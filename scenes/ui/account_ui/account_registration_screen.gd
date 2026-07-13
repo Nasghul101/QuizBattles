@@ -21,7 +21,7 @@ extends Control
 @onready var email_input: TextEdit = %EmailInput
 
 ## Reference to the Create Account button
-@onready var create_account_button: Button = %CreateAccountButton
+@onready var create_account_button: TextureButton = %CreateAccountButton
 
 ## Flag to track if account creation failed due to duplicate username
 var _duplicate_username_error: bool = false
@@ -68,7 +68,7 @@ func _update_button_state() -> void:
 
 
 func _on_back_button_pressed() -> void:
-    Utils.navigate_to_scene("register_login")
+    Utils.navigate_to_scene("main_lobby")
 
 ## Handle Create Account button press
 func _on_create_account_button_pressed() -> void:
@@ -105,3 +105,7 @@ func _on_create_account_button_pressed() -> void:
         if result.error_code == "USERNAME_EXISTS":
             _duplicate_username_error = true
             _update_button_state()
+
+
+func _on_sign_in_button_pressed() -> void:
+    Utils.navigate_to_scene("register_login")

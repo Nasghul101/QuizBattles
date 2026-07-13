@@ -2,10 +2,7 @@
 
 [sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_liiet"]
 
-[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_iluv3"]
-bg_color = Color(0.49803922, 0.21568628, 0.58431375, 1)
-shadow_color = Color(0.49803922, 0.21568628, 0.58431375, 1)
-shadow_size = 42
+[sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_4ulci"]
 
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_4ulci"]
 bg_color = Color(0.49803922, 0.21568628, 0.58431375, 0.5058824)
@@ -17,7 +14,7 @@ offset_right = 1119.0
 offset_bottom = 2496.0
 size_flags_horizontal = 3
 theme_override_styles/normal = SubResource("StyleBoxEmpty_liiet")
-theme_override_styles/pressed = SubResource("StyleBoxFlat_iluv3")
+theme_override_styles/pressed = SubResource("StyleBoxEmpty_4ulci")
 theme_override_styles/hover = SubResource("StyleBoxFlat_4ulci")
 toggle_mode = true
 
@@ -35,6 +32,7 @@ theme_override_constants/margin_bottom = 60
 
 [node name="TextureRect" type="TextureRect" parent="MarginContainer" unique_id=337857074]
 self_modulate = Color(0.9843137, 0.8627451, 0.9529412, 1)
+z_index = 1
 layout_mode = 2
 expand_mode = 1
 stretch_mode = 5

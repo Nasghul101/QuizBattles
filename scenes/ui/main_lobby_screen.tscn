@@ -8,11 +8,11 @@
 [ext_resource type="PackedScene" uid="uid://cxkr8w47uveic" path="res://scenes/ui/lobby_pages/friendly_battle_page.tscn" id="4_4wv0w"]
 [ext_resource type="Texture2D" uid="uid://d2oj6872a8b7u" path="res://resources/icon_profile.tres" id="4_gj36w"]
 [ext_resource type="Texture2D" uid="uid://dg1t835qf2fwf" path="res://resources/icon_notification.tres" id="6_gj36w"]
-[ext_resource type="Texture2D" uid="uid://bwiby0r7dcp7d" path="res://assets/icon_wrong.png" id="7_6xylg"]
 [ext_resource type="PackedScene" uid="uid://crnu6goxc6w28" path="res://scenes/ui/lobby_pages/socials_page.tscn" id="8_wn6oh"]
 [ext_resource type="PackedScene" uid="uid://dshoppagedumm" path="res://scenes/ui/lobby_pages/shop_page.tscn" id="9_shop1"]
 [ext_resource type="PackedScene" uid="uid://dgt40tmm1tgde" path="res://scenes/ui/navigation_bar.tscn" id="10_nv11"]
 [ext_resource type="Theme" uid="uid://cxninrmdvbey6" path="res://Styles/BasicTheme.tres" id="12_87f1m"]
+[ext_resource type="PackedScene" uid="uid://ctbg4s6mn7ekg" path="res://scenes/ui/components/back_button.tscn" id="13_87f1m"]
 
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_ns136"]
 bg_color = Color(0.30980393, 0.2627451, 0.3137255, 1)
@@ -222,14 +222,11 @@ theme_override_constants/separation = 10
 
 [node name="HBoxContainer" type="HBoxContainer" parent="NotificationsPopUp/PopUpBackground/MarginContainer/NotificationContainer" unique_id=1148397191]
 layout_mode = 2
-theme_override_constants/separation = 68
+theme_override_constants/separation = 78
 
-[node name="ClosePopUpButton" type="Button" parent="NotificationsPopUp/PopUpBackground/MarginContainer/NotificationContainer/HBoxContainer" unique_id=31311946]
-custom_minimum_size = Vector2(160, 0)
+[node name="ClosePopUpButton" parent="NotificationsPopUp/PopUpBackground/MarginContainer/NotificationContainer/HBoxContainer" unique_id=126928124 instance=ExtResource("13_87f1m")]
+custom_minimum_size = Vector2(150, 50)
 layout_mode = 2
-size_flags_horizontal = 0
-icon = ExtResource("7_6xylg")
-expand_icon = true
 
 [node name="MarkAsReadButton" type="Button" parent="NotificationsPopUp/PopUpBackground/MarginContainer/NotificationContainer/HBoxContainer" unique_id=554882324]
 custom_minimum_size = Vector2(400, 150)

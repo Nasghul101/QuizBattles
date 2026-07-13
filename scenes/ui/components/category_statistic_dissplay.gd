@@ -23,31 +23,16 @@ func _ready() -> void:
     # Set the title to the category name
     title.text = category
     
-    # Load color codes from JSON
-    var file = FileAccess.open('res://data/color_codes.json', FileAccess.READ)
-    if file:
-        var json = JSON.new()
-        var parse_result = json.parse(file.get_as_text())
-        if parse_result == OK:
-            var colors = json.data
-            if colors.has("category_colors") and colors["category_colors"].has(category):
-                var color_string = colors["category_colors"][category]
-                if color_string != null:
-                    set_bg_color(Color(color_string))
-                else:
-                    # Use a default color if category color is not defined
-                    set_bg_color(Color("#808080"))
-            else:
-                # Use a default color if category not found
-                set_bg_color(Color("#808080"))
-        file.close()
+    set_bg_color(Utils.resolve_category_color(category))
 
 func set_bg_color(color: Color) -> void:
     # Duplicate the gradient texture to make it modifiable
     var new_texture = bg.texture.duplicate()
     var new_gradient = new_texture.gradient.duplicate()
-    new_gradient.colors[0] = color
-    new_gradient.colors[1] = Color(color, 0.5)
+    var new_colors = new_gradient.colors
+    new_colors[0] = color
+    new_colors[1] = Color(color.r, color.g, color.b, 0.5)
+    new_gradient.colors = new_colors
     new_texture.gradient = new_gradient
     bg.texture = new_texture
     

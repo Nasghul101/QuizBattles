@@ -187,28 +187,12 @@ func _on_timer_expired() -> void:
     wrong_buttons.shuffle()
     _on_answer_selected(wrong_buttons[0].answer_index)
 
-
-
-## Resolve the accent Color for a category name from color_codes.json
-##
-## Returns Color.WHITE when the category is unknown or has no defined color.
-func _resolve_category_color(category: String) -> Color:
-    var codes: Dictionary = Utils.get_color_codes()
-    var category_colors: Dictionary = codes.get("category_colors", {})
-    if not category_colors.has(category):
-        return Color.WHITE
-    var value = category_colors[category]
-    if value == null:
-        return Color.WHITE
-    return Color(value)
-
-
 ## Apply the category accent Color to the gradient label and all answer buttons
 ##
 ## Args:
 ##   category: The category name from question data (empty string uses fallback)
 func _apply_category_color(category: String) -> void:
-    var color: Color = _resolve_category_color(category)
+    var color: Color = Utils.resolve_category_color(category)
     category_label.set_accent_color(color)
     for button: TextureButton in answer_buttons:
         button.set_pulsating_color(color)

@@ -108,6 +108,7 @@ stretch_mode = 5
 
 [node name="CategoryLabel" parent="PanelContainer/MarginContainer/VBoxContainer/Category" unique_id=1036388009 instance=ExtResource("4_dh7g3")]
 unique_name_in_owner = true
+custom_minimum_size = Vector2(10, 10)
 layout_mode = 1
 
 [node name="QuestionPanel" type="TextureRect" parent="PanelContainer/MarginContainer/VBoxContainer" unique_id=1147497453]
@@ -120,6 +121,7 @@ stretch_mode = 5
 
 [node name="QuestionLabel" type="Label" parent="PanelContainer/MarginContainer/VBoxContainer/QuestionPanel" unique_id=1312887903]
 unique_name_in_owner = true
+custom_minimum_size = Vector2(10, 10)
 layout_mode = 1
 anchors_preset = 15
 anchor_right = 1.0
