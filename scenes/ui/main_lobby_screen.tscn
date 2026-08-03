@@ -8,6 +8,7 @@
 [ext_resource type="PackedScene" uid="uid://cxkr8w47uveic" path="res://scenes/ui/lobby_pages/friendly_battle_page.tscn" id="4_4wv0w"]
 [ext_resource type="Texture2D" uid="uid://d2oj6872a8b7u" path="res://resources/icon_profile.tres" id="4_gj36w"]
 [ext_resource type="Texture2D" uid="uid://dg1t835qf2fwf" path="res://resources/icon_notification.tres" id="6_gj36w"]
+[ext_resource type="Script" uid="uid://bjq3n5yrdthqi" path="res://scenes/script_components/animation_component.gd" id="7_ns136"]
 [ext_resource type="PackedScene" uid="uid://crnu6goxc6w28" path="res://scenes/ui/lobby_pages/socials_page.tscn" id="8_wn6oh"]
 [ext_resource type="PackedScene" uid="uid://dshoppagedumm" path="res://scenes/ui/lobby_pages/shop_page.tscn" id="9_shop1"]
 [ext_resource type="PackedScene" uid="uid://dgt40tmm1tgde" path="res://scenes/ui/navigation_bar.tscn" id="10_nv11"]
@@ -96,6 +97,12 @@ texture_normal = ExtResource("4_gj36w")
 ignore_texture_size = true
 stretch_mode = 5
 
+[node name="Animation_Component" type="Node" parent="VBoxContainer/TextureRect/MarginContainer/HBoxContainer/AccountButton" unique_id=1218887096]
+script = ExtResource("7_ns136")
+press_transition = 11
+press_scale = Vector2(1.2, 1.2)
+metadata/_custom_type_script = "uid://bjq3n5yrdthqi"
+
 [node name="PageName" type="Label" parent="VBoxContainer/TextureRect/MarginContainer/HBoxContainer" unique_id=875561421]
 unique_name_in_owner = true
 layout_mode = 2
@@ -118,6 +125,12 @@ texture_normal = ExtResource("6_gj36w")
 ignore_texture_size = true
 stretch_mode = 5
 
+[node name="Animation_Component" type="Node" parent="VBoxContainer/TextureRect/MarginContainer/HBoxContainer/NotificationsButton" unique_id=384281306]
+script = ExtResource("7_ns136")
+press_transition = 11
+press_rotation = 10.0
+metadata/_custom_type_script = "uid://bjq3n5yrdthqi"
+
 [node name="MarginContainer" type="MarginContainer" parent="VBoxContainer" unique_id=2059080828]
 layout_mode = 2
 size_flags_vertical = 3
@@ -137,7 +150,7 @@ anchor_right = 1.0
 anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
-theme_override_constants/separation = 0
+theme_override_constants/separation = 200
 
 [node name="DuelPage" parent="VBoxContainer/MarginContainer/PageClipContainer/PagesContainer" unique_id=1034330464 instance=ExtResource("3_1l6go")]
 layout_mode = 2
@@ -169,16 +182,31 @@ layout_mode = 2
 [node name="NotificationsPopUp" type="MarginContainer" parent="." unique_id=2140860605]
 unique_name_in_owner = true
 visible = false
+top_level = true
 layout_mode = 1
 anchors_preset = 15
 anchor_right = 1.0
 anchor_bottom = 1.0
+offset_left = 800.0
+offset_top = -2000.0
+offset_right = 800.0
+offset_bottom = -2000.0
 grow_horizontal = 2
 grow_vertical = 2
+scale = Vector2(1e-05, 1e-05)
+pivot_offset = Vector2(589.5, 1278)
 theme_override_constants/margin_left = 120
 theme_override_constants/margin_top = 500
 theme_override_constants/margin_right = 120
 theme_override_constants/margin_bottom = 500
+
+[node name="Animation_Component" type="Node" parent="NotificationsPopUp" unique_id=795075476]
+script = ExtResource("7_ns136")
+visible_animation = true
+visible_anim_time = 0.5
+visible_position = Vector2(400, -1000)
+visible_scale = Vector2(0, 0)
+metadata/_custom_type_script = "uid://bjq3n5yrdthqi"
 
 [node name="PopUpBackground" type="Panel" parent="NotificationsPopUp" unique_id=927153535]
 custom_minimum_size = Vector2(300, 500)

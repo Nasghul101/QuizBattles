@@ -1,0 +1,138 @@
+[gd_scene format=3 uid="uid://cwd5bgman1opk"]
+
+[ext_resource type="Script" uid="uid://btef4v22uw4uu" path="res://scenes/ui/test_ui/animation_test.gd" id="1_1j184"]
+[ext_resource type="Theme" uid="uid://cxninrmdvbey6" path="res://Styles/BasicTheme.tres" id="1_kbvrn"]
+[ext_resource type="Script" uid="uid://bjq3n5yrdthqi" path="res://scenes/script_components/animation_component.gd" id="2_a7wt8"]
+
+[node name="AnimationTest" type="Control" unique_id=381247244]
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+script = ExtResource("1_1j184")
+
+[node name="Panel" type="Panel" parent="." unique_id=1423001967]
+layout_mode = 0
+offset_left = 113.0
+offset_top = 364.0
+offset_right = 1054.0
+offset_bottom = 1501.0
+pivot_offset = Vector2(470.5, 568.5)
+theme = ExtResource("1_kbvrn")
+
+[node name="Animation_Component" type="Node" parent="Panel" unique_id=1879625074]
+script = ExtResource("2_a7wt8")
+enter_animation = true
+enter_anim_time = 0.5
+enter_delay = 0.5
+enter_scale = Vector2(0, 0)
+metadata/_custom_type_script = "uid://bjq3n5yrdthqi"
+
+[node name="SqueezeButton" type="Button" parent="Panel" unique_id=246716893]
+top_level = true
+layout_mode = 0
+offset_left = 458.0
+offset_top = 667.0
+offset_right = 741.0
+offset_bottom = 786.0
+pivot_offset = Vector2(141.5, 59.5)
+theme = ExtResource("1_kbvrn")
+text = "Press me"
+
+[node name="Animation_Component" type="Node" parent="Panel/SqueezeButton" unique_id=1207048235 node_paths=PackedStringArray("wait_for")]
+script = ExtResource("2_a7wt8")
+enter_animation = true
+press_anim_time = 0.415
+press_transition = 10
+press_easing = 1
+press_scale = Vector2(0.455, 1)
+enter_anim_time = 0.5
+wait_for = NodePath("../../Animation_Component")
+enter_position = Vector2(0, 5000)
+metadata/_custom_type_script = "uid://bjq3n5yrdthqi"
+
+[node name="Button2" type="Button" parent="Panel" unique_id=2010471648]
+top_level = true
+layout_mode = 0
+offset_left = 464.0
+offset_top = 830.0
+offset_right = 747.0
+offset_bottom = 949.0
+pivot_offset = Vector2(141.5, 59.5)
+theme = ExtResource("1_kbvrn")
+text = "Press me"
+
+[node name="Animation_Component" type="Node" parent="Panel/Button2" unique_id=1250144444 node_paths=PackedStringArray("wait_for")]
+script = ExtResource("2_a7wt8")
+enter_animation = true
+press_transition = 11
+press_scale = Vector2(2, 2)
+enter_anim_time = 0.5
+wait_for = NodePath("../../SqueezeButton/Animation_Component")
+enter_position = Vector2(0, 5000)
+metadata/_custom_type_script = "uid://bjq3n5yrdthqi"
+
+[node name="Button3" type="Button" parent="Panel" unique_id=1253315874]
+top_level = true
+layout_mode = 0
+offset_left = 470.0
+offset_top = 1004.0
+offset_right = 753.0
+offset_bottom = 1123.0
+pivot_offset = Vector2(141.5, 59.5)
+theme = ExtResource("1_kbvrn")
+text = "Press me"
+
+[node name="Animation_Component" type="Node" parent="Panel/Button3" unique_id=318180150 node_paths=PackedStringArray("wait_for")]
+script = ExtResource("2_a7wt8")
+enter_animation = true
+press_transition = 11
+press_scale = Vector2(2, 2)
+enter_anim_time = 0.5
+wait_for = NodePath("../../Button2/Animation_Component")
+enter_position = Vector2(0, 5000)
+metadata/_custom_type_script = "uid://bjq3n5yrdthqi"
+
+[node name="SwitchVisibleButton" type="Button" parent="Panel" unique_id=1458244265]
+top_level = true
+layout_mode = 0
+offset_left = 159.0
+offset_top = 154.0
+offset_right = 442.0
+offset_bottom = 273.0
+pivot_offset = Vector2(141.5, 59.5)
+theme = ExtResource("1_kbvrn")
+text = "Switch visible"
+
+[node name="Animation_Component" type="Node" parent="Panel/SwitchVisibleButton" unique_id=607626449]
+script = ExtResource("2_a7wt8")
+press_transition = 11
+press_scale = Vector2(2, 2)
+press_rotation = 11.17
+metadata/_custom_type_script = "uid://bjq3n5yrdthqi"
+
+[node name="VisibilityTest" type="Button" parent="." unique_id=1248791204]
+unique_name_in_owner = true
+layout_mode = 0
+offset_left = 595.0
+offset_top = 92.0
+offset_right = 872.0
+offset_bottom = 325.0
+pivot_offset = Vector2(138.5, 116.5)
+theme = ExtResource("1_kbvrn")
+text = "This does 
+something
+when turned 
+visble"
+
+[node name="Animation_Component" type="Node" parent="VisibilityTest" unique_id=1424208184]
+script = ExtResource("2_a7wt8")
+visible_animation = true
+visible_anim_time = 1.0
+visible_scale = Vector2(0, 0)
+visible_rotation = 45.245
+metadata/_custom_type_script = "uid://bjq3n5yrdthqi"
+
+[connection signal="pressed" from="Panel/SwitchVisibleButton" to="." method="_on_switch_visible_button_pressed"]

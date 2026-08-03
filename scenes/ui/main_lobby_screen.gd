@@ -28,6 +28,7 @@ var is_swiping: bool = false
 var swipe_threshold: float = 100.0  # Minimum pixels to trigger page change
 var drag_start_container_pos: float = 0.0
 var page_width: float = 0.0
+var page_separation: float = 0.0
 
 ## Current page tracking
 var current_page: int = 0
@@ -50,6 +51,9 @@ func _ready() -> void:
     # Calculate page width from viewport
     await get_tree().process_frame  # Wait for layout
     page_width = page_clip_container.size.x
+    
+    # Get separation from HBoxContainer
+    page_separation = pages_container.get_theme_constant("separation")
     
     # Set each page to take full width
     for page: Node in pages_container.get_children():
@@ -95,7 +99,7 @@ func _input(event: InputEvent) -> void:
             var target_pos: float = drag_start_container_pos + drag_offset
             
             # Clamp to prevent dragging beyond first/last page
-            var min_pos: float = -(page_width * (_get_total_pages() - 1))
+            var min_pos: float = -((page_width + page_separation) * (_get_total_pages() - 1))
             var max_pos: float = 0.0
             pages_container.position.x = clampf(target_pos, min_pos, max_pos)
     
@@ -106,7 +110,7 @@ func _input(event: InputEvent) -> void:
             var target_pos: float = drag_start_container_pos + drag_offset
             
             # Clamp to prevent dragging beyond first/last page
-            var min_pos: float = -(page_width * (_get_total_pages() - 1))
+            var min_pos: float = -((page_width + page_separation) * (_get_total_pages() - 1))
             var max_pos: float = 0.0
             pages_container.position.x = clampf(target_pos, min_pos, max_pos)
 
@@ -146,7 +150,7 @@ func _navigate_to_page(page_index: int) -> void:
 
 ## Set page position with optional animation
 func _set_page_position(page_index: int, animate: bool = false) -> void:
-    var target_x: float = -page_width * page_index
+    var target_x: float = -(page_width + page_separation) * page_index
     
     if animate:
         is_animating = true

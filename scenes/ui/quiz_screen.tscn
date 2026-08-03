@@ -12,6 +12,7 @@
 [ext_resource type="Texture2D" uid="uid://b005etrilpxw0" path="res://assets/ui/QuizScreen_Button_Top_Outline.png" id="8_dh7g3"]
 [ext_resource type="Texture2D" uid="uid://cjeupu2xrdrwi" path="res://assets/ui/QuizScreen_Button_Bottom_Outline.png" id="9_f45mr"]
 [ext_resource type="Shader" uid="uid://c6shv0xpxc3t5" path="res://shaders/trailing_progress_bar.gdshader" id="10_r8m2p"]
+[ext_resource type="Theme" uid="uid://cxninrmdvbey6" path="res://Styles/BasicTheme.tres" id="13_5u4c0"]
 
 [sub_resource type="ShaderMaterial" id="ShaderMaterial_t872d"]
 shader = ExtResource("2_kxe5e")
@@ -206,9 +207,17 @@ theme_override_styles/background = SubResource("StyleBoxFlat_f45mr")
 theme_override_styles/fill = SubResource("StyleBoxFlat_h5ymd")
 show_percentage = false
 
-[node name="NextQuestion" type="Button" parent="." unique_id=1306289098]
-unique_name_in_owner = true
+[node name="Panel" type="Panel" parent="." unique_id=1432804320]
 visible = false
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="NextQuestion" type="Button" parent="Panel" unique_id=1306289098]
+unique_name_in_owner = true
 custom_minimum_size = Vector2(200, 100)
 layout_mode = 1
 anchors_preset = 8
@@ -216,11 +225,11 @@ anchor_left = 0.5
 anchor_top = 0.5
 anchor_right = 0.5
 anchor_bottom = 0.5
-offset_left = -4.0
-offset_top = -4.0
-offset_right = 4.0
-offset_bottom = 4.0
+offset_left = -101.0
+offset_top = -50.0
+offset_right = 101.0
+offset_bottom = 50.0
 grow_horizontal = 2
 grow_vertical = 2
-theme_override_font_sizes/font_size = 56
+theme = ExtResource("13_5u4c0")
 text = "Next Question"

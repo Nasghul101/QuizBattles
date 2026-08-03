@@ -10,7 +10,6 @@ offset_top = 60.0
 offset_right = 1119.0
 offset_bottom = 2496.0
 theme = ExtResource("1_c1ejc")
-toggle_mode = true
 
 [node name="MarginContainer" type="MarginContainer" parent="." unique_id=1749982375]
 layout_mode = 1

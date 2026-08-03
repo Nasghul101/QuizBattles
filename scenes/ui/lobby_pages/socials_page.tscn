@@ -4,6 +4,7 @@
 [ext_resource type="Texture2D" uid="uid://cgybwrud0436v" path="res://assets/ui/SocialScreen_BG.png" id="1_xpe0s"]
 [ext_resource type="StyleBox" uid="uid://bprlsfswn38in" path="res://Styles/App_Background_Stylebox.tres" id="2_rx60n"]
 [ext_resource type="Texture2D" uid="uid://bmem6ia1yawim" path="res://assets/ui/SozialScreen_NewFriendButton.png" id="4_6rgj1"]
+[ext_resource type="PackedScene" uid="uid://c7l31g3fc4kr8" path="res://scenes/ui/components/friend_display_component.tscn" id="5_8i3sq"]
 [ext_resource type="Texture2D" uid="uid://c7iksc2clc1a5" path="res://assets/ui/SocialScreen_BG_BorderOnly.png" id="5_p37ba"]
 [ext_resource type="Texture2D" uid="uid://bwiby0r7dcp7d" path="res://assets/icon_wrong.png" id="6_npdnn"]
 [ext_resource type="Theme" uid="uid://cxninrmdvbey6" path="res://Styles/BasicTheme.tres" id="7_5n5qj"]
@@ -67,15 +68,20 @@ unique_name_in_owner = true
 layout_mode = 2
 size_flags_horizontal = 3
 size_flags_vertical = 3
-theme_override_constants/separation = -113
+theme_override_constants/separation = -121
 metadata/_edit_use_anchors_ = true
 
+[node name="FriendDisplayComponent" parent="BGTexture/ScrollContainer/FriendDisplayContainer" unique_id=1413633874 instance=ExtResource("5_8i3sq")]
+layout_mode = 2
+
+[node name="FriendDisplayComponent2" parent="BGTexture/ScrollContainer/FriendDisplayContainer" unique_id=1209301222 instance=ExtResource("5_8i3sq")]
+layout_mode = 2
+
 [node name="AddNewFriendsButton" type="TextureButton" parent="BGTexture/ScrollContainer/FriendDisplayContainer" unique_id=193793223]
-custom_minimum_size = Vector2(0, 446.375)
 layout_mode = 2
 size_flags_vertical = 10
 texture_normal = ExtResource("4_6rgj1")
-stretch_mode = 4
+stretch_mode = 0
 
 [node name="BGOutline" type="TextureRect" parent="BGTexture" unique_id=1992923695]
 layout_mode = 1
@@ -91,6 +97,7 @@ expand_mode = 5
 [node name="AddFriendsPopup" type="MarginContainer" parent="." unique_id=1931475607]
 unique_name_in_owner = true
 visible = false
+top_level = true
 layout_mode = 1
 anchors_preset = 15
 anchor_right = 1.0
@@ -194,6 +201,7 @@ icon_alignment = 1
 [node name="AccountPopup" parent="." unique_id=1182344581 instance=ExtResource("10_8i3sq")]
 unique_name_in_owner = true
 visible = false
+top_level = true
 layout_mode = 1
 
 [connection signal="pressed" from="BGTexture/ScrollContainer/FriendDisplayContainer/AddNewFriendsButton" to="." method="_on_add_new_friends_button_pressed"]

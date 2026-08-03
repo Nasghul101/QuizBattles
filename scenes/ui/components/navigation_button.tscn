@@ -1,5 +1,7 @@
 [gd_scene format=3 uid="uid://bxl6tljcfl6ps"]
 
+[ext_resource type="Script" uid="uid://bjq3n5yrdthqi" path="res://scenes/script_components/animation_component.gd" id="1_4ulci"]
+
 [sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_liiet"]
 
 [sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_4ulci"]
@@ -12,11 +14,20 @@ offset_left = 60.0
 offset_top = 60.0
 offset_right = 1119.0
 offset_bottom = 2496.0
+pivot_offset = Vector2(529.5, 1218)
 size_flags_horizontal = 3
 theme_override_styles/normal = SubResource("StyleBoxEmpty_liiet")
 theme_override_styles/pressed = SubResource("StyleBoxEmpty_4ulci")
 theme_override_styles/hover = SubResource("StyleBoxFlat_4ulci")
 toggle_mode = true
+
+[node name="Animation_Component" type="Node" parent="." unique_id=708229465]
+script = ExtResource("1_4ulci")
+press_anim_time = 0.3
+press_transition = 10
+press_easing = 1
+press_scale = Vector2(0.8, 1)
+metadata/_custom_type_script = "uid://bjq3n5yrdthqi"
 
 [node name="MarginContainer" type="MarginContainer" parent="." unique_id=1749982375]
 layout_mode = 1
