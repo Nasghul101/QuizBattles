@@ -14,6 +14,7 @@
 [ext_resource type="PackedScene" uid="uid://dgt40tmm1tgde" path="res://scenes/ui/navigation_bar.tscn" id="10_nv11"]
 [ext_resource type="Theme" uid="uid://cxninrmdvbey6" path="res://Styles/BasicTheme.tres" id="12_87f1m"]
 [ext_resource type="PackedScene" uid="uid://ctbg4s6mn7ekg" path="res://scenes/ui/components/back_button.tscn" id="13_87f1m"]
+[ext_resource type="Script" uid="uid://d02goaqs1otjn" path="res://scenes/ui/notifications_pop_up.gd" id="13_ppyyu"]
 
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_ns136"]
 bg_color = Color(0.30980393, 0.2627451, 0.3137255, 1)
@@ -99,8 +100,18 @@ stretch_mode = 5
 
 [node name="Animation_Component" type="Node" parent="VBoxContainer/TextureRect/MarginContainer/HBoxContainer/AccountButton" unique_id=1218887096]
 script = ExtResource("7_ns136")
+movement_animation = null
 press_transition = 11
 press_scale = Vector2(1.2, 1.2)
+movement_anim_time = null
+movement_delay = null
+movement_transition = null
+movement_easing = null
+movement_position = null
+movement_scale = null
+movement_rotation = null
+movement_size = null
+movement_modulate = null
 metadata/_custom_type_script = "uid://bjq3n5yrdthqi"
 
 [node name="PageName" type="Label" parent="VBoxContainer/TextureRect/MarginContainer/HBoxContainer" unique_id=875561421]
@@ -127,8 +138,18 @@ stretch_mode = 5
 
 [node name="Animation_Component" type="Node" parent="VBoxContainer/TextureRect/MarginContainer/HBoxContainer/NotificationsButton" unique_id=384281306]
 script = ExtResource("7_ns136")
+movement_animation = null
 press_transition = 11
 press_rotation = 10.0
+movement_anim_time = null
+movement_delay = null
+movement_transition = null
+movement_easing = null
+movement_position = null
+movement_scale = null
+movement_rotation = null
+movement_size = null
+movement_modulate = null
 metadata/_custom_type_script = "uid://bjq3n5yrdthqi"
 
 [node name="MarginContainer" type="MarginContainer" parent="VBoxContainer" unique_id=2059080828]
@@ -181,31 +202,28 @@ layout_mode = 2
 
 [node name="NotificationsPopUp" type="MarginContainer" parent="." unique_id=2140860605]
 unique_name_in_owner = true
-visible = false
 top_level = true
 layout_mode = 1
 anchors_preset = 15
 anchor_right = 1.0
 anchor_bottom = 1.0
-offset_left = 800.0
-offset_top = -2000.0
-offset_right = 800.0
-offset_bottom = -2000.0
+offset_top = 2685.0
+offset_bottom = 2685.0
 grow_horizontal = 2
 grow_vertical = 2
-scale = Vector2(1e-05, 1e-05)
-pivot_offset = Vector2(589.5, 1278)
 theme_override_constants/margin_left = 120
 theme_override_constants/margin_top = 500
 theme_override_constants/margin_right = 120
 theme_override_constants/margin_bottom = 500
+script = ExtResource("13_ppyyu")
 
-[node name="Animation_Component" type="Node" parent="NotificationsPopUp" unique_id=795075476]
+[node name="Animation_Component" type="Node" parent="NotificationsPopUp" unique_id=1291520897]
 script = ExtResource("7_ns136")
-visible_animation = true
-visible_anim_time = 0.5
-visible_position = Vector2(400, -1000)
-visible_scale = Vector2(0, 0)
+movement_animation = true
+movement_anim_time = 1.0
+movement_transition = 11
+movement_easing = 2
+movement_position = Vector2(0, -2685)
 metadata/_custom_type_script = "uid://bjq3n5yrdthqi"
 
 [node name="PopUpBackground" type="Panel" parent="NotificationsPopUp" unique_id=927153535]
@@ -215,9 +233,12 @@ theme = ExtResource("12_87f1m")
 theme_override_styles/panel = SubResource("StyleBoxFlat_ns136")
 
 [node name="MarginContainer" type="MarginContainer" parent="NotificationsPopUp/PopUpBackground" unique_id=1416495028]
-layout_mode = 0
-offset_right = 939.0
-offset_bottom = 1556.0
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
 theme_override_constants/margin_left = 45
 theme_override_constants/margin_top = 50
 theme_override_constants/margin_right = 45
@@ -274,6 +295,6 @@ horizontal_alignment = 1
 vertical_alignment = 1
 
 [connection signal="pressed" from="VBoxContainer/TextureRect/MarginContainer/HBoxContainer/AccountButton" to="." method="_on_account_button_pressed"]
-[connection signal="pressed" from="VBoxContainer/TextureRect/MarginContainer/HBoxContainer/NotificationsButton" to="." method="_on_notifications_button_pressed"]
+[connection signal="pressed" from="VBoxContainer/TextureRect/MarginContainer/HBoxContainer/NotificationsButton" to="NotificationsPopUp" method="_on_notifications_button_pressed"]
 [connection signal="page_changed" from="VBoxContainer/MarginContainer2/NavigationBar" to="." method="_on_navigation_bar_page_changed"]
-[connection signal="pressed" from="NotificationsPopUp/PopUpBackground/MarginContainer/NotificationContainer/HBoxContainer/ClosePopUpButton" to="." method="_on_close_pop_up_button_pressed"]
+[connection signal="pressed" from="NotificationsPopUp/PopUpBackground/MarginContainer/NotificationContainer/HBoxContainer/ClosePopUpButton" to="NotificationsPopUp" method="_on_close_pop_up_button_pressed"]

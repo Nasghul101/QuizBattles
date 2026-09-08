@@ -6,9 +6,9 @@
 [ext_resource type="Texture2D" uid="uid://bmem6ia1yawim" path="res://assets/ui/SozialScreen_NewFriendButton.png" id="4_6rgj1"]
 [ext_resource type="PackedScene" uid="uid://c7l31g3fc4kr8" path="res://scenes/ui/components/friend_display_component.tscn" id="5_8i3sq"]
 [ext_resource type="Texture2D" uid="uid://c7iksc2clc1a5" path="res://assets/ui/SocialScreen_BG_BorderOnly.png" id="5_p37ba"]
-[ext_resource type="Texture2D" uid="uid://bwiby0r7dcp7d" path="res://assets/icon_wrong.png" id="6_npdnn"]
 [ext_resource type="Theme" uid="uid://cxninrmdvbey6" path="res://Styles/BasicTheme.tres" id="7_5n5qj"]
 [ext_resource type="Texture2D" uid="uid://blen8fg2q6x2c" path="res://assets/icons8-share-144.png" id="7_rx60n"]
+[ext_resource type="Texture2D" uid="uid://clb3c5hdk7apb" path="res://resources/icon_back.tres" id="8_8i3sq"]
 [ext_resource type="PackedScene" uid="uid://dnr83p3aukr5k" path="res://scenes/ui/account_ui/account_popup.tscn" id="10_8i3sq"]
 
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_npdnn"]
@@ -178,8 +178,9 @@ alignment = 2
 custom_minimum_size = Vector2(160, 0)
 layout_mode = 2
 theme = ExtResource("7_5n5qj")
-icon = ExtResource("6_npdnn")
+icon = ExtResource("8_8i3sq")
 icon_alignment = 1
+expand_icon = true
 
 [node name="SendFriendRequestButton" type="Button" parent="AddFriendsPopup/Background/MarginContainer/VBoxContainer/HBoxContainer" unique_id=1514516218]
 unique_name_in_owner = true

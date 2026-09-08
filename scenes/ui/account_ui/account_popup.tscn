@@ -2,9 +2,9 @@
 
 [ext_resource type="Theme" uid="uid://cxninrmdvbey6" path="res://Styles/BasicTheme.tres" id="1_mpaho"]
 [ext_resource type="Script" uid="uid://cuag73iw3g4do" path="res://scenes/ui/account_ui/account_popup.gd" id="1_p8j0m"]
-[ext_resource type="Texture2D" uid="uid://bwiby0r7dcp7d" path="res://assets/icon_wrong.png" id="2_p8j0m"]
 [ext_resource type="PackedScene" uid="uid://b0frkcn0f5ddu" path="res://scenes/ui/components/piechart.tscn" id="3_appl4"]
 [ext_resource type="FontFile" uid="uid://c2546x0aealwc" path="res://assets/Font/exo/Exo-ExtraBold.otf" id="4_cqb5n"]
+[ext_resource type="Texture2D" uid="uid://clb3c5hdk7apb" path="res://resources/icon_back.tres" id="5_p8j0m"]
 
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_npdnn"]
 bg_color = Color(0.30980393, 0.2627451, 0.3137255, 1)
@@ -67,12 +67,6 @@ theme_override_font_sizes/font_size = 60
 text = "Friend Name"
 horizontal_alignment = 1
 vertical_alignment = 1
-
-[node name="AccountBackButton" type="Button" parent="Background/MarginContainer/VBoxContainer/HBoxContainer2" unique_id=1587206555]
-layout_mode = 2
-size_flags_horizontal = 8
-theme = ExtResource("1_mpaho")
-icon = ExtResource("2_p8j0m")
 
 [node name="HBoxContainer3" type="HBoxContainer" parent="Background/MarginContainer/VBoxContainer" unique_id=566442406]
 layout_mode = 2
@@ -184,6 +178,14 @@ size_flags_vertical = 8
 theme_override_constants/separation = 68
 alignment = 2
 
+[node name="AccountBackButton" type="Button" parent="Background/MarginContainer/VBoxContainer/HBoxContainer" unique_id=1587206555]
+custom_minimum_size = Vector2(150, 0)
+layout_mode = 2
+size_flags_horizontal = 8
+theme = ExtResource("1_mpaho")
+icon = ExtResource("5_p8j0m")
+expand_icon = true
+
 [node name="InviteToDuelButton" type="Button" parent="Background/MarginContainer/VBoxContainer/HBoxContainer" unique_id=1826118509]
 unique_name_in_owner = true
 custom_minimum_size = Vector2(0, 150)
@@ -194,15 +196,16 @@ theme = ExtResource("1_mpaho")
 text = "Invite to duel"
 
 [node name="UnfriedButon" type="Button" parent="Background/MarginContainer/VBoxContainer/HBoxContainer" unique_id=765703830]
-custom_minimum_size = Vector2(0, 150)
+custom_minimum_size = Vector2(150, 150)
 layout_mode = 2
-size_flags_horizontal = 3
 theme = ExtResource("1_mpaho")
+theme_override_colors/font_color = Color(0.8, 0.09411765, 0.06666667, 1)
 text = "unfriend"
 icon_alignment = 1
 
 [node name="UnfriendPopup" type="MarginContainer" parent="Background" unique_id=361426179]
 unique_name_in_owner = true
+visible = false
 layout_mode = 1
 anchors_preset = 15
 anchor_right = 1.0
@@ -215,7 +218,6 @@ theme_override_constants/margin_right = 100
 theme_override_constants/margin_bottom = 500
 
 [node name="Panel" type="Panel" parent="Background/UnfriendPopup" unique_id=1304776263]
-visible = false
 layout_mode = 2
 theme = ExtResource("1_mpaho")
 
@@ -261,7 +263,7 @@ size_flags_horizontal = 3
 theme = ExtResource("1_mpaho")
 text = "No"
 
-[connection signal="pressed" from="Background/MarginContainer/VBoxContainer/HBoxContainer2/AccountBackButton" to="." method="_on_account_back_button_pressed"]
+[connection signal="pressed" from="Background/MarginContainer/VBoxContainer/HBoxContainer/AccountBackButton" to="." method="_on_account_back_button_pressed"]
 [connection signal="pressed" from="Background/MarginContainer/VBoxContainer/HBoxContainer/InviteToDuelButton" to="." method="_on_invite_to_duel_button_pressed"]
 [connection signal="pressed" from="Background/MarginContainer/VBoxContainer/HBoxContainer/UnfriedButon" to="." method="_on_unfried_buton_pressed"]
 [connection signal="pressed" from="Background/UnfriendPopup/Panel/MarginContainer/VBoxContainer/HBoxContainer/YesButton" to="." method="_on_yes_button_pressed"]
