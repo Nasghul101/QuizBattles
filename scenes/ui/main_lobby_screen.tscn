@@ -15,6 +15,7 @@
 [ext_resource type="Theme" uid="uid://cxninrmdvbey6" path="res://Styles/BasicTheme.tres" id="12_87f1m"]
 [ext_resource type="PackedScene" uid="uid://ctbg4s6mn7ekg" path="res://scenes/ui/components/back_button.tscn" id="13_87f1m"]
 [ext_resource type="Script" uid="uid://d02goaqs1otjn" path="res://scenes/ui/notifications_pop_up.gd" id="13_ppyyu"]
+[ext_resource type="Script" uid="uid://b2doapra872wy" path="res://scenes/ui/page_clip_container.gd" id="14_pageclip"]
 
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_ns136"]
 bg_color = Color(0.30980393, 0.2627451, 0.3137255, 1)
@@ -142,6 +143,7 @@ theme_override_constants/margin_right = 50
 unique_name_in_owner = true
 layout_mode = 2
 size_flags_vertical = 3
+script = ExtResource("14_pageclip")
 
 [node name="PagesContainer" type="HBoxContainer" parent="VBoxContainer/MarginContainer/PageClipContainer" unique_id=792530406]
 unique_name_in_owner = true
@@ -277,5 +279,6 @@ vertical_alignment = 1
 
 [connection signal="pressed" from="VBoxContainer/TextureRect/MarginContainer/HBoxContainer/AccountButton" to="." method="_on_account_button_pressed"]
 [connection signal="pressed" from="VBoxContainer/TextureRect/MarginContainer/HBoxContainer/NotificationsButton" to="NotificationsPopUp" method="_on_notifications_button_pressed"]
+[connection signal="swipe_requested" from="VBoxContainer/MarginContainer/PageClipContainer" to="." method="_on_page_clip_container_swipe_requested"]
 [connection signal="page_changed" from="VBoxContainer/MarginContainer2/NavigationBar" to="." method="_on_navigation_bar_page_changed"]
 [connection signal="pressed" from="NotificationsPopUp/PopUpBackground/MarginContainer/NotificationContainer/HBoxContainer/ClosePopUpButton" to="NotificationsPopUp" method="_on_close_pop_up_button_pressed"]

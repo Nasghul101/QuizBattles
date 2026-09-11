@@ -31,8 +31,8 @@ UserDatabase="*res://autoload/user_database.gd"
 
 window/size/viewport_width=1179
 window/size/viewport_height=2556
-window/size/window_width_override=983
-window/size/window_height_override=2130
+window/size/window_width_override=816
+window/size/window_height_override=1770
 window/stretch/mode="canvas_items"
 window/handheld/orientation=1
 

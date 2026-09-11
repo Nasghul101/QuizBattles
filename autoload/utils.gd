@@ -15,6 +15,9 @@ const SCENES: Dictionary = {
     "account_registration": "res://scenes/ui/account_ui/account_registration_screen.tscn"
 }
 
+## Last page selected in the main lobby during this app session.
+var last_lobby_page: int = 0
+
 
 ## Navigate to a scene by key with optional fallback
 ##
