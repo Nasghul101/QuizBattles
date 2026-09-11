@@ -4,6 +4,7 @@
 [ext_resource type="Theme" uid="uid://cxninrmdvbey6" path="res://Styles/BasicTheme.tres" id="1_kbvrn"]
 [ext_resource type="Script" uid="uid://bjq3n5yrdthqi" path="res://scenes/script_components/animation_component.gd" id="2_a7wt8"]
 [ext_resource type="Script" uid="uid://80fb3vue7err" path="res://scenes/ui/test_ui/button_2.gd" id="4_fnuyt"]
+[ext_resource type="Script" uid="uid://8vcff2k1vgbn" path="res://scenes/ui/test_ui/multible_anim_button.gd" id="5_18uw8"]
 
 [node name="AnimationTest" type="Control" unique_id=381247244]
 layout_mode = 3
@@ -26,19 +27,9 @@ theme = ExtResource("1_kbvrn")
 [node name="Animation_Component" type="Node" parent="Panel" unique_id=1879625074]
 script = ExtResource("2_a7wt8")
 enter_animation = true
-movement_animation = null
 enter_anim_time = 0.5
 enter_delay = 0.5
 enter_scale = Vector2(0, 0)
-movement_anim_time = null
-movement_delay = null
-movement_transition = null
-movement_easing = null
-movement_position = null
-movement_scale = null
-movement_rotation = null
-movement_size = null
-movement_modulate = null
 metadata/_custom_type_script = "uid://bjq3n5yrdthqi"
 
 [node name="SqueezeButton" type="Button" parent="Panel" unique_id=246716893]
@@ -54,8 +45,8 @@ text = "Press me"
 
 [node name="Animation_Component" type="Node" parent="Panel/SqueezeButton" unique_id=1207048235 node_paths=PackedStringArray("wait_for")]
 script = ExtResource("2_a7wt8")
+press_animation = true
 enter_animation = true
-movement_animation = null
 press_anim_time = 0.415
 press_transition = 10
 press_easing = 1
@@ -63,15 +54,6 @@ press_scale = Vector2(0.455, 1)
 enter_anim_time = 0.5
 wait_for = NodePath("../../Animation_Component")
 enter_position = Vector2(0, 5000)
-movement_anim_time = null
-movement_delay = null
-movement_transition = null
-movement_easing = null
-movement_position = null
-movement_scale = null
-movement_rotation = null
-movement_size = null
-movement_modulate = null
 metadata/_custom_type_script = "uid://bjq3n5yrdthqi"
 
 [node name="Button2" type="Button" parent="Panel" unique_id=2010471648]
@@ -88,6 +70,7 @@ script = ExtResource("4_fnuyt")
 
 [node name="Animation_Component" type="Node" parent="Panel/Button2" unique_id=1250144444 node_paths=PackedStringArray("wait_for")]
 script = ExtResource("2_a7wt8")
+press_animation = true
 enter_animation = true
 movement_animation = true
 press_transition = 11
@@ -112,6 +95,7 @@ text = "Press me"
 
 [node name="Animation_Component" type="Node" parent="Panel/Button3" unique_id=318180150 node_paths=PackedStringArray("wait_for", "wait_for_movement")]
 script = ExtResource("2_a7wt8")
+press_animation = true
 enter_animation = true
 movement_animation = true
 press_transition = 11
@@ -121,7 +105,7 @@ wait_for = NodePath("../../Button2/Animation_Component")
 enter_position = Vector2(0, 5000)
 movement_anim_time = 1.0
 wait_for_movement = NodePath("../../Button2/Animation_Component")
-movement_scale = Vector2(2, 2)
+movement_position = Vector2(200, 0)
 metadata/_custom_type_script = "uid://bjq3n5yrdthqi"
 
 [node name="SwitchVisibleButton" type="Button" parent="." unique_id=1458244265]
@@ -137,19 +121,10 @@ text = "Switch visible"
 
 [node name="Animation_Component" type="Node" parent="SwitchVisibleButton" unique_id=607626449]
 script = ExtResource("2_a7wt8")
-movement_animation = null
+press_animation = true
 press_transition = 11
 press_scale = Vector2(2, 2)
 press_rotation = 11.17
-movement_anim_time = null
-movement_delay = null
-movement_transition = null
-movement_easing = null
-movement_position = null
-movement_scale = null
-movement_rotation = null
-movement_size = null
-movement_modulate = null
 metadata/_custom_type_script = "uid://bjq3n5yrdthqi"
 
 [node name="VisibilityTest" type="Button" parent="." unique_id=1248791204]
@@ -169,19 +144,9 @@ visble"
 [node name="Animation_Component" type="Node" parent="VisibilityTest" unique_id=1424208184]
 script = ExtResource("2_a7wt8")
 visible_animation = true
-movement_animation = null
 visible_anim_time = 1.0
 visible_scale = Vector2(0, 0)
 visible_rotation = 45.245
-movement_anim_time = null
-movement_delay = null
-movement_transition = null
-movement_easing = null
-movement_position = null
-movement_scale = null
-movement_rotation = null
-movement_size = null
-movement_modulate = null
 metadata/_custom_type_script = "uid://bjq3n5yrdthqi"
 
 [node name="AnimateOnOtherNodesButton" type="Button" parent="." unique_id=968309433]
@@ -194,5 +159,34 @@ theme = ExtResource("1_kbvrn")
 text = "Press this to do 
 funky stuff with other nodes"
 
+[node name="MultibleAnimButton" type="Button" parent="." unique_id=429702784]
+layout_mode = 0
+offset_left = 127.0
+offset_top = 1916.0
+offset_right = 451.0
+offset_bottom = 2087.0
+pivot_offset = Vector2(162, 85.5)
+theme = ExtResource("1_kbvrn")
+text = "This Plays multible 
+animations when 
+pressed"
+script = ExtResource("5_18uw8")
+
+[node name="SideMovement" type="Node" parent="MultibleAnimButton" unique_id=1544602249]
+script = ExtResource("2_a7wt8")
+movement_animation = true
+movement_anim_time = 1.0
+movement_position = Vector2(200, 0)
+metadata/_custom_type_script = "uid://bjq3n5yrdthqi"
+
+[node name="UpMovement" type="Node" parent="MultibleAnimButton" unique_id=804848342 node_paths=PackedStringArray("wait_for_movement")]
+script = ExtResource("2_a7wt8")
+movement_animation = true
+movement_anim_time = 1.0
+wait_for_movement = NodePath("../SideMovement")
+movement_position = Vector2(200, -200)
+metadata/_custom_type_script = "uid://bjq3n5yrdthqi"
+
 [connection signal="pressed" from="SwitchVisibleButton" to="." method="_on_switch_visible_button_pressed"]
 [connection signal="pressed" from="AnimateOnOtherNodesButton" to="Panel/Button2" method="_on_animate_on_other_nodes_button_pressed"]
+[connection signal="pressed" from="MultibleAnimButton" to="MultibleAnimButton" method="_on_pressed"]

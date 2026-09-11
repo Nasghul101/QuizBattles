@@ -100,18 +100,8 @@ stretch_mode = 5
 
 [node name="Animation_Component" type="Node" parent="VBoxContainer/TextureRect/MarginContainer/HBoxContainer/AccountButton" unique_id=1218887096]
 script = ExtResource("7_ns136")
-movement_animation = null
 press_transition = 11
 press_scale = Vector2(1.2, 1.2)
-movement_anim_time = null
-movement_delay = null
-movement_transition = null
-movement_easing = null
-movement_position = null
-movement_scale = null
-movement_rotation = null
-movement_size = null
-movement_modulate = null
 metadata/_custom_type_script = "uid://bjq3n5yrdthqi"
 
 [node name="PageName" type="Label" parent="VBoxContainer/TextureRect/MarginContainer/HBoxContainer" unique_id=875561421]
@@ -138,18 +128,8 @@ stretch_mode = 5
 
 [node name="Animation_Component" type="Node" parent="VBoxContainer/TextureRect/MarginContainer/HBoxContainer/NotificationsButton" unique_id=384281306]
 script = ExtResource("7_ns136")
-movement_animation = null
 press_transition = 11
 press_rotation = 10.0
-movement_anim_time = null
-movement_delay = null
-movement_transition = null
-movement_easing = null
-movement_position = null
-movement_scale = null
-movement_rotation = null
-movement_size = null
-movement_modulate = null
 metadata/_custom_type_script = "uid://bjq3n5yrdthqi"
 
 [node name="MarginContainer" type="MarginContainer" parent="VBoxContainer" unique_id=2059080828]
@@ -211,6 +191,7 @@ offset_top = 2685.0
 offset_bottom = 2685.0
 grow_horizontal = 2
 grow_vertical = 2
+pivot_offset = Vector2(589.5, 1278)
 theme_override_constants/margin_left = 120
 theme_override_constants/margin_top = 500
 theme_override_constants/margin_right = 120

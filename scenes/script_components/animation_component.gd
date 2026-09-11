@@ -6,6 +6,7 @@ signal moved
 
 @export_group("Options")
 @export var from_center : bool = true
+@export var press_animation : bool = false
 @export var enter_animation : bool = false
 @export var visible_animation : bool = false
 @export var movement_animation : bool = false
@@ -81,6 +82,12 @@ const IMMEDIATE_TRANSITION = Tween.TRANS_LINEAR
 
 func _validate_property(property: Dictionary) -> void:
 	# Make Enter Settings read-only if enter_animation is not checked
+	if property.name in ["press_anim_time", "press_delay", "press_transition", 
+						 "press_easing", "press_position", "press_scale", 
+						 "press_rotation", "press_size", "press_modulate"]:
+		if not press_animation:
+			property.usage |= PROPERTY_USAGE_READ_ONLY
+
 	if property.name in ["enter_anim_time", "enter_delay", "wait_for", "enter_transition", 
 						 "enter_easing", "enter_position", "enter_scale", "enter_rotation", 
 						 "enter_size", "enter_modulate"]:
@@ -108,7 +115,7 @@ func _ready() -> void:
 
 #this connects signals for when animations should be played
 func connect_signals() -> void:
-	if target.has_signal("pressed"):
+	if press_animation and target.has_signal("pressed"):
 		target.pressed.connect(add_tween.bind(
 				press_values,
 				parallel_animations,
@@ -133,10 +140,11 @@ func connect_signals() -> void:
 			)
 		)
 
-	if target.has_signal("play_animation"):
-		target.play_animation.connect(on_play_animation)
+	# if chained to another component, ignore the target's own signal so only the previous animation triggers this one
 	if wait_for_movement:
 		wait_for_movement.moved.connect(on_play_animation)
+	elif target.has_signal("play_animation"):
+		target.play_animation.connect(on_play_animation)
 
 	if target.has_signal("visibility_changed"):
 		target.visibility_changed.connect(on_visible.bind())
