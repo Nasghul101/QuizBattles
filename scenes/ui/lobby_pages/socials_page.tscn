@@ -9,6 +9,7 @@
 [ext_resource type="Theme" uid="uid://cxninrmdvbey6" path="res://Styles/BasicTheme.tres" id="7_5n5qj"]
 [ext_resource type="Texture2D" uid="uid://blen8fg2q6x2c" path="res://assets/icons8-share-144.png" id="7_rx60n"]
 [ext_resource type="Texture2D" uid="uid://clb3c5hdk7apb" path="res://resources/icon_back.tres" id="8_8i3sq"]
+[ext_resource type="Script" uid="uid://bjq3n5yrdthqi" path="res://scenes/script_components/animation_component.gd" id="8_juggy"]
 [ext_resource type="PackedScene" uid="uid://dnr83p3aukr5k" path="res://scenes/ui/account_ui/account_popup.tscn" id="10_8i3sq"]
 
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_npdnn"]
@@ -104,10 +105,17 @@ anchor_right = 1.0
 anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
+pivot_offset = Vector2(589.5, 1278)
 theme_override_constants/margin_left = 120
 theme_override_constants/margin_top = 500
 theme_override_constants/margin_right = 120
 theme_override_constants/margin_bottom = 500
+
+[node name="Animation_Component" type="Node" parent="AddFriendsPopup" unique_id=408928632]
+script = ExtResource("8_juggy")
+visible_animation = true
+visible_scale = Vector2(0.5, 0.5)
+metadata/_custom_type_script = "uid://bjq3n5yrdthqi"
 
 [node name="Background" type="Panel" parent="AddFriendsPopup" unique_id=1361208122]
 layout_mode = 2

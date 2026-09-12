@@ -93,6 +93,7 @@ func _on_create_account_button_pressed() -> void:
         var sign_in_result: Dictionary = UserDatabase.sign_in(username, password)
         if sign_in_result.success:
             print("User automatically logged in")
+            LocalCache.remember_login(username, password)
             Utils.navigate_to_scene("account_management", "register_login")
         else:
             print("ERROR: Failed to log in after account creation: ", sign_in_result.message)

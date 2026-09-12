@@ -2,6 +2,7 @@
 
 [ext_resource type="Theme" uid="uid://cxninrmdvbey6" path="res://Styles/BasicTheme.tres" id="1_mpaho"]
 [ext_resource type="Script" uid="uid://cuag73iw3g4do" path="res://scenes/ui/account_ui/account_popup.gd" id="1_p8j0m"]
+[ext_resource type="Script" uid="uid://bjq3n5yrdthqi" path="res://scenes/script_components/animation_component.gd" id="2_appl4"]
 [ext_resource type="PackedScene" uid="uid://b0frkcn0f5ddu" path="res://scenes/ui/components/piechart.tscn" id="3_appl4"]
 [ext_resource type="FontFile" uid="uid://c2546x0aealwc" path="res://assets/Font/exo/Exo-ExtraBold.otf" id="4_cqb5n"]
 [ext_resource type="Texture2D" uid="uid://clb3c5hdk7apb" path="res://resources/icon_back.tres" id="5_p8j0m"]
@@ -24,11 +25,18 @@ anchor_right = 1.0
 anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
+pivot_offset = Vector2(589.5, 1278)
 theme_override_constants/margin_left = 120
 theme_override_constants/margin_top = 500
 theme_override_constants/margin_right = 120
 theme_override_constants/margin_bottom = 500
 script = ExtResource("1_p8j0m")
+
+[node name="Animation_Component" type="Node" parent="." unique_id=115170861]
+script = ExtResource("2_appl4")
+visible_animation = true
+visible_scale = Vector2(0.3, 0.3)
+metadata/_custom_type_script = "uid://bjq3n5yrdthqi"
 
 [node name="Background" type="Panel" parent="." unique_id=1913664982]
 layout_mode = 2

@@ -72,6 +72,9 @@ func _on_log_in_button_pressed() -> void:
     var result: Dictionary = UserDatabase.sign_in(username, password)
     
     if result.success:
+        # Remember credentials for auto sign-in on future launches
+        LocalCache.remember_login(username, password)
+        
         # Success - navigate to account management
         Utils.navigate_to_scene("account_management", "main_lobby")
     else:

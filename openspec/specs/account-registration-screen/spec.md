@@ -2,7 +2,9 @@
 
 ## Purpose
 TBD - created by archiving change add-account-registration-screen-logic. Update Purpose after archive.
+
 ## Requirements
+
 ### Requirement: Enable Create Account Button Based on Field Content
 The CreateAccountButton SHALL be enabled only when all 4 input fields (username, password, password confirmation, email) contain text.
 
@@ -117,12 +119,15 @@ The system SHALL re-enable the CreateAccountButton when the NameInput field is e
 ---
 
 ### Requirement: Create Account on Successful Validation
-The system SHALL call UserDatabase.create_user() with default avatar path and log the result when all validations pass.
+The system SHALL call UserDatabase.create_user() with default avatar path and log the result when all validations pass, and SHALL remember the new user's login credentials in the local device cache after the automatic post-registration sign-in.
 
-**Rationale:** Complete the registration process with a default profile picture and provide feedback without interrupting gameplay.
+**Rationale:** Complete the registration process with a default profile picture, provide feedback without interrupting gameplay, and let the device remember the newly created account for future launches.
 
 **Changes from previous version:**
 - User records now include avatar_path field with default value
+- After the automatic post-registration sign-in succeeds, `LocalCache.remember_login(username, password)` is called with the exact credentials used to create the account
+
+**Cross-reference:** Uses `local-device-cache.remember_login()`.
 
 #### Scenario: Successful account creation with default avatar
 **Given** all input fields are valid  
@@ -142,7 +147,11 @@ The system SHALL call UserDatabase.create_user() with default avatar path and lo
 **Then** UserDatabase.get_current_user() includes the default avatar_path  
 **And** the avatar is available for display on the Account Management Screen
 
----
+#### Scenario: New account is remembered for auto sign-in on future launches
+**Given** a new user "Player123" with password "password123" successfully creates an account  
+**When** the automatic post-registration sign-in succeeds  
+**Then** `LocalCache.remember_login("Player123", "password123")` is called  
+**And** the local device cache's `remembered_login` reflects the new account's credentials
 
 ### Requirement: Console-Only Error Feedback
 The system SHALL log all validation errors and success messages to console without displaying UI notifications.
@@ -170,4 +179,3 @@ The BackButton SHALL have no connected logic or behavior.
 **And** the screen remains on account registration
 
 ---
-

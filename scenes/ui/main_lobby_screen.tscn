@@ -101,6 +101,7 @@ stretch_mode = 5
 
 [node name="Animation_Component" type="Node" parent="VBoxContainer/TextureRect/MarginContainer/HBoxContainer/AccountButton" unique_id=1218887096]
 script = ExtResource("7_ns136")
+press_animation = true
 press_transition = 11
 press_scale = Vector2(1.2, 1.2)
 metadata/_custom_type_script = "uid://bjq3n5yrdthqi"
@@ -129,6 +130,7 @@ stretch_mode = 5
 
 [node name="Animation_Component" type="Node" parent="VBoxContainer/TextureRect/MarginContainer/HBoxContainer/NotificationsButton" unique_id=384281306]
 script = ExtResource("7_ns136")
+press_animation = true
 press_transition = 11
 press_rotation = 10.0
 metadata/_custom_type_script = "uid://bjq3n5yrdthqi"
@@ -144,6 +146,8 @@ unique_name_in_owner = true
 layout_mode = 2
 size_flags_vertical = 3
 script = ExtResource("14_pageclip")
+swipe_start_delay = 0.05
+animation_duration = 0.5
 
 [node name="PagesContainer" type="HBoxContainer" parent="VBoxContainer/MarginContainer/PageClipContainer" unique_id=792530406]
 unique_name_in_owner = true
@@ -189,11 +193,12 @@ layout_mode = 1
 anchors_preset = 15
 anchor_right = 1.0
 anchor_bottom = 1.0
-offset_top = 2685.0
-offset_bottom = 2685.0
+offset_top = 2591.0
+offset_bottom = 2591.0
 grow_horizontal = 2
 grow_vertical = 2
 pivot_offset = Vector2(589.5, 1278)
+mouse_filter = 0
 theme_override_constants/margin_left = 120
 theme_override_constants/margin_top = 500
 theme_override_constants/margin_right = 120
@@ -203,13 +208,14 @@ script = ExtResource("13_ppyyu")
 [node name="Animation_Component" type="Node" parent="NotificationsPopUp" unique_id=1291520897]
 script = ExtResource("7_ns136")
 movement_animation = true
-movement_anim_time = 1.0
+movement_anim_time = 0.9
 movement_transition = 11
 movement_easing = 2
 movement_position = Vector2(0, -2685)
 metadata/_custom_type_script = "uid://bjq3n5yrdthqi"
 
 [node name="PopUpBackground" type="Panel" parent="NotificationsPopUp" unique_id=927153535]
+unique_name_in_owner = true
 custom_minimum_size = Vector2(300, 500)
 layout_mode = 2
 theme = ExtResource("12_87f1m")

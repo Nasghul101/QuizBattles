@@ -23,6 +23,7 @@ toggle_mode = true
 
 [node name="Animation_Component" type="Node" parent="." unique_id=708229465]
 script = ExtResource("1_4ulci")
+press_animation = true
 press_anim_time = 0.3
 press_transition = 10
 press_easing = 1

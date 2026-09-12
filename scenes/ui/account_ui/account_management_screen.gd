@@ -90,4 +90,5 @@ func _on_back_button_pressed() -> void:
 ## Sign out current user and navigate to main lobby.
 func _on_log_off_button_pressed() -> void:
     UserDatabase.sign_out()
+    LocalCache.forget_login()
     Utils.navigate_to_scene("main_lobby")

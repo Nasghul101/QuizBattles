@@ -1,4 +1,3 @@
-@tool
 class_name Animation_Component extends Node
 
 signal entered
@@ -144,7 +143,7 @@ func connect_signals() -> void:
 	if wait_for_movement:
 		wait_for_movement.moved.connect(on_play_animation)
 	elif target.has_signal("play_animation"):
-		target.play_animation.connect(on_play_animation)
+		target.connect("play_animation", on_play_animation)
 
 	if target.has_signal("visibility_changed"):
 		target.visibility_changed.connect(on_visible.bind())
