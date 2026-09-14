@@ -82,8 +82,10 @@ size_flags_vertical = 3
 
 [node name="Piechart" parent="Background/MarginContainer/VBoxContainer/HBoxContainer3" unique_id=1069233904 instance=ExtResource("3_appl4")]
 unique_name_in_owner = true
+custom_minimum_size = Vector2(0, 400)
 layout_mode = 2
 size_flags_horizontal = 3
+size_flags_vertical = 0
 
 [node name="StatisticsContainer" type="VBoxContainer" parent="Background/MarginContainer/VBoxContainer/HBoxContainer3" unique_id=346467496]
 layout_mode = 2

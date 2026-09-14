@@ -26,8 +26,7 @@ shader_parameter/bg = SubResource("GradientTexture1D_jyckf")
 shader_parameter/offset = 0.0
 shader_parameter/smoothing = 0.0
 
-[node name="Piechart" type="Control" unique_id=1069233904]
-layout_mode = 3
+[node name="Piechart" type="AspectRatioContainer" unique_id=1069233904]
 anchors_preset = 15
 anchor_right = 1.0
 anchor_bottom = 1.0
@@ -39,28 +38,23 @@ label_offset = 0.8
 [node name="Chart" type="Panel" parent="." unique_id=317172239]
 unique_name_in_owner = true
 material = SubResource("ShaderMaterial_rpdrh")
-layout_mode = 1
-anchors_preset = 15
-anchor_right = 1.0
-anchor_bottom = 1.0
-grow_horizontal = 2
-grow_vertical = 2
+layout_mode = 2
 
-[node name="Win_Label" type="Label" parent="." unique_id=233298726]
+[node name="Win_Label" type="Label" parent="Chart" unique_id=233298726]
 unique_name_in_owner = true
 layout_mode = 0
 offset_right = 40.0
 offset_bottom = 23.0
 theme = ExtResource("3_vim5g")
 
-[node name="Draw_Label" type="Label" parent="." unique_id=77815748]
+[node name="Draw_Label" type="Label" parent="Chart" unique_id=77815748]
 unique_name_in_owner = true
 layout_mode = 0
 offset_right = 40.0
 offset_bottom = 23.0
 theme = ExtResource("3_vim5g")
 
-[node name="Loss_Label" type="Label" parent="." unique_id=314679060]
+[node name="Loss_Label" type="Label" parent="Chart" unique_id=314679060]
 unique_name_in_owner = true
 layout_mode = 0
 offset_right = 40.0

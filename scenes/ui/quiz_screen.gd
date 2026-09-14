@@ -36,7 +36,8 @@ signal next_question_requested
 @onready var category_label: GradientLabel = %CategoryLabel
 @onready var answers_grid: GridContainer = %AnswersGrid
 @onready var answer_buttons: Array[TextureButton]
-@onready var next_question_button: Button = %NextQuestion 
+@onready var next_question_panel: Panel = %NextQuestion
+@onready var next_question_button: Button = %NextQuestionButton
 @onready var round_number: Label = %RoundNumber
 @onready var time_limit_bar: ProgressBar = %TimeLimitBar
 
@@ -57,10 +58,8 @@ func _ready() -> void:
     for button in answer_buttons:
         button.answer_selected.connect(_on_answer_selected)
     
-    # Connect NextQuestion button
-    next_question_button.pressed.connect(_on_next_question_pressed)
-    
     # Hide NextQuestion button initially
+    next_question_panel.visible = false
     next_question_button.visible = false
     time_limit_bar.max_value = time_limit
 
@@ -102,6 +101,7 @@ func load_question(data: Dictionary) -> void:
     has_answered = false
     
     # Hide NextQuestion button when loading new question
+    next_question_panel.visible = false
     next_question_button.visible = false
     
     # Reset all answer buttons to neutral state
@@ -164,17 +164,12 @@ func _on_answer_selected(answer_index: int) -> void:
     question_answered.emit(is_correct, selected_answer_text)
     
     # Show NextQuestion button
+    next_question_panel.visible = true
     next_question_button.visible = true
     
     # Emit signal only if answer was correct
     if is_correct:
         answer_correct.emit()
-
-
-## Handle NextQuestion button press
-func _on_next_question_pressed() -> void:
-    next_question_requested.emit()
-
 
 ## Auto-select a random wrong answer when the timer expires
 func _on_timer_expired() -> void:
@@ -206,3 +201,7 @@ func _reveal_all_buttons() -> void:
             button.reveal_correct()
         else:
             button.reveal_wrong()
+
+
+func _on_next_question_button_pressed() -> void:
+    next_question_requested.emit()

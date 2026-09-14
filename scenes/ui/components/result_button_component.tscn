@@ -2,7 +2,7 @@
 
 [ext_resource type="Texture2D" uid="uid://5tuxrcqmgin5" path="res://assets/ui/Resultcomponent_Button.png" id="1_e4k1g"]
 [ext_resource type="Script" uid="uid://cnbgabgs8nxlc" path="res://scenes/ui/components/result_button_component.gd" id="1_script"]
-[ext_resource type="Texture2D" uid="uid://bmvwaydwtrod7" path="res://assets/hidden.png" id="4_j4c4y"]
+[ext_resource type="Texture2D" uid="uid://d0tmjbmmag7n8" path="res://resources/icon_thinking.tres" id="3_gsw65"]
 
 [node name="ResultButtonComponent" type="TextureButton" unique_id=858801615]
 anchors_preset = 15
@@ -24,12 +24,13 @@ anchor_right = 1.0
 anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
-theme_override_constants/margin_left = 10
-theme_override_constants/margin_right = 10
+theme_override_constants/margin_left = 40
+theme_override_constants/margin_right = 40
 
 [node name="HiddenIcon" type="TextureRect" parent="MarginContainer" unique_id=1014116420]
 unique_name_in_owner = true
+self_modulate = Color(0.9843137, 0.8627451, 0.9529412, 1)
 layout_mode = 2
-texture = ExtResource("4_j4c4y")
+texture = ExtResource("3_gsw65")
 expand_mode = 5
 stretch_mode = 5

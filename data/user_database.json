@@ -128,22 +128,22 @@
 		},
 		{
 			"config": {
-				"questions": 5.0,
-				"rounds": 3.0
+				"questions": 5,
+				"rounds": 3
 			},
-			"created_at": 1783420994.987,
-			"current_round": 1.0,
+			"created_at": 1789205310.93,
+			"current_round": 1,
 			"current_turn": "linus",
 			"dismissed_by": [],
 			"inviter": "robin",
-			"match_id": "match_1783420994",
+			"match_id": "match_1789205310",
 			"players": [
 				"robin",
 				"linus"
 			],
 			"rounds_data": [
 				{
-					"category": "Entertainment",
+					"category": "Animals",
 					"category_chooser": "robin",
 					"player_answers": {
 						"linus": {
@@ -154,151 +154,151 @@
 							"answered": true,
 							"results": [
 								{
-									"player_answer": "Mirror Universe",
+									"player_answer": "Felidae",
 									"question_data": {
-										"category": "Entertainment",
-										"correct_answer": "Para-Zone",
+										"category": "Animals",
+										"correct_answer": "Felidae",
 										"difficulty": "medium",
 										"incorrect_answers": [
-											"Hyperspace",
-											"Mirror Universe",
-											"Phantom Zone"
+											"Felinae",
+											"Felis",
+											"Cat"
 										],
-										"question": "In Black Hammer, what dimension does Colonel Weird travel through?",
+										"question": "What is the name of the family that the domestic cat is a member of?",
 										"type": "multiple"
 									},
-									"was_correct": false
+									"was_correct": true
 								},
 								{
-									"player_answer": "Barry Allen",
+									"player_answer": "Haliaeetus Leucocephalus ",
 									"question_data": {
-										"category": "Entertainment",
-										"correct_answer": "Bruce Wayne",
-										"difficulty": "easy",
+										"category": "Animals",
+										"correct_answer": "Haliaeetus Leucocephalus ",
+										"difficulty": "hard",
 										"incorrect_answers": [
-											"Clark Kent",
-											"Barry Allen",
-											"Tony Stark"
+											"Tyto Alba",
+											"Cyanocitta Cristata",
+											"Aquila Chrysaetos"
 										],
-										"question": "Who is Batman?",
+										"question": "What is the scientific name for the Bald Eagle?",
 										"type": "multiple"
 									},
-									"was_correct": false
+									"was_correct": true
 								},
 								{
-									"player_answer": "Rose",
+									"player_answer": "Hummingbird",
 									"question_data": {
-										"category": "Entertainment",
-										"correct_answer": "Rosalyn",
-										"difficulty": "easy",
-										"incorrect_answers": [
-											"Rose",
-											"Ruby",
-											"Rachel"
-										],
-										"question": "What is the full first name of the babysitter in Calvin and Hobbes?",
-										"type": "multiple"
-									},
-									"was_correct": false
-								},
-								{
-									"player_answer": "Batman",
-									"question_data": {
-										"category": "Entertainment",
-										"correct_answer": "Flash",
-										"difficulty": "easy",
-										"incorrect_answers": [
-											"Superman",
-											"Batman",
-											"Spiderman"
-										],
-										"question": "Which superhero is known for his super speed?",
-										"type": "multiple"
-									},
-									"was_correct": false
-								},
-								{
-									"player_answer": "Scorpio",
-									"question_data": {
-										"category": "Entertainment",
-										"correct_answer": "Zodiac",
+										"category": "Animals",
+										"correct_answer": "Bulbul",
 										"difficulty": "medium",
 										"incorrect_answers": [
-											"Scorpio",
-											"Tiger Mafia",
-											"The Union"
+											"Hummingbird",
+											"Falcon",
+											"Sparrow"
 										],
-										"question": "In Marvel Comics, Taurus is the founder and leader of which criminal organization?",
+										"question": "What is the national bird of Bahrain?",
 										"type": "multiple"
 									},
 									"was_correct": false
+								},
+								{
+									"player_answer": "Hyaenidae",
+									"question_data": {
+										"category": "Animals",
+										"correct_answer": "Hyaenidae",
+										"difficulty": "hard",
+										"incorrect_answers": [
+											"Canidae",
+											"Felidae",
+											"Eupleridae"
+										],
+										"question": "What scientific family does the Aardwolf belong to?",
+										"type": "multiple"
+									},
+									"was_correct": true
+								},
+								{
+									"player_answer": "Tail",
+									"question_data": {
+										"category": "Animals",
+										"correct_answer": "Tail",
+										"difficulty": "hard",
+										"incorrect_answers": [
+											"Head",
+											"Teeth",
+											"Feet"
+										],
+										"question": "Unlike on most salamanders, this part of a newt is flat?",
+										"type": "multiple"
+									},
+									"was_correct": true
 								}
 							]
 						}
 					},
 					"questions": [
 						{
-							"category": "Entertainment",
-							"correct_answer": "Para-Zone",
+							"category": "Animals",
+							"correct_answer": "Felidae",
 							"difficulty": "medium",
 							"incorrect_answers": [
-								"Hyperspace",
-								"Mirror Universe",
-								"Phantom Zone"
+								"Felinae",
+								"Felis",
+								"Cat"
 							],
-							"question": "In Black Hammer, what dimension does Colonel Weird travel through?",
+							"question": "What is the name of the family that the domestic cat is a member of?",
 							"type": "multiple"
 						},
 						{
-							"category": "Entertainment",
-							"correct_answer": "Bruce Wayne",
-							"difficulty": "easy",
+							"category": "Animals",
+							"correct_answer": "Haliaeetus Leucocephalus ",
+							"difficulty": "hard",
 							"incorrect_answers": [
-								"Clark Kent",
-								"Barry Allen",
-								"Tony Stark"
+								"Tyto Alba",
+								"Cyanocitta Cristata",
+								"Aquila Chrysaetos"
 							],
-							"question": "Who is Batman?",
+							"question": "What is the scientific name for the Bald Eagle?",
 							"type": "multiple"
 						},
 						{
-							"category": "Entertainment",
-							"correct_answer": "Rosalyn",
-							"difficulty": "easy",
-							"incorrect_answers": [
-								"Rose",
-								"Ruby",
-								"Rachel"
-							],
-							"question": "What is the full first name of the babysitter in Calvin and Hobbes?",
-							"type": "multiple"
-						},
-						{
-							"category": "Entertainment",
-							"correct_answer": "Flash",
-							"difficulty": "easy",
-							"incorrect_answers": [
-								"Superman",
-								"Batman",
-								"Spiderman"
-							],
-							"question": "Which superhero is known for his super speed?",
-							"type": "multiple"
-						},
-						{
-							"category": "Entertainment",
-							"correct_answer": "Zodiac",
+							"category": "Animals",
+							"correct_answer": "Bulbul",
 							"difficulty": "medium",
 							"incorrect_answers": [
-								"Scorpio",
-								"Tiger Mafia",
-								"The Union"
+								"Hummingbird",
+								"Falcon",
+								"Sparrow"
 							],
-							"question": "In Marvel Comics, Taurus is the founder and leader of which criminal organization?",
+							"question": "What is the national bird of Bahrain?",
+							"type": "multiple"
+						},
+						{
+							"category": "Animals",
+							"correct_answer": "Hyaenidae",
+							"difficulty": "hard",
+							"incorrect_answers": [
+								"Canidae",
+								"Felidae",
+								"Eupleridae"
+							],
+							"question": "What scientific family does the Aardwolf belong to?",
+							"type": "multiple"
+						},
+						{
+							"category": "Animals",
+							"correct_answer": "Tail",
+							"difficulty": "hard",
+							"incorrect_answers": [
+								"Head",
+								"Teeth",
+								"Feet"
+							],
+							"question": "Unlike on most salamanders, this part of a newt is flat?",
 							"type": "multiple"
 						}
 					],
-					"round_number": 1.0
+					"round_number": 1
 				},
 				{
 					"category": "",
@@ -314,7 +314,7 @@
 						}
 					},
 					"questions": [],
-					"round_number": 2.0
+					"round_number": 2
 				},
 				{
 					"category": "",
@@ -330,7 +330,7 @@
 						}
 					},
 					"questions": [],
-					"round_number": 3.0
+					"round_number": 3
 				}
 			],
 			"stats_processed": false,
@@ -341,16 +341,16 @@
 		"Linus": {
 			"avatar_path": "res://assets/profile_pictures/man_standard.png",
 			"category_stats": {},
-			"current_streak": 0,
+			"current_streak": 0.0,
 			"email": "Linus@test.de",
 			"friend_wins": {},
 			"friends": [],
-			"losses": 0,
+			"losses": 0.0,
 			"notifications": [],
 			"password_hash": "a665a45920422f9d417e4867efdc4fb8a04a1f3fff1fa07e998e86f7f7a27ae3",
-			"total_games": 0,
+			"total_games": 0.0,
 			"username": "Linus",
-			"wins": 0
+			"wins": 0.0
 		},
 		"Robin": {
 			"avatar_path": "res://assets/profile_pictures/man_standard.png",

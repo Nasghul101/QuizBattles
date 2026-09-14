@@ -122,7 +122,8 @@ theme_override_font_sizes/font_size = 60
 text = "Name Player 1"
 
 [node name="TextureRect" type="TextureRect" parent="MarginContainer/VBoxContainer/Header" unique_id=498838148]
-custom_minimum_size = Vector2(100, 100)
+self_modulate = Color(0.9843137, 0.8627451, 0.9529412, 1)
+custom_minimum_size = Vector2(150, 150)
 layout_mode = 2
 texture = ExtResource("5_k136l")
 expand_mode = 1

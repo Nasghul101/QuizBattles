@@ -3,4 +3,4 @@ signal play_animation
 
 
 func _on_pressed() -> void:
-	play_animation.emit()
+    play_animation.emit()

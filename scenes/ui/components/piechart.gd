@@ -1,85 +1,94 @@
 # uid://caiyu3bea5dhy
-extends Control
+extends AspectRatioContainer
 
-@export_range(0,1) var label_offset: float = 0.6
+@export_range(0, 1) var label_offset: float = 0.6
 
 @onready var chart: Panel = %Chart
 @onready var win_label: Label = %Win_Label
 @onready var draw_label: Label = %Draw_Label
 @onready var loss_label: Label = %Loss_Label
 
-var total_games: int
-var win_percent : int
-var draw_percent: int
-var loose_percent: int
+var wins: int = 0
+var draws: int = 0
+var total_games: int = 0
+var win_percent: int = 0
+var draw_percent: int = 0
+var loose_percent: int = 0
 
 func _ready() -> void:
-    # Wait for the parent container to finish its layout
-    await get_tree().process_frame
-    await get_tree().process_frame
-    
-    
-    # Now resize chart to be square based on the calculated width
-    chart.size.y = chart.size.x
+    chart.resized.connect(_on_chart_resized)
+    _update_chart()
 
-func set_chart(total_wins : int, total_draws: int, total_games_played: int) -> void:
-        # Get values from text fields
-    var wins = total_wins
-    var draws = total_draws
+func _on_chart_resized() -> void:
+    _update_labels()
+
+func set_chart(total_wins: int, total_draws: int, total_games_played: int) -> void:
+    wins = total_wins
+    draws = total_draws
     total_games = total_games_played
-    # Calculate total losses
-    var losses = 100 - (wins + draws)
-       
+    
+    if not is_inside_tree():
+        return
+    
+    _update_chart()
+
+func _update_chart() -> void:
+    if not chart:
+        return
+    
     if total_games > 0:
-        # Calculate percentages (rounded to int)
-        win_percent = roundi((wins / float(total_games)) * 100)
-        draw_percent = roundi((draws / float(total_games)) * 100)
-        loose_percent = 100 - win_percent - draw_percent  # Ensures all add up to 100
+        win_percent = roundi((wins / float(total_games)) * 100.0)
+        draw_percent = roundi((draws / float(total_games)) * 100.0)
+        loose_percent = 100 - win_percent - draw_percent
         
-        # Get the shader material
         var shader_material = chart.material as ShaderMaterial
-        
         if shader_material:
-            # Set shader value to 100 - win
-            shader_material.set_shader_parameter("value", 100 - wins)
+            shader_material.set_shader_parameter("value", 100.0 - float(win_percent))
             
-            # Get the foreground gradient texture
             var fg_texture = shader_material.get_shader_parameter("fg") as GradientTexture1D
-            
             if fg_texture and fg_texture.gradient:
                 var gradient = fg_texture.gradient
-                
-                # Set gradient offsets
-                # Offset 1 to loose/100
-                # Offset 2 to (loose/100) + 0.01
                 if gradient.offsets.size() >= 3:
-                    gradient.offsets[1] = losses / 100.0
-                    gradient.offsets[2] = (losses / 100.0) + 0.001
-                
-        # Position labels
-        position_label(win_label, 0, wins, label_offset)
-        win_label.text = "%d%%" % win_percent
-        
-        position_label(draw_label, wins, wins + draws, label_offset)
-        draw_label.text = "%d%%" % draw_percent
-        
-        position_label(loss_label, wins + draws, total_games, label_offset)
-        loss_label.text = "%d%%" % loose_percent
+                    gradient.offsets[1] = loose_percent / 100.0
+                    gradient.offsets[2] = (loose_percent / 100.0) + 0.001
+                    
+        _update_labels()
+    else:
+        _update_labels()
 
-func position_label(label: Label, start_value: float, end_value: float, radius_offset: float):
-    # Calculate the middle angle of this section
-    var middle_value = (start_value + end_value) / 2.0
-    var angle_degrees = (middle_value / total_games) * 360.0  # Convert to degrees based on total_games
-    var angle_radians = deg_to_rad(angle_degrees - 90)  # -90 to start from top
+func _update_labels() -> void:
+    if not chart or not win_label or not draw_label or not loss_label:
+        return
     
-    # Get chart center and radius
+    if total_games > 0:
+        win_label.text = "%d%%" % win_percent
+        draw_label.text = "%d%%" % draw_percent
+        loss_label.text = "%d%%" % loose_percent
+        
+        win_label.visible = win_percent > 0
+        draw_label.visible = draw_percent > 0
+        loss_label.visible = loose_percent > 0
+        
+        position_label(win_label, 0, wins, label_offset)
+        position_label(draw_label, wins, wins + draws, label_offset)
+        position_label(loss_label, wins + draws, total_games, label_offset)
+    else:
+        win_label.visible = false
+        draw_label.visible = false
+        loss_label.visible = false
+
+func position_label(label: Label, start_value: float, end_value: float, radius_offset: float) -> void:
+    if total_games <= 0 or chart.size.x <= 0 or chart.size.y <= 0:
+        return
+    
+    var middle_value = (start_value + end_value) / 2.0
+    var angle_degrees = (middle_value / float(total_games)) * 360.0
+    var angle_radians = deg_to_rad(angle_degrees - 90.0)
+    
     var center = chart.size / 2.0
     var radius = min(center.x, center.y) * radius_offset
     
-    # Convert polar to Cartesian coordinates
-    var offset_x = -cos(angle_radians) * radius  # Negated to mirror x
+    var offset_x = -cos(angle_radians) * radius
     var offset_y = sin(angle_radians) * radius
     
-    # Position the label
-    label.position = center + Vector2(offset_x, offset_y)
-    label.position -= label.size / 2.0
+    label.position = center + Vector2(offset_x, offset_y) - (label.size / 2.0)
