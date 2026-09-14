@@ -62,7 +62,6 @@ func _ready() -> void:
     
     # Connect TriviaQuestionService signals
     TriviaQuestionService.questions_ready.connect(_on_questions_ready)
-    TriviaQuestionService.api_failed.connect(_on_api_failed)
     
     # Connect FinishGameButton
     finish_game_button.pressed.connect(_on_finish_game_button_pressed)
@@ -296,12 +295,6 @@ func _handle_round_completion() -> void:
     
     # Update play button state
     _update_play_button_state()
-
-
-## Handle API failure
-func _on_api_failed() -> void:
-    print("API failed, using fallback questions")
-    # questions_ready will still be emitted with fallback questions
 
 
 ## Update play button enabled/disabled state based on turn

@@ -1,47 +1,4 @@
-# trivia-question-service Specification
-
-## Purpose
-A singleton autoload service that fetches trivia questions from the Open Trivia Database API, caches them in memory, and provides fallback to local questions when the API is unavailable. Consolidates Open Trivia DB categories and returns questions in their native format for use by quiz screens.
-
-## Requirements
-
-### Requirement: Question Format Compatibility
-The service SHALL return questions in a consistent format expected by quiz screens, regardless of the source language file.
-
-#### Scenario: Return questions in correct format
-**Given** questions are read from a local language database
-**When** returned to the caller
-**Then** each question dictionary contains:
-- `"question"` (String): The question text
-- `"correct_answer"` (String): The correct answer
-- `"incorrect_answers"` (Array of 3 Strings): The wrong answers
-- `"category"` (String): The question category
-- `"difficulty"` (String): The difficulty level (easy/medium/hard)
-
-#### Scenario: No transformation of API data
-**Given** questions are read from the local language database
-**When** the service processes them
-**Then** it returns the question text as-is without decoding or transformation
-**Because** local database files are already stored as plain, decoded UTF-8 text (no HTML entities to unescape)
-
-#### Scenario: Category field is normalized to the requested top-level category
-**Given** a question is read from the local database under a top-level category key
-**When** the service returns it
-**Then** the `"category"` field on the returned dictionary is overwritten with that top-level category name
-
----
-
-### Requirement: Initialization
-The service SHALL initialize itself when loaded as an autoload, without establishing any network resources.
-
-#### Scenario: Autoload initialization
-**Given** the game starts
-**When** the Godot engine loads autoload singletons
-**Then** the TriviaQuestionService initializes with empty loaded-database state
-**And** is ready to handle `fetch_questions()` calls, loading the relevant language file lazily on first use
-
----
-
+## ADDED Requirements
 ### Requirement: Local Language Database Loading
 The service SHALL load trivia questions from a local, per-language JSON file instead of a remote API.
 
@@ -137,3 +94,70 @@ The service SHALL provide a simple, async-friendly API for fetching questions fr
 **Then** all in-memory loaded language databases are cleared
 
 ---
+
+## MODIFIED Requirements
+### Requirement: Question Format Compatibility
+The service SHALL return questions in a consistent format expected by quiz screens, regardless of the source language file.
+
+#### Scenario: Return questions in correct format
+**Given** questions are read from a local language database
+**When** returned to the caller
+**Then** each question dictionary contains:
+- `"question"` (String): The question text
+- `"correct_answer"` (String): The correct answer
+- `"incorrect_answers"` (Array of 3 Strings): The wrong answers
+- `"category"` (String): The question category
+- `"difficulty"` (String): The difficulty level (easy/medium/hard)
+
+#### Scenario: No transformation of API data
+**Given** questions are read from the local language database
+**When** the service processes them
+**Then** it returns the question text as-is without decoding or transformation
+**Because** local database files are already stored as plain, decoded UTF-8 text (no HTML entities to unescape)
+
+#### Scenario: Category field is normalized to the requested top-level category
+**Given** a question is read from the local database under a top-level category key
+**When** the service returns it
+**Then** the `"category"` field on the returned dictionary is overwritten with that top-level category name
+
+---
+
+### Requirement: Initialization
+The service SHALL initialize itself when loaded as an autoload, without establishing any network resources.
+
+#### Scenario: Autoload initialization
+**Given** the game starts
+**When** the Godot engine loads autoload singletons
+**Then** the TriviaQuestionService initializes with empty loaded-database state
+**And** is ready to handle `fetch_questions()` calls, loading the relevant language file lazily on first use
+
+---
+
+## REMOVED Requirements
+### Requirement: API Integration
+**Reason**: The service no longer calls the Open Trivia Database API; all questions come from local per-language JSON files bundled with the game.
+**Migration**: See the new "Local Language Database Loading" requirement.
+
+### Requirement: Category Mapping
+**Reason**: Open Trivia Database subcategory IDs are no longer needed. Local database files already key questions directly by the 12 consolidated category names.
+**Migration**: See the new "Category Validation" requirement.
+
+### Requirement: Session-Based Caching
+**Reason**: Replaced by a simpler "load once per language, keep resident for the session" model that doesn't need a consume/eviction pattern designed for trickling API responses.
+**Migration**: See the "Loaded Language Database Caching" requirement.
+
+### Requirement: Fallback to Local Questions
+**Reason**: Local JSON is now the primary and only source; there is no remote API to fall back from. Missing-language handling is covered by the new "Language Resolution and Fallback" requirement.
+**Migration**: See the new "Language Resolution and Fallback" requirement.
+
+### Requirement: Error State Management
+**Reason**: `connection_error` and `api_failed` signals no longer apply since there is no network request that can fail in those ways.
+**Migration**: Callers only need to handle `questions_ready`, treating an empty array as a failure to obtain questions.
+
+### Requirement: Memory Management
+**Reason**: The 50-question eviction cap existed to bound memory from trickling, per-category API responses. It no longer applies now that a language database is parsed once and held resident for the session.
+**Migration**: See the "Loaded Language Database Caching" requirement.
+
+### Requirement: Public API
+**Reason**: Replaced by "Local Question Fetching API". `has_cached_questions()` and `get_cached_questions()` are removed since they only supported the old consume-cache pattern and are not used by any other script.
+**Migration**: See the new "Local Question Fetching API" requirement. Callers relying on `questions_ready` are unaffected.

@@ -15,8 +15,6 @@ extends Control
 func _ready() -> void:
     # Connect service signals
     TriviaQuestionService.questions_ready.connect(_on_questions_ready)
-    TriviaQuestionService.connection_error.connect(_on_connection_error)
-    TriviaQuestionService.api_failed.connect(_on_api_failed)
     
     # Populate category dropdown
     var categories = TriviaQuestionService.get_available_categories()
@@ -57,10 +55,3 @@ func _on_questions_ready(questions: Array) -> void:
     # Display first question in quiz screen
     quiz_screen.load_question(questions[0])
 
-
-func _on_connection_error() -> void:
-    status_label.text = "ERROR: No internet connection. Please connect to the internet."
-
-
-func _on_api_failed() -> void:
-    status_label.text = "WARNING: API failed. Using fallback questions."
