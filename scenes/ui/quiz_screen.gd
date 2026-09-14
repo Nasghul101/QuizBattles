@@ -77,9 +77,9 @@ func _process(delta: float) -> void:
 ## Set the round number displayed on screen
 ##
 ## Args:
-##   round: The current round number (1-based)
-func set_round_number(round: int) -> void:
-    round_number.text = str(round)
+##   round_num: The current round number (1-based)
+func set_round_number(round_num: int) -> void:
+    round_number.text = str(round_num)
 
 
 ## Load and display a quiz question with answers

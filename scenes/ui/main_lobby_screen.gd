@@ -84,8 +84,8 @@ func _load_existing_notifications() -> void:
     var notifications: Array = UserDatabase.get_notifications(UserDatabase.current_user.username)
     
     # Instantiate a component for each notification
-    for notification: Dictionary in notifications:
-        _instantiate_notification_component(notification)
+    for notif_data: Dictionary in notifications:
+        _instantiate_notification_component(notif_data)
 
 
 ## Handle notification received signal

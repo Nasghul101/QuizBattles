@@ -14,6 +14,7 @@ extends Node
 ## - sender: String - Username or "System" indicating source
 ## - has_actions: bool - Whether notification shows accept/deny buttons
 ## - action_data: Dictionary - Custom data for handling notification actions (e.g., {"type": "friend_request", "sender_id": "username"})
+# warning-ignore UNUSED_SIGNAL
 signal notification_received(notification_data: Dictionary)
 
 ## Emitted when a user interacts with a notification (accepts or denies).
@@ -21,6 +22,7 @@ signal notification_received(notification_data: Dictionary)
 ## [param action] Action taken by user ("accept" or "deny")
 ## Systems interested in specific notification types should listen to this signal
 ## and check action_data to handle their notification types appropriately.
+# warning-ignore UNUSED_SIGNAL
 signal notification_action_taken(notification_id: String, action: String)
 
 ## Emitted when a player accepts a game invitation.
@@ -29,6 +31,7 @@ signal notification_action_taken(notification_id: String, action: String)
 ## This signal serves as a hook for future multiplayer game initialization.
 ## Currently no system connects to this, but multiplayer logic will use it
 ## to start game sessions between the two players.
+# warning-ignore UNUSED_SIGNAL
 signal game_invite_accepted(inviter_username: String, invitee_username: String)
 
 ## Emitted when a new multiplayer match is created.
@@ -36,10 +39,12 @@ signal game_invite_accepted(inviter_username: String, invitee_username: String)
 ## [param player1] String - Username of first player
 ## [param player2] String - Username of second player
 ## This signal allows UI components to update when new matches are available.
+# warning-ignore UNUSED_SIGNAL
 signal match_created(match_id: String, player1: String, player2: String)
 
 ## Emitted when a player's statistics are updated after match completion.
 ## [param username] String - Username of the player whose statistics changed
 ## This signal notifies UI components (profile screens, lobby displays, leaderboards)
 ## to refresh displayed statistics including wins, losses, current_streak, and friend_wins.
+# warning-ignore UNUSED_SIGNAL
 signal player_stats_updated(username: String)

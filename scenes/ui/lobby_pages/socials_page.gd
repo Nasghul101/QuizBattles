@@ -168,7 +168,7 @@ func _get_category_color(category_name: String, default_color: Color) -> Color:
 
 ## Handle friendship changes (friend request accepted).
 ## Repopulates the friend list when a friend request is accepted.
-func _on_friendship_changed(notification_id: String, action: String) -> void:
+func _on_friendship_changed(_notification_id: String, action: String) -> void:
     if action == "accept":
         _populate_friends_list()
 

@@ -228,10 +228,10 @@ func on_visible() -> void:
 
 
 #this setups the tween with the given values, parallel_animations, seconds, delay, transition and easing
-func add_tween(values: Dictionary, parallel_animations: bool, seconds: float, delay : float, transition: Tween.TransitionType, 
+func add_tween(values: Dictionary, use_parallel: bool, seconds: float, delay : float, transition: Tween.TransitionType, 
 easing: Tween.EaseType, entering: bool, pressed: bool, moving: bool = false) -> void:
     var tween = get_tree().create_tween()
-    tween.set_parallel(parallel_animations)
+    tween.set_parallel(use_parallel)
     tween.pause()
     for property in properties:
         tween.tween_property(target, str(property), values[property], seconds).set_trans(transition).set_ease(easing)

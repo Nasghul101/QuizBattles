@@ -919,11 +919,11 @@ func _on_game_invite_accepted(inviter_username: String, invitee_username: String
     var rounds = 3  # Default fallback
     var questions = 2  # Default fallback
     
-    for notification in notifications:
-        if notification.has("action_data") and notification.action_data.get("type") == "game_invite":
-            if notification.action_data.get("inviter_id") == inviter_username:
-                rounds = notification.action_data.get("rounds", 3)
-                questions = notification.action_data.get("questions", 2)
+    for notif_data in notifications:
+        if notif_data.has("action_data") and notif_data.action_data.get("type") == "game_invite":
+            if notif_data.action_data.get("inviter_id") == inviter_username:
+                rounds = notif_data.action_data.get("rounds", 3)
+                questions = notif_data.action_data.get("questions", 2)
                 break
     
     # Create the match
