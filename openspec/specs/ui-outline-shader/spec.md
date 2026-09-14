@@ -1,7 +1,7 @@
 # ui-outline-shader Specification
 
 ## Purpose
-TBD - created by archiving change add-configurable-outline-shader. Update Purpose after archive.
+Defines the configurable UI outline shader and its visual customization behavior.
 ## Requirements
 ### Requirement: The shader SHALL render an outline following the exact contour of textures
 The shader SHALL detect texture boundaries using alpha channel sampling and render a configurable outline that precisely follows the shape of non-transparent pixels.

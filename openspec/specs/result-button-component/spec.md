@@ -1,7 +1,7 @@
 # result-button-component Specification
 
 ## Purpose
-TBD - created by archiving change refactor-result-component-to-use-result-button. Update Purpose after archive.
+Defines the reusable result button used to summarize a player's answer outcome.
 ## Requirements
 ### Requirement: The component SHALL manage its own visual properties
 The ResultButtonComponent SHALL define and control all UI properties including size, colors, icons, and modulation states internally without external configuration.

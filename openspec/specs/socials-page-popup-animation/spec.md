@@ -1,7 +1,7 @@
 # socials-page-popup-animation Specification
 
 ## Purpose
-TBD - created by archiving change 2026-01-24-add-socials-page-popup-animation. Update Purpose after archive.
+Defines popup opening, closing, and animation behavior on the socials page.
 ## Requirements
 ### Requirement: Popup Open Animation
 The system SHALL provide a smooth animation that slides the AddFriendsPopup from below the screen upwards to fill the entire screen, with a semi-transparent overlay fading in simultaneously when the user presses the AddNewFriendButton.

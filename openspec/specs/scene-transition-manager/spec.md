@@ -1,7 +1,7 @@
 # scene-transition-manager Specification
 
 ## Purpose
-TBD - created by archiving change add-game-setup-and-transition-logic. Update Purpose after archive.
+Defines scene transition behavior and coordination for navigation between game screens.
 ## Requirements
 ### Requirement: Transition manager MUST provide fade-out and fade-in effects
 The transition manager SHALL provide smooth fade-out and fade-in effects during scene changes.

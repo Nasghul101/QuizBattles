@@ -1,7 +1,7 @@
 # codebase-type-safety Specification
 
 ## Purpose
-TBD - created by archiving change add-explicit-type-annotations. Update Purpose after archive.
+Defines static typing expectations for GDScript code in the project.
 ## Requirements
 ### Requirement: Explicit Variable Type Annotations
 All variable declarations in GDScript files SHALL use explicit type annotations instead of type inference operators to improve code clarity and type safety.

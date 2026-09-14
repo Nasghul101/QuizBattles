@@ -1,7 +1,7 @@
 # socials-page-friend-display Specification
 
 ## Purpose
-TBD - created by archiving change add-friend-list-management. Update Purpose after archive.
+Defines how the socials page displays and updates the player's friend list.
 ## Requirements
 ### Requirement: Real-Time Friend List Update
 The socials page SHALL update the displayed friend list immediately when a new friendship is created while the page is open.

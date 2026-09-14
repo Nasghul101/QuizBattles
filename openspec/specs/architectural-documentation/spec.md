@@ -1,7 +1,7 @@
 # architectural-documentation Specification
 
 ## Purpose
-TBD - created by archiving change document-absolute-node-paths. Update Purpose after archive.
+Defines documentation conventions for absolute scene-node paths and related architecture details.
 ## Requirements
 ### Requirement: Absolute Node Path Documentation
 The project SHALL maintain comprehensive documentation of all absolute node path usages to improve code understanding and architectural awareness.

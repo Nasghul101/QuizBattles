@@ -1,7 +1,7 @@
 # avatar-selection-popup Specification
 
 ## Purpose
-TBD - created by archiving change 2026-01-25-populate-avatar-chooser-popup. Update Purpose after archive.
+Defines avatar selection popup behavior and the presentation of available profile avatars.
 ## Requirements
 ### Requirement: Display Avatar Options in Modal Popup
 When the user presses the `UserAvatar` button on the Account Management Screen, the `ChooseAvatarPopup` SHALL display as a modal overlay.

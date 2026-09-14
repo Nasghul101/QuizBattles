@@ -1,7 +1,7 @@
 # register-login-screen Specification
 
 ## Purpose
-TBD - created by archiving change add-account-screen-navigation. Update Purpose after archive.
+Defines navigation and interaction behavior for the registration and login screen.
 
 ## Requirements
 

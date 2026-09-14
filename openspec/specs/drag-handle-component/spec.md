@@ -1,7 +1,7 @@
 # drag-handle-component Specification
 
 ## Purpose
-TBD - created by archiving change 2026-01-28-extract-drag-handle-component. Update Purpose after archive.
+Defines the reusable drag handle component used for draggable interface elements.
 ## Requirements
 ### Requirement: The component SHALL detect and track drag interactions
 The DragHandle component SHALL detect mouse press, motion, and release events to track drag gestures.

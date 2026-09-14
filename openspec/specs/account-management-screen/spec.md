@@ -1,7 +1,7 @@
 # account-management-screen Specification
 
 ## Purpose
-TBD - created by archiving change add-account-screen-navigation. Update Purpose after archive.
+Defines the account management screen, including user navigation, profile information, and account actions.
 
 ## Requirements
 

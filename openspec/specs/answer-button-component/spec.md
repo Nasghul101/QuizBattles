@@ -1,7 +1,7 @@
 # answer-button-component Specification
 
 ## Purpose
-TBD - created by archiving change add-answer-button-component. Update Purpose after archive.
+Defines the reusable answer button used to display, select, and reveal quiz answers.
 ## Requirements
 ### Requirement: The component SHALL display answer text dynamically
 The component SHALL display answer text that can be set at runtime via a child Label node.
@@ -182,7 +182,7 @@ The component SHALL use `self_modulate` to tint the button texture for correct/w
 
 ---
 
-### Requirement: The component SHALL expose shader parameter control methods
+### Requirement: The component SHALL reset shader and visual state
 The answer button component SHALL provide public methods to set shader uniform
 parameters so that callers (e.g. the review screen) can adapt the button's
 appearance without directly coupling to the ShaderMaterial type.

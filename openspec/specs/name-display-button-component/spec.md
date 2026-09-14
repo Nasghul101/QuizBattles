@@ -1,7 +1,7 @@
 # name-display-button-component Specification
 
 ## Purpose
-TBD - created by archiving change implement-socials-page-interactions. Update Purpose after archive.
+Defines the reusable button that displays a player's name and responds to selection.
 ## Requirements
 ### Requirement: Display Username Text
 The component SHALL display a username as text on a button with appropriate styling from BasicTheme.

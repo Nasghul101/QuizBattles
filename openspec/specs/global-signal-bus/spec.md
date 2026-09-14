@@ -1,7 +1,7 @@
 # global-signal-bus Specification
 
 ## Purpose
-TBD - created by archiving change 2026-02-02-add-notification-system. Update Purpose after archive.
+Defines the application-wide signal bus used to coordinate events between independent systems.
 ## Requirements
 ### Requirement: GlobalSignalBus Autoload Singleton
 The system SHALL provide a GlobalSignalBus autoload singleton at `autoload/global_signal_bus.gd` that serves as a central hub for application-wide signals.

@@ -1,7 +1,7 @@
 # local-user-database Specification
 
 ## Purpose
-TBD - created by archiving change add-local-user-database. Update Purpose after archive.
+Defines local user storage, authentication data, social data, and player statistics.
 ## Requirements
 ### Requirement: User Registration
 The system SHALL allow creating new user accounts with username, password, and email.

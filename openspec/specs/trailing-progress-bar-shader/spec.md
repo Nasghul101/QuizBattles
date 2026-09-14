@@ -1,4 +1,4 @@
-# Spec Delta: trailing_progress_bar Shader
+# trailing_progress_bar Shader Specification
 
 **Capability**: Progress Bar Trailing Shader  
 **Scope**: Canvas Item Shader for Visual Effects  
@@ -6,7 +6,11 @@
 
 ---
 
-## ADDED Requirements
+## Purpose
+
+Defines the trailing progress-bar shader used to render smooth value-decrease feedback.
+
+## Requirements
 
 ### Requirement: Progress bars SHALL support smooth trailing effect on value decrease
 The progress bar shader SHALL render a smooth gradient trail behind the current fill when the normalized progress value decreases, creating a "damage" or "drain" visual effect.
@@ -190,15 +194,13 @@ The shader SHALL support both left-to-right and right-to-left fill directions wi
 
 ---
 
-## MODIFIED Requirements
+## Compatibility
 
 None at this time. All existing ProgressBar behavior (value setting, max_value, fill rendering) remains unchanged.
 
 ---
 
-## REMOVED Requirements
-
-None at this time. No existing shader or ProgressBar capabilities are removed.
+No existing shader or ProgressBar capabilities are removed.
 
 ---
 

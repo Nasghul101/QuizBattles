@@ -1,7 +1,7 @@
 # result-component Specification
 
 ## Purpose
-TBD - created by archiving change add-result-component. Update Purpose after archive.
+Defines the round result component that displays answer outcomes for one or two players.
 ## Requirements
 ### Requirement: The component SHALL display the category name as text
 The result component SHALL set `CategoryLabel.text` to the category name string passed via `load_result_data()`. The old `CategorySymbol` TextureRect is no longer part of the component.
@@ -209,7 +209,7 @@ The result component SHALL connect to the ResultButtonComponent's "result_clicke
 ---
 
 ### Requirement: stored_results_p1 and stored_results_p2 SHALL replace the former stored_results array
-Internal result storage is split into two arrays to support per-player score retrieval.
+The component SHALL split internal result storage into two arrays to support per-player score retrieval.
 
 #### Scenario: stored_results_p1 accessible after load
 **Given** `load_result_data()` has been called with valid p1_results  

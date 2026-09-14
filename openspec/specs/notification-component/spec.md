@@ -1,7 +1,7 @@
 # notification-component Specification
 
 ## Purpose
-TBD - created by archiving change 2026-02-02-add-notification-system. Update Purpose after archive.
+Defines notification presentation and interaction behavior for in-game messages.
 ## Requirements
 ### Requirement: NotificationComponent Scene Structure
 The system SHALL provide a NotificationComponent at `scenes/ui/components/notification_component.tscn` that displays notification content with optional action buttons.

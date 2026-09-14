@@ -1,7 +1,7 @@
 # quiz-screen-component Specification
 
 ## Purpose
-TBD - created by archiving change add-quiz-screen-component. Update Purpose after archive.
+Defines the quiz screen that presents questions, answers, timers, and answer feedback.
 ## Requirements
 ### Requirement: The component SHALL display question text in a styled panel
 The quiz screen SHALL display the question text in a prominent panel container at the top of the screen.

@@ -1,7 +1,7 @@
 # main-lobby-screen Specification
 
 ## Purpose
-TBD - created by archiving change add-account-screen-navigation. Update Purpose after archive.
+Defines the main lobby screen, its navigation, and the user state shown when it loads.
 
 ## Requirements
 

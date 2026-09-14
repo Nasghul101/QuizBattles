@@ -1,7 +1,7 @@
 # socials-page-search-interaction Specification
 
 ## Purpose
-TBD - created by archiving change implement-socials-page-interactions. Update Purpose after archive.
+Defines search interaction and filtering behavior for finding users on the socials page.
 ## Requirements
 ### Requirement: Real-Time User Search
 The socials page SHALL filter and display user search results in real-time as the player types in the NameInput field, instantiating name_display_button components for each matching user.

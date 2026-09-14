@@ -1,7 +1,7 @@
 # local-device-cache Specification
 
 ## Purpose
-TBD - created by archiving change add-local-device-cache. Update Purpose after archive.
+Defines local persistence for device-scoped settings and cached application state.
 
 ## Requirements
 

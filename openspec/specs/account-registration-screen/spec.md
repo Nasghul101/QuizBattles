@@ -1,7 +1,7 @@
 # account-registration-screen Specification
 
 ## Purpose
-TBD - created by archiving change add-account-registration-screen-logic. Update Purpose after archive.
+Defines account registration behavior, validation, and persistence for new users.
 
 ## Requirements
 

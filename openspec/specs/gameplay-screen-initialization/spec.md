@@ -1,7 +1,7 @@
 # gameplay-screen-initialization Specification
 
 ## Purpose
-TBD - created by archiving change add-game-setup-and-transition-logic. Update Purpose after archive.
+Defines gameplay screen initialization, round setup, child components, and result presentation.
 
 ## Requirements
 

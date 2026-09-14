@@ -1,7 +1,7 @@
 # setup-screen-logic Specification
 
 ## Purpose
-TBD - created by archiving change add-game-setup-and-transition-logic. Update Purpose after archive.
+Defines game setup behavior, including player configuration and transition into gameplay.
 ## Requirements
 ### Requirement: Setup screen MUST synchronize slider values with amount labels
 The setup screen SHALL synchronize slider values with their corresponding amount labels in real-time so players can see their current selections.

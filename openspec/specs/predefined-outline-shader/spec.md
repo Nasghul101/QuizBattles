@@ -1,7 +1,7 @@
 # predefined-outline-shader Specification
 
 ## Purpose
-TBD - created by archiving change add-predefined-outline-shader. Update Purpose after archive.
+Defines the configurable predefined outline shader used to highlight UI textures.
 ## Requirements
 ### Requirement: The shader SHALL detect outline pixels based on color threshold comparison
 The shader SHALL identify which pixels are part of the outline by comparing their color values against a configurable threshold, treating dark pixels as outline and light pixels as base texture.
