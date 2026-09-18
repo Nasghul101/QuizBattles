@@ -30,10 +30,13 @@ const DATABASE_PATH := "user://local_cache.dat"
 const PASSPHRASE := "quizduell_local_cache_v1"
 
 ## Default settings applied to a freshly created cache
+## "locale" is empty until the player explicitly picks one; empty means
+## "not chosen yet" so startup falls back to OS locale detection.
 const DEFAULT_SETTINGS := {
     "music_volume": 1.0,
     "sfx_volume": 1.0,
-    "notifications_enabled": true
+    "notifications_enabled": true,
+    "locale": ""
 }
 
 ## In-memory cache state

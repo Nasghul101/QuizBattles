@@ -108,7 +108,7 @@ layout_mode = 2
 size_flags_vertical = 0
 theme_override_fonts/font = ExtResource("4_uvioe")
 theme_override_font_sizes/font_size = 80
-text = "Log in"
+text = "REGISTER_LOGIN_HEADER"
 horizontal_alignment = 1
 vertical_alignment = 1
 
@@ -118,7 +118,7 @@ custom_minimum_size = Vector2(0, 80)
 layout_mode = 2
 theme_override_font_sizes/font_size = 50
 theme_override_styles/normal = SubResource("StyleBoxFlat_tbt7s")
-placeholder_text = "Username"
+placeholder_text = "REGISTER_LOGIN_USERNAME_PLACEHOLDER"
 
 [node name="PasswordInput" type="TextEdit" parent="MarginContainer/VBoxContainer" unique_id=2102629611]
 unique_name_in_owner = true
@@ -126,7 +126,7 @@ custom_minimum_size = Vector2(0, 80)
 layout_mode = 2
 theme_override_font_sizes/font_size = 50
 theme_override_styles/normal = SubResource("StyleBoxFlat_ks5sr")
-placeholder_text = "Password"
+placeholder_text = "COMMON_PASSWORD_PLACEHOLDER"
 
 [node name="HBoxContainer" type="HBoxContainer" parent="MarginContainer/VBoxContainer" unique_id=1088984614]
 layout_mode = 2
@@ -163,7 +163,7 @@ anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
 theme_override_font_sizes/font_size = 60
-text = "Sign in"
+text = "COMMON_SIGN_IN_BUTTON"
 horizontal_alignment = 1
 vertical_alignment = 1
 
@@ -190,7 +190,7 @@ grow_horizontal = 2
 grow_vertical = 2
 theme_override_constants/outline_size = 0
 theme_override_font_sizes/font_size = 25
-text = "Create new Account"
+text = "REGISTER_LOGIN_CREATE_ACCOUNT_BUTTON"
 horizontal_alignment = 1
 vertical_alignment = 1
 autowrap_mode = 3

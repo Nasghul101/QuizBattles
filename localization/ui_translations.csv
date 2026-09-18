@@ -1,0 +1,62 @@
+keys,en,de
+COMMON_YES,Yes,Ja
+COMMON_NO,No,Nein
+COMMON_BACK_BUTTON,Back,Zurück
+COMMON_ACCEPT_BUTTON,Accept,Annehmen
+COMMON_DENY_BUTTON,Deny,Ablehnen
+COMMON_SIGN_IN_BUTTON,Sign in,Anmelden
+COMMON_PASSWORD_PLACEHOLDER,Password,Passwort
+COMMON_PLAY_BUTTON,Play,Spielen
+COMMON_VS_LABEL,vs.,vs.
+COMMON_DRAW_LABEL,Draw,Unentschieden
+STAT_LABEL_WINS,Wins,Siege
+STAT_LABEL_DRAWS,Draws,Unentschieden
+STAT_LABEL_LOSSES,Losses,Niederlagen
+STAT_LABEL_TOTAL_GAMES,Total games,Gesamtspiele
+STAT_LABEL_PLAYED,Played,Gespielt
+STAT_LABEL_WIN_RATE,Win rate,Gewinnrate
+ACCOUNT_MANAGEMENT_CATEGORIES_HEADER,Categories,Kategorien
+ACCOUNT_MANAGEMENT_LOG_OFF_BUTTON,Log off,Abmelden
+ACCOUNT_POPUP_INVITE_BUTTON,Invite to duel,Zum Duell einladen
+ACCOUNT_POPUP_UNFRIEND_BUTTON,unfriend,entfreunden
+ACCOUNT_POPUP_UNFRIEND_CONFIRM_MESSAGE,Do you really want to unfriend that Player?,Möchtest du diesen Spieler wirklich entfreunden?
+ACCOUNT_REGISTRATION_HEADER,Create new Account,Neues Konto erstellen
+ACCOUNT_REGISTRATION_NAME_PLACEHOLDER,Name,Name
+ACCOUNT_REGISTRATION_CONFIRM_PASSWORD_PLACEHOLDER,Confirm Password,Passwort bestätigen
+ACCOUNT_REGISTRATION_EMAIL_PLACEHOLDER,Email,E-Mail
+ACCOUNT_REGISTRATION_CREATE_BUTTON,Create an account,Konto erstellen
+REGISTER_LOGIN_HEADER,Log in,Anmelden
+REGISTER_LOGIN_USERNAME_PLACEHOLDER,Username,Benutzername
+REGISTER_LOGIN_CREATE_ACCOUNT_BUTTON,Create new Account,Neues Konto erstellen
+CATEGORY_POPUP_CHOOSE_HEADLINE,Choose a Category,Wähle eine Kategorie
+CATEGORY_POPUP_LOADING_LABEL,Loading...,Lädt...
+FRIENDLY_DUEL_ROUND_LABEL,Round: %d,Runde: %d
+RESULT_COMPONENT_ROUND_LABEL,Round %d,Runde %d
+GAMEPLAY_SCREEN_FINISH_BUTTON,Finish,Beenden
+GAMEPLAY_SCREEN_WINNER_LABEL,"""%s"" won","""%s"" hat gewonnen"
+QUIZ_SCREEN_NEXT_QUESTION_BUTTON,Next Question,Nächste Frage
+SETUP_SCREEN_HEADER,Game Setup,Spieleinstellungen
+SETUP_SCREEN_ROUNDS_LABEL,Number of Rounds:,Anzahl der Runden:
+SETUP_SCREEN_QUESTIONS_LABEL,Number of Questions:,Anzahl der Fragen:
+SETUP_SCREEN_START_BUTTON,Start,Start
+FRIENDLY_BATTLE_PAGE_NO_MATCHES_MESSAGE,"No active matches Invite friends to start playing!","Keine aktiven Duelle Lade Freunde ein, um zu spielen!"
+SHOP_PAGE_COMING_SOON_LABEL,Shop (Coming Soon),Shop (bald verfügbar)
+SOCIALS_PAGE_ADD_FRIEND_HEADER,Add new friend,Neuen Freund hinzufügen
+SOCIALS_PAGE_ADD_FRIEND_NAME_PLACEHOLDER,Input name,Namen eingeben
+SOCIALS_PAGE_SEND_REQUEST_BUTTON,Send friend request,Freundschaftsanfrage senden
+MAIN_LOBBY_PAGE_NAME_PLACEHOLDER,Page Name,Seitenname
+MAIN_LOBBY_NOTIFICATIONS_HEADER,Notifications,Benachrichtigungen
+MAIN_LOBBY_MARK_ALL_READ_BUTTON,Mark all as read,Alle als gelesen markieren
+MAIN_LOBBY_NO_NOTIFICATIONS_LABEL,No notifications,Keine Benachrichtigungen
+CATEGORY_GENERAL_KNOWLEDGE,General Knowledge,Allgemeinwissen
+CATEGORY_ENTERTAINMENT,Entertainment,Unterhaltung
+CATEGORY_SCIENCE,Science,Wissenschaft
+CATEGORY_HISTORY,History,Geschichte
+CATEGORY_GEOGRAPHY,Geography,Geografie
+CATEGORY_SPORTS,Sports,Sport
+CATEGORY_ART,Art,Kunst
+CATEGORY_ANIMALS,Animals,Tiere
+CATEGORY_MYTHOLOGY,Mythology,Mythologie
+CATEGORY_POLITICS,Politics,Politik
+CATEGORY_CELEBRITIES,Celebrities,Prominente
+CATEGORY_VEHICLES,Vehicles,Fahrzeuge

@@ -114,7 +114,7 @@ theme_override_styles/panel = SubResource("StyleBoxFlat_63srb")
 [node name="Label" type="Label" parent="MarginContainer/VBoxContainer/HBoxContainer/PieChartContainer/HBoxContainer/LegendWin" unique_id=251199673]
 layout_mode = 2
 theme = ExtResource("2_xldbt")
-text = "Wins"
+text = "STAT_LABEL_WINS"
 
 [node name="LegendDraw" type="HBoxContainer" parent="MarginContainer/VBoxContainer/HBoxContainer/PieChartContainer/HBoxContainer" unique_id=1025223175]
 layout_mode = 2
@@ -129,7 +129,7 @@ theme_override_styles/panel = SubResource("StyleBoxFlat_3o5mh")
 [node name="Label" type="Label" parent="MarginContainer/VBoxContainer/HBoxContainer/PieChartContainer/HBoxContainer/LegendDraw" unique_id=1486396656]
 layout_mode = 2
 theme = ExtResource("2_xldbt")
-text = "Draws"
+text = "STAT_LABEL_DRAWS"
 
 [node name="LegendLoss" type="HBoxContainer" parent="MarginContainer/VBoxContainer/HBoxContainer/PieChartContainer/HBoxContainer" unique_id=456847489]
 layout_mode = 2
@@ -144,7 +144,7 @@ theme_override_styles/panel = SubResource("StyleBoxFlat_ccxb8")
 [node name="Label" type="Label" parent="MarginContainer/VBoxContainer/HBoxContainer/PieChartContainer/HBoxContainer/LegendLoss" unique_id=810292626]
 layout_mode = 2
 theme = ExtResource("2_xldbt")
-text = "Losses"
+text = "STAT_LABEL_LOSSES"
 
 [node name="MarginContainer" type="MarginContainer" parent="MarginContainer/VBoxContainer/HBoxContainer" unique_id=1538936183]
 layout_mode = 2
@@ -176,7 +176,7 @@ vertical_alignment = 1
 layout_mode = 2
 theme = ExtResource("2_xldbt")
 theme_override_font_sizes/font_size = 60
-text = "Total games"
+text = "STAT_LABEL_TOTAL_GAMES"
 horizontal_alignment = 1
 vertical_alignment = 1
 
@@ -202,7 +202,7 @@ vertical_alignment = 1
 layout_mode = 2
 theme = ExtResource("2_xldbt")
 theme_override_font_sizes/font_size = 30
-text = "Wins"
+text = "STAT_LABEL_WINS"
 horizontal_alignment = 1
 vertical_alignment = 1
 
@@ -223,7 +223,7 @@ vertical_alignment = 1
 layout_mode = 2
 theme = ExtResource("2_xldbt")
 theme_override_font_sizes/font_size = 30
-text = "Draws"
+text = "STAT_LABEL_DRAWS"
 horizontal_alignment = 1
 vertical_alignment = 1
 
@@ -244,7 +244,7 @@ vertical_alignment = 1
 layout_mode = 2
 theme = ExtResource("2_xldbt")
 theme_override_font_sizes/font_size = 30
-text = "Losses"
+text = "STAT_LABEL_LOSSES"
 horizontal_alignment = 1
 vertical_alignment = 1
 
@@ -275,7 +275,7 @@ layout_mode = 2
 theme = ExtResource("2_xldbt")
 theme_override_fonts/font = ExtResource("4_63srb")
 theme_override_font_sizes/font_size = 70
-text = "Categories"
+text = "ACCOUNT_MANAGEMENT_CATEGORIES_HEADER"
 horizontal_alignment = 1
 vertical_alignment = 2
 
@@ -352,7 +352,7 @@ layout_mode = 2
 size_flags_horizontal = 4
 size_flags_vertical = 8
 theme = ExtResource("2_xldbt")
-text = "Back"
+text = "COMMON_BACK_BUTTON"
 
 [node name="LogOffButton" type="Button" parent="MarginContainer/VBoxContainer/HBoxContainer2" unique_id=1769483899]
 custom_minimum_size = Vector2(300, 100)
@@ -360,7 +360,7 @@ layout_mode = 2
 size_flags_horizontal = 4
 size_flags_vertical = 8
 theme = ExtResource("2_xldbt")
-text = "Log off"
+text = "ACCOUNT_MANAGEMENT_LOG_OFF_BUTTON"
 
 [connection signal="pressed" from="MarginContainer/VBoxContainer/HBoxContainer2/BackButton" to="." method="_on_back_button_pressed"]
 [connection signal="pressed" from="MarginContainer/VBoxContainer/HBoxContainer2/LogOffButton" to="." method="_on_log_off_button_pressed"]

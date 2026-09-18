@@ -110,7 +110,7 @@ vertical_alignment = 1
 layout_mode = 2
 theme = ExtResource("1_mpaho")
 theme_override_font_sizes/font_size = 60
-text = "Total games"
+text = "STAT_LABEL_TOTAL_GAMES"
 horizontal_alignment = 1
 vertical_alignment = 1
 
@@ -136,7 +136,7 @@ vertical_alignment = 1
 layout_mode = 2
 theme = ExtResource("1_mpaho")
 theme_override_font_sizes/font_size = 30
-text = "Wins"
+text = "STAT_LABEL_WINS"
 horizontal_alignment = 1
 vertical_alignment = 1
 
@@ -157,7 +157,7 @@ vertical_alignment = 1
 layout_mode = 2
 theme = ExtResource("1_mpaho")
 theme_override_font_sizes/font_size = 30
-text = "Draws"
+text = "STAT_LABEL_DRAWS"
 horizontal_alignment = 1
 vertical_alignment = 1
 
@@ -178,7 +178,7 @@ vertical_alignment = 1
 layout_mode = 2
 theme = ExtResource("1_mpaho")
 theme_override_font_sizes/font_size = 30
-text = "Losses"
+text = "STAT_LABEL_LOSSES"
 horizontal_alignment = 1
 vertical_alignment = 1
 
@@ -203,14 +203,14 @@ layout_mode = 2
 size_flags_horizontal = 3
 size_flags_vertical = 4
 theme = ExtResource("1_mpaho")
-text = "Invite to duel"
+text = "ACCOUNT_POPUP_INVITE_BUTTON"
 
 [node name="UnfriedButon" type="Button" parent="Background/MarginContainer/VBoxContainer/HBoxContainer" unique_id=765703830]
 custom_minimum_size = Vector2(150, 150)
 layout_mode = 2
 theme = ExtResource("1_mpaho")
 theme_override_colors/font_color = Color(0.8, 0.09411765, 0.06666667, 1)
-text = "unfriend"
+text = "ACCOUNT_POPUP_UNFRIEND_BUTTON"
 icon_alignment = 1
 
 [node name="UnfriendPopup" type="MarginContainer" parent="Background" unique_id=361426179]
@@ -252,7 +252,7 @@ layout_mode = 2
 size_flags_vertical = 3
 theme = ExtResource("1_mpaho")
 theme_override_font_sizes/font_size = 70
-text = "Do you really want to unfriend that Player?"
+text = "ACCOUNT_POPUP_UNFRIEND_CONFIRM_MESSAGE"
 autowrap_mode = 3
 
 [node name="HBoxContainer" type="HBoxContainer" parent="Background/UnfriendPopup/Panel/MarginContainer/VBoxContainer" unique_id=1745829710]
@@ -264,14 +264,14 @@ custom_minimum_size = Vector2(0, 100)
 layout_mode = 2
 size_flags_horizontal = 3
 theme = ExtResource("1_mpaho")
-text = "Yes"
+text = "COMMON_YES"
 
 [node name="NoButton" type="Button" parent="Background/UnfriendPopup/Panel/MarginContainer/VBoxContainer/HBoxContainer" unique_id=955623822]
 custom_minimum_size = Vector2(0, 100)
 layout_mode = 2
 size_flags_horizontal = 3
 theme = ExtResource("1_mpaho")
-text = "No"
+text = "COMMON_NO"
 
 [connection signal="pressed" from="Background/MarginContainer/VBoxContainer/HBoxContainer/AccountBackButton" to="." method="_on_account_back_button_pressed"]
 [connection signal="pressed" from="Background/MarginContainer/VBoxContainer/HBoxContainer/InviteToDuelButton" to="." method="_on_invite_to_duel_button_pressed"]

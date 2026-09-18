@@ -114,7 +114,7 @@ offset_transform_enabled = true
 offset_transform_position = Vector2(0, 50)
 theme_override_fonts/font = ExtResource("3_wn6oh")
 theme_override_font_sizes/font_size = 100
-text = "Page Name"
+text = "MAIN_LOBBY_PAGE_NAME_PLACEHOLDER"
 horizontal_alignment = 1
 vertical_alignment = 1
 
@@ -241,7 +241,7 @@ theme_override_constants/separation = 36
 layout_mode = 2
 size_flags_horizontal = 4
 theme_override_font_sizes/font_size = 60
-text = "Notifications"
+text = "MAIN_LOBBY_NOTIFICATIONS_HEADER"
 horizontal_alignment = 1
 
 [node name="NotificationScrollContainer" type="ScrollContainer" parent="NotificationsPopUp/PopUpBackground/MarginContainer/NotificationContainer" unique_id=2008242561]
@@ -272,14 +272,14 @@ layout_mode = 2
 size_flags_vertical = 4
 theme = ExtResource("12_87f1m")
 theme_override_font_sizes/font_size = 40
-text = "Mark all as read"
+text = "MAIN_LOBBY_MARK_ALL_READ_BUTTON"
 
 [node name="NoNotificationsLabel" type="Label" parent="NotificationsPopUp/PopUpBackground/MarginContainer" unique_id=623958745]
 unique_name_in_owner = true
 visible = false
 layout_mode = 2
 theme_override_font_sizes/font_size = 40
-text = "No notifications"
+text = "MAIN_LOBBY_NO_NOTIFICATIONS_LABEL"
 horizontal_alignment = 1
 vertical_alignment = 1
 

@@ -25,6 +25,10 @@ extends Control
 
 ## Project Conventions
 
+### Planning Workflow
+- Always use the `grill-with-docs` skill before implementation begins to stress-test plans against the project's existing documentation, terminology, architecture decisions, and relevant code paths.
+- Always use the `grill-with-docs` skill while drafting an OpenSpec change proposal itself (after the initial context-gathering step, before finalizing `proposal.md`/`design.md`/spec deltas) to stress-test the proposed approach against `openspec/project.md`, existing specs, and relevant code paths before it is shared for approval.
+
 ### Code Style
 - Follow official GDScript style guide: https://docs.godotengine.org/en/stable/tutorials/scripting/gdscript/gdscript_styleguide.html
 - Static typing: Use static typing where possible for better performance and error checking

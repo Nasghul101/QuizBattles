@@ -18,6 +18,45 @@ const SCENES: Dictionary = {
 ## Last page selected in the main lobby during this app session.
 var last_lobby_page: int = 0
 
+## Locales supported by localization/ui_translations.csv, in priority order.
+const SUPPORTED_LOCALES: PackedStringArray = ["en", "de"]
+
+## Default locale used when no stored preference or supported OS locale is found.
+const DEFAULT_LOCALE: String = "en"
+
+
+func _ready() -> void:
+    _bootstrap_locale()
+
+
+## Resolve and apply the active locale on startup.
+##
+## Priority: stored player preference -> supported OS locale -> DEFAULT_LOCALE.
+func _bootstrap_locale() -> void:
+    var stored_locale: String = LocalCache.get_setting("locale", "")
+    if not stored_locale.is_empty() and SUPPORTED_LOCALES.has(stored_locale):
+        TranslationServer.set_locale(stored_locale)
+        return
+
+    var os_locale: String = OS.get_locale_language()
+    if SUPPORTED_LOCALES.has(os_locale):
+        TranslationServer.set_locale(os_locale)
+        return
+
+    TranslationServer.set_locale(DEFAULT_LOCALE)
+
+
+## Change the active app locale at runtime and persist the choice.
+##
+## @param locale: A locale code from SUPPORTED_LOCALES (e.g. "en", "de")
+func set_app_locale(locale: String) -> void:
+    if not SUPPORTED_LOCALES.has(locale):
+        push_error("Utils: Unsupported locale '%s'" % locale)
+        return
+
+    TranslationServer.set_locale(locale)
+    LocalCache.set_setting("locale", locale)
+
 
 ## Navigate to a scene by key with optional fallback
 ##
@@ -84,3 +123,16 @@ func resolve_category_color(category: String) -> Color:
     if value == null:
         return Color.WHITE
     return Color(value)
+
+
+## Translate a canonical (English) category name for display in the current locale.
+##
+## The canonical name (e.g. "General Knowledge") is what question data and
+## color_codes.json key off of, so callers must keep using it for lookups and
+## only use the translated string for on-screen display.
+##
+## Falls back to the original category name if no matching CATEGORY_* key exists.
+func translate_category(category_name: String) -> String:
+    var key: String = "CATEGORY_" + category_name.to_upper().replace(" ", "_")
+    var translated: String = tr(key)
+    return category_name if translated == key else translated

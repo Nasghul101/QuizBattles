@@ -112,7 +112,7 @@ func initialize_empty(num_answer_buttons: int) -> void:
 ## Args:
 ##   round_number: The 1-based round number to display
 func set_round(round_number: int) -> void:
-    round_label.text = "Round %d" % round_number
+    round_label.text = tr("RESULT_COMPONENT_ROUND_LABEL") % round_number
 
 
 ## Load and display result data for both players for a category round
@@ -156,7 +156,7 @@ func load_result_data(category_name: String, p1_results: Array, p2_results: Arra
     stored_results_p2 = p2_results.duplicate(true)
 
     # Set category label text
-    category_label.text = category_name
+    category_label.text = Utils.translate_category(category_name)
 
     # Mark as not empty
     is_empty = false

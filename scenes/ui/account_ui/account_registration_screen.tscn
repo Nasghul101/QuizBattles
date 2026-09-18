@@ -131,7 +131,7 @@ size_flags_vertical = 0
 theme = ExtResource("1_5uyap")
 theme_override_fonts/font = ExtResource("4_u0yaj")
 theme_override_font_sizes/font_size = 80
-text = "Create new Account"
+text = "ACCOUNT_REGISTRATION_HEADER"
 horizontal_alignment = 1
 vertical_alignment = 1
 
@@ -141,7 +141,7 @@ custom_minimum_size = Vector2(0, 80)
 layout_mode = 2
 theme_override_font_sizes/font_size = 50
 theme_override_styles/normal = SubResource("StyleBoxFlat_kxw4b")
-placeholder_text = "Name"
+placeholder_text = "ACCOUNT_REGISTRATION_NAME_PLACEHOLDER"
 
 [node name="PasswordInput" type="TextEdit" parent="MarginContainer/VBoxContainer" unique_id=934657551]
 unique_name_in_owner = true
@@ -149,7 +149,7 @@ custom_minimum_size = Vector2(0, 80)
 layout_mode = 2
 theme_override_font_sizes/font_size = 50
 theme_override_styles/normal = SubResource("StyleBoxFlat_s42hv")
-placeholder_text = "Password"
+placeholder_text = "COMMON_PASSWORD_PLACEHOLDER"
 
 [node name="PasswordConfirm" type="TextEdit" parent="MarginContainer/VBoxContainer" unique_id=1249088703]
 unique_name_in_owner = true
@@ -157,7 +157,7 @@ custom_minimum_size = Vector2(0, 80)
 layout_mode = 2
 theme_override_font_sizes/font_size = 50
 theme_override_styles/normal = SubResource("StyleBoxFlat_pa4p6")
-placeholder_text = "Confirm Password"
+placeholder_text = "ACCOUNT_REGISTRATION_CONFIRM_PASSWORD_PLACEHOLDER"
 
 [node name="EmailInput" type="TextEdit" parent="MarginContainer/VBoxContainer" unique_id=1446578198]
 unique_name_in_owner = true
@@ -165,7 +165,7 @@ custom_minimum_size = Vector2(0, 80)
 layout_mode = 2
 theme_override_font_sizes/font_size = 50
 theme_override_styles/normal = SubResource("StyleBoxFlat_bmm42")
-placeholder_text = "Email"
+placeholder_text = "ACCOUNT_REGISTRATION_EMAIL_PLACEHOLDER"
 
 [node name="HBoxContainer" type="HBoxContainer" parent="MarginContainer/VBoxContainer" unique_id=482033934]
 layout_mode = 2
@@ -204,7 +204,7 @@ anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
 theme_override_font_sizes/font_size = 60
-text = "Create an account"
+text = "ACCOUNT_REGISTRATION_CREATE_BUTTON"
 horizontal_alignment = 1
 vertical_alignment = 1
 
@@ -219,7 +219,7 @@ theme_override_constants/margin_bottom = 35
 [node name="SignInButton" type="Button" parent="MarginContainer/VBoxContainer/HBoxContainer/MarginContainer2" unique_id=65427909]
 layout_mode = 2
 theme_override_styles/normal = SubResource("StyleBoxFlat_nkt3n")
-text = "Sign in"
+text = "COMMON_SIGN_IN_BUTTON"
 
 [connection signal="pressed" from="MarginContainer/VBoxContainer/HBoxContainer/MarginContainer/BackButton" to="." method="_on_back_button_pressed"]
 [connection signal="pressed" from="MarginContainer/VBoxContainer/HBoxContainer/CreateAccountButton" to="." method="_on_create_account_button_pressed"]

@@ -68,7 +68,7 @@ layout_mode = 2
 theme = ExtResource("3_7tavt")
 theme_override_fonts/font = ExtResource("2_tsdpv")
 theme_override_font_sizes/font_size = 80
-text = "Game Setup"
+text = "SETUP_SCREEN_HEADER"
 horizontal_alignment = 1
 vertical_alignment = 1
 
@@ -96,7 +96,7 @@ layout_mode = 2
 size_flags_horizontal = 0
 theme_override_fonts/font = ExtResource("2_mq2t8")
 theme_override_font_sizes/font_size = 25
-text = "Number of Rounds:"
+text = "SETUP_SCREEN_ROUNDS_LABEL"
 vertical_alignment = 1
 
 [node name="RoundsSlider" type="HSlider" parent="Panel/MarginContainer3/VBoxContainer/Panel/MarginContainer/HBoxContainer" unique_id=1848598507]
@@ -146,7 +146,7 @@ layout_mode = 2
 size_flags_horizontal = 0
 theme_override_fonts/font = ExtResource("2_mq2t8")
 theme_override_font_sizes/font_size = 25
-text = "Number of Questions:"
+text = "SETUP_SCREEN_QUESTIONS_LABEL"
 vertical_alignment = 1
 
 [node name="QuestionsSlider" type="HSlider" parent="Panel/MarginContainer3/VBoxContainer/Panel2/MarginContainer/HBoxContainer" unique_id=2038962434]
@@ -192,7 +192,7 @@ grow_vertical = 2
 theme_override_colors/font_color = Color(0.9843137, 0.8627451, 0.9529412, 1)
 theme_override_fonts/font = ExtResource("2_mq2t8")
 theme_override_font_sizes/font_size = 60
-text = "Start"
+text = "SETUP_SCREEN_START_BUTTON"
 horizontal_alignment = 1
 vertical_alignment = 1
 metadata/_edit_use_anchors_ = true

@@ -20,8 +20,8 @@ extends Control
 @onready var win_rate : AutoSizeLabel = %WinRate
 
 func _ready() -> void:
-    # Set the title to the category name
-    title.text = category
+    # Set the title to the translated category name
+    title.text = Utils.translate_category(category)
     
     set_bg_color(Utils.resolve_category_color(category))
 

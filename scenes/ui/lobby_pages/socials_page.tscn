@@ -145,7 +145,7 @@ layout_mode = 2
 size_flags_horizontal = 4
 theme = ExtResource("7_5n5qj")
 theme_override_font_sizes/font_size = 60
-text = "Add new friend"
+text = "SOCIALS_PAGE_ADD_FRIEND_HEADER"
 horizontal_alignment = 1
 vertical_alignment = 1
 
@@ -154,7 +154,7 @@ unique_name_in_owner = true
 custom_minimum_size = Vector2(0, 70)
 layout_mode = 2
 theme = ExtResource("7_5n5qj")
-placeholder_text = "Input name"
+placeholder_text = "SOCIALS_PAGE_ADD_FRIEND_NAME_PLACEHOLDER"
 
 [node name="Panel" type="Panel" parent="AddFriendsPopup/Background/MarginContainer/VBoxContainer" unique_id=1141816307]
 layout_mode = 2
@@ -197,7 +197,7 @@ layout_mode = 2
 size_flags_vertical = 4
 theme = ExtResource("7_5n5qj")
 theme_override_font_sizes/font_size = 40
-text = "Send friend request"
+text = "SOCIALS_PAGE_SEND_REQUEST_BUTTON"
 
 [node name="ShareButton" type="Button" parent="AddFriendsPopup/Background/MarginContainer/VBoxContainer/HBoxContainer" unique_id=2067300042]
 custom_minimum_size = Vector2(160, 0)

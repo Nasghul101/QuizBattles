@@ -396,11 +396,11 @@ func _show_finish_popup() -> void:
     var winner_text = ""
     
     if p1_score > p2_score:
-        winner_text = '"%s" won' % my_username
+        winner_text = tr("GAMEPLAY_SCREEN_WINNER_LABEL") % my_username
     elif p2_score > p1_score:
-        winner_text = '"%s" won' % opponent_username
+        winner_text = tr("GAMEPLAY_SCREEN_WINNER_LABEL") % opponent_username
     else:
-        winner_text = "Draw"
+        winner_text = tr("COMMON_DRAW_LABEL")
     
     winner_display.text = winner_text
     finish_game_popup.visible = true

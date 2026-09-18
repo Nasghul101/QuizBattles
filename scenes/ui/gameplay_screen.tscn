@@ -199,7 +199,7 @@ anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
 theme_override_font_sizes/font_size = 80
-text = "Play"
+text = "COMMON_PLAY_BUTTON"
 horizontal_alignment = 1
 vertical_alignment = 1
 
@@ -242,7 +242,7 @@ layout_mode = 2
 size_flags_horizontal = 4
 size_flags_vertical = 10
 theme_override_font_sizes/font_size = 40
-text = "Finish"
+text = "GAMEPLAY_SCREEN_FINISH_BUTTON"
 
 [node name="CategoryPopup" type="MarginContainer" parent="." unique_id=2095487321]
 unique_name_in_owner = true
@@ -282,7 +282,7 @@ theme_override_constants/separation = 50
 unique_name_in_owner = true
 layout_mode = 2
 theme_override_font_sizes/font_size = 80
-text = "Choose a Category"
+text = "CATEGORY_POPUP_CHOOSE_HEADLINE"
 horizontal_alignment = 1
 vertical_alignment = 1
 

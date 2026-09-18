@@ -226,4 +226,3 @@ func _html_unescape(text: String) -> String:
     for entity: String in entities.keys():
         result = result.replace(entity, entities[entity])
     return result
-

@@ -17,7 +17,7 @@ func set_opponents_points(points: int) -> void:
     opponent_points.text = str(points)
     
 func set_round_count(count: int) -> void:
-    round_count.text = "Round: " + str(count)
+    round_count.text = tr("FRIENDLY_DUEL_ROUND_LABEL") % count
     
 func set_opponent_name(opp_name: String) -> void:
     opponent_name.text = opp_name

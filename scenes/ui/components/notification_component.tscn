@@ -40,14 +40,14 @@ custom_minimum_size = Vector2(0, 40)
 layout_mode = 2
 size_flags_horizontal = 3
 theme_override_font_sizes/font_size = 14
-text = "Accept"
+text = "COMMON_ACCEPT_BUTTON"
 
 [node name="Deny" type="Button" parent="MarginContainer/VBoxContainer/ActionButtonsContainer"]
 custom_minimum_size = Vector2(0, 40)
 layout_mode = 2
 size_flags_horizontal = 3
 theme_override_font_sizes/font_size = 14
-text = "Deny"
+text = "COMMON_DENY_BUTTON"
 
 [connection signal="pressed" from="MarginContainer/VBoxContainer/ActionButtonsContainer/Accept" to="." method="_on_accept_pressed"]
 [connection signal="pressed" from="MarginContainer/VBoxContainer/ActionButtonsContainer/Deny" to="." method="_on_deny_pressed"]

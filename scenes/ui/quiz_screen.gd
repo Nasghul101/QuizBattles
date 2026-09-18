@@ -114,7 +114,7 @@ func load_question(data: Dictionary) -> void:
     # Display category (if available) and apply accent colour
     var category: String = data.get("category", "")
     if not category.is_empty():
-        category_label.text = category
+        category_label.text = Utils.translate_category(category)
     _apply_category_color(category)
     
     # Store correct answer for validation

@@ -30,6 +30,6 @@ texture = SubResource("PlaceholderTexture2D_d3alh")
 custom_minimum_size = Vector2(200, 100)
 layout_mode = 2
 size_flags_horizontal = 4
-text = "Play"
+text = "COMMON_PLAY_BUTTON"
 
 [connection signal="pressed" from="VBoxContainer/PlayButton" to="." method="_on_play_button_pressed"]

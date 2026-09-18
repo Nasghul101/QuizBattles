@@ -33,6 +33,10 @@ signal category_selected(category_name: String)
 var is_loading: bool = false
 var progress_tween: Tween
 
+# Maps each category button to its canonical (untranslated) category name,
+# since button.text is display-only once translated.
+var _button_categories: Dictionary = {}
+
 
 func _ready() -> void:
     # Connect category button signals
@@ -56,14 +60,17 @@ func show_categories(categories: Array) -> void:
     
     # Reset to selection state
     is_loading = false
-    headline.text = "Choose a Category"
+    headline.text = tr("CATEGORY_POPUP_CHOOSE_HEADLINE")
     category_container.visible = true
     progress_bar.visible = false
     
     # Populate category buttons
-    category1.text = categories[0]
-    category2.text = categories[1]
-    category3.text = categories[2]
+    category1.text = Utils.translate_category(categories[0])
+    category2.text = Utils.translate_category(categories[1])
+    category3.text = Utils.translate_category(categories[2])
+    _button_categories[category1] = categories[0]
+    _button_categories[category2] = categories[1]
+    _button_categories[category3] = categories[2]
     
     # Color category buttons
     set_bg_color(bg1, Utils.resolve_category_color(categories[0]))
@@ -87,7 +94,7 @@ func set_bg_color(bg: TextureRect, color: Color) -> void:
 ## Switch to loading state with animated progress bar
 func show_loading() -> void:
     is_loading = true
-    headline.text = "Loading..."
+    headline.text = tr("CATEGORY_POPUP_LOADING_LABEL")
     category_container.visible = false
     progress_bar.visible = true
     progress_bar.value = 0
@@ -117,7 +124,7 @@ func _on_category_selected(button: Button) -> void:
     if is_loading:
         return  # Ignore clicks during loading
     
-    print("[CategoryPopup] Category selected: ", button.text)
+    var category_name: String = _button_categories.get(button, button.text)
+    print("[CategoryPopup] Category selected: ", category_name)
     
-    var category_name: String = button.text
     category_selected.emit(category_name)

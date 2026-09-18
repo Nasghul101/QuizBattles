@@ -240,7 +240,7 @@ grow_horizontal = 2
 grow_vertical = 2
 theme = ExtResource("13_5u4c0")
 theme_override_font_sizes/font_size = 60
-text = "Next Question"
+text = "QUIZ_SCREEN_NEXT_QUESTION_BUTTON"
 
 [node name="Animation_Component" type="Node" parent="NextQuestion/NextQuestionButton" unique_id=643679973]
 script = ExtResource("14_ys6o3")
