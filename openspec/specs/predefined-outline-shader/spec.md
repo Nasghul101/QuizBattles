@@ -2,7 +2,9 @@
 
 ## Purpose
 Defines the configurable predefined outline shader used to highlight UI textures.
+
 ## Requirements
+
 ### Requirement: The shader SHALL detect outline pixels based on color threshold comparison
 The shader SHALL identify which pixels are part of the outline by comparing their color values against a configurable threshold, treating dark pixels as outline and light pixels as base texture.
 
@@ -77,62 +79,6 @@ The shader SHALL provide a configurable uniform for the outline color that repla
 
 ---
 
-### Requirement: The shader SHALL provide a texture-based pulsating animation effect
-The shader SHALL render an animated effect that travels around the outline using a texture sampler (e.g., CircleFade.svg) as a radial gradient mask, creating smooth transitions as it moves.
-
-#### Scenario: Pulsating effect uses texture as gradient mask
-**Given** a UI element with predefined_outline_shader applied  
-**When** pulsating is enabled and a fade texture is assigned  
-**Then** the fade texture SHALL be sampled based on angular position around the outline  
-**And** the texture's values SHALL modulate the pulsating color intensity  
-**And** the effect SHALL create a smooth gradient as it travels  
-**Because** texture-based gradients produce more sophisticated visual effects than solid colors
-
-#### Scenario: Pulsating effect animates around outline perimeter
-**Given** a UI element with pulsating enabled  
-**When** time progresses  
-**Then** the texture-based gradient effect SHALL move around the outline  
-**And** the movement SHALL be smooth and continuous  
-**And** the direction SHALL respect the clockwise/counterclockwise setting  
-**Because** animated effects draw attention to important UI elements
-
-#### Scenario: Pulsating effect stays within outline boundaries
-**Given** a texture with a black outline and white interior  
-**When** the pulsating animation is active  
-**Then** the animated effect SHALL only appear on detected outline pixels  
-**And** base texture pixels SHALL NOT show pulsating effect  
-**Because** the effect should enhance the outline without affecting the content area
-
-#### Scenario: Pulsating effect can be toggled on/off
-**Given** a ShaderMaterial using predefined_outline_shader  
-**When** the "Enable Pulsating" boolean property is set  
-**Then** pulsating animation SHALL activate when true  
-**And** SHALL be completely disabled when false (no performance cost)  
-**And** the default value SHALL be false (disabled)  
-**Because** not all UI elements need animated effects
-
----
-
-### Requirement: The shader SHALL expose fade texture sampler as an inspector property
-The shader SHALL provide a configurable texture sampler uniform that allows designers to assign radial gradient textures for the pulsating effect.
-
-#### Scenario: Designer assigns CircleFade texture to material
-**Given** a ShaderMaterial using predefined_outline_shader  
-**When** the designer opens the material in the inspector  
-**Then** a "Fade Texture" property SHALL be visible accepting Texture2D  
-**And** assigning CircleFade.svg SHALL use it for pulsating gradient  
-**And** different gradient textures can be assigned for variation  
-**Because** designers need flexibility to use different gradient patterns
-
-#### Scenario: Shader handles missing fade texture gracefully
-**Given** a ShaderMaterial with pulsating enabled but no fade texture assigned  
-**When** the shader renders  
-**Then** the shader SHALL NOT crash or produce errors  
-**And** pulsating effect SHALL fall back to a default behavior (solid color or disabled)  
-**Because** shader must be robust to incomplete configuration
-
----
-
 ### Requirement: The shader SHALL expose pulsating color as an inspector property
 The shader SHALL provide a configurable uniform for the pulsating animation color that is modulated by the fade texture.
 
@@ -143,20 +89,6 @@ The shader SHALL provide a configurable uniform for the pulsating animation colo
 **And** the color SHALL be modulated by the fade texture gradient  
 **And** the default color SHALL be cyan (#00FFFF) with full opacity  
 **Because** pulsating effects need to contrast with the base outline color
-
----
-
-### Requirement: The shader SHALL expose pulsating size as an inspector property
-The shader SHALL provide a configurable uniform that controls how much of the outline area the fade gradient covers (spread/concentration of the effect).
-
-#### Scenario: Pulsating size controls gradient spread
-**Given** a ShaderMaterial with pulsating enabled and size set to 0.5  
-**When** the pulsating animation is active  
-**Then** the fade gradient SHALL cover a smaller area (concentrated spotlight effect)  
-**And** increasing size to 2.0 SHALL spread the gradient over a wider area  
-**And** the gradient SHALL remain within detected outline pixels  
-**And** the default size SHALL be 1.0  
-**Because** different UI elements and outline widths require different effect intensities
 
 ---
 
@@ -186,53 +118,18 @@ The shader SHALL provide a configurable uniform that controls whether the pulsat
 
 ---
 
-### Requirement: The shader SHALL calculate angular position based on UV coordinates
-The shader SHALL determine each outline pixel's angular position relative to the texture center to enable circumferential animation effects.
-
-#### Scenario: Angular position is calculated from texture center
-**Given** an outline pixel at UV coordinates (0.75, 0.5)  
-**When** the shader calculates angular position  
-**Then** position SHALL be relative to center (0.5, 0.5)  
-**And** angle SHALL be calculated using atan(dy, dx)  
-**And** angle SHALL be normalized to 0.0-1.0 range  
-**Because** animation needs consistent rotational mapping regardless of texture shape
-
-#### Scenario: Time-based offset animates angular position
-**Given** an outline pixel with angular position 0.25  
-**When** time progresses with speed 1.0 and counterclockwise direction  
-**Then** animated position SHALL be (0.25 - TIME) wrapped to 0.0-1.0 range  
-**And** the wrapping SHALL create continuous rotation  
-**Because** animation must loop seamlessly around the outline
-
----
-
-### Requirement: The shader SHALL sample fade texture based on angular position and radial distance
-The shader SHALL map the fade texture using angular position as the primary coordinate and distance from center for radial gradient application.
-
-#### Scenario: Fade texture sampling creates rotational effect
-**Given** an outline pixel with animated angular position 0.5  
-**When** the shader samples the fade texture  
-**Then** the U coordinate SHALL be the animated angular position  
-**And** the V coordinate SHALL be based on distance from center scaled by size parameter  
-**And** the sampled value SHALL modulate pulsating color intensity  
-**Because** this mapping creates a gradient that travels around the outline
-
----
-
 ### Requirement: The shader SHALL blend pulsating effect with base outline color
-The shader SHALL combine the color-replaced outline with the texture-based pulsating effect using smooth interpolation.
+The shader SHALL combine the color-replaced outline with the rotating line effect using a smooth width/length mask, constrained to outline pixels.
 
 #### Scenario: Pulsating effect blends smoothly with outline color
-**Given** an outline pixel with replacement color red and pulsating color cyan  
-**When** fade texture value is 0.0 at that position  
-**Then** final color SHALL be mostly red (outline color)  
-**When** fade texture value is 1.0  
-**Then** final color SHALL be mostly cyan (pulsating color)  
-**When** fade texture value is 0.5  
-**Then** final color SHALL be a 50/50 blend of red and cyan  
-**Because** smooth blending creates professional gradient transitions
-
----
+**Given** an outline pixel with replacement color red and pulsating color cyan
+**When** the pixel is at the exact center of the line (mask value 1.0)
+**Then** final color SHALL be fully cyan (pulsating color)
+**When** the pixel is outside the line's thickness plus blur range (mask value 0.0)
+**Then** final color SHALL be fully red (outline color)
+**When** the pixel is within the blur feather region
+**Then** final color SHALL be a smooth interpolation between red and cyan
+**Because** smooth blending avoids a harsh, aliased edge on the line
 
 ### Requirement: The shader SHALL be compatible with all CanvasItem node types
 The shader SHALL function correctly when applied to any Godot node that uses canvas_item rendering.
@@ -257,24 +154,109 @@ The shader SHALL function correctly when applied to any Godot node that uses can
 The shader SHALL be optimized for mobile rendering while providing all visual features.
 
 #### Scenario: Shader runs efficiently on mobile devices
-**Given** the shader applied to multiple UI elements  
-**When** rendering on a mobile device  
-**Then** frame rate SHALL remain stable (60 FPS target)  
-**And** pulsating effect SHALL have minimal performance impact  
+**Given** the shader applied to multiple UI elements
+**When** rendering on a mobile device
+**Then** frame rate SHALL remain stable (60 FPS target)
+**And** pulsating effect SHALL have minimal performance impact
 **Because** mobile performance is a project priority
 
 #### Scenario: Shader uses early-exit optimization
-**Given** the shader fragment function  
-**When** enable_pulsating is false  
-**Then** pulsating calculations SHALL be skipped entirely  
-**And** only outline color replacement SHALL execute  
+**Given** the shader fragment function
+**When** enable_pulsating is false
+**Then** pulsating calculations SHALL be skipped entirely
+**And** only outline color replacement SHALL execute
 **Because** disabled effects should have zero performance cost
 
 #### Scenario: Shader performs minimal texture sampling
-**Given** the shader with pulsating enabled  
-**When** rendering a pixel  
-**Then** base texture SHALL be sampled once  
-**And** fade texture SHALL be sampled once (only for outline pixels)  
-**And** no additional sampling loops SHALL be executed  
-**Because** excessive texture samples degrade mobile performance
+**Given** the shader with pulsating enabled
+**When** rendering a pixel
+**Then** the base texture SHALL be sampled once
+**And** no additional texture samples SHALL be performed for the rotating line effect (it is computed procedurally)
+**Because** avoiding extra texture samples keeps the effect cheap on mobile devices
 
+### Requirement: The shader SHALL provide a rotating radial line pulsating animation effect
+The shader SHALL render an animated single line segment that starts at the texture's center, initially points toward the top, has a length equal to the texture's width, and rotates continuously around the center, restricted to detected outline pixels.
+
+#### Scenario: Line originates at center and points to the top
+**Given** a UI element with predefined_outline_shader applied and pulsating enabled
+**When** TIME is 0.0
+**Then** the rendered line SHALL be centered on the texture's center point
+**And** the line SHALL extend from the center toward the top edge of the texture
+**And** the line's length SHALL equal the texture's width
+**Because** this defines the effect's starting orientation and scale
+
+#### Scenario: Line rotates around the center over time
+**Given** a UI element with pulsating enabled
+**When** TIME progresses
+**Then** the line SHALL rotate continuously around the texture's center
+**And** the rotation direction SHALL respect the `pulsating_clockwise` setting
+**And** the rotation speed SHALL respect the `pulsating_speed` setting
+**Because** a continuously rotating line draws attention without requiring a gradient texture
+
+#### Scenario: Line renders only on outline pixels
+**Given** a texture with a black outline and white interior processed by the outline detection step
+**When** the pulsating line sweeps across the texture
+**Then** the line SHALL only be visible where a pixel is already classified as an outline pixel
+**And** base texture (non-outline) pixels SHALL NOT be affected by the line at any rotation angle
+**Because** the effect must enhance the outline without altering the content area
+
+#### Scenario: Line thickness and blur are constant along its whole length
+**Given** a UI element with `pulsating_thickness` and `pulsating_blur` configured
+**When** the line is rendered at any point along its length, near the center or near the outer edge
+**Then** the perpendicular width of the line and the softness of its edges SHALL be the same regardless of distance from the center
+**Because** the effect should read as a straight line of uniform width, not a wedge that narrows toward the center
+
+#### Scenario: Pulsating effect can be toggled on/off
+**Given** a ShaderMaterial using predefined_outline_shader
+**When** the "Enable Pulsating" boolean property is set
+**Then** the rotating line SHALL render when true
+**And** SHALL be completely disabled when false (no performance cost)
+**And** the default value SHALL be false (disabled)
+**Because** not all UI elements need animated effects
+
+### Requirement: The shader SHALL calculate angular position based on pixel-space coordinates
+The shader SHALL determine each outline pixel's position relative to the texture center in pixel space (using `TEXTURE_PIXEL_SIZE`) and its angle relative to "pointing at the top" to drive the rotating line effect.
+
+(Note: this requirement is functionally new but replaces the removed "The shader SHALL calculate angular position based on UV coordinates" requirement.)
+
+#### Scenario: Pixel position is converted to pixel space
+**Given** an outline pixel at UV coordinates (0.75, 0.5) on a non-square texture
+**When** the shader calculates the pixel's offset from center
+**Then** the offset SHALL be computed in pixel units using `TEXTURE_PIXEL_SIZE` rather than raw UV units
+**Because** pixel-space calculation keeps the line's thickness visually consistent regardless of the texture's aspect ratio
+
+#### Scenario: Angle is measured relative to the top, increasing clockwise
+**Given** an outline pixel directly above the texture center
+**When** the shader calculates its angle
+**Then** the angle SHALL be 0 (pointing at the top)
+**And** an outline pixel directly to the right of center SHALL have an angle of +pi/2
+**Because** the line must start pointing at the top and rotate clockwise as time and angle increase
+
+#### Scenario: Time-based rotation updates the line's angle
+**Given** the line's base angle of 0 (pointing at the top)
+**When** TIME progresses with a given `pulsating_speed` and `pulsating_clockwise` setting
+**Then** the line's current angle SHALL advance continuously in the configured direction at the configured speed
+**Because** continuous rotation creates the animated sweeping effect
+
+### Requirement: The shader SHALL expose pulsating line thickness as an inspector property
+The shader SHALL provide a configurable uniform, in approximate pixels, controlling the width of the rotating line.
+
+#### Scenario: Designer adjusts line thickness
+**Given** a ShaderMaterial using predefined_outline_shader with pulsating enabled
+**When** the designer adjusts the "Pulsating Thickness" property
+**Then** the rendered line's width SHALL change accordingly, measured in approximate pixels
+**And** the default thickness SHALL be 6.0 pixels
+**Because** different outline widths and texture sizes require different line thicknesses
+
+### Requirement: The shader SHALL expose pulsating line blur as an inspector property
+The shader SHALL provide a configurable uniform, in the 0.0-1.0 range, controlling the softness of the rotating line's edges, applied uniformly along the entire length of the line regardless of distance from the center.
+
+#### Scenario: Designer adjusts line blur
+**Given** a ShaderMaterial using predefined_outline_shader with pulsating enabled
+**When** the designer sets "Pulsating Blur" to 0.0
+**Then** the line SHALL have a hard, unfeathered edge
+**When** the designer increases "Pulsating Blur" toward 1.0
+**Then** the line's edges SHALL become progressively softer
+**And** the softness SHALL be consistent along the whole length of the line, not just near the center or the outer tip
+**And** the default blur SHALL be 0.25
+**Because** designers need control over how crisp or soft the animated line appears

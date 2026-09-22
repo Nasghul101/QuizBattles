@@ -661,6 +661,135 @@
             ],
             "stats_processed": false,
             "status": "active"
+        },
+        {
+            "config": {
+                "questions": 5,
+                "rounds": 3
+            },
+            "created_at": 1790067092.751,
+            "current_round": 1,
+            "current_turn": "robin",
+            "dismissed_by": [],
+            "inviter": "robin",
+            "match_id": "match_1790067092",
+            "players": [
+                "robin",
+				"linus"
+            ],
+            "rounds_data": [
+                {
+                    "category": "Science",
+                    "category_chooser": "robin",
+                    "player_answers": {
+                        "linus": {
+                            "answered": false,
+                            "results": []
+                        },
+                        "robin": {
+                            "answered": false,
+                            "results": []
+                        }
+                    },
+                    "questions": [
+                        {
+                            "category": "Science",
+                            "correct_answer": "Intel 4004",
+                            "difficulty": "medium",
+                            "incorrect_answers": [
+                                "Intel 486SX",
+                                "TMS 1000",
+								"AMD AM386"
+                            ],
+                            "question": "Was war der erste kommerziell verfügbare Computerprozessor?",
+                            "type": "multiple"
+                        },
+                        {
+                            "category": "Science",
+                            "correct_answer": "Fünf",
+                            "difficulty": "easy",
+                            "incorrect_answers": [
+                                "Zwei",
+                                "Drei",
+								"1"
+                            ],
+                            "question": "Wie viele Monde hat Pluto?",
+                            "type": "multiple"
+                        },
+                        {
+                            "category": "Science",
+                            "correct_answer": "D",
+                            "difficulty": "medium",
+                            "incorrect_answers": [
+                                "L",
+                                "C",
+								"X"
+                            ],
+                            "question": "Was ist die römische Zahl für 500?",
+                            "type": "multiple"
+                        },
+                        {
+                            "category": "Science",
+                            "correct_answer": "Desoxyribonukleinsäure",
+                            "difficulty": "easy",
+                            "incorrect_answers": [
+                                "Desoxyribogenetische Säure",
+                                "Desoxyribogenetische Atome",
+								"Detoxic Acid"
+                            ],
+                            "question": "Wofür steht DNA?",
+                            "type": "multiple"
+                        },
+                        {
+                            "category": "Science",
+                            "correct_answer": "Quadratisch",
+                            "difficulty": "medium",
+                            "incorrect_answers": [
+                                "Rational",
+                                "Linear",
+								"Exponentiell"
+                            ],
+                            "question": "Welche Art von Funktion ist x2+2x+1?",
+                            "type": "multiple"
+                        }
+                    ],
+                    "round_number": 1
+                },
+                {
+                    "category": "",
+                    "category_chooser": "linus",
+                    "player_answers": {
+                        "linus": {
+                            "answered": false,
+                            "results": []
+                        },
+                        "robin": {
+                            "answered": false,
+                            "results": []
+                        }
+                    },
+                    "questions": [],
+                    "round_number": 2
+                },
+                {
+                    "category": "",
+                    "category_chooser": "robin",
+                    "player_answers": {
+                        "linus": {
+                            "answered": false,
+                            "results": []
+                        },
+                        "robin": {
+                            "answered": false,
+                            "results": []
+                        }
+                    },
+                    "questions": [],
+                    "round_number": 3
+                }
+            ],
+            "stats_processed": false,
+            "status": "active"
         }
     ],
     "users": {

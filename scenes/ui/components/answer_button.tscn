@@ -3,7 +3,6 @@
 [ext_resource type="Script" uid="uid://dqkw4pjvr5f6m" path="res://scenes/ui/components/answer_button.gd" id="1_answer_button"]
 [ext_resource type="Texture2D" uid="uid://dhcx1iywao3ot" path="res://assets/ui/QuizScreen_Button_Top_Outline.svg" id="1_noyet"]
 [ext_resource type="Shader" uid="uid://dtvwdbl5lb1q" path="res://shaders/predefined_outline_shader.gdshader" id="1_ux1it"]
-[ext_resource type="Texture2D" uid="uid://beucm7ecx63i1" path="res://assets/CircleFade.svg" id="2_iths6"]
 [ext_resource type="FontFile" uid="uid://cdt5m65uglln" path="res://assets/Font/exo/Exo-SemiBold.otf" id="5_iths6"]
 [ext_resource type="Script" uid="uid://bttgnk3bb2a8i" path="res://addons/font_auto_size_labels/auto_size_label.gd" id="6_65ii4"]
 
@@ -12,9 +11,9 @@ shader = ExtResource("1_ux1it")
 shader_parameter/outline_color = Color(0.9843137, 0.8627451, 0.9529412, 1)
 shader_parameter/outline_threshold = 0.6250000296875
 shader_parameter/enable_pulsating = true
-shader_parameter/fade_texture = ExtResource("2_iths6")
 shader_parameter/pulsating_color = Color(0.1882353, 1, 0.48235294, 1)
-shader_parameter/pulsating_size = 0.56900002376762
+shader_parameter/pulsating_thickness = 6.0
+shader_parameter/pulsating_blur = 0.25
 shader_parameter/pulsating_speed = 1.36700006167262
 shader_parameter/pulsating_clockwise = false
 

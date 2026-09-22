@@ -15,24 +15,37 @@
 [ext_resource type="Theme" uid="uid://cxninrmdvbey6" path="res://Styles/BasicTheme.tres" id="13_5u4c0"]
 [ext_resource type="Script" uid="uid://bjq3n5yrdthqi" path="res://scenes/script_components/animation_component.gd" id="14_ys6o3"]
 
-[sub_resource type="ShaderMaterial" id="ShaderMaterial_t872d"]
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_53ej6"]
 shader = ExtResource("2_kxe5e")
 shader_parameter/outline_color = Color(0.9843137, 0.8627451, 0.9529412, 1)
-shader_parameter/outline_threshold = 0.6330000300675
+shader_parameter/outline_threshold = 0.2
 shader_parameter/enable_pulsating = false
 shader_parameter/pulsating_color = Color(0, 1, 1, 1)
-shader_parameter/pulsating_size = 1.0
+shader_parameter/pulsating_thickness = 300.0
+shader_parameter/pulsating_blur = 0.25
 shader_parameter/pulsating_speed = 1.0
 shader_parameter/pulsating_clockwise = false
 
-[sub_resource type="ShaderMaterial" id="ShaderMaterial_dh7g3"]
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_ys6o3"]
 shader = ExtResource("2_kxe5e")
 shader_parameter/outline_color = Color(0.9843137, 0.8627451, 0.9529412, 1)
-shader_parameter/outline_threshold = 0.710000033725
+shader_parameter/outline_threshold = 0.2
 shader_parameter/enable_pulsating = false
 shader_parameter/pulsating_color = Color(0, 1, 1, 1)
-shader_parameter/pulsating_size = 0.22500000742762
-shader_parameter/pulsating_speed = 2.24600010342512
+shader_parameter/pulsating_thickness = 300.0
+shader_parameter/pulsating_blur = 0.25
+shader_parameter/pulsating_speed = 1.0
+shader_parameter/pulsating_clockwise = false
+
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_e7lr6"]
+shader = ExtResource("2_kxe5e")
+shader_parameter/outline_color = Color(0.9843137, 0.8627451, 0.9529412, 1)
+shader_parameter/outline_threshold = 0.2
+shader_parameter/enable_pulsating = true
+shader_parameter/pulsating_color = Color(0, 1, 1, 1)
+shader_parameter/pulsating_thickness = 280.00000854999996
+shader_parameter/pulsating_blur = 0.6000000285
+shader_parameter/pulsating_speed = 1.0
 shader_parameter/pulsating_clockwise = false
 
 [sub_resource type="ShaderMaterial" id="ShaderMaterial_r8m2p"]
@@ -105,7 +118,7 @@ alignment = 1
 
 [node name="Category" type="TextureRect" parent="PanelContainer/MarginContainer/VBoxContainer" unique_id=270733299]
 self_modulate = Color(0.19215687, 0, 0.24313726, 1)
-material = SubResource("ShaderMaterial_t872d")
+material = SubResource("ShaderMaterial_53ej6")
 layout_mode = 2
 texture = ExtResource("3_t872d")
 expand_mode = 5
@@ -118,7 +131,7 @@ layout_mode = 1
 
 [node name="QuestionPanel" type="TextureRect" parent="PanelContainer/MarginContainer/VBoxContainer" unique_id=1147497453]
 self_modulate = Color(0.19215687, 0, 0.24313726, 1)
-material = SubResource("ShaderMaterial_dh7g3")
+material = SubResource("ShaderMaterial_ys6o3")
 layout_mode = 2
 texture = ExtResource("5_f45mr")
 expand_mode = 5
@@ -166,20 +179,24 @@ theme_override_constants/v_separation = -135
 columns = 2
 
 [node name="AnswerButton1" parent="PanelContainer/MarginContainer/VBoxContainer/MarginContainer2/AnswersGrid" unique_id=1148935281 instance=ExtResource("2_answer_button")]
+material = SubResource("ShaderMaterial_e7lr6")
 layout_mode = 2
 texture_normal = ExtResource("8_dh7g3")
 
 [node name="AnswerButton2" parent="PanelContainer/MarginContainer/VBoxContainer/MarginContainer2/AnswersGrid" unique_id=1756245460 instance=ExtResource("2_answer_button")]
+material = SubResource("ShaderMaterial_e7lr6")
 layout_mode = 2
 texture_normal = ExtResource("8_dh7g3")
 flip_h = true
 
 [node name="AnswerButton3" parent="PanelContainer/MarginContainer/VBoxContainer/MarginContainer2/AnswersGrid" unique_id=1256488247 instance=ExtResource("2_answer_button")]
+material = SubResource("ShaderMaterial_e7lr6")
 layout_mode = 2
 size_flags_vertical = 1
 texture_normal = ExtResource("9_f45mr")
 
 [node name="AnswerButton4" parent="PanelContainer/MarginContainer/VBoxContainer/MarginContainer2/AnswersGrid" unique_id=1259839459 instance=ExtResource("2_answer_button")]
+material = SubResource("ShaderMaterial_e7lr6")
 layout_mode = 2
 texture_normal = ExtResource("9_f45mr")
 flip_h = true
