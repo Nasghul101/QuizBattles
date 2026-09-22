@@ -48,18 +48,10 @@ func _on_account_back_button_pressed():
 func _on_invite_to_duel_button_pressed():
     if not UserDatabase.is_signed_in():
         return
-    var notification_data: Dictionary = {
-        "recipient_username": _displayed_friend_username,
-        "message": "%s invites you to a duel" % [UserDatabase.current_user.username],
-        "sender": UserDatabase.current_user.username,
-        "has_actions": true,
-        "action_data": {
-            "type": "game_invite",
-            "inviter_id": UserDatabase.current_user.username
-        }
+    var params: Dictionary = {
+        "invited_player": _displayed_friend_username
     }
-    GlobalSignalBus.notification_received.emit(notification_data)
-    invite_button.disabled = true
+    TransitionManager.change_scene("res://scenes/ui/setup_screen.tscn", params)
 
 
 func _on_unfried_buton_pressed():

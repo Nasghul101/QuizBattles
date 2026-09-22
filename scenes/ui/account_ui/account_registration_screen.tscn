@@ -56,18 +56,6 @@ corner_radius_top_right = 10
 corner_radius_bottom_right = 10
 corner_radius_bottom_left = 10
 
-[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_3uu7k"]
-bg_color = Color(0.19215687, 0, 0.24313726, 1)
-border_width_left = 6
-border_width_top = 6
-border_width_right = 6
-border_width_bottom = 6
-border_color = Color(0.9843137, 0.8627451, 0.9529412, 1)
-corner_radius_top_left = 5
-corner_radius_top_right = 5
-corner_radius_bottom_right = 5
-corner_radius_bottom_left = 5
-
 [sub_resource type="ShaderMaterial" id="ShaderMaterial_svdou"]
 shader = ExtResource("5_u0yaj")
 shader_parameter/outline_color = Color(0.9843137, 0.8627451, 0.9529412, 1)
@@ -77,18 +65,6 @@ shader_parameter/pulsating_color = Color(0, 1, 1, 1)
 shader_parameter/pulsating_size = 1.0
 shader_parameter/pulsating_speed = 1.0
 shader_parameter/pulsating_clockwise = false
-
-[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_nkt3n"]
-bg_color = Color(0.19215687, 0, 0.24313726, 1)
-border_width_left = 6
-border_width_top = 6
-border_width_right = 6
-border_width_bottom = 6
-border_color = Color(0.9843137, 0.8627451, 0.9529412, 1)
-corner_radius_top_left = 5
-corner_radius_top_right = 5
-corner_radius_bottom_right = 5
-corner_radius_bottom_left = 5
 
 [node name="AccountRegistrationScreen" type="Control" unique_id=839186813]
 layout_mode = 3
@@ -181,14 +157,14 @@ theme_override_constants/margin_right = 35
 theme_override_constants/margin_bottom = 35
 
 [node name="BackButton" parent="MarginContainer/VBoxContainer/HBoxContainer/MarginContainer" unique_id=126928124 instance=ExtResource("5_kxw4b")]
+custom_minimum_size = Vector2(150, 150)
 layout_mode = 2
-theme_override_styles/normal = SubResource("StyleBoxFlat_3uu7k")
 
 [node name="CreateAccountButton" type="TextureButton" parent="MarginContainer/VBoxContainer/HBoxContainer" unique_id=951616059]
 unique_name_in_owner = true
 self_modulate = Color(0.19215687, 0, 0.24313726, 1)
 material = SubResource("ShaderMaterial_svdou")
-custom_minimum_size = Vector2(700, 200)
+custom_minimum_size = Vector2(700, 210)
 layout_mode = 2
 size_flags_horizontal = 6
 size_flags_vertical = 4
@@ -217,8 +193,9 @@ theme_override_constants/margin_right = 35
 theme_override_constants/margin_bottom = 35
 
 [node name="SignInButton" type="Button" parent="MarginContainer/VBoxContainer/HBoxContainer/MarginContainer2" unique_id=65427909]
+custom_minimum_size = Vector2(150, 150)
 layout_mode = 2
-theme_override_styles/normal = SubResource("StyleBoxFlat_nkt3n")
+theme = ExtResource("1_5uyap")
 text = "COMMON_SIGN_IN_BUTTON"
 
 [connection signal="pressed" from="MarginContainer/VBoxContainer/HBoxContainer/MarginContainer/BackButton" to="." method="_on_back_button_pressed"]

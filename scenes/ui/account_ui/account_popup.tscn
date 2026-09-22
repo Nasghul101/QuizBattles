@@ -79,10 +79,11 @@ vertical_alignment = 1
 [node name="HBoxContainer3" type="HBoxContainer" parent="Background/MarginContainer/VBoxContainer" unique_id=566442406]
 layout_mode = 2
 size_flags_vertical = 3
+theme_override_constants/separation = 30
 
 [node name="Piechart" parent="Background/MarginContainer/VBoxContainer/HBoxContainer3" unique_id=1069233904 instance=ExtResource("3_appl4")]
 unique_name_in_owner = true
-custom_minimum_size = Vector2(0, 400)
+custom_minimum_size = Vector2(300, 400)
 layout_mode = 2
 size_flags_horizontal = 3
 size_flags_vertical = 0
@@ -94,7 +95,7 @@ theme_override_constants/separation = 35
 
 [node name="VBoxContainer" type="VBoxContainer" parent="Background/MarginContainer/VBoxContainer/HBoxContainer3/StatisticsContainer" unique_id=791032627]
 layout_mode = 2
-theme_override_constants/separation = -9
+theme_override_constants/separation = -12
 
 [node name="TotalGamesAmount" type="Label" parent="Background/MarginContainer/VBoxContainer/HBoxContainer3/StatisticsContainer/VBoxContainer" unique_id=184953181]
 unique_name_in_owner = true
@@ -116,7 +117,7 @@ vertical_alignment = 1
 
 [node name="HBoxContainer" type="HBoxContainer" parent="Background/MarginContainer/VBoxContainer/HBoxContainer3/StatisticsContainer" unique_id=1375258584]
 layout_mode = 2
-theme_override_constants/separation = 58
+theme_override_constants/separation = 30
 alignment = 1
 
 [node name="StatisticWin" type="VBoxContainer" parent="Background/MarginContainer/VBoxContainer/HBoxContainer3/StatisticsContainer/HBoxContainer" unique_id=379113252]
@@ -206,11 +207,12 @@ theme = ExtResource("1_mpaho")
 text = "ACCOUNT_POPUP_INVITE_BUTTON"
 
 [node name="UnfriedButon" type="Button" parent="Background/MarginContainer/VBoxContainer/HBoxContainer" unique_id=765703830]
-custom_minimum_size = Vector2(150, 150)
+custom_minimum_size = Vector2(170, 150)
 layout_mode = 2
 theme = ExtResource("1_mpaho")
 theme_override_colors/font_color = Color(0.8, 0.09411765, 0.06666667, 1)
 text = "ACCOUNT_POPUP_UNFRIEND_BUTTON"
+autowrap_mode = 3
 icon_alignment = 1
 
 [node name="UnfriendPopup" type="MarginContainer" parent="Background" unique_id=361426179]

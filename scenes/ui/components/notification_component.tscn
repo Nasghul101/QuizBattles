@@ -1,53 +1,72 @@
-[gd_scene load_steps=2 format=3 uid="uid://bwq48wb4m7kad"]
+[gd_scene format=3 uid="uid://bwq48wb4m7kad"]
 
 [ext_resource type="Script" uid="uid://b3w8heokyjjc8" path="res://scenes/ui/components/notification_component.gd" id="1_kq8u1"]
+[ext_resource type="Theme" uid="uid://cxninrmdvbey6" path="res://Styles/BasicTheme.tres" id="2_oswe5"]
 
-[node name="NotificationComponent" type="Panel"]
-custom_minimum_size = Vector2(0, 80)
-size_flags_horizontal = 3
-script = ExtResource("1_kq8u1")
-
-[node name="MarginContainer" type="MarginContainer" parent="."]
-layout_mode = 1
+[node name="NotificationComponent" type="Panel" unique_id=1924891862]
+custom_minimum_size = Vector2(0, 150)
 anchors_preset = 15
 anchor_right = 1.0
 anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
+size_flags_horizontal = 3
+script = ExtResource("1_kq8u1")
+
+[node name="MarginContainer" type="MarginContainer" parent="." unique_id=614594968]
+custom_minimum_size = Vector2(0, 50)
+layout_mode = 1
+anchors_preset = 14
+anchor_top = 0.5
+anchor_right = 1.0
+anchor_bottom = 0.5
+offset_top = -60.0
+offset_bottom = 60.0
+grow_horizontal = 2
+grow_vertical = 2
+theme = ExtResource("2_oswe5")
 theme_override_constants/margin_left = 10
 theme_override_constants/margin_top = 10
 theme_override_constants/margin_right = 10
 theme_override_constants/margin_bottom = 10
 
-[node name="VBoxContainer" type="VBoxContainer" parent="MarginContainer"]
+[node name="VBoxContainer" type="HBoxContainer" parent="MarginContainer" unique_id=266623915]
 layout_mode = 2
 theme_override_constants/separation = 10
 
-[node name="NotificationText" type="Label" parent="MarginContainer/VBoxContainer"]
+[node name="NotificationText" type="Label" parent="MarginContainer/VBoxContainer" unique_id=1743469122]
 unique_name_in_owner = true
 custom_minimum_size = Vector2(100, 50)
 layout_mode = 2
+size_flags_horizontal = 3
 text = "Notification message text"
 autowrap_mode = 3
 
-[node name="ActionButtonsContainer" type="HBoxContainer" parent="MarginContainer/VBoxContainer"]
+[node name="MarginContainer" type="MarginContainer" parent="MarginContainer/VBoxContainer" unique_id=1981823276]
+layout_mode = 2
+size_flags_horizontal = 10
+theme_override_constants/margin_right = 15
+
+[node name="ActionButtonsContainer" type="HBoxContainer" parent="MarginContainer/VBoxContainer/MarginContainer" unique_id=816994399]
 unique_name_in_owner = true
 layout_mode = 2
-theme_override_constants/separation = 10
+size_flags_horizontal = 10
+size_flags_vertical = 4
+theme_override_constants/separation = 15
 
-[node name="Accept" type="Button" parent="MarginContainer/VBoxContainer/ActionButtonsContainer"]
-custom_minimum_size = Vector2(0, 40)
+[node name="Accept" type="Button" parent="MarginContainer/VBoxContainer/MarginContainer/ActionButtonsContainer" unique_id=1660036693]
+custom_minimum_size = Vector2(200, 60)
 layout_mode = 2
 size_flags_horizontal = 3
-theme_override_font_sizes/font_size = 14
+theme = ExtResource("2_oswe5")
 text = "COMMON_ACCEPT_BUTTON"
 
-[node name="Deny" type="Button" parent="MarginContainer/VBoxContainer/ActionButtonsContainer"]
-custom_minimum_size = Vector2(0, 40)
+[node name="Deny" type="Button" parent="MarginContainer/VBoxContainer/MarginContainer/ActionButtonsContainer" unique_id=2118414929]
+custom_minimum_size = Vector2(200, 60)
 layout_mode = 2
 size_flags_horizontal = 3
-theme_override_font_sizes/font_size = 14
+theme = ExtResource("2_oswe5")
 text = "COMMON_DENY_BUTTON"
 
-[connection signal="pressed" from="MarginContainer/VBoxContainer/ActionButtonsContainer/Accept" to="." method="_on_accept_pressed"]
-[connection signal="pressed" from="MarginContainer/VBoxContainer/ActionButtonsContainer/Deny" to="." method="_on_deny_pressed"]
+[connection signal="pressed" from="MarginContainer/VBoxContainer/MarginContainer/ActionButtonsContainer/Accept" to="." method="_on_accept_pressed"]
+[connection signal="pressed" from="MarginContainer/VBoxContainer/MarginContainer/ActionButtonsContainer/Deny" to="." method="_on_deny_pressed"]

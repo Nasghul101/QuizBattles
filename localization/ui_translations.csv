@@ -18,7 +18,7 @@ STAT_LABEL_WIN_RATE,Win rate,Gewinnrate
 ACCOUNT_MANAGEMENT_CATEGORIES_HEADER,Categories,Kategorien
 ACCOUNT_MANAGEMENT_LOG_OFF_BUTTON,Log off,Abmelden
 ACCOUNT_POPUP_INVITE_BUTTON,Invite to duel,Zum Duell einladen
-ACCOUNT_POPUP_UNFRIEND_BUTTON,unfriend,entfreunden
+ACCOUNT_POPUP_UNFRIEND_BUTTON,unfriend,freund entfernen
 ACCOUNT_POPUP_UNFRIEND_CONFIRM_MESSAGE,Do you really want to unfriend that Player?,Möchtest du diesen Spieler wirklich entfreunden?
 ACCOUNT_REGISTRATION_HEADER,Create new Account,Neues Konto erstellen
 ACCOUNT_REGISTRATION_NAME_PLACEHOLDER,Name,Name
@@ -43,7 +43,7 @@ FRIENDLY_BATTLE_PAGE_NO_MATCHES_MESSAGE,"No active matches Invite friends to sta
 SHOP_PAGE_COMING_SOON_LABEL,Shop (Coming Soon),Shop (bald verfügbar)
 SOCIALS_PAGE_ADD_FRIEND_HEADER,Add new friend,Neuen Freund hinzufügen
 SOCIALS_PAGE_ADD_FRIEND_NAME_PLACEHOLDER,Input name,Namen eingeben
-SOCIALS_PAGE_SEND_REQUEST_BUTTON,Send friend request,Freundschaftsanfrage senden
+SOCIALS_PAGE_SEND_REQUEST_BUTTON,Send friend request,Freund hinzufügen
 MAIN_LOBBY_PAGE_NAME_PLACEHOLDER,Page Name,Seitenname
 MAIN_LOBBY_NOTIFICATIONS_HEADER,Notifications,Benachrichtigungen
 MAIN_LOBBY_MARK_ALL_READ_BUTTON,Mark all as read,Alle als gelesen markieren

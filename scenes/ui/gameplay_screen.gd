@@ -166,7 +166,7 @@ func _on_play_button_pressed() -> void:
         current_round_results = []
         current_round += 1  # Track locally for display
         
-        quiz_screen.disabled = false
+        quiz_screen.visible = true
         quiz_screen.set_round_number(current_round)
         quiz_screen.load_question(fetched_questions[0])
 

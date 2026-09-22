@@ -2,6 +2,8 @@
 
 [ext_resource type="Script" uid="uid://qyyp7e5iwkwd" path="res://scenes/ui/lobby_pages/friendly_battle_page.gd" id="1_d28o3"]
 [ext_resource type="Theme" uid="uid://cxninrmdvbey6" path="res://Styles/BasicTheme.tres" id="2_kqnbk"]
+[ext_resource type="PackedScene" uid="uid://cd8qg0jt3f85c" path="res://scenes/ui/components/friendly_duel_button_l.tscn" id="3_4kkq2"]
+[ext_resource type="PackedScene" uid="uid://bhctmag7xjst8" path="res://scenes/ui/components/friendly_duel_button_r.tscn" id="4_ds805"]
 
 [node name="FriendlyBattlePage" type="Control" unique_id=1302723933]
 layout_mode = 3
@@ -25,7 +27,6 @@ theme = ExtResource("2_kqnbk")
 layout_mode = 2
 size_flags_horizontal = 3
 size_flags_vertical = 3
-theme_override_constants/separation = 57
 
 [node name="FriendsListL" type="VBoxContainer" parent="ScrollContainer/FriendslistContainer" unique_id=246517394]
 unique_name_in_owner = true
@@ -33,11 +34,29 @@ layout_mode = 2
 size_flags_horizontal = 3
 size_flags_vertical = 3
 
+[node name="FriendlyDuelButton_L" parent="ScrollContainer/FriendslistContainer/FriendsListL" unique_id=2050095066 instance=ExtResource("3_4kkq2")]
+layout_mode = 2
+
+[node name="FriendlyDuelButton_L2" parent="ScrollContainer/FriendslistContainer/FriendsListL" unique_id=393083347 instance=ExtResource("3_4kkq2")]
+layout_mode = 2
+
+[node name="FriendlyDuelButton_L3" parent="ScrollContainer/FriendslistContainer/FriendsListL" unique_id=877968424 instance=ExtResource("3_4kkq2")]
+layout_mode = 2
+
 [node name="FriendsListR" type="VBoxContainer" parent="ScrollContainer/FriendslistContainer" unique_id=1294210755]
 unique_name_in_owner = true
 layout_mode = 2
 size_flags_horizontal = 3
 size_flags_vertical = 3
+
+[node name="FriendlyDuelButton_R" parent="ScrollContainer/FriendslistContainer/FriendsListR" unique_id=1321971219 instance=ExtResource("4_ds805")]
+layout_mode = 2
+
+[node name="FriendlyDuelButton_R2" parent="ScrollContainer/FriendslistContainer/FriendsListR" unique_id=1112567043 instance=ExtResource("4_ds805")]
+layout_mode = 2
+
+[node name="FriendlyDuelButton_R3" parent="ScrollContainer/FriendslistContainer/FriendsListR" unique_id=935502940 instance=ExtResource("4_ds805")]
+layout_mode = 2
 
 [node name="NoMatchesLabel" type="Label" parent="." unique_id=1861689695]
 unique_name_in_owner = true
@@ -47,9 +66,9 @@ anchor_left = 0.5
 anchor_top = 0.5
 anchor_right = 0.5
 anchor_bottom = 0.5
-offset_left = -200.0
+offset_left = -427.5
 offset_top = -50.0
-offset_right = 200.0
+offset_right = 427.5
 offset_bottom = 50.0
 grow_horizontal = 2
 grow_vertical = 2

@@ -8,8 +8,8 @@ colors = PackedColorArray(0.8117647, 0.8666667, 0.15294118, 1, 0.9843137, 0.8627
 
 [sub_resource type="GradientTexture2D" id="GradientTexture2D_30mq0"]
 gradient = SubResource("Gradient_b6rbf")
-fill_from = Vector2(0, 0.7307692)
-fill_to = Vector2(0, 0.3974359)
+fill_from = Vector2(0, 0.9722222)
+fill_to = Vector2(0, 0.44444445)
 
 [node name="Label" type="Label" unique_id=1077587627]
 clip_children = 2

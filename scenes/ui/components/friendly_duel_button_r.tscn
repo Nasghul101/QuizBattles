@@ -6,7 +6,17 @@
 [ext_resource type="Theme" uid="uid://cxninrmdvbey6" path="res://Styles/BasicTheme.tres" id="4_odbbl"]
 [ext_resource type="Script" uid="uid://bttgnk3bb2a8i" path="res://addons/font_auto_size_labels/auto_size_label.gd" id="5_ruaml"]
 
-[node name="FriendlyDuelButton_R" type="TextureButton" unique_id=583814323]
+[sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_nu1gk"]
+
+[sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_mngjo"]
+
+[sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_li8ys"]
+
+[sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_odbbl"]
+
+[sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_ruaml"]
+
+[node name="FriendlyDuelButton_R" type="Button" unique_id=1321971219]
 custom_minimum_size = Vector2(0, 400)
 anchors_preset = -1
 anchor_right = 1.0
@@ -14,34 +24,48 @@ anchor_bottom = 0.28090766
 grow_horizontal = 2
 grow_vertical = 2
 size_flags_horizontal = 3
-texture_normal = ExtResource("1_nu1gk")
-ignore_texture_size = true
-stretch_mode = 4
+theme_override_styles/normal = SubResource("StyleBoxEmpty_nu1gk")
+theme_override_styles/pressed = SubResource("StyleBoxEmpty_mngjo")
+theme_override_styles/hover = SubResource("StyleBoxEmpty_li8ys")
+theme_override_styles/disabled = SubResource("StyleBoxEmpty_odbbl")
+theme_override_styles/focus = SubResource("StyleBoxEmpty_ruaml")
 script = ExtResource("2_mngjo")
 
 [node name="HighlightTexture" type="TextureRect" parent="." unique_id=1057637957]
 unique_name_in_owner = true
-visible = false
 layout_mode = 1
-anchors_preset = -1
-anchor_left = -0.09769635
-anchor_top = -0.14585795
-anchor_right = 1.0996964
-anchor_bottom = 1.1742258
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
 texture = ExtResource("3_nu1gk")
 expand_mode = 1
-stretch_mode = 4
-metadata/_edit_use_anchors_ = true
+stretch_mode = 5
+
+[node name="UnhighlightTexture" type="TextureRect" parent="." unique_id=2115593116]
+unique_name_in_owner = true
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+texture = ExtResource("1_nu1gk")
+expand_mode = 1
+stretch_mode = 5
 
 [node name="PlayerPoints" type="Label" parent="." unique_id=1800585279]
 unique_name_in_owner = true
 layout_mode = 1
 anchors_preset = -1
-anchor_top = 0.15
-anchor_right = 0.2086514
-anchor_bottom = 0.8
+anchor_left = 0.07294317
+anchor_top = 0.20473538
+anchor_right = 0.2815946
+anchor_bottom = 0.8547354
+offset_left = 0.069000244
+offset_top = -0.19000244
+offset_right = -0.3420105
 grow_horizontal = 2
 grow_vertical = 2
 theme = ExtResource("4_odbbl")
@@ -49,15 +73,19 @@ theme_override_font_sizes/font_size = 50
 text = "4"
 horizontal_alignment = 1
 vertical_alignment = 1
+metadata/_edit_use_anchors_ = true
 
 [node name="OpponentPoints" type="Label" parent="." unique_id=620843543]
 unique_name_in_owner = true
 layout_mode = 1
 anchors_preset = -1
-anchor_left = 0.7989822
-anchor_top = 0.15
-anchor_right = 1.0
-anchor_bottom = 0.8
+anchor_left = 0.71077186
+anchor_top = 0.21309192
+anchor_right = 0.91178966
+anchor_bottom = 0.86309195
+offset_left = 0.014953613
+offset_top = 0.06599426
+offset_right = 0.035888672
 grow_horizontal = 2
 grow_vertical = 2
 theme = ExtResource("4_odbbl")
@@ -69,14 +97,18 @@ vertical_alignment = 1
 [node name="HBoxContainer" type="VBoxContainer" parent="." unique_id=988863643]
 layout_mode = 1
 anchors_preset = -1
-anchor_left = 0.20695505
-anchor_right = 0.79700005
-anchor_bottom = 0.763
-offset_right = 0.33691406
-offset_bottom = 0.16601563
+anchor_left = 0.1908397
+anchor_top = 0.08800001
+anchor_right = 0.78083974
+anchor_bottom = 0.851
+offset_left = 0.10699463
+offset_top = -0.18400574
+offset_right = 0.49694824
+offset_bottom = -0.018005371
 grow_horizontal = 2
 grow_vertical = 2
 theme_override_constants/separation = -36
+metadata/_edit_use_anchors_ = true
 
 [node name="VersusLabel" type="Label" parent="HBoxContainer" unique_id=168818720]
 custom_minimum_size = Vector2(10, 10)

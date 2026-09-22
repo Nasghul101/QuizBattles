@@ -28,11 +28,11 @@ shader_parameter/pulsating_clockwise = false
 [sub_resource type="ShaderMaterial" id="ShaderMaterial_dh7g3"]
 shader = ExtResource("2_kxe5e")
 shader_parameter/outline_color = Color(0.9843137, 0.8627451, 0.9529412, 1)
-shader_parameter/outline_threshold = 0.8330000395675
+shader_parameter/outline_threshold = 0.710000033725
 shader_parameter/enable_pulsating = false
 shader_parameter/pulsating_color = Color(0, 1, 1, 1)
-shader_parameter/pulsating_size = 1.0
-shader_parameter/pulsating_speed = 1.0
+shader_parameter/pulsating_size = 0.22500000742762
+shader_parameter/pulsating_speed = 2.24600010342512
 shader_parameter/pulsating_clockwise = false
 
 [sub_resource type="ShaderMaterial" id="ShaderMaterial_r8m2p"]

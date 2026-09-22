@@ -268,7 +268,7 @@
       "category": "General Knowledge",
       "type": "multiple",
       "difficulty": "easy",
-      "question": "Was ist die Währung von Indien und Pakistan sowie ein paar anderen asiatischen Ländern?",
+      "question": "Was ist die Währung von unter anderem Indien und Pakistan?",
       "correct_answer": "Rupie",
       "incorrect_answers": [
         "Riyal",
@@ -328,7 +328,7 @@
       "category": "General Knowledge",
       "type": "multiple",
       "difficulty": "hard",
-      "question": "Was übersetzt der lateinische Ausdruck \"Veni, vidi, vici\" ins Englische?",
+      "question": "Was bedeutet der lateinische Ausdruck \"Veni, vidi, vici\" im Deutschen?",
       "correct_answer": "Ich kam, ich sah, ich eroberte",
       "incorrect_answers": [
         "Sieh kein Böses, höre kein Böses, sprich kein Böses",
@@ -1708,7 +1708,7 @@
       "category": "General Knowledge",
       "type": "multiple",
       "difficulty": "easy",
-      "question": "Wann wurde Pong freigelassen?",
+      "question": "Wann wurde Pong veröffentlicht?",
       "correct_answer": "29. November 1972",
       "incorrect_answers": [
         "29. März 2017",
@@ -20120,7 +20120,7 @@
       "category": "Mythology",
       "type": "multiple",
       "difficulty": "medium",
-      "question": "Diese griechische mythologische Figur ist der Gott / die Göttin der Kampfstrategie (unter anderem).",
+      "question": "Diese griechische mythologische Figur ist unter anderem der Gott der Kampfstrategie.",
       "correct_answer": "Athena",
       "incorrect_answers": [
         "Ares",
@@ -20228,8 +20228,8 @@
       "category": "Mythology",
       "type": "multiple",
       "difficulty": "hard",
-      "question": "Wer hat Hippomenes in einem Footrace besiegt?",
-      "correct_answer": "Atalanta",
+      "question": "Wen hat Hippomenes in einem Wettlauf besiegt?",
+      "correct_answer": "Atalante",
       "incorrect_answers": [
         "Peleus",
         "Theseus",

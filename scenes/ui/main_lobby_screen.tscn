@@ -273,6 +273,7 @@ size_flags_vertical = 4
 theme = ExtResource("12_87f1m")
 theme_override_font_sizes/font_size = 40
 text = "MAIN_LOBBY_MARK_ALL_READ_BUTTON"
+autowrap_mode = 3
 
 [node name="NoNotificationsLabel" type="Label" parent="NotificationsPopUp/PopUpBackground/MarginContainer" unique_id=623958745]
 unique_name_in_owner = true

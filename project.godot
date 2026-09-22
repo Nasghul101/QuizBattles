@@ -28,11 +28,6 @@ UserDatabase="*res://autoload/user_database.gd"
 LocalCache="*res://autoload/local_cache.gd"
 Utils="*res://autoload/utils.gd"
 
-[internationalization]
-
-locale/translations=PackedStringArray("res://localization/ui_translations.en.translation", "res://localization/ui_translations.de.translation")
-locale/locale_filter=[1, ["en", "de"]]
-
 [display]
 
 window/size/viewport_width=1179
@@ -53,3 +48,8 @@ theme/default_font_multichannel_signed_distance_field=true
 [input_devices]
 
 pointing/emulate_touch_from_mouse=true
+
+[internationalization]
+
+locale/translations=PackedStringArray("res://localization/ui_translations.en.translation", "res://localization/ui_translations.de.translation")
+locale/locale_filter=[1, ["en", "de"]]

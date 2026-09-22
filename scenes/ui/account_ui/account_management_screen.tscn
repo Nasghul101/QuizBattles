@@ -96,62 +96,12 @@ size_flags_horizontal = 3
 layout_mode = 2
 size_flags_vertical = 3
 
-[node name="HBoxContainer" type="HBoxContainer" parent="MarginContainer/VBoxContainer/HBoxContainer/PieChartContainer" unique_id=2114126727]
-layout_mode = 2
-theme_override_constants/separation = 52
-alignment = 1
-
-[node name="LegendWin" type="HBoxContainer" parent="MarginContainer/VBoxContainer/HBoxContainer/PieChartContainer/HBoxContainer" unique_id=742616523]
-layout_mode = 2
-theme_override_constants/separation = 10
-
-[node name="Panel" type="Panel" parent="MarginContainer/VBoxContainer/HBoxContainer/PieChartContainer/HBoxContainer/LegendWin" unique_id=347277809]
-custom_minimum_size = Vector2(20, 20)
-layout_mode = 2
-size_flags_vertical = 4
-theme_override_styles/panel = SubResource("StyleBoxFlat_63srb")
-
-[node name="Label" type="Label" parent="MarginContainer/VBoxContainer/HBoxContainer/PieChartContainer/HBoxContainer/LegendWin" unique_id=251199673]
-layout_mode = 2
-theme = ExtResource("2_xldbt")
-text = "STAT_LABEL_WINS"
-
-[node name="LegendDraw" type="HBoxContainer" parent="MarginContainer/VBoxContainer/HBoxContainer/PieChartContainer/HBoxContainer" unique_id=1025223175]
-layout_mode = 2
-theme_override_constants/separation = 10
-
-[node name="Panel" type="Panel" parent="MarginContainer/VBoxContainer/HBoxContainer/PieChartContainer/HBoxContainer/LegendDraw" unique_id=1613858142]
-custom_minimum_size = Vector2(20, 20)
-layout_mode = 2
-size_flags_vertical = 4
-theme_override_styles/panel = SubResource("StyleBoxFlat_3o5mh")
-
-[node name="Label" type="Label" parent="MarginContainer/VBoxContainer/HBoxContainer/PieChartContainer/HBoxContainer/LegendDraw" unique_id=1486396656]
-layout_mode = 2
-theme = ExtResource("2_xldbt")
-text = "STAT_LABEL_DRAWS"
-
-[node name="LegendLoss" type="HBoxContainer" parent="MarginContainer/VBoxContainer/HBoxContainer/PieChartContainer/HBoxContainer" unique_id=456847489]
-layout_mode = 2
-theme_override_constants/separation = 10
-
-[node name="Panel" type="Panel" parent="MarginContainer/VBoxContainer/HBoxContainer/PieChartContainer/HBoxContainer/LegendLoss" unique_id=1782026031]
-custom_minimum_size = Vector2(20, 20)
-layout_mode = 2
-size_flags_vertical = 4
-theme_override_styles/panel = SubResource("StyleBoxFlat_ccxb8")
-
-[node name="Label" type="Label" parent="MarginContainer/VBoxContainer/HBoxContainer/PieChartContainer/HBoxContainer/LegendLoss" unique_id=810292626]
-layout_mode = 2
-theme = ExtResource("2_xldbt")
-text = "STAT_LABEL_LOSSES"
-
 [node name="MarginContainer" type="MarginContainer" parent="MarginContainer/VBoxContainer/HBoxContainer" unique_id=1538936183]
 layout_mode = 2
 size_flags_horizontal = 3
-theme_override_constants/margin_left = 70
-theme_override_constants/margin_top = 65
-theme_override_constants/margin_right = 70
+theme_override_constants/margin_left = 50
+theme_override_constants/margin_top = 125
+theme_override_constants/margin_right = 50
 
 [node name="StatisticsContainer" type="VBoxContainer" parent="MarginContainer/VBoxContainer/HBoxContainer/MarginContainer" unique_id=425000588]
 layout_mode = 2
@@ -182,7 +132,7 @@ vertical_alignment = 1
 
 [node name="HBoxContainer" type="HBoxContainer" parent="MarginContainer/VBoxContainer/HBoxContainer/MarginContainer/StatisticsContainer" unique_id=2001230601]
 layout_mode = 2
-theme_override_constants/separation = 58
+theme_override_constants/separation = 35
 alignment = 1
 
 [node name="StatisticWin" type="VBoxContainer" parent="MarginContainer/VBoxContainer/HBoxContainer/MarginContainer/StatisticsContainer/HBoxContainer" unique_id=1159508169]
@@ -198,13 +148,20 @@ text = "100"
 horizontal_alignment = 1
 vertical_alignment = 1
 
-[node name="Label" type="Label" parent="MarginContainer/VBoxContainer/HBoxContainer/MarginContainer/StatisticsContainer/HBoxContainer/StatisticWin" unique_id=552330284]
+[node name="LegendWin" type="HBoxContainer" parent="MarginContainer/VBoxContainer/HBoxContainer/MarginContainer/StatisticsContainer/HBoxContainer/StatisticWin" unique_id=742616523]
+layout_mode = 2
+theme_override_constants/separation = 10
+
+[node name="Panel" type="Panel" parent="MarginContainer/VBoxContainer/HBoxContainer/MarginContainer/StatisticsContainer/HBoxContainer/StatisticWin/LegendWin" unique_id=347277809]
+custom_minimum_size = Vector2(20, 20)
+layout_mode = 2
+size_flags_vertical = 4
+theme_override_styles/panel = SubResource("StyleBoxFlat_63srb")
+
+[node name="Label" type="Label" parent="MarginContainer/VBoxContainer/HBoxContainer/MarginContainer/StatisticsContainer/HBoxContainer/StatisticWin/LegendWin" unique_id=251199673]
 layout_mode = 2
 theme = ExtResource("2_xldbt")
-theme_override_font_sizes/font_size = 30
 text = "STAT_LABEL_WINS"
-horizontal_alignment = 1
-vertical_alignment = 1
 
 [node name="StatisticDraw" type="VBoxContainer" parent="MarginContainer/VBoxContainer/HBoxContainer/MarginContainer/StatisticsContainer/HBoxContainer" unique_id=1536217365]
 layout_mode = 2
@@ -219,13 +176,20 @@ text = "87"
 horizontal_alignment = 1
 vertical_alignment = 1
 
-[node name="Label" type="Label" parent="MarginContainer/VBoxContainer/HBoxContainer/MarginContainer/StatisticsContainer/HBoxContainer/StatisticDraw" unique_id=35102974]
+[node name="LegendDraw" type="HBoxContainer" parent="MarginContainer/VBoxContainer/HBoxContainer/MarginContainer/StatisticsContainer/HBoxContainer/StatisticDraw" unique_id=1025223175]
+layout_mode = 2
+theme_override_constants/separation = 10
+
+[node name="Panel" type="Panel" parent="MarginContainer/VBoxContainer/HBoxContainer/MarginContainer/StatisticsContainer/HBoxContainer/StatisticDraw/LegendDraw" unique_id=1613858142]
+custom_minimum_size = Vector2(20, 20)
+layout_mode = 2
+size_flags_vertical = 4
+theme_override_styles/panel = SubResource("StyleBoxFlat_3o5mh")
+
+[node name="Label" type="Label" parent="MarginContainer/VBoxContainer/HBoxContainer/MarginContainer/StatisticsContainer/HBoxContainer/StatisticDraw/LegendDraw" unique_id=1486396656]
 layout_mode = 2
 theme = ExtResource("2_xldbt")
-theme_override_font_sizes/font_size = 30
 text = "STAT_LABEL_DRAWS"
-horizontal_alignment = 1
-vertical_alignment = 1
 
 [node name="StatisticLoss" type="VBoxContainer" parent="MarginContainer/VBoxContainer/HBoxContainer/MarginContainer/StatisticsContainer/HBoxContainer" unique_id=480614976]
 layout_mode = 2
@@ -240,13 +204,20 @@ text = "49"
 horizontal_alignment = 1
 vertical_alignment = 1
 
-[node name="Label" type="Label" parent="MarginContainer/VBoxContainer/HBoxContainer/MarginContainer/StatisticsContainer/HBoxContainer/StatisticLoss" unique_id=1308697193]
+[node name="LegendLoss" type="HBoxContainer" parent="MarginContainer/VBoxContainer/HBoxContainer/MarginContainer/StatisticsContainer/HBoxContainer/StatisticLoss" unique_id=456847489]
+layout_mode = 2
+theme_override_constants/separation = 10
+
+[node name="Panel" type="Panel" parent="MarginContainer/VBoxContainer/HBoxContainer/MarginContainer/StatisticsContainer/HBoxContainer/StatisticLoss/LegendLoss" unique_id=1782026031]
+custom_minimum_size = Vector2(20, 20)
+layout_mode = 2
+size_flags_vertical = 4
+theme_override_styles/panel = SubResource("StyleBoxFlat_ccxb8")
+
+[node name="Label" type="Label" parent="MarginContainer/VBoxContainer/HBoxContainer/MarginContainer/StatisticsContainer/HBoxContainer/StatisticLoss/LegendLoss" unique_id=810292626]
 layout_mode = 2
 theme = ExtResource("2_xldbt")
-theme_override_font_sizes/font_size = 30
 text = "STAT_LABEL_LOSSES"
-horizontal_alignment = 1
-vertical_alignment = 1
 
 [node name="Panel" type="Panel" parent="MarginContainer/VBoxContainer" unique_id=1993193982]
 layout_mode = 2

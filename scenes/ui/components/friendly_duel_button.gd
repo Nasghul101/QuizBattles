@@ -1,5 +1,5 @@
 # uid://264or4hvbnj7
-extends TextureButton
+extends Button
 
 @onready var player_points: Label = %PlayerPoints
 @onready var opponent_points: Label = %OpponentPoints
