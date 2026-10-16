@@ -39,7 +39,7 @@ window/handheld/orientation=1
 
 [editor_plugins]
 
-enabled=PackedStringArray("res://addons/font_auto_size_labels/plugin.cfg")
+enabled=PackedStringArray("res://addons/GodotFirebase-main/addons/godot-firebase/plugin.cfg", "res://addons/font_auto_size_labels/plugin.cfg")
 
 [gui]
 

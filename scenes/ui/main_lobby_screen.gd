@@ -20,6 +20,7 @@ const NOTIFICATION_COMPONENT = preload("res://scenes/ui/components/notification_
 @onready var notifications_popup: MarginContainer = %NotificationsPopUp
 @onready var notification_list_container: VBoxContainer = %NotificationListContainer
 @onready var no_notifications_label: Label = %NoNotificationsLabel
+@onready var page_name: Label = %PageName
 
 ## Current page tracking
 var current_page: int = 0
@@ -37,6 +38,9 @@ func _ready() -> void:
     
     # Update notification indicator
     _update_notification_indicator()
+
+    # Set initial page name
+    _update_page_name(current_page)
     
     await page_clip_container.initialized
     current_page = Utils.last_lobby_page
@@ -50,6 +54,7 @@ func _on_page_clip_container_swipe_requested(target_page: int) -> void:
     Utils.last_lobby_page = current_page
     page_clip_container.current_page = current_page
     _update_page_indicator(current_page)
+    _update_page_name(current_page)
 
 
 ## Update bottom navigation buttons to reflect current page
@@ -64,9 +69,23 @@ func _on_navigation_bar_page_changed(index: int) -> void:
     page_clip_container.current_page = current_page
     page_clip_container.animate_to_page(current_page)
     _update_page_indicator(current_page)
+    _update_page_name(current_page)
 
 
 ## Handle AccountButton press with conditional navigation based on login state
+func _update_page_name(page_index: int) -> void:
+    match page_index:
+        0:
+            page_name.text = tr("MAIN_LOBBY_PAGE_NAME_DUEL")
+        1:
+            page_name.text = tr("MAIN_LOBBY_PAGE_NAME_SHOP")
+        2:
+            page_name.text = tr("MAIN_LOBBY_PAGE_NAME_FRIENDLY_BATTLE")
+        3:
+            page_name.text = tr("MAIN_LOBBY_PAGE_NAME_SOCIALS")
+        _:
+            page_name.text = ""
+
 func _on_account_button_pressed() -> void:
     if UserDatabase.is_signed_in():
         # User is logged in - navigate to account management

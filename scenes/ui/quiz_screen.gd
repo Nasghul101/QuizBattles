@@ -40,6 +40,9 @@ signal next_question_requested
 @onready var next_question_button: Button = %NextQuestionButton
 @onready var round_number: Label = %RoundNumber
 @onready var time_limit_bar: ProgressBar = %TimeLimitBar
+@onready var category_panel: TextureRect = %CategoryPanel
+@onready var question_panel: TextureRect = %QuestionPanel
+
 
 # Internal state
 var correct_answer_text: String = ""
@@ -190,8 +193,17 @@ func _apply_category_color(category: String) -> void:
     var color: Color = Utils.resolve_category_color(category)
     category_label.set_accent_color(color)
     for button: TextureButton in answer_buttons:
-        button.set_pulsating_color(color)
+        set_pulsating_color(button, color)
+    set_pulsating_color(category_panel, color)
+    set_pulsating_color(question_panel, color)
 
+## Set the pulsating color on the shader material
+func set_pulsating_color(object: Control,color: Color) -> void:
+    var mat := object.material as ShaderMaterial
+    if mat == null:
+        push_warning("answer_button: material is not a ShaderMaterial; set_pulsating_color is a no-op")
+        return
+    mat.set_shader_parameter("pulsating_color", color)
 
 ## Reveal the correct/wrong state of all answer buttons
 func _reveal_all_buttons() -> void:

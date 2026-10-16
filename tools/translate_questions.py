@@ -17,8 +17,8 @@ from urllib.request import Request, urlopen
 # Change these values for another translation run.
 INPUT_FILE = Path(__file__).resolve().parent.parent / "data" / "questions_en.json"
 INPUT_LANGUAGE = "en"
-OUTPUT_LANGUAGE = "de"
-OUTPUT_FILE = Path(__file__).resolve().parent.parent / "data" / "questions_de.json"
+OUTPUT_LANGUAGE = "zh"
+OUTPUT_FILE = Path(__file__).resolve().parent.parent / "data" / "questions_zh.json"
 
 # LibreTranslate installation and server settings.
 LIBRETRANSLATE_EXECUTABLE = Path(
@@ -166,6 +166,14 @@ def translate_texts(texts: list[str]) -> dict[str, str]:
                 translations.update(zip(batch, translated))
                 print(f"Translated batch {batch_index}/{total_batches} ({len(batch)} texts)")
                 break
+            except HTTPError as error:
+                response_body = error.read().decode("utf-8", errors="replace")
+                details = f"HTTP {error.code}: {response_body or error.reason}"
+                if attempt == MAX_RETRIES:
+                    raise TranslationError(
+                        f"Failed to translate batch {batch_index} after {MAX_RETRIES} attempts: {details}"
+                    ) from error
+                print(f"Batch {batch_index} failed ({details}); retrying ({attempt}/{MAX_RETRIES})...")
             except (HTTPError, URLError, TimeoutError, OSError, json.JSONDecodeError, TranslationError) as error:
                 if attempt == MAX_RETRIES:
                     raise TranslationError(

@@ -44,7 +44,10 @@ SHOP_PAGE_COMING_SOON_LABEL,Shop (Coming Soon),Shop (bald verfügbar)
 SOCIALS_PAGE_ADD_FRIEND_HEADER,Add new friend,Neuen Freund hinzufügen
 SOCIALS_PAGE_ADD_FRIEND_NAME_PLACEHOLDER,Input name,Namen eingeben
 SOCIALS_PAGE_SEND_REQUEST_BUTTON,Send friend request,Freund hinzufügen
-MAIN_LOBBY_PAGE_NAME_PLACEHOLDER,Page Name,Seitenname
+MAIN_LOBBY_PAGE_NAME_DUEL,Duel,Duell
+MAIN_LOBBY_PAGE_NAME_SHOP,Shop,Shop
+MAIN_LOBBY_PAGE_NAME_FRIENDLY_BATTLE,Active Games,Aktive Spiele
+MAIN_LOBBY_PAGE_NAME_SOCIALS,Friends,Freunde
 MAIN_LOBBY_NOTIFICATIONS_HEADER,Notifications,Benachrichtigungen
 MAIN_LOBBY_MARK_ALL_READ_BUTTON,Mark all as read,Alle als gelesen markieren
 MAIN_LOBBY_NO_NOTIFICATIONS_LABEL,No notifications,Keine Benachrichtigungen
