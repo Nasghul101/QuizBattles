@@ -132,22 +132,34 @@ columns = 2
 [node name="AnswerButton1" parent="PanelContainer/MarginContainer/VBoxContainer/MarginContainer/AnswersGrid" unique_id=2092759514 instance=ExtResource("1_h8w4e")]
 custom_minimum_size = Vector2(300, 120)
 layout_mode = 2
+correct_color = null
+wrong_color = null
+animation_duration = null
 
 [node name="AnswerButton2" parent="PanelContainer/MarginContainer/VBoxContainer/MarginContainer/AnswersGrid" unique_id=1319528786 instance=ExtResource("1_h8w4e")]
 custom_minimum_size = Vector2(300, 120)
 layout_mode = 2
 flip_h = true
+correct_color = null
+wrong_color = null
+animation_duration = null
 
 [node name="AnswerButton3" parent="PanelContainer/MarginContainer/VBoxContainer/MarginContainer/AnswersGrid" unique_id=811083456 instance=ExtResource("1_h8w4e")]
 custom_minimum_size = Vector2(300, 120)
 layout_mode = 2
 texture_normal = ExtResource("4_yj114")
+correct_color = null
+wrong_color = null
+animation_duration = null
 
 [node name="AnswerButton4" parent="PanelContainer/MarginContainer/VBoxContainer/MarginContainer/AnswersGrid" unique_id=79033506 instance=ExtResource("1_h8w4e")]
 custom_minimum_size = Vector2(300, 120)
 layout_mode = 2
 texture_normal = ExtResource("4_yj114")
 flip_h = true
+correct_color = null
+wrong_color = null
+animation_duration = null
 
 [node name="BackButton" type="TextureButton" parent="PanelContainer/MarginContainer/VBoxContainer" unique_id=577944624]
 self_modulate = Color(0.19215687, 0, 0.24313726, 1)

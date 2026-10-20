@@ -16,9 +16,8 @@ signal answer_selected(index: int)
 
 # Exported color properties for customization
 var neutral_color: Color
-@export var correct_color: Color = Color(0.2, 0.8, 0.2, 1.0)  # Green
-@export var wrong_color: Color = Color(0.8, 0.2, 0.2, 1.0)    # Red
-@export var selected_outline_color: Color = Color(1.0, 1.0, 1.0, 1.0)  # White
+var correct_color: Color
+var wrong_color: Color
 @export var animation_duration: float = 0.3
 
 # Internal state
@@ -36,6 +35,14 @@ var answer_text: String:
 func _ready() -> void:
     # Set initial neutral color tint
     neutral_color = get_self_modulate()
+    
+    # The scene's material is shared across instances; make it per-button
+    if material:
+        material = material.duplicate()
+    
+    var color_codes: Dictionary = Utils.get_color_codes().get("miscellaneous", {})
+    correct_color = Color(color_codes.get("Right answer"))
+    wrong_color = Color(color_codes.get("Wrong answer"))
     
     # Connect button press to internal handler
     pressed.connect(_on_button_pressed)
@@ -88,3 +95,13 @@ func _animate_modulate(target_color: Color) -> void:
     _tween.set_ease(Tween.EASE_OUT)
     _tween.set_trans(Tween.TRANS_CUBIC)
     _tween.tween_property(self, "self_modulate", target_color, animation_duration)
+
+func set_shader_outline_color(color: Color) -> void:
+    var mat := material as ShaderMaterial
+    if mat:
+        mat.set_shader_parameter("outline_color", color)
+
+func set_pulsating_enabled(enabled: bool) -> void:
+    var mat := material as ShaderMaterial
+    if mat:
+        mat.set_shader_parameter("enable_pulsating", enabled)

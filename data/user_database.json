@@ -667,19 +667,19 @@
                 "questions": 5,
                 "rounds": 3
             },
-            "created_at": 1790217688.271,
+            "created_at": 1792480875.354,
             "current_round": 1,
-            "current_turn": "robin",
+            "current_turn": "linus",
             "dismissed_by": [],
             "inviter": "robin",
-            "match_id": "match_1790217688",
+            "match_id": "match_1792480875",
             "players": [
                 "robin",
 				"linus"
             ],
             "rounds_data": [
                 {
-                    "category": "Science",
+                    "category": "Sports",
                     "category_chooser": "robin",
                     "player_answers": {
                         "linus": {
@@ -687,69 +687,150 @@
                             "results": []
                         },
                         "robin": {
-                            "answered": false,
-                            "results": []
+                            "answered": true,
+                            "results": [
+                                {
+                                    "player_answer": "New York",
+                                    "question_data": {
+                                        "category": "Sports",
+                                        "correct_answer": "Quebec-Stadt",
+                                        "difficulty": "easy",
+                                        "incorrect_answers": [
+                                            "Houston",
+                                            "Montreal",
+											"New York"
+                                        ],
+                                        "question": "Aus welcher Stadt stammte das ehemalige NHL-Team \"The Nordiques\"?",
+                                        "type": "multiple"
+                                    },
+                                    "was_correct": false
+                                },
+                                {
+                                    "player_answer": "2:01:41",
+                                    "question_data": {
+                                        "category": "Sports",
+                                        "correct_answer": "2:01:41",
+                                        "difficulty": "hard",
+                                        "incorrect_answers": [
+                                            "2:01:12",
+                                            "2:01:45",
+											"2:01:51"
+                                        ],
+                                        "question": "Welches ist Kenesisa Bekele persönlich am besten im Marathon?",
+                                        "type": "multiple"
+                                    },
+                                    "was_correct": true
+                                },
+                                {
+                                    "player_answer": "London",
+                                    "question_data": {
+                                        "category": "Sports",
+                                        "correct_answer": "London",
+                                        "difficulty": "hard",
+                                        "incorrect_answers": [
+                                            "Paris",
+                                            "Athen",
+											"Rom"
+                                        ],
+                                        "question": "Welche dieser europäischen Städte war die erste, die dreimal die modernen Olympischen Sommerspiele ausrichtete?",
+                                        "type": "multiple"
+                                    },
+                                    "was_correct": true
+                                },
+                                {
+                                    "player_answer": "Kart",
+                                    "question_data": {
+                                        "category": "Sports",
+                                        "correct_answer": "Golf",
+                                        "difficulty": "medium",
+                                        "incorrect_answers": [
+                                            "Sport",
+                                            "Kart",
+											"Tennis"
+                                        ],
+                                        "question": "Füllen Sie die Lücke aus: Die Mario-Serie hat ein Spin-off-Spiel, in dem Charaktere in verschiedenen Sportarten konkurrieren, bekannt als Mario____.",
+                                        "type": "multiple"
+                                    },
+                                    "was_correct": false
+                                },
+                                {
+                                    "player_answer": "Bill Tilden",
+                                    "question_data": {
+                                        "category": "Sports",
+                                        "correct_answer": "Roger Federer",
+                                        "difficulty": "easy",
+                                        "incorrect_answers": [
+                                            "Bill Tilden",
+                                            "Boris Becker",
+											"Pete Sampras"
+                                        ],
+                                        "question": "Wer wird oft \"der Maestro\" in der Männer-Tennis-Strecke genannt?",
+                                        "type": "multiple"
+                                    },
+                                    "was_correct": false
+                                }
+                            ]
                         }
                     },
                     "questions": [
                         {
-                            "category": "Science",
-                            "correct_answer": "Kohlendioxid",
+                            "category": "Sports",
+                            "correct_answer": "Quebec-Stadt",
                             "difficulty": "easy",
                             "incorrect_answers": [
-                                "Stickstoff",
-                                "Ammoniak",
-								"Sauerstoff"
+                                "Houston",
+                                "Montreal",
+								"New York"
                             ],
-                            "question": "Trockeneis ist die feste Form welcher Substanz?",
+                            "question": "Aus welcher Stadt stammte das ehemalige NHL-Team \"The Nordiques\"?",
                             "type": "multiple"
                         },
                         {
-                            "category": "Science",
-                            "correct_answer": "4,5 Milliarden Jahre",
-                            "difficulty": "medium",
-                            "incorrect_answers": [
-                                "3,5 Milliarden Jahre",
-                                "2,5 Milliarden Jahre",
-								"5,5 Milliarden Jahre"
-                            ],
-                            "question": "Wie alt ist die Erde?",
-                            "type": "multiple"
-                        },
-                        {
-                            "category": "Science",
-                            "correct_answer": "Poincaré-Vermutung",
+                            "category": "Sports",
+                            "correct_answer": "2:01:41",
                             "difficulty": "hard",
                             "incorrect_answers": [
-                                "P vs. NP Problem",
-                                "Riemann-Hypothese",
-								"Fermatsche Vermutung"
+                                "2:01:12",
+                                "2:01:45",
+								"2:01:51"
                             ],
-                            "question": "Was ist das einzige Millennium-Preis-Problem, das bisher gelöst wurde?",
+                            "question": "Welches ist Kenesisa Bekele persönlich am besten im Marathon?",
                             "type": "multiple"
                         },
                         {
-                            "category": "Science",
-                            "correct_answer": "A' + B'",
+                            "category": "Sports",
+                            "correct_answer": "London",
                             "difficulty": "hard",
                             "incorrect_answers": [
-                                "A'B + B'A",
-                                "A'B'",
-								"AB' + AB'"
+                                "Paris",
+                                "Athen",
+								"Rom"
                             ],
-                            "question": "Nach dem DeMorgan-Theorem ist der Boolesche Ausdruck (AB) äquivalent zu:",
+                            "question": "Welche dieser europäischen Städte war die erste, die dreimal die modernen Olympischen Sommerspiele ausrichtete?",
                             "type": "multiple"
                         },
                         {
-                            "category": "Science",
-                            "correct_answer": "84 Erdenjahre",
+                            "category": "Sports",
+                            "correct_answer": "Golf",
                             "difficulty": "medium",
                             "incorrect_answers": [
-                                "47 Erdjahre",
-                                "62 Erdjahre",
-								"109 Erdenjahre"
+                                "Sport",
+                                "Kart",
+								"Tennis"
                             ],
-                            "question": "Wie lange dauert ein Jahr auf Uranus?",
+                            "question": "Füllen Sie die Lücke aus: Die Mario-Serie hat ein Spin-off-Spiel, in dem Charaktere in verschiedenen Sportarten konkurrieren, bekannt als Mario____.",
+                            "type": "multiple"
+                        },
+                        {
+                            "category": "Sports",
+                            "correct_answer": "Roger Federer",
+                            "difficulty": "easy",
+                            "incorrect_answers": [
+                                "Bill Tilden",
+                                "Boris Becker",
+								"Pete Sampras"
+                            ],
+                            "question": "Wer wird oft \"der Maestro\" in der Männer-Tennis-Strecke genannt?",
                             "type": "multiple"
                         }
                     ],

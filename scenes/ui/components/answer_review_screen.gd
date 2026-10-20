@@ -27,6 +27,7 @@ extends Control
 # Answer button references
 var answer_buttons: Array = []
 
+var color_codes: Dictionary = Utils.get_color_codes().get("miscellaneous", {})
 
 func _ready() -> void:
     # Get all answer button children from the grid
@@ -74,10 +75,10 @@ func load_review_data(question_data: Dictionary) -> void:
         
         # Disable interaction
         button.disabled = true
-        
-        # Disable pulsating animation for static review display
+          
+        #disable pulsating
         button.set_pulsating_enabled(false)
-        
+
         # Set color based on correctness
         if answer_text == correct_answer:
             button.reveal_correct()
@@ -86,7 +87,10 @@ func load_review_data(question_data: Dictionary) -> void:
         
         # Add white shader outline if this was the player's choice
         if answer_text == player_answer:
-            button.set_shader_outline_color(Color.WHITE)
+            button.set_shader_outline_color(Color(color_codes.get("Notification")))
+        else:
+            button.set_shader_outline_color(Color(color_codes.get("App white")))
+            
 
 
 ## Show the review screen as a modal overlay
