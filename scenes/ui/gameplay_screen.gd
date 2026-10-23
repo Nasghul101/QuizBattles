@@ -21,6 +21,7 @@ var num_questions: int = 0
 var match_id: String = ""
 var match_data: Dictionary = {}
 var opponent_username: String = ""
+var _initialization_failed: bool = false
 
 # State variables
 var current_round: int = 0  # 0 = idle, 1+ = active round
@@ -49,6 +50,9 @@ var quiz_screen_scene: PackedScene = preload("res://scenes/ui/quiz_screen.tscn")
 
 
 func _ready() -> void:
+    if _initialization_failed:
+        Utils.navigate_to_scene("main_lobby")
+        return
     
     # Connect category popup signal
     category_popup.category_selected.connect(_on_category_selected)
@@ -118,10 +122,10 @@ func initialize(params: Dictionary) -> void:
     match_id = params["match_id"]
     
     # Load match data
-    match_data = UserDatabase.get_match(match_id)
+    match_data = await UserDatabase.get_match(match_id)
     if match_data.is_empty():
         push_error("Match not found: %s" % match_id)
-        TransitionManager.change_scene("res://scenes/ui/main_lobby_screen.tscn")
+        _initialization_failed = true
         return
     
     # Set configuration from match
@@ -204,7 +208,11 @@ func _on_questions_ready(questions: Array) -> void:
     var current_round_idx = match_data.current_round - 1
     match_data.rounds_data[current_round_idx].category = selected_category
     match_data.rounds_data[current_round_idx].questions = questions.duplicate(true)
-    UserDatabase.update_match(match_data)
+    var saved: Dictionary = await UserDatabase.update_match(match_data)
+    if not saved.get("success", false):
+        push_error("Could not save selected questions: %s" % saved.get("message", "Unknown error"))
+        play_button.disabled = false
+        return
     
     # Hide category popup
     category_popup.hide_popup()
@@ -245,7 +253,7 @@ func _on_next_question_requested() -> void:
         quiz_screen.load_question(fetched_questions[current_question_index])
     else:
         # All questions answered, complete the round
-        _handle_round_completion()
+        await _handle_round_completion()
         
 
 ## Handle completion of current round by current player
@@ -277,11 +285,17 @@ func _handle_round_completion() -> void:
         
         else:
             # Match complete - update statistics before finishing
-            UserDatabase.update_player_statistics(match_data)
+            var statistics: Dictionary = await UserDatabase.update_player_statistics(match_data)
+            if not statistics.get("success", false):
+                push_error("Could not update match statistics: %s" % statistics.get("message", "Unknown error"))
+                return
             
             # Set status to finished and show popup
             match_data.status = "finished"
-            UserDatabase.update_match(match_data)
+            var finished: Dictionary = await UserDatabase.update_match(match_data)
+            if not finished.get("success", false):
+                push_error("Could not finish match: %s" % finished.get("message", "Unknown error"))
+                return
             _update_score_labels()
             _show_finish_popup()
             return
@@ -291,7 +305,10 @@ func _handle_round_completion() -> void:
         match_data.current_turn = opponent_username
     
     # Save match state
-    UserDatabase.update_match(match_data)
+    var saved: Dictionary = await UserDatabase.update_match(match_data)
+    if not saved.get("success", false):
+        push_error("Could not save match progress: %s" % saved.get("message", "Unknown error"))
+        return
     
     # Update play button state
     _update_play_button_state()
@@ -427,9 +444,14 @@ func _on_finish_game_button_pressed() -> void:
     
     if all_dismissed:
         # Both players dismissed - delete the match
-        UserDatabase.delete_match(match_id)
+        if not await UserDatabase.delete_match(match_id):
+            push_error("Could not delete completed match %s" % match_id)
+            return
     else:
         # Only this player dismissed - update match
-        UserDatabase.update_match(match_data)
+        var saved: Dictionary = await UserDatabase.update_match(match_data)
+        if not saved.get("success", false):
+            push_error("Could not save match dismissal: %s" % saved.get("message", "Unknown error"))
+            return
     
     TransitionManager.change_scene("res://scenes/ui/main_lobby_screen.tscn")

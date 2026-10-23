@@ -1,0 +1,21 @@
+{
+  "name": "quizbattles-firebase",
+  "private": true,
+  "scripts": {
+    "emulators": "firebase emulators:start --project demo-quizbattles",
+    "test:rules": "firebase emulators:exec --project demo-quizbattles --only auth,firestore \"npm run test:rules:run\"",
+    "test:rules:run": "node tests/firebase/firestore_rules.test.mjs",
+    "test:functions": "firebase emulators:exec --project demo-quizbattles --only auth,firestore,functions \"node --test tests/firebase/match_statistics_function.test.mjs\"",
+    "test:auth-firestore": "firebase emulators:exec --project demo-quizbattles --only auth,firestore \"node tests/firebase/run_auth_firestore_test.mjs\"",
+    "test:user-database": "firebase emulators:exec --project demo-quizbattles --only auth,firestore,functions \"node tests/firebase/run_auth_firestore_test.mjs tests/user_database_firebase_test.gd\"",
+    "test:local-cache": "firebase emulators:exec --project demo-quizbattles --only auth,firestore \"node tests/firebase/run_auth_firestore_test.mjs tests/local_cache_settings_test.gd\"",
+    "test:startup": "firebase emulators:exec --project demo-quizbattles --only auth,firestore,functions \"node tests/firebase/run_godot_project.mjs\"",
+    "test:runtime-mode": "node tests/firebase/run_auth_firestore_test.mjs tests/firebase_runtime_mode_test.gd"
+  },
+  "devDependencies": {
+    "@firebase/rules-unit-testing": "^6.0.0",
+    "firebase": "^13.0.0",
+    "firebase-admin": "^13.10.0",
+    "firebase-tools": "^15.34.0"
+  }
+}

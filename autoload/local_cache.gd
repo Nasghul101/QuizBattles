@@ -2,26 +2,22 @@ extends Node
 
 ## Local Device Cache Service
 ##
-## Stores per-device state that should persist across launches: the last
-## remembered login (for auto sign-in) and in-game settings. Unlike
-## UserDatabase (which simulates a shared backend of all accounts), this
-## autoload only ever concerns itself with this specific device.
+## Stores per-device settings that should persist across launches and restores the
+## Firebase Auth session of the previous launch. Unlike UserDatabase (the shared
+## Firebase backend of all accounts), this autoload only concerns this device.
 ##
-## Storage is a single JSON dictionary written to user:// with Godot's
-## built-in encrypted FileAccess API. The passphrase is embedded in the
-## binary, so this only obfuscates the file from casual inspection - it is
-## not real secret storage, matching UserDatabase's temporary, pre-Firebase
-## security posture.
+## Settings are a single JSON dictionary written to user:// with Godot's built-in
+## encrypted FileAccess API (obfuscation only, not secret storage). Login sessions
+## are stored by the GodotFirebase plugin in its own encrypted auth file
+## (user://user.auth); no password is ever stored on the device.
 ##
-## IMPORTANT: This autoload must be registered after UserDatabase in
-## project.godot so UserDatabase has already loaded its user records before
-## the automatic sign-in attempt below runs.
+## IMPORTANT: This autoload must be registered after Firebase and UserDatabase in
+## project.godot so both are ready before the session restore below runs.
 ##
-## This cache is permanently device-local: it is never synced to a server
-## or database and is out of scope for the future Firebase migration. It is
-## not shipped with the app - the file only ever exists once created at
-## runtime on the player's device. On a new device, players start with no
-## remembered login and default settings by design.
+## This cache is permanently device-local: it is never synced to a server.
+
+## Emitted once the startup session restore has finished (success or not)
+signal session_restore_finished(success: bool)
 
 ## Path to the encrypted cache file
 const DATABASE_PATH := "user://local_cache.dat"
@@ -41,14 +37,16 @@ const DEFAULT_SETTINGS := {
 
 ## In-memory cache state
 var data: Dictionary = {
-    "remembered_login": {},
     "settings": DEFAULT_SETTINGS.duplicate()
 }
+
+## True once the startup session restore has finished
+var session_restore_done: bool = false
 
 
 func _ready() -> void:
     _load_cache()
-    _attempt_auto_sign_in()
+    _restore_session()
 
 
 ## Load the cache file from disk, or create a fresh default one if missing/corrupt.
@@ -78,15 +76,17 @@ func _load_cache() -> void:
         return
 
     var loaded: Dictionary = json.data
-    data.remembered_login = loaded.get("remembered_login", {})
     data.settings = DEFAULT_SETTINGS.duplicate()
     data.settings.merge(loaded.get("settings", {}), true)
+
+    # Discard credentials remembered by earlier versions; they are not migrated to Firebase.
+    if loaded.has("remembered_login"):
+        _save_cache()
 
 
 ## Reset in-memory state to defaults and persist it, overwriting a corrupt file.
 func _reset_to_defaults() -> void:
     data = {
-        "remembered_login": {},
         "settings": DEFAULT_SETTINGS.duplicate()
     }
     _save_cache()
@@ -103,43 +103,30 @@ func _save_cache() -> void:
     file.close()
 
 
-## Attempt to silently sign in the remembered user, if any, via UserDatabase.
-##
-## Reuses UserDatabase.sign_in() so a password change since the credentials
-## were cached naturally invalidates auto sign-in (the stored password will
-## no longer match the account's current password hash).
-func _attempt_auto_sign_in() -> void:
-    var remembered: Dictionary = data.remembered_login
-    if remembered.is_empty():
-        return
-
-    var username: String = remembered.get("username", "")
-    var password: String = remembered.get("password", "")
-
-    var result: Dictionary = UserDatabase.sign_in(username, password)
+## Silently restore the Firebase Auth session of the previous launch, if any.
+func _restore_session() -> void:
+    var result: Dictionary = await UserDatabase.restore_session()
     if result.success:
-        print("LocalCache: Auto signed in as %s" % username)
-    else:
-        print("LocalCache: Remembered login is no longer valid, forgetting it (%s)" % result.get("error_code", ""))
-        forget_login()
+        print("LocalCache: Restored session for %s" % UserDatabase.current_user.username)
+    elif result.get("error_code") != "NO_SESSION":
+        push_warning("LocalCache: Stored session could not be restored (%s): %s" % [
+            result.get("error_code", "UNKNOWN"),
+            result.get("message", "No error details returned")
+        ])
+        forget_session()
+    session_restore_done = true
+    session_restore_finished.emit(result.success)
 
 
-## Remember login credentials for auto sign-in on future launches.
-##
-## @param username: Username that was just signed in/registered
-## @param password: Password used for that sign-in/registration
-func remember_login(username: String, password: String) -> void:
-    data.remembered_login = {
-        "username": username,
-        "password": password
-    }
-    _save_cache()
+## Remember the current Firebase session for auto sign-in on future launches.
+func remember_session() -> bool:
+    return UserDatabase.remember_session()
 
 
-## Clear any remembered login credentials.
-func forget_login() -> void:
-    data.remembered_login = {}
-    _save_cache()
+## Forget the stored Firebase session.
+func forget_session() -> void:
+    if FileAccess.file_exists("user://user.auth"):
+        Firebase.Auth.remove_auth()
 
 
 ## Get a settings value, falling back to the provided default if not set.

@@ -180,16 +180,20 @@ func _set_config(config_json : Dictionary) -> void:
 
 func _check_emulating() -> void :
 	## Check emulating
+	_base_url = ""
+	_refresh_request_base_url = ""
 	if not Firebase.emulating:
 		_base_url = "https://identitytoolkit.googleapis.com/{version}/".format({ version = _API_VERSION })
 		_refresh_request_base_url = "https://securetoken.googleapis.com"
 	else:
-		var port : String = _config.emulators.ports.authentication
-		if port == "":
+		var emulator_config: Dictionary = _config.get("emulators", {})
+		var ports: Dictionary = emulator_config.get("ports", {})
+		var port := str(ports.get("authentication", ""))
+		if not port.is_valid_int() or int(port) < 1 or int(port) > 65535:
 			Firebase._printerr("You are in 'emulated' mode, but the port for Authentication has not been configured.")
 		else:
-			_base_url = "http://localhost:{port}/identitytoolkit.googleapis.com/{version}/".format({ version = _API_VERSION ,port = port })
-			_refresh_request_base_url = "http://localhost:{port}/securetoken.googleapis.com".format({port = port})
+			_base_url = Firebase.get_emulator_url(port, "identitytoolkit.googleapis.com/{version}/".format({ version = _API_VERSION }))
+			_refresh_request_base_url = Firebase.get_emulator_url(port, "securetoken.googleapis.com")
 
 
 # Function is used to check if the auth script is ready to process a request. Returns true if it is not currently processing

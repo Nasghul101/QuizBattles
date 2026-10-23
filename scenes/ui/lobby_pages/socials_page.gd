@@ -43,7 +43,7 @@ func _ready() -> void:
     send_friend_request_button.disabled = true
     
     # Populate friends list on startup
-    _populate_friends_list()
+    await _populate_friends_list()
 
 
 ## Populate the friends list with friend display components showing statistics
@@ -58,13 +58,15 @@ func _populate_friends_list() -> void:
         return
     
     var current_username: String = UserDatabase.current_user.username
-    var friends_list: Array = UserDatabase.get_friends(current_username)
-    var current_user_data: Dictionary = UserDatabase.get_user_data_for_display(current_username)
+    var friends_list: Array = await UserDatabase.get_friends(current_username)
+    var current_user_data: Dictionary = await UserDatabase.get_user_data_for_display(current_username)
+    if not is_inside_tree():
+        return
     
     # Create a display component for each friend
     for friend: Dictionary in friends_list:
         var friend_username: String = friend.username
-        var friend_data: Dictionary = UserDatabase.get_user_data_for_display(friend_username)
+        var friend_data: Dictionary = await UserDatabase.get_user_data_for_display(friend_username)
         
         # Skip if friend data couldn't be loaded
         if friend_data.is_empty():
@@ -95,7 +97,7 @@ func _populate_friends_list() -> void:
 
 
 func _on_friend_display_pressed(friend_username: String) -> void:
-    account_popup.open_for_friend(friend_username)
+    await account_popup.open_for_friend(friend_username)
 
 
 ## Get top 3 categories sorted by play count.
@@ -168,9 +170,9 @@ func _get_category_color(category_name: String, default_color: Color) -> Color:
 
 ## Handle friendship changes (friend request accepted).
 ## Repopulates the friend list when a friend request is accepted.
-func _on_friendship_changed(_notification_id: String, action: String) -> void:
+func _on_friendship_changed(_notification_data: Dictionary, action: String) -> void:
     if action == "accept":
-        _populate_friends_list()
+        await _populate_friends_list()
 
 
 ## Handle name input text changed for search-as-you-type functionality.
@@ -192,7 +194,9 @@ func _on_name_input_text_changed() -> void:
         return
     
     # Search for users
-    var results: Array = UserDatabase.search_users_by_username(query)
+    var results: Array = await UserDatabase.search_users_by_username(query)
+    if not is_inside_tree() or name_input.text.strip_edges() != query:
+        return
     
     # Create a button for each result
     for user_data: Dictionary in results:
@@ -278,10 +282,14 @@ func _on_send_friend_request_button_pressed() -> void:
         }
     }
     
-    # Emit notification via GlobalSignalBus
-    GlobalSignalBus.notification_received.emit(notification_data)
-    
-    # Provide user feedback
+    var result: Dictionary = await UserDatabase.add_notification(selected_username, notification_data)
+    if not result.get("success", false):
+        push_error("Could not send friend request (%s): %s" % [
+            result.get("error_code", "UNKNOWN"),
+            result.get("message", "No error details returned")
+        ])
+        return
+
     print("Friend request sent to %s" % selected_username)
     
     # Clear selection and disable button

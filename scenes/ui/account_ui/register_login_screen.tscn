@@ -113,13 +113,13 @@ text = "REGISTER_LOGIN_HEADER"
 horizontal_alignment = 1
 vertical_alignment = 1
 
-[node name="UsernameInput" type="TextEdit" parent="MarginContainer/VBoxContainer" unique_id=225954471]
+[node name="EmailInput" type="TextEdit" parent="MarginContainer/VBoxContainer" unique_id=225954471]
 unique_name_in_owner = true
 custom_minimum_size = Vector2(0, 80)
 layout_mode = 2
 theme_override_font_sizes/font_size = 50
 theme_override_styles/normal = SubResource("StyleBoxFlat_tbt7s")
-placeholder_text = "REGISTER_LOGIN_USERNAME_PLACEHOLDER"
+placeholder_text = "REGISTER_LOGIN_EMAIL_PLACEHOLDER"
 
 [node name="PasswordInput" type="TextEdit" parent="MarginContainer/VBoxContainer" unique_id=2102629611]
 unique_name_in_owner = true

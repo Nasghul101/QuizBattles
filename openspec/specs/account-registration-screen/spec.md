@@ -56,47 +56,47 @@ The system SHALL verify that password and password confirmation fields match whe
 ---
 
 ### Requirement: Validate Email Format on Submit
-The system SHALL verify email format using UserDatabase validation rules when CreateAccountButton is pressed.
+The system SHALL validate that the email field is non-empty and submit it to Firebase Authentication for provider validation when CreateAccountButton is pressed.
 
-**Rationale:** Ensure email addresses meet basic format requirements before storage.
+**Rationale:** Firebase Authentication is authoritative for email/password account creation.
+
+#### Scenario: Reject invalid email
+- **GIVEN** the email field is not accepted by Firebase Authentication
+- **WHEN** account creation is submitted
+- **THEN** no Firestore profile is created
+- **AND** the Auth error is logged and surfaced
 
 #### Scenario: Reject invalid email format
-**Given** the account registration screen has all fields filled  
-**And** EmailInput contains "notanemail"  
-**When** the user presses CreateAccountButton  
-**Then** no account is created  
-**And** an error message is logged to console with the UserDatabase error message
+- **GIVEN** the email field contains an invalid address
+- **WHEN** account creation is submitted
+- **THEN** Firebase Authentication rejects registration and no Firestore profile is created
+- **AND** the Auth error is logged and surfaced
+
+#### Scenario: Accept valid email
+- **GIVEN** Firebase Authentication accepts the email and all other validations pass
+- **WHEN** account creation is submitted
+- **THEN** profile creation proceeds
 
 #### Scenario: Accept valid email format
-**Given** the account registration screen has all fields filled  
-**And** EmailInput contains "player@example.com"  
-**And** all other validations pass  
-**When** the user presses CreateAccountButton  
-**Then** email validation succeeds and account creation proceeds
-
----
+- **GIVEN** the email field contains a valid address and other validations pass
+- **WHEN** account creation is submitted
+- **THEN** Firebase Authentication accepts the address and profile creation proceeds
 
 ### Requirement: Check Username Uniqueness on Submit
-The system SHALL check if the username already exists in UserDatabase when CreateAccountButton is pressed.
+The system SHALL check username availability against Firebase-backed username records when CreateAccountButton is pressed and SHALL enforce uniqueness when creating the profile.
 
-**Rationale:** Prevent duplicate usernames and maintain unique player identities.
+**Rationale:** Prevent duplicate player identities across devices and concurrent registrations.
 
 #### Scenario: Reject duplicate username
-**Given** a user already exists with username "Player123"  
-**And** the account registration screen has all fields filled with username "Player123"  
-**When** the user presses CreateAccountButton  
-**Then** no account is created  
-**And** an error message is logged to console: "Username already exists"  
-**And** the CreateAccountButton is disabled
+- **GIVEN** the username already exists in Firebase
+- **WHEN** account creation is submitted with that username
+- **THEN** no profile is created
+- **AND** the existing duplicate-username error and button recovery behavior are preserved
 
 #### Scenario: Accept unique username
-**Given** no user exists with username "NewPlayer"  
-**And** the account registration screen has all fields filled with username "NewPlayer"  
-**And** all other validations pass  
-**When** the user presses CreateAccountButton  
-**Then** username validation succeeds and account creation proceeds
-
----
+- **GIVEN** the username is not registered in Firebase
+- **WHEN** account creation is submitted and Firebase confirms the unique claim
+- **THEN** the username is associated with the new Auth account
 
 ### Requirement: Re-enable Button After Username Edit
 The system SHALL re-enable the CreateAccountButton when the NameInput field is edited after a duplicate username error.
@@ -119,39 +119,41 @@ The system SHALL re-enable the CreateAccountButton when the NameInput field is e
 ---
 
 ### Requirement: Create Account on Successful Validation
-The system SHALL call UserDatabase.create_user() with default avatar path and log the result when all validations pass, and SHALL remember the new user's login credentials in the local device cache after the automatic post-registration sign-in.
+The system SHALL create a Firebase Authentication account and its Firestore profile after validation succeeds, establish the authenticated session, and persist the Firebase Auth session through the plugin's encrypted auth-file support. It SHALL NOT store the password in LocalCache.
 
-**Rationale:** Complete the registration process with a default profile picture, provide feedback without interrupting gameplay, and let the device remember the newly created account for future launches.
+**Rationale:** Complete registration with a remotely persisted profile and preserve automatic sign-in without caching the user's password.
 
-**Changes from previous version:**
-- User records now include avatar_path field with default value
-- After the automatic post-registration sign-in succeeds, `LocalCache.remember_login(username, password)` is called with the exact credentials used to create the account
-
-**Cross-reference:** Uses `local-device-cache.remember_login()`.
+**Cross-reference:** Firebase session persistence is defined by `local-device-cache`.
 
 #### Scenario: Successful account creation with default avatar
-**Given** all input fields are valid  
-**And** username "NewPlayer" does not exist  
-**And** email "new@example.com" is valid format  
-**And** passwords match  
-**When** the user presses CreateAccountButton  
-**Then** UserDatabase.create_user() is called and returns user data including avatar_path  
-**And** the returned user data includes `avatar_path: "res://assets/profile_pictures/man_standard.png"`  
-**And** the complete user data is logged to console  
-**And** the user is automatically signed in with avatar_path in their session
+- **GIVEN** all input fields are valid, the username is available, and the passwords match
+- **WHEN** the user presses CreateAccountButton
+- **THEN** Firebase Authentication creates the account and Firestore creates a profile with the default avatar
+- **AND** the new user session includes the profile data
+- **AND** the account-management screen is shown only after profile creation succeeds
 
 #### Scenario: Avatar path persists after registration and sign-in
-**Given** a new user "Player123" successfully creates an account  
-**When** the automatic sign-in completes  
-**And** the screen transitions to Account Management  
-**Then** UserDatabase.get_current_user() includes the default avatar_path  
-**And** the avatar is available for display on the Account Management Screen
+- **GIVEN** a new account was registered with its default avatar
+- **WHEN** the profile is loaded after authentication
+- **THEN** the current user data includes the default avatar path from Firestore
+- **AND** the avatar is available on the account-management screen
+
+#### Scenario: New account is remembered without saving its password
+- **GIVEN** a new account was successfully created
+- **WHEN** registration completes
+- **THEN** the Firebase Auth session is saved for restoration
+- **AND** LocalCache does not store the email/password pair
 
 #### Scenario: New account is remembered for auto sign-in on future launches
-**Given** a new user "Player123" with password "password123" successfully creates an account  
-**When** the automatic post-registration sign-in succeeds  
-**Then** `LocalCache.remember_login("Player123", "password123")` is called  
-**And** the local device cache's `remembered_login` reflects the new account's credentials
+- **GIVEN** a new account was successfully created
+- **WHEN** registration completes
+- **THEN** the Firebase Auth session is saved for restoration without storing the password in LocalCache
+
+#### Scenario: Profile write fails
+- **GIVEN** Firebase Authentication creates an account but Firestore profile creation fails
+- **WHEN** registration completes
+- **THEN** registration reports failure and does not navigate as if successful
+- **AND** the backend error is logged and surfaced
 
 ### Requirement: Console-Only Error Feedback
 The system SHALL log all validation errors and success messages to console without displaying UI notifications.

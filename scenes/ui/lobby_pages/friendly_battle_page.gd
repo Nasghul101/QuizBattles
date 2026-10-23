@@ -7,9 +7,10 @@ const FRIENDLY_DUEL_BUTTON_R = preload("res://scenes/ui/components/friendly_duel
 @onready var friend_list_l : VBoxContainer = %FriendsListL
 @onready var friend_list_r : VBoxContainer = %FriendsListR
 
+var _loading_matches: bool = false
 
 func _ready() -> void:
-    _populate_active_matches()
+    await _populate_active_matches()
     
     # Listen for new matches being created
     GlobalSignalBus.match_created.connect(_on_match_created)
@@ -25,8 +26,9 @@ func _notification(what: int) -> void:
 ## Buttons alternate between left (friend_list_l) and right (friend_list_r) containers
 func _populate_active_matches() -> void:
     # Return early if nodes aren't ready yet
-    if not is_node_ready() or friend_list_l == null or friend_list_r == null:
+    if not is_node_ready() or friend_list_l == null or friend_list_r == null or _loading_matches:
         return
+    _loading_matches = true
     
     # Clear existing children
     for child in friend_list_l.get_children():
@@ -36,19 +38,22 @@ func _populate_active_matches() -> void:
     
     # Return early if user is not signed in
     if not UserDatabase.is_signed_in():
+        _loading_matches = false
         return
     
     # Get all matches for current user
-    var all_matches: Array = UserDatabase.get_all_matches_for_player(
+    var all_matches: Array = await UserDatabase.get_all_matches_for_player(
         UserDatabase.current_user.username
     )
+    if not is_inside_tree():
+        _loading_matches = false
+        return
     
-    # Filter out matches that current user has dismissed and finished matches
+    # Finished matches stay listed until the current user has seen the result and dismissed them
     var matches: Array = []
     for match in all_matches:
         var dismissed_by = match.get("dismissed_by", [])
-        var is_finished = match.get("status") == "finished"
-        if UserDatabase.current_user.username not in dismissed_by and not is_finished:
+        if UserDatabase.current_user.username not in dismissed_by:
             matches.append(match)
     
     # Show/hide empty state message if it exists
@@ -89,6 +94,7 @@ func _populate_active_matches() -> void:
         button.pressed.connect(_on_button_pressed.bind(match.match_id))
         
         match_index += 1
+    _loading_matches = false
 
 
 ## Calculate cumulative score for a player across all rounds
@@ -138,7 +144,7 @@ func _on_match_created(_match_id: String, player1: String, player2: String) -> v
 ## @param match_id: Match identifier passed from button
 func _on_button_pressed(match_id: String) -> void:
     # Validate match exists before navigating
-    var match = UserDatabase.get_match(match_id)
+    var match: Dictionary = await UserDatabase.get_match(match_id)
     if match.is_empty():
         push_warning("Cannot navigate: match not found %s" % match_id)
         _populate_active_matches()  # Refresh list

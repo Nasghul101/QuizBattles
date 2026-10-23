@@ -24,10 +24,10 @@ config/icon="res://icon.svg"
 GlobalSignalBus="*res://autoload/global_signal_bus.gd"
 TransitionManager="*res://autoload/transition_manager.gd"
 TriviaQuestionService="*res://autoload/trivia_question_service.gd"
+Firebase="*uid://cvb26atjckwlq"
 UserDatabase="*res://autoload/user_database.gd"
 LocalCache="*res://autoload/local_cache.gd"
 Utils="*res://autoload/utils.gd"
-Firebase="*uid://cvb26atjckwlq"
 
 [display]
 
@@ -40,7 +40,17 @@ window/handheld/orientation=1
 
 [editor_plugins]
 
-enabled=PackedStringArray("res://addons/GodotFirebase-main/addons/godot-firebase/plugin.cfg", "res://addons/font_auto_size_labels/plugin.cfg", "res://addons/godot-firebase/plugin.cfg")
+enabled=PackedStringArray("res://addons/font_auto_size_labels/plugin.cfg", "res://addons/godot-firebase/plugin.cfg")
+
+[firebase]
+
+runtime_mode="emulator"
+emulator_project_id="demo-quizbattles"
+emulator_host="127.0.0.1"
+functions_region="us-central1"
+emulators/ports/authentication=9099
+emulators/ports/firestore=8080
+emulators/ports/functions=5001
 
 [gui]
 

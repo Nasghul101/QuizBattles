@@ -23,7 +23,10 @@ func open_for_friend(friend_username: String) -> void:
     _displayed_friend_username = friend_username
     friend_name_label.text = friend_username
 
-    var friend_data: Dictionary = UserDatabase.get_user_data_for_display(friend_username)
+    var friend_data: Dictionary = await UserDatabase.get_user_data_for_display(friend_username)
+    if friend_data.is_empty():
+        push_error("Could not load profile for friend %s" % friend_username)
+        return
     var wins: int = friend_data.get("wins", 0)
     var losses: int = friend_data.get("losses", 0)
     var total_games: int = friend_data.get("total_games", 0)
@@ -58,13 +61,19 @@ func _on_unfried_buton_pressed():
     unfriend_popup.visible = true
 
 
-func _on_yes_button_pressed():
+func _on_yes_button_pressed() -> void:
     if not UserDatabase.is_signed_in():
         push_error("Cannot unfriend: no user signed in")
         unfriend_popup.visible = false
         visible = false
         return
-    UserDatabase.remove_friend(UserDatabase.current_user.username, _displayed_friend_username)
+    var result: Dictionary = await UserDatabase.remove_friend(
+        UserDatabase.current_user.username,
+        _displayed_friend_username
+    )
+    if not result.get("success", false):
+        push_error("Could not remove friend: %s" % result.get("message", "Unknown error"))
+        return
     unfriend_popup.visible = false
     visible = false
     friend_removed.emit()

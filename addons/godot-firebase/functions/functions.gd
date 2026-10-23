@@ -135,14 +135,17 @@ func _set_config(config_json : Dictionary) -> void:
 
 func _check_emulating() -> void :
 	## Check emulating
+	_base_url = ""
 	if not Firebase.emulating:
 		_base_url = "https://{zone}-{projectId}.cloudfunctions.net/".format({ zone = _config.functionsGeoZone, projectId = _config.projectId })
 	else:
-		var port : String = _config.emulators.ports.functions
-		if port == "":
+		var emulator_config: Dictionary = _config.get("emulators", {})
+		var ports: Dictionary = emulator_config.get("ports", {})
+		var port := str(ports.get("functions", ""))
+		if not port.is_valid_int() or int(port) < 1 or int(port) > 65535:
 			Firebase._printerr("You are in 'emulated' mode, but the port for Cloud Functions has not been configured.")
 		else:
-			_base_url = "http://localhost:{port}/{projectId}/{zone}/".format({ port = port, zone = _config.functionsGeoZone, projectId = _config.projectId })
+			_base_url = Firebase.get_emulator_url(port, "{projectId}/{zone}/".format({ zone = _config.functionsGeoZone, projectId = _config.projectId }))
 
 
 func _pooled_request(task : FunctionTask) -> void:

@@ -61,89 +61,103 @@ The register/login screen SHALL handle navigation failures gracefully by returni
 **AND** the fallback transition SHALL use TransitionManager with fade effects
 
 ### Requirement: Enable Login Button Based on Input Field Content
-The LogInButton SHALL be enabled only when both username and password input fields contain text.
+The LogInButton SHALL be enabled only when both the email and password input fields contain text.
 
-**Rationale:** Prevent login attempts with incomplete credentials and provide clear visual feedback about form readiness.
+**Rationale:** Prevent sign-in attempts with incomplete credentials and provide clear visual feedback about form readiness.
 
 #### Scenario: Button disabled with empty fields
-**Given** the register/login screen is displayed  
-**And** at least one input field is empty  
-**When** the user views the LogInButton  
-**Then** the button is disabled (not pressable)
+- **GIVEN** the register/login screen is displayed and at least one input field is empty
+- **WHEN** the user views the LogInButton
+- **THEN** the button is disabled
 
 #### Scenario: Button enabled with both fields filled
-**Given** the register/login screen is displayed  
-**And** UsernameInput contains "Player123"  
-**And** PasswordInput contains "password123"  
-**When** the user views the LogInButton  
-**Then** the button is enabled (pressable)
+- **GIVEN** EmailInput contains `player@example.com` and PasswordInput contains a password
+- **WHEN** the user views the LogInButton
+- **THEN** the button is enabled
+
+#### Scenario: Button updates in real time
+- **GIVEN** both fields are filled and the button is enabled
+- **WHEN** the user clears either field
+- **THEN** the LogInButton becomes disabled immediately
 
 #### Scenario: Button updates in real-time as user types
-**Given** both fields are filled and the button is enabled  
-**When** the user clears the UsernameInput field  
-**Then** the LogInButton becomes disabled immediately  
-**And** when the user types text back into UsernameInput  
-**Then** the LogInButton becomes enabled again
-
----
+- **GIVEN** the button is enabled
+- **WHEN** the user clears and then refills either email or password
+- **THEN** the button's enabled state updates immediately based on both fields
 
 ### Requirement: Authenticate User on Login Button Press
-The system SHALL authenticate user credentials using UserDatabase when LogInButton is pressed, and SHALL remember the credentials in the local device cache on success so future launches can auto sign-in.
+The system SHALL authenticate the supplied email and password through Firebase Authentication when LogInButton is pressed. After successful authentication, it SHALL load the Firestore profile, persist the Firebase Auth session using the plugin's encrypted auth-file support, and navigate to account management.
 
-**Rationale:** Allow registered users to log into their accounts and access authenticated features, and let the device remember them for next time.
+**Rationale:** Authenticate through the configured Firebase provider and restore a valid session without keeping the user's password in the device cache.
 
 **Constraints:**
-- Login state persists only for current game session (in-memory) beyond what the local device cache remembers
-- Authentication errors are logged to console only (no UI error display)
-- Successful login SHALL call `LocalCache.remember_login(username, password)` with the exact credentials that were used to sign in
-
-**Cross-reference:** Uses `local-device-cache.remember_login()`.
+- Authentication and profile loading are asynchronous
+- Authentication or profile-loading failures are logged and surfaced to the caller without creating a signed-in session
+- Successful login SHALL NOT call `LocalCache.remember_login()` or persist the password
 
 #### Scenario: Successful login with valid credentials
-**Given** a user exists with username "Player123" and password "password123"  
-**And** the register/login screen has UsernameInput "Player123" and PasswordInput "password123"  
-**When** the user presses LogInButton  
-**Then** UserDatabase.sign_in() is called with the provided credentials  
-**And** the user session is set in UserDatabase  
-**And** `LocalCache.remember_login("Player123", "password123")` is called  
-**And** the screen transitions to account_management_screen using TransitionManager
+- **GIVEN** an Auth account and Firestore profile exist for the supplied email
+- **WHEN** the user presses LogInButton
+- **THEN** Firebase Authentication verifies the credentials
+- **AND** the profile is loaded into the current user session
+- **AND** the Firebase Auth session is saved locally without storing the password
+- **AND** the screen transitions to account management
+
+#### Scenario: Failed login with invalid credentials
+- **GIVEN** Firebase Authentication rejects the supplied email or password
+- **WHEN** the user presses LogInButton
+- **THEN** an authentication error is logged
+- **AND** no session is established and no Auth session file is saved
 
 #### Scenario: Failed login with non-existent user
-**Given** no user exists with username "Ghost"  
-**And** the register/login screen has UsernameInput "Ghost" and PasswordInput "anypassword"  
-**When** the user presses LogInButton  
-**Then** UserDatabase.sign_in() returns failure with error_code "USER_NOT_FOUND"  
-**And** an error message is logged to console  
-**And** the LogInButton is disabled  
-**And** `LocalCache.remember_login()` is NOT called
+- **GIVEN** no Firebase Auth account exists for the supplied email
+- **WHEN** the user presses LogInButton
+- **THEN** Firebase Auth returns a failed sign-in result
+- **AND** an error is logged, the button is disabled, and no session is saved
 
 #### Scenario: Failed login with incorrect password
-**Given** a user exists with username "Player123" and password "password123"  
-**And** the register/login screen has UsernameInput "Player123" and PasswordInput "wrongpassword"  
-**When** the user presses LogInButton  
-**Then** UserDatabase.sign_in() returns failure with error_code "INVALID_PASSWORD"  
-**And** an error message is logged to console: "ERROR: Password is incorrect"  
-**And** the LogInButton is disabled  
-**And** `LocalCache.remember_login()` is NOT called
+- **GIVEN** a Firebase Auth account exists for the supplied email
+- **WHEN** the user submits an incorrect password
+- **THEN** Firebase Auth returns a failed sign-in result
+- **AND** an error is logged, the button is disabled, and no session is saved
+
+#### Scenario: Failed profile load
+- **GIVEN** Auth succeeds but the corresponding Firestore profile cannot be loaded
+- **WHEN** the login operation completes
+- **THEN** login is not reported as successful
+- **AND** the Firestore failure is surfaced
 
 ### Requirement: Re-enable Button After Login Failure
-The system SHALL re-enable the LogInButton when either input field is edited after a failed login attempt.
+The system SHALL re-enable the LogInButton when either the email or password field is edited after a failed login attempt, provided both fields contain text.
 
-**Rationale:** Allow users to correct their credentials and retry login without navigation away from the screen.
+**Rationale:** Allow users to correct credentials and retry without navigating away.
+
+#### Scenario: Re-enable after editing email
+- **GIVEN** login failed and both fields contain text
+- **WHEN** the user edits the email field
+- **THEN** the LogInButton becomes enabled
 
 #### Scenario: Re-enable button after editing username following failure
-**Given** login failed and LogInButton is disabled  
-**When** the user modifies the UsernameInput field  
-**And** both fields contain text  
-**Then** the LogInButton becomes enabled
+- **GIVEN** login failed and both fields contain text
+- **WHEN** the user edits the email field
+- **THEN** the LogInButton becomes enabled
+
+#### Scenario: Re-enable after editing password
+- **GIVEN** login failed and both fields contain text
+- **WHEN** the user edits the password field
+- **THEN** the LogInButton becomes enabled
 
 #### Scenario: Re-enable button after editing password following failure
-**Given** login failed and LogInButton is disabled  
-**When** the user modifies the PasswordInput field  
-**And** both fields contain text  
-**Then** the LogInButton becomes enabled
+- **GIVEN** login failed and both fields contain text
+- **WHEN** the user edits the password field
+- **THEN** the LogInButton becomes enabled
+
+#### Scenario: Keep button disabled when a field is empty
+- **GIVEN** login failed
+- **WHEN** the user edits a field but either email or password remains empty
+- **THEN** the LogInButton remains disabled
 
 #### Scenario: Button remains disabled if fields are empty after edit
-**Given** login failed and LogInButton is disabled  
-**When** the user clears the UsernameInput field  
-**Then** the LogInButton remains disabled
+- **GIVEN** login failed
+- **WHEN** the user edits a field while the other required field remains empty
+- **THEN** the LogInButton remains disabled

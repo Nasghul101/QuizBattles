@@ -105,7 +105,7 @@ func query(query : FirestoreQuery) -> Array:
 	var task : FirestoreTask = FirestoreTask.new()
 	task.action = FirestoreTask.Task.TASK_QUERY
 	var body: Dictionary = { structuredQuery = query.query }
-	var url: String = _base_url + _extended_url + query.sub_collection_path + _query_suffix
+	var url: String = _base_url + (_extended_url + query.sub_collection_path).rstrip("/") + _query_suffix
 	
 	task.data = query
 	task._fields = JSON.stringify(body)
@@ -181,14 +181,17 @@ func _set_config(config_json : Dictionary) -> void:
 
 func _check_emulating() -> void :
 	## Check emulating
+	_base_url = ""
 	if not Firebase.emulating:
 		_base_url = "https://firestore.googleapis.com/{version}/".format({ version = _API_VERSION })
 	else:
-		var port : String = _config.emulators.ports.firestore
-		if port == "":
+		var emulator_config: Dictionary = _config.get("emulators", {})
+		var ports: Dictionary = emulator_config.get("ports", {})
+		var port := str(ports.get("firestore", ""))
+		if not port.is_valid_int() or int(port) < 1 or int(port) > 65535:
 			Firebase._printerr("You are in 'emulated' mode, but the port for Firestore has not been configured.")
 		else:
-			_base_url = "http://localhost:{port}/{version}/".format({ version = _API_VERSION, port = port })
+			_base_url = Firebase.get_emulator_url(port, "{version}/".format({ version = _API_VERSION }))
 
 func _pooled_request(task : FirestoreTask) -> void:
 	if (auth == null or auth.is_empty()) and not Firebase.emulating:
@@ -199,8 +202,8 @@ func _pooled_request(task : FirestoreTask) -> void:
 			_check_auth_error(result[0], result[1])
 		Firebase._print("Client connected as Anonymous")
 
-	if not Firebase.emulating:
-		task._headers = PackedStringArray([_AUTHORIZATION_HEADER + auth.idtoken])
+	if auth != null and auth.has("idtoken"):
+		task._headers = PackedStringArray([_AUTHORIZATION_HEADER + str(auth.idtoken)])
 
 	var	http_request = HTTPRequest.new()
 	http_request.timeout = 5

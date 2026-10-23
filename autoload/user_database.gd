@@ -1,19 +1,16 @@
 # uid://cc1ahmri317sm
 extends Node
 
-## Local User Database Service
+## Firebase-backed User Database Service
 ##
-## Provides in-memory user registration, authentication, and session management.
-## Designed as a temporary replacement for Firebase Authentication with a compatible
-## API surface to minimize future migration effort.
+## Provides registration, authentication, profiles, notifications, friendships,
+## matches and statistics on top of Firebase Authentication, Cloud Firestore and
+## Cloud Functions (GodotFirebase plugin). In development and test runs the plugin
+## talks to the Firebase Local Emulator Suite only.
 ##
-## This service stores user data only in memory - all data is lost when the game closes.
-## Passwords are hashed using SHA-256 for security even in temporary storage.
-##
-## Error codes follow Firebase Auth naming conventions (uppercase with underscores).
-
-## Valid top-level domains for email validation
-const VALID_TLDS := [".com", ".de", ".org", ".net", ".edu", ".gov", ".co", ".uk", ".io", ".app", ".dev", ".tech"]
+## Almost every method talks to the network and must be awaited. Failures are returned
+## as {success: false, error_code: String, message: String}; no failure is replaced by
+## local or cached data.
 
 ## Minimum username length
 const MIN_USERNAME_LENGTH := 5
@@ -24,195 +21,247 @@ const MAX_USERNAME_LENGTH := 15
 ## Default avatar path for new users
 const DEFAULT_AVATAR_PATH := "res://assets/profile_pictures/man_standard.png"
 
-## Path to the JSON file where user data is stored
-const DATABASE_PATH := "res://data/user_database.json"
+## Notifications older than this are hidden and cleaned up (3 days)
+const NOTIFICATION_EXPIRY_SECONDS: float = 259200.0
 
-## Main database structure containing users and matches
-var data: Dictionary = {
-    "users": {},
-    "multiplayer_matches": []
-}
+## Maximum number of username search results
+const SEARCH_LIMIT := 20
 
-## Shortcut reference to users dictionary for backward compatibility
-var _users: Dictionary:
-    get:
-        return data.users
-    set(value):
-        data.users = value
+## Cloud Function that applies the statistics of a finished match
+const STATISTICS_FUNCTION := "processMatchStatistics"
 
-## Currently logged-in user (empty Dictionary if not signed in)
+const AUTH_TIMEOUT_SECONDS := 20.0
+
+## Currently logged-in user: {uid, username, email, avatar_path} (empty if not signed in)
 var current_user: Dictionary = {}
+
+var _uid_cache: Dictionary = {}
+var _fs_busy: bool = false
+var _last_error: Dictionary = {}
+
+signal _fs_released
+
+
+class AuthWait extends RefCounted:
+    signal finished
+    var result: Array = []
+
+    func on_result(code: Variant, content: Variant) -> void:
+        result = [code, content]
+        finished.emit()
+
+    func on_timeout() -> void:
+        finished.emit()
 
 
 func _ready() -> void:
-    _load_database()
-    # Connect to GlobalSignalBus to handle incoming notifications
+    Firebase.Firestore.error.connect(_on_firestore_error)
     GlobalSignalBus.notification_received.connect(_on_notification_received_global)
-    # Connect to notification actions for handling denial logic
     GlobalSignalBus.notification_action_taken.connect(_on_notification_action_taken)
-    # Connect to game invite acceptance for match creation
-    GlobalSignalBus.game_invite_accepted.connect(_on_game_invite_accepted)
 
 
-## Handle notification received from GlobalSignalBus
-## Adds notification to recipient's database regardless of who is currently logged in
-func _on_notification_received_global(notification_data: Dictionary) -> void:
-    var recipient: String = notification_data.get("recipient_username", "")
-    if recipient.is_empty():
-        push_error("Cannot add notification: recipient_username is missing")
-        return
-    
-    # Check for duplicate friend requests
-    if notification_data.has("action_data"):
-        var action_data: Dictionary = notification_data.action_data
-        if action_data.get("type") == "friend_request":
-            var sender: String = notification_data.get("sender", "")
-            if _has_pending_friend_request(recipient, sender):
-                push_warning("Friend request already sent to %s from %s" % [recipient, sender])
-                return
-        
-        # Check for duplicate game invites
-        if action_data.get("type") == "game_invite":
-            var sender: String = notification_data.get("sender", "")
-            if _has_pending_game_invite(recipient, sender):
-                push_warning("Game invite already sent to %s from %s" % [recipient, sender])
-                return
-    
-    # Add notification to recipient's account
-    add_notification(recipient, notification_data)
+func _on_firestore_error(error: Variant = {}, _status: Variant = null, _message: Variant = null) -> void:
+    if error is Dictionary:
+        _last_error = error
+    else:
+        _last_error = {"code": error, "status": str(_status), "message": str(_message)}
 
 
-## Check if a pending friend request already exists from sender to recipient
-func _has_pending_friend_request(recipient: String, sender: String) -> bool:
-    if not user_exists(recipient):
-        return false
-    
-    var notifications: Array = get_notifications(recipient)
-    
-    for notif_data: Dictionary in notifications:
-        if notif_data.has("action_data") and notif_data.action_data is Dictionary:
-            var action_data: Dictionary = notif_data.action_data
-            if action_data.get("type") == "friend_request" and notif_data.get("sender") == sender:
-                return true
-    
-    return false
+## ============================================================================
+## Firestore primitives (serialized so error reporting cannot be mixed up)
+## ============================================================================
+
+func _lock() -> void:
+    while _fs_busy:
+        await _fs_released
+    _fs_busy = true
+    _last_error = {}
 
 
-## Check if a pending game invite already exists from sender to recipient
-func _has_pending_game_invite(recipient: String, sender: String) -> bool:
-    if not user_exists(recipient):
-        return false
-    
-    var notifications: Array = get_notifications(recipient)
-    
-    for notif_data: Dictionary in notifications:
-        if notif_data.has("action_data") and notif_data.action_data is Dictionary:
-            var action_data: Dictionary = notif_data.action_data
-            if action_data.get("type") == "game_invite" and notif_data.get("sender") == sender:
-                return true
-    
-    return false
+func _unlock() -> void:
+    _fs_busy = false
+    _fs_released.emit()
 
 
-## Handle notification action taken (for denial logic)
-## Sends rejection notification to inviter when game invite is denied
-func _on_notification_action_taken(notification_id: String, action: String) -> void:
-    # Only handle deny actions
-    if action != "deny":
-        return
-    
-    # Get current user
-    if not is_signed_in():
-        return
-    
-    var current_username: String = current_user.username
-    
-    # Find the notification being denied
-    var notifications: Array = get_notifications(current_username)
-    var denied_notification: Dictionary = {}
-    
-    for notif_data: Dictionary in notifications:
-        if notif_data.get("id") == notification_id:
-            denied_notification = notif_data
-            break
-    
-    # Check if it's a game invite
-    if denied_notification.has("action_data"):
-        var action_data: Dictionary = denied_notification.action_data
-        if action_data.get("type") == "game_invite":
-            # Send rejection notification to original sender
-            var inviter: String = denied_notification.get("sender", "")
-            if not inviter.is_empty():
-                var rejection_data: Dictionary = {
-                    "recipient_username": inviter,
-                    "message": "%s rejected your duel" % current_username,
-                    "sender": "System",
-                    "has_actions": false,
-                    "action_data": {
-                        "type": "game_invite_rejection"
-                    }
-                }
-                # Emit through signal bus to trigger notification creation
-                GlobalSignalBus.notification_received.emit(rejection_data)
-                print("Rejection notification sent to %s" % inviter)
+func _result(ok: bool, data: Variant = null) -> Dictionary:
+    return {
+        "ok": ok,
+        "data": data,
+        "status": str(_last_error.get("status", "")),
+        "message": str(_last_error.get("message", "Backend request failed"))
+    }
 
 
-## Create a new user account with username, password, and email.
-## 
-## Validates input, checks for duplicates, hashes the password, and stores the user.
+func _doc_data(doc: FirestoreDocument) -> Dictionary:
+    return Utilities.fields2dict({"fields": doc.document})
+
+
+## Username-derived document IDs are percent-encoded so any character is URL safe.
+func _doc_id(normalized_username: String) -> String:
+    return normalized_username.uri_encode()
+
+
+func _fs_get(collection: String, doc_id: String) -> Dictionary:
+    await _lock()
+    var doc: Variant = await Firebase.Firestore.collection(collection).get_doc(doc_id)
+    var ok: bool = doc != null and _last_error.is_empty()
+    var res: Dictionary = _result(ok, _doc_data(doc) if ok else {})
+    _unlock()
+    return res
+
+
+func _fs_create(collection: String, doc_id: String, data: Dictionary) -> Dictionary:
+    await _lock()
+    var doc: Variant = await Firebase.Firestore.collection(collection).add(doc_id, data)
+    var res: Dictionary = _result(doc != null and _last_error.is_empty())
+    _unlock()
+    return res
+
+
+func _fs_set(collection: String, doc_id: String, data: Dictionary) -> Dictionary:
+    await _lock()
+    await Firebase.Firestore.collection(collection).set_doc(doc_id, data)
+    var res: Dictionary = _result(_last_error.is_empty())
+    _unlock()
+    return res
+
+
+func _fs_patch(collection: String, doc_id: String, partial: Dictionary) -> Dictionary:
+    await _lock()
+    var doc := FirestoreDocument.new({"name": doc_id, "fields": Utilities.dict2fields(partial).fields})
+    doc.collection_name = collection
+    var updated: Variant = await Firebase.Firestore.collection(collection).update(doc)
+    doc.free()
+    var res: Dictionary = _result(updated != null and _last_error.is_empty())
+    _unlock()
+    return res
+
+
+func _fs_delete(collection: String, doc_id: String) -> Dictionary:
+    await _lock()
+    var doc := FirestoreDocument.new({"name": doc_id})
+    doc.collection_name = collection
+    var deleted: Variant = await Firebase.Firestore.collection(collection).delete(doc)
+    doc.free()
+    var res: Dictionary = _result(bool(deleted) and _last_error.is_empty())
+    _unlock()
+    return res
+
+
+## Returns {ok, data: Array[{id, data}], ...}
+func _fs_query(query: FirestoreQuery) -> Dictionary:
+    await _lock()
+    var docs: Array = await Firebase.Firestore.query(query)
+    var items: Array = []
+    for doc: FirestoreDocument in docs:
+        items.append({"id": doc.doc_name, "data": _doc_data(doc)})
+        doc.free()
+    var res: Dictionary = _result(_last_error.is_empty(), items)
+    _unlock()
+    return res
+
+
+func _fail(error_code: String, message: String) -> Dictionary:
+    return {"success": false, "error_code": error_code, "message": message}
+
+
+func _backend_fail(res: Dictionary) -> Dictionary:
+    var code: String = res.get("status", "")
+    return _fail(code if not code.is_empty() else "BACKEND_ERROR", res.get("message", "Backend request failed"))
+
+
+## ============================================================================
+## Firebase Authentication helpers
+## ============================================================================
+
+## Starts a Firebase Auth request and waits for its auth_request signal.
+## Returns {success: true, auth: Dictionary} or a failure dictionary.
+func _auth_request(starter: Callable) -> Dictionary:
+    if Firebase.Auth.is_busy:
+        return _fail("AUTH_BUSY", "Authentication service is busy")
+
+    var wait := AuthWait.new()
+    Firebase.Auth.auth_request.connect(wait.on_result, CONNECT_ONE_SHOT)
+    starter.call()
+    if wait.result.is_empty():
+        get_tree().create_timer(AUTH_TIMEOUT_SECONDS).timeout.connect(wait.on_timeout)
+        await wait.finished
+    if Firebase.Auth.auth_request.is_connected(wait.on_result):
+        Firebase.Auth.auth_request.disconnect(wait.on_result)
+
+    if wait.result.is_empty():
+        return _fail("SERVICE_UNAVAILABLE", "Authentication service did not respond")
+
+    var code: Variant = wait.result[0]
+    var content: Variant = wait.result[1]
+    if typeof(code) == TYPE_INT and code == 1:
+        return {"success": true, "auth": content}
+
+    var message: String = str(content)
+    if message.contains("Error connecting"):
+        return _fail("SERVICE_UNAVAILABLE", message)
+    # Firebase messages look like "WEAK_PASSWORD : Password should be ..."
+    var error_code: String = message.split(" ")[0] if not message.is_empty() else "AUTH_ERROR"
+    return _fail(error_code, message)
+
+
+func _current_uid() -> String:
+    return str(Firebase.Auth.auth.get("localid", ""))
+
+
+## ============================================================================
+## Registration, sign-in and session
+## ============================================================================
+
+## Create a Firebase Auth account and its Firestore profile.
 ##
-## @param username: Username for the new account (5-15 characters)
-## @param password: Password for the new account (will be hashed)
-## @param email: Email address for the new account (must be valid format)
-## @return Dictionary with success status, error info, and user data:
-##   - {success: true, user: {username: String, email: String}} on success
-##   - {success: false, error_code: String, message: String} on failure
+## Success is reported only after the Auth account, the unique username claim and the
+## profile exist. If a later step fails, earlier steps are rolled back.
+##
+## @return {success: true, user: {username, email, avatar_path}} or a failure dictionary
 func create_user(username: String, password: String, email: String) -> Dictionary:
-    # Validate username length
     var username_validation: Dictionary = _validate_username(username)
     if not username_validation.success:
         return username_validation
-    
-    # Validate email format
-    var email_validation: Dictionary = _validate_email(email)
-    if not email_validation.success:
-        return email_validation
-    
-    # Check for duplicate username
-    if user_exists(username):
-        return {
-            "success": false,
-            "error_code": "USERNAME_EXISTS",
-            "message": "Username already exists"
-        }
-    
-    # Check for duplicate email
-    if email_exists(email):
-        return {
-            "success": false,
-            "error_code": "EMAIL_EXISTS",
-            "message": "Email already registered"
-        }
-    
-    # Hash password and store user
-    var password_hash: String = _hash_password(password)
-    var user_data: Dictionary = {
+
+    if email.strip_edges().is_empty():
+        return _fail("INVALID_EMAIL", "Email is required")
+
+    var signup: Dictionary = await _auth_request(
+        func() -> void: Firebase.Auth.signup_with_email_and_password(email, password)
+    )
+    if not signup.success:
+        return signup
+
+    var uid: String = _current_uid()
+    var normalized: String = username.to_lower()
+    var claim: Dictionary = await _fs_create("usernames", _doc_id(normalized), {
+        "uid": uid,
         "username": username,
-        "password_hash": password_hash,
-        "email": email,
+        "username_normalized": normalized
+    })
+    if not claim.ok:
+        await _discard_new_account("")
+        if claim.status == "ALREADY_EXISTS":
+            return _fail("USERNAME_EXISTS", "Username already exists")
+        return _backend_fail(claim)
+
+    var profile: Dictionary = await _fs_create("users", uid, {
+        "uid": uid,
+        "username": username,
+        "username_normalized": normalized,
         "avatar_path": DEFAULT_AVATAR_PATH,
-        "notifications": [],
-        "friends": [],
         "wins": 0,
         "losses": 0,
         "total_games": 0,
         "current_streak": 0,
         "friend_wins": {},
         "category_stats": {}
-    }
-    _users[username] = user_data
-    _save_database()
-    # Return success with public user data (no password hash)
+    })
+    if not profile.ok:
+        await _discard_new_account(_doc_id(normalized))
+        return _backend_fail(profile)
+
     return {
         "success": true,
         "user": {
@@ -223,1054 +272,621 @@ func create_user(username: String, password: String, email: String) -> Dictionar
     }
 
 
-## Authenticate a user with username and password credentials.
+## Rolls back a partially created registration (username claim first, then the Auth account).
+func _discard_new_account(claim_id: String) -> void:
+    if not claim_id.is_empty():
+        var released: Dictionary = await _fs_delete("usernames", claim_id)
+        if not released.ok:
+            push_error("Could not release username claim after failed registration: %s" % released.message)
+    var removed: Dictionary = await _auth_request(func() -> void: Firebase.Auth.delete_user_account())
+    if not removed.success:
+        push_error("Could not delete Auth account after failed registration: %s" % removed.message)
+    Firebase.Auth.logout()
+
+
+## Authenticate with email and password and load the Firestore profile.
 ##
-## Verifies credentials and sets the current user session on success.
+## The current user session is set only after both steps succeed.
 ##
-## @param username: Username to authenticate
-## @param password: Password to verify
-## @return Dictionary with success status, error info, and user data:
-##   - {success: true, user: {username: String, email: String}} on success
-##   - {success: false, error_code: String, message: String} on failure
-func sign_in(username: String, password: String) -> Dictionary:
-    # Check if user exists
-    if not user_exists(username):
-        return {
-            "success": false,
-            "error_code": "USER_NOT_FOUND",
-            "message": "No user found with this username"
-        }
-    
-    # Get stored user data
-    var user_data: Dictionary = _users[username]
-    var stored_hash: String = user_data.password_hash
-    
-    # Verify password hash
-    var provided_hash: String = _hash_password(password)
-    if provided_hash != stored_hash:
-        return {
-            "success": false,
-            "error_code": "INVALID_PASSWORD",
-            "message": "Password is incorrect"
-        }
-    
-    # Set current user (without password hash)
+## @return {success: true, user: {username, email, avatar_path}} or a failure dictionary
+func sign_in(email: String, password: String) -> Dictionary:
+    var login: Dictionary = await _auth_request(
+        func() -> void: Firebase.Auth.login_with_email_and_password(email, password)
+    )
+    if not login.success:
+        return login
+    return await _finish_sign_in(str(login.auth.get("email", email)))
+
+
+## Restore the session stored in the encrypted GodotFirebase auth file.
+func restore_session() -> Dictionary:
+    if not FileAccess.file_exists("user://user.auth"):
+        return _fail("NO_SESSION", "No stored session")
+
+    var refreshed: Dictionary = await _auth_request(func() -> void: Firebase.Auth.load_auth())
+    if not refreshed.success:
+        Firebase.Auth.logout()
+        return refreshed
+
+    var holder: Dictionary = {"email": ""}
+    var on_userdata: Callable = func(userdata: Variant) -> void: holder.email = str(userdata.email)
+    Firebase.Auth.userdata_received.connect(on_userdata, CONNECT_ONE_SHOT)
+    var userdata_request: Dictionary = await _auth_request(func() -> void: Firebase.Auth.get_user_data())
+    if Firebase.Auth.userdata_received.is_connected(on_userdata):
+        Firebase.Auth.userdata_received.disconnect(on_userdata)
+    if not userdata_request.success:
+        Firebase.Auth.logout()
+        return userdata_request
+
+    return await _finish_sign_in(holder.email)
+
+
+func _finish_sign_in(email: String) -> Dictionary:
+    var uid: String = _current_uid()
+    var profile: Dictionary = await _fs_get("users", uid)
+    if not profile.ok:
+        Firebase.Auth.logout()
+        if profile.status == "NOT_FOUND":
+            return _fail("PROFILE_NOT_FOUND", "No user profile exists for this account")
+        return _backend_fail(profile)
+
     current_user = {
-        "username": user_data.username,
-        "email": user_data.email,
-        "avatar_path": user_data.avatar_path
+        "uid": uid,
+        "username": profile.data.get("username", ""),
+        "email": email,
+        "avatar_path": profile.data.get("avatar_path", DEFAULT_AVATAR_PATH)
     }
-    
-    # Return success with user data
-    return {
-        "success": true,
-        "user": current_user.duplicate()
-    }
+    return {"success": true, "user": get_current_user()}
+
+
+## Persist the Firebase session in the encrypted GodotFirebase auth file.
+func remember_session() -> bool:
+    return Firebase.Auth.save_auth(Firebase.Auth.auth)
 
 
 ## Sign out the current user and clear the session.
 func sign_out() -> void:
     current_user = {}
+    _uid_cache.clear()
+    Firebase.Auth.logout()
 
 
-## Get the currently logged-in user.
-##
-## @return Dictionary with user data {username: String, email: String} if signed in,
-##         or empty Dictionary if not signed in
+## Get the currently logged-in user (without uid), or an empty Dictionary.
 func get_current_user() -> Dictionary:
-    return current_user.duplicate()
+    if current_user.is_empty():
+        return {}
+    var user: Dictionary = current_user.duplicate()
+    user.erase("uid")
+    return user
 
 
-## Check if a user is currently signed in.
-##
-## @return true if a user is signed in, false otherwise
 func is_signed_in() -> bool:
     return not current_user.is_empty()
 
 
-## Update the avatar path for the currently signed-in user.
-##
-## @param avatar_path: New avatar path to set
-## @return Dictionary with success status and error info:
-##   - {success: true, avatar_path: String} on success
-##   - {success: false, error_code: String, message: String} on failure
+## Update the avatar path of the signed-in user.
 func update_avatar(avatar_path: String) -> Dictionary:
-    # Check if user is signed in
     if not is_signed_in():
-        return {
-            "success": false,
-            "error_code": "NOT_SIGNED_IN",
-            "message": "No user is currently signed in"
-        }
-    
-    # Get current username
-    var username: String = current_user.username
-    
-    # Update avatar_path in stored user data
-    if _users.has(username):
-        _users[username].avatar_path = avatar_path
-        _save_database()
-    
-    # Update current_user session to reflect the change
+        return _fail("NOT_SIGNED_IN", "No user is currently signed in")
+
+    var res: Dictionary = await _fs_patch("users", current_user.uid, {"avatar_path": avatar_path})
+    if not res.ok:
+        return _backend_fail(res)
+
     current_user.avatar_path = avatar_path
-    
-    # Return success
-    return {
-        "success": true,
-        "avatar_path": avatar_path
-    }
+    return {"success": true, "avatar_path": avatar_path}
 
 
-## Check if a username is already registered.
-##
-## @param username: Username to check
-## @return true if username exists, false otherwise
-func user_exists(username: String) -> bool:
-    return _users.has(username)
+## ============================================================================
+## Profiles and search
+## ============================================================================
 
+## Resolve a username to its uid through the public username claim.
+## Returns {ok, found, uid, username}; ok is false when the backend failed.
+func _resolve_user(username: String) -> Dictionary:
+    var normalized: String = username.to_lower()
+    if is_signed_in() and current_user.username.to_lower() == normalized:
+        return {"ok": true, "found": true, "uid": current_user.uid, "username": current_user.username}
+    if _uid_cache.has(normalized):
+        return _uid_cache[normalized]
+    if normalized.is_empty():
+        return {"ok": true, "found": false}
 
-## Check if an email is already registered.
-##
-## @param email: Email address to check
-## @return true if email exists, false otherwise
-func email_exists(email: String) -> bool:
-    for user_data: Dictionary in _users.values():
-        if user_data.email == email:
-            return true
-    return false
-
-
-## Get user data by username (for internal use).
-##
-## @param username: Username to look up
-## @return Dictionary with user data if found, empty Dictionary otherwise
-func get_user_by_username(username: String) -> Dictionary:
-    if user_exists(username):
-        var user_data : Dictionary = _users[username]
-        return {
-            "username": user_data.username,
-            "email": user_data.email,
-            "avatar_path": user_data.avatar_path
+    var claim: Dictionary = await _fs_get("usernames", _doc_id(normalized))
+    if claim.ok:
+        var found: Dictionary = {
+            "ok": true,
+            "found": true,
+            "uid": str(claim.data.get("uid", "")),
+            "username": str(claim.data.get("username", username))
         }
-    return {}
+        _uid_cache[normalized] = found
+        return found
+    if claim.status == "NOT_FOUND":
+        return {"ok": true, "found": false}
+    push_error("Could not resolve user '%s': %s" % [username, claim.message])
+    return {"ok": false, "found": false, "message": claim.message, "status": claim.status}
 
 
-## Get user data safe for display in UI (excludes sensitive data).
-##
-## Returns username, avatar_path, wins, losses, current_streak, friend_wins.
-## Explicitly excludes password_hash and email for security.
-##
-## @param username: Username to look up
-## @return Dictionary with display-safe user data, or empty Dictionary if user doesn't exist
-func get_user_data_for_display(username: String) -> Dictionary:
-    if not user_exists(username):
-        return {}
-    
-    var user_data: Dictionary = _users[username]
+func _public_profile(profile: Dictionary) -> Dictionary:
     return {
-        "username": user_data.username,
-        "avatar_path": user_data.get("avatar_path", DEFAULT_AVATAR_PATH),
-        "wins": user_data.get("wins", 0),
-        "losses": user_data.get("losses", 0),
-        "total_games": user_data.get("total_games", 0),
-        "current_streak": user_data.get("current_streak", 0),
-        "friend_wins": user_data.get("friend_wins", {}),
-        "category_stats": user_data.get("category_stats", {})
+        "username": profile.get("username", ""),
+        "avatar_path": profile.get("avatar_path", DEFAULT_AVATAR_PATH)
     }
 
 
-## Search for users by username with case-insensitive partial matching.
+func user_exists(username: String) -> bool:
+    var user: Dictionary = await _resolve_user(username)
+    return user.found
+
+
+## Get public profile data (username, avatar_path) of a user, or an empty Dictionary.
+func get_user_by_username(username: String) -> Dictionary:
+    var profile: Dictionary = await _load_profile_by_username(username)
+    if profile.is_empty():
+        return {}
+    return _public_profile(profile)
+
+
+func _load_profile_by_username(username: String) -> Dictionary:
+    var user: Dictionary = await _resolve_user(username)
+    if not user.found:
+        return {}
+    var profile: Dictionary = await _fs_get("users", user.uid)
+    if not profile.ok:
+        push_error("Could not load profile of '%s': %s" % [username, profile.message])
+        return {}
+    return profile.data
+
+
+## Get user data safe for display in UI (no email or credentials).
+func get_user_data_for_display(username: String) -> Dictionary:
+    var profile: Dictionary = await _load_profile_by_username(username)
+    if profile.is_empty():
+        return {}
+    return {
+        "username": profile.get("username", ""),
+        "avatar_path": profile.get("avatar_path", DEFAULT_AVATAR_PATH),
+        "wins": profile.get("wins", 0),
+        "losses": profile.get("losses", 0),
+        "total_games": profile.get("total_games", 0),
+        "current_streak": profile.get("current_streak", 0),
+        "friend_wins": profile.get("friend_wins", {}),
+        "category_stats": profile.get("category_stats", {})
+    }
+
+
+## Search users whose username starts with the query (case-insensitive).
+## Firestore has no substring queries, so only prefixes are matched.
+## The signed-in user is excluded.
 ##
-## Performs partial substring matching (case-insensitive) and excludes
-## the currently logged-in user from results.
-##
-## @param query: Search string to match against usernames
-## @return Array of user dictionaries with username, email, and avatar_path
+## @return Array of {username, avatar_path}
 func search_users_by_username(query: String) -> Array:
     var results: Array = []
-    
-    # Return empty array if query is empty
     if query.is_empty():
         return results
-    
-    # Convert query to lowercase for case-insensitive matching
-    var query_lower: String = query.to_lower()
-    
-    # Search through all users
-    for username: String in _users.keys():
-        # Exclude current user from results
-        if is_signed_in() and username == current_user.username:
+
+    var prefix: String = query.to_lower()
+    var firestore_query: FirestoreQuery = FirestoreQuery.new() \
+        .from("users") \
+        .order_by("username_normalized") \
+        .limit(SEARCH_LIMIT + 1)
+    # FirestoreQuery.where() drops the first filter when chaining AND onto a single filter
+    firestore_query.query["where"] = firestore_query.create_composite_filter(FirestoreQuery.OPERATOR.AND, [
+        firestore_query.create_field_filter("username_normalized", FirestoreQuery.OPERATOR.GREATER_THAN_OR_EQUAL, prefix),
+        firestore_query.create_field_filter("username_normalized", FirestoreQuery.OPERATOR.LESS_THAN, prefix + "\uf8ff")
+    ])
+    var res: Dictionary = await _fs_query(firestore_query)
+    if not res.ok:
+        push_error("User search failed: %s" % res.message)
+        return results
+
+    for item: Dictionary in res.data:
+        if is_signed_in() and item.id == current_user.uid:
             continue
-        
-        # Check if username contains query (case-insensitive)
-        if username.to_lower().contains(query_lower):
-            var user_data: Dictionary = _users[username]
-            results.append({
-                "username": user_data.username,
-                "email": user_data.email,
-                "avatar_path": user_data.avatar_path
-            })
-    
+        if results.size() >= SEARCH_LIMIT:
+            break
+        results.append(_public_profile(item.data))
     return results
 
 
-## Validate email format.
-##
-## Checks for @ symbol and valid top-level domain.
-##
-## @param email: Email address to validate
-## @return Dictionary with success status and error info:
-##   - {success: true} if valid
-##   - {success: false, error_code: String, message: String} if invalid
-func _validate_email(email: String) -> Dictionary:
-    # Check for @ symbol
-    if not email.contains("@"):
-        return {
-            "success": false,
-            "error_code": "INVALID_EMAIL",
-            "message": "Email format is invalid"
-        }
-    
-    # Check for valid TLD
-    var has_valid_tld: bool = false
-    for tld: String in VALID_TLDS:
-        if email.ends_with(tld):
-            has_valid_tld = true
-            break
-    
-    if not has_valid_tld:
-        return {
-            "success": false,
-            "error_code": "INVALID_EMAIL",
-            "message": "Email format is invalid"
-        }
-    
-    return {"success": true}
-
-
-## Validate username length.
-##
-## Username must be between 5 and 15 characters inclusive.
-##
-## @param username: Username to validate
-## @return Dictionary with success status and error info:
-##   - {success: true} if valid
-##   - {success: false, error_code: String, message: String} if invalid
 func _validate_username(username: String) -> Dictionary:
     var length: int = username.length()
-    
     if length < MIN_USERNAME_LENGTH:
-        return {
-            "success": false,
-            "error_code": "USERNAME_TOO_SHORT",
-            "message": "Username must be at least %d characters" % MIN_USERNAME_LENGTH
-        }
-    
+        return _fail("USERNAME_TOO_SHORT", "Username must be at least %d characters" % MIN_USERNAME_LENGTH)
     if length > MAX_USERNAME_LENGTH:
-        return {
-            "success": false,
-            "error_code": "USERNAME_TOO_LONG",
-            "message": "Username must be at most %d characters" % MAX_USERNAME_LENGTH
-        }
-    
+        return _fail("USERNAME_TOO_LONG", "Username must be at most %d characters" % MAX_USERNAME_LENGTH)
+    # "/" is not allowed in document IDs and "." would split Firestore field paths
+    if username.contains("/") or username.contains("."):
+        return _fail("USERNAME_INVALID", "Username must not contain '/' or '.'")
     return {"success": true}
 
 
-## Hash a password using SHA-256.
+## ============================================================================
+## Notifications
+## ============================================================================
+
+## Create a notification for a user in Firestore.
 ##
-## Uses Godot's built-in HashingContext to generate a secure hash.
-##
-## @param password: Plain-text password to hash
-## @return Hex-encoded SHA-256 hash of the password
-func _hash_password(password: String) -> String:
-    var ctx: HashingContext = HashingContext.new()
-    ctx.start(HashingContext.HASH_SHA256)
-    ctx.update(password.to_utf8_buffer())
-    var hash_bytes: PackedByteArray = ctx.finish()
-    return hash_bytes.hex_encode()
+## @param username: Username of the recipient
+## @param notification_data: message, sender, has_actions, action_data and optionally
+##   id, timestamp (unix seconds). Friend requests and game invites use a deterministic
+##   id so the same sender cannot create duplicates while one is still pending.
+## @return {success: true, id: String} or a failure dictionary
+func add_notification(username: String, notification_data: Dictionary) -> Dictionary:
+    if not is_signed_in():
+        return _fail("NOT_SIGNED_IN", "No user is currently signed in")
+
+    var recipient: Dictionary = await _resolve_user(username)
+    if not recipient.ok:
+        return _fail(str(recipient.get("status", "")), str(recipient.get("message", "Backend request failed")))
+    if not recipient.found:
+        return _fail("USER_NOT_FOUND", "User '%s' does not exist" % username)
+
+    var action_data: Dictionary = notification_data.get("action_data", {})
+    var id: String = str(notification_data.get("id", ""))
+    if id.is_empty():
+        var type: String = str(action_data.get("type", ""))
+        if type == "friend_request" or type == "game_invite":
+            id = "%s_%s_%s" % [type, current_user.uid, recipient.uid]
+        else:
+            id = _generate_notification_id()
+
+    var created_at: float = float(notification_data.get("timestamp", Time.get_unix_time_from_system()))
+    var res: Dictionary = await _fs_create("notifications", id, {
+        "recipient_uid": recipient.uid,
+        "sender_uid": current_user.uid,
+        "sender": str(notification_data.get("sender", current_user.username)),
+        "message": str(notification_data.get("message", "")),
+        "has_actions": bool(notification_data.get("has_actions", false)),
+        "action_data": action_data,
+        "is_read": false,
+        "created_at": created_at
+    })
+    if not res.ok:
+        if res.status == "ALREADY_EXISTS":
+            return _fail("ALREADY_PENDING", "A matching notification is already pending")
+        return _backend_fail(res)
+    return {"success": true, "id": id}
 
 
-## Add a notification to a user's notification list.
-##
-## Automatically generates unique ID and timestamp if not provided.
-## Stores notification in user's record and persists to database.
-##
-## @param username: Username of recipient
-## @param notification_data: Dictionary containing notification details:
-##   - message: String - The notification text
-##   - sender: String - Username or "System"
-##   - has_actions: bool - Whether to show accept/deny buttons
-##   - action_data: Dictionary - Custom data for handling actions
-##   - id (optional): String - Auto-generated if not provided
-##   - timestamp (optional): String - Auto-generated if not provided (ISO 8601)
-##   - is_read (optional): bool - Defaults to false
-func add_notification(username: String, notification_data: Dictionary) -> void:
-    # Validate user exists
-    if not user_exists(username):
-        push_error("Cannot add notification: user '%s' does not exist" % username)
-        return
-    
-    # Ensure user has notifications array
-    if not _users[username].has("notifications"):
-        _users[username].notifications = []
-    
-    # Auto-generate ID if not provided
-    if not notification_data.has("id"):
-        notification_data.id = _generate_notification_id()
-    
-    # Auto-generate timestamp if not provided (Unix timestamp for expiry logic)
-    if not notification_data.has("timestamp"):
-        notification_data.timestamp = Time.get_unix_time_from_system()
-    
-    # Default is_read to false
-    if not notification_data.has("is_read"):
-        notification_data.is_read = false
-    
-    # Append notification to user's list
-    _users[username].notifications.append(notification_data)
-    
-    # Persist to disk
-    _save_database()
+func _generate_notification_id() -> String:
+    return "%d_%d" % [int(Time.get_unix_time_from_system() * 1000.0), randi() % 1000000]
 
 
-## Remove a notification from a user's notification list by ID.
-##
-## @param username: Username of the user
-## @param notification_id: Unique ID of the notification to remove
-func remove_notification(username: String, notification_id: String) -> void:
-    # Validate user exists
-    if not user_exists(username):
-        push_error("Cannot remove notification: user '%s' does not exist" % username)
-        return
-    
-    # Check if user has notifications array
-    if not _users[username].has("notifications"):
-        return
-    
-    var notifications: Array = _users[username].notifications
-    
-    # Find and remove notification by ID
-    for i in range(notifications.size()):
-        if notifications[i].has("id") and notifications[i].id == notification_id:
-            notifications.remove_at(i)
-            _save_database()
-            return
+func _notification_from_doc(item: Dictionary) -> Dictionary:
+    var data: Dictionary = item.data
+    return {
+        "id": item.id,
+        "timestamp": float(data.get("created_at", 0.0)),
+        "is_read": bool(data.get("is_read", false)),
+        "message": data.get("message", ""),
+        "sender": data.get("sender", ""),
+        "sender_uid": data.get("sender_uid", ""),
+        "has_actions": bool(data.get("has_actions", false)),
+        "action_data": data.get("action_data", {})
+    }
 
 
-## Get all notifications for a specific user.
-## Automatically filters out notifications older than 3 days.
-##
-## @param username: Username to get notifications for
-## @return Array of notification dictionaries (excluding expired), or empty array if user doesn't exist
+## Remove a notification by ID.
+func remove_notification(username: String, notification_id: String) -> Dictionary:
+    var res: Dictionary = await _fs_delete("notifications", notification_id)
+    if not res.ok:
+        return _backend_fail(res)
+    return {"success": true}
+
+
+## Get a user's notifications, oldest first. Expired notifications (older than 3 days)
+## are hidden and deleted. Only the recipient may read them.
 func get_notifications(username: String) -> Array:
-    if not user_exists(username):
+    var user: Dictionary = await _resolve_user(username)
+    if not user.found:
         return []
-    
-    if not _users[username].has("notifications"):
+
+    var firestore_query: FirestoreQuery = FirestoreQuery.new() \
+        .from("notifications") \
+        .where("recipient_uid", FirestoreQuery.OPERATOR.EQUAL, user.uid)
+    var res: Dictionary = await _fs_query(firestore_query)
+    if not res.ok:
+        push_error("Could not load notifications: %s" % res.message)
         return []
-    
-    # Filter out expired notifications (older than 3 days)
-    const NOTIFICATION_EXPIRY_SECONDS: int = 259200  # 3 days in seconds
-    var current_time: float = Time.get_unix_time_from_system()
-    var filtered_notifications: Array = []
-    
-    for notif_data: Dictionary in _users[username].notifications:
-        var notification_time: float = 0.0
-        var timestamp_value: Variant = notif_data.get("timestamp", 0.0)
-        
-        # Handle both float (Unix timestamp) and String (ISO 8601) formats for backwards compatibility
-        if timestamp_value is float:
-            notification_time = timestamp_value
-        elif timestamp_value is String:
-            # Parse ISO 8601 string to Unix timestamp
-            var datetime: Dictionary = Time.get_datetime_dict_from_datetime_string(timestamp_value, false)
-            notification_time = Time.get_unix_time_from_datetime_dict(datetime)
-        
-        # Keep notification if not expired
-        if current_time - notification_time <= NOTIFICATION_EXPIRY_SECONDS:
-            filtered_notifications.append(notif_data)
-    
-    return filtered_notifications
+
+    var now: float = Time.get_unix_time_from_system()
+    var notifications: Array = []
+    for item: Dictionary in res.data:
+        var notification: Dictionary = _notification_from_doc(item)
+        if now - float(notification.timestamp) > NOTIFICATION_EXPIRY_SECONDS:
+            await _fs_delete("notifications", item.id)
+            continue
+        notifications.append(notification)
+    notifications.sort_custom(func(a: Dictionary, b: Dictionary) -> bool: return a.timestamp < b.timestamp)
+    return notifications
 
 
-## Mark a notification as read for a user.
-##
-## @param username: Username of the user
-## @param notification_id: Unique ID of the notification to mark as read
-func mark_notification_read(username: String, notification_id: String) -> void:
-    # Validate user exists
-    if not user_exists(username):
-        push_error("Cannot mark notification as read: user '%s' does not exist" % username)
-        return
-    
-    # Check if user has notifications array
-    if not _users[username].has("notifications"):
-        return
-    
-    var notifications: Array = _users[username].notifications
-    
-    # Find and update notification
-    for notif_data: Dictionary in notifications:
-        if notif_data.has("id") and notif_data.id == notification_id:
-            notif_data.is_read = true
-            _save_database()
-            return
+func mark_notification_read(username: String, notification_id: String) -> Dictionary:
+    var res: Dictionary = await _fs_patch("notifications", notification_id, {"is_read": true})
+    if not res.ok:
+        return _backend_fail(res)
+    return {"success": true}
 
 
-## Get the count of unread notifications for a user.
-##
-## @param username: Username to check
-## @return Number of unread notifications (is_read == false)
 func get_unread_count(username: String) -> int:
-    if not user_exists(username):
-        return 0
-    
-    if not _users[username].has("notifications"):
-        return 0
-    
     var unread_count: int = 0
-    for notif_data: Dictionary in _users[username].notifications:
-        if notif_data.has("is_read") and not notif_data.is_read:
+    for notification: Dictionary in await get_notifications(username):
+        if not notification.is_read:
             unread_count += 1
-    
     return unread_count
 
 
-## Generate a unique notification ID.
-##
-## Combines current time in milliseconds with a random component.
-##
-## @return Unique ID string
-func _generate_notification_id() -> String:
-    var time_ms: int = Time.get_ticks_msec()
-    var random_part: int = randi() % 10000
-    return "%d_%d" % [time_ms, random_part]
+## Handle notification received from GlobalSignalBus and store it for the recipient.
+func _on_notification_received_global(notification_data: Dictionary) -> void:
+    var recipient: String = notification_data.get("recipient_username", "")
+    if recipient.is_empty():
+        push_error("Cannot add notification: recipient_username is missing")
+        return
+
+    var result: Dictionary = await add_notification(recipient, notification_data)
+    if result.success:
+        return
+    if result.error_code == "ALREADY_PENDING":
+        push_warning("Notification to %s is already pending" % recipient)
+    else:
+        push_error("Could not send notification to %s: %s" % [recipient, result.message])
 
 
-## Check if two users are friends.
-##
-## @param username1: First user's username
-## @param username2: Second user's username
-## @return true if users are friends, false otherwise
+## Sends a rejection notification to the inviter when a game invite is denied.
+func _on_notification_action_taken(denied_notification: Dictionary, action: String) -> void:
+    if action != "deny" or not is_signed_in():
+        return
+
+    var action_data: Dictionary = denied_notification.get("action_data", {})
+    if action_data.get("type") != "game_invite":
+        return
+
+    var inviter: String = denied_notification.get("sender", "")
+    if inviter.is_empty():
+        return
+    GlobalSignalBus.notification_received.emit({
+        "recipient_username": inviter,
+        "message": "%s rejected your duel" % current_user.username,
+        "sender": "System",
+        "has_actions": false,
+        "action_data": {"type": "game_invite_rejection"}
+    })
+
+
+## ============================================================================
+## Friendships
+## ============================================================================
+
+func _friendship_id(uid_a: String, uid_b: String) -> String:
+    return "%s_%s" % ([uid_a, uid_b] if uid_a < uid_b else [uid_b, uid_a])
+
+
 func are_friends(username1: String, username2: String) -> bool:
-    # Check if first user exists
-    if not user_exists(username1):
+    var user1: Dictionary = await _resolve_user(username1)
+    var user2: Dictionary = await _resolve_user(username2)
+    if not user1.found or not user2.found:
         return false
-    
-    # Check if user has friends array
-    if not _users[username1].has("friends"):
-        return false
-    
-    # Check if username2 is in username1's friends array
-    return username2 in _users[username1].friends
+    var res: Dictionary = await _fs_get("friendships", _friendship_id(user1.uid, user2.uid))
+    if res.ok:
+        return true
+    if res.status != "NOT_FOUND":
+        push_error("Could not check friendship: %s" % res.message)
+    return false
 
 
-## Add a bidirectional friendship between two users.
-##
-## Creates friendship in both directions and prevents duplicates and self-friending.
-##
-## @param username: First user's username
-## @param friend_username: Second user's username to befriend
-func add_friend(username: String, friend_username: String) -> void:
-    # Validate both users exist
-    if not user_exists(username):
-        push_error("Cannot add friend: user '%s' does not exist" % username)
-        return
-    
-    if not user_exists(friend_username):
-        push_error("Cannot add friend: user '%s' does not exist" % friend_username)
-        return
-    
-    # Prevent self-friending
-    if username == friend_username:
-        push_error("Cannot add friend: users cannot friend themselves")
-        return
-    
-    # Check if already friends
-    if are_friends(username, friend_username):
-        push_warning("Users '%s' and '%s' are already friends" % [username, friend_username])
-        return
-    
-    # Ensure both users have friends array
-    if not _users[username].has("friends"):
-        _users[username].friends = []
-    
-    if not _users[friend_username].has("friends"):
-        _users[friend_username].friends = []
-    
-    # Add bidirectional friendship
-    _users[username].friends.append(friend_username)
-    _users[friend_username].friends.append(username)
-    
-    # Save to database
-    _save_database()
-    
-    print("Friendship created: %s <-> %s" % [username, friend_username])
+## Create a bidirectional friendship (one record shared by both users).
+func add_friend(username: String, friend_username: String) -> Dictionary:
+    if username.to_lower() == friend_username.to_lower():
+        return _fail("SELF_FRIEND", "Users cannot friend themselves")
+
+    var user: Dictionary = await _resolve_user(username)
+    var friend: Dictionary = await _resolve_user(friend_username)
+    if not user.found or not friend.found:
+        return _fail("USER_NOT_FOUND", "Both users must exist")
+
+    var uids: Array = [user.uid, friend.uid]
+    uids.sort()
+    var res: Dictionary = await _fs_create("friendships", _friendship_id(user.uid, friend.uid), {
+        "participant_uids": uids,
+        "created_at": Time.get_unix_time_from_system()
+    })
+    if not res.ok:
+        if res.status == "ALREADY_EXISTS":
+            return _fail("ALREADY_FRIENDS", "Users are already friends")
+        return _backend_fail(res)
+    return {"success": true}
 
 
-## Remove a bidirectional friendship between two users.
-##
-## Removes friendship from both users' friends arrays.
-##
-## @param username: First user's username
-## @param friend_username: Second user's username to unfriend
-func remove_friend(username: String, friend_username: String) -> void:
-    # Validate both users exist (silent return if not)
-    if not user_exists(username) or not user_exists(friend_username):
-        return
-    
-    # Ensure both users have friends array
-    if not _users[username].has("friends"):
-        _users[username].friends = []
-    
-    if not _users[friend_username].has("friends"):
-        _users[friend_username].friends = []
-    
-    # Remove from both sides
-    if friend_username in _users[username].friends:
-        _users[username].friends.erase(friend_username)
-    
-    if username in _users[friend_username].friends:
-        _users[friend_username].friends.erase(username)
-    
-    # Save to database
-    _save_database()
-    
-    print("Friendship removed: %s <-> %s" % [username, friend_username])
+func remove_friend(username: String, friend_username: String) -> Dictionary:
+    var user: Dictionary = await _resolve_user(username)
+    var friend: Dictionary = await _resolve_user(friend_username)
+    if not user.found or not friend.found:
+        return _fail("USER_NOT_FOUND", "Both users must exist")
+
+    var res: Dictionary = await _fs_delete("friendships", _friendship_id(user.uid, friend.uid))
+    if not res.ok:
+        return _backend_fail(res)
+    return {"success": true}
 
 
-## Get list of friends with full user data.
+## Get the friends of the signed-in user.
 ##
-## Returns array of friend dictionaries containing username, email, and avatar_path.
-## Skips friends who no longer exist in the database.
-##
-## @param username: Username to get friends for
-## @return Array of friend data dictionaries, or empty array if user doesn't exist
+## @return Array of {username, avatar_path}
 func get_friends(username: String) -> Array:
-    # Validate user exists
-    if not user_exists(username):
+    var user: Dictionary = await _resolve_user(username)
+    if not user.found:
         push_error("Cannot get friends: user '%s' does not exist" % username)
         return []
-    
-    # Check if user has friends array
-    if not _users[username].has("friends"):
+
+    var firestore_query: FirestoreQuery = FirestoreQuery.new() \
+        .from("friendships") \
+        .where("participant_uids", FirestoreQuery.OPERATOR.ARRAY_CONTAINS, user.uid)
+    var res: Dictionary = await _fs_query(firestore_query)
+    if not res.ok:
+        push_error("Could not load friends: %s" % res.message)
         return []
-    
-    var results: Array = []
-    var friends_list: Array = _users[username].friends
-    
-    # Get full data for each friend
-    for friend_username: String in friends_list:
-        var friend_data: Dictionary = get_user_by_username(friend_username)
-        
-        # Skip if friend no longer exists (deleted user)
-        if friend_data.is_empty():
-            continue
-        
-        results.append(friend_data)
-    
-    return results
+
+    var friends: Array = []
+    for item: Dictionary in res.data:
+        for friend_uid: String in item.data.get("participant_uids", []):
+            if friend_uid == user.uid:
+                continue
+            var profile: Dictionary = await _fs_get("users", friend_uid)
+            if profile.ok:
+                friends.append(_public_profile(profile.data))
+    return friends
 
 
 ## ============================================================================
-## Multiplayer Match Management
+## Multiplayer matches
 ## ============================================================================
 
-## Create a new multiplayer match between two players
+## Create a new multiplayer match between two players.
 ##
-## @param inviter: Username who sent the invitation
-## @param invitee: Username who accepted the invitation
-## @param rounds: Number of rounds to play
-## @param questions: Number of questions per round
-## @return match_id: Unique identifier for the created match
+## @return match_id, or an empty String if the match could not be created
 func create_match(inviter: String, invitee: String, rounds: int, questions: int) -> String:
-    var match_id = "match_%d" % Time.get_unix_time_from_system()
-    
-    var match_data = {
+    var inviter_user: Dictionary = await _resolve_user(inviter)
+    var invitee_user: Dictionary = await _resolve_user(invitee)
+    if not inviter_user.found or not invitee_user.found:
+        push_error("Cannot create match: both players must exist")
+        return ""
+
+    var match_id: String = "match_%d_%d" % [int(Time.get_unix_time_from_system()), randi() % 1000000]
+    var match_data: Dictionary = {
         "match_id": match_id,
         "players": [inviter, invitee],
+        "participant_uids": [inviter_user.uid, invitee_user.uid],
         "inviter": inviter,
-        "config": {
-            "rounds": rounds,
-            "questions": questions
-        },
-        "current_turn": inviter,  # Inviter always starts
+        "config": {"rounds": rounds, "questions": questions},
+        "current_turn": inviter,
         "current_round": 1,
         "status": "active",
-        "dismissed_by": [],  # Track which players have dismissed the finished match
-        "stats_processed": false,  # Track if statistics have been updated
+        "dismissed_by": [],
+        "stats_processed": false,
         "rounds_data": [],
         "created_at": Time.get_unix_time_from_system()
     }
-    
-    # Initialize rounds_data with empty structures
     for i in range(rounds):
-        var round_data = {
+        match_data.rounds_data.append({
             "round_number": i + 1,
             "category": "",
             "category_chooser": inviter if (i + 1) % 2 == 1 else invitee,
             "questions": [],
             "player_answers": {
-                inviter: {
-                    "answered": false,
-                    "results": []
-                },
-                invitee: {
-                    "answered": false,
-                    "results": []
-                }
+                inviter: {"answered": false, "results": []},
+                invitee: {"answered": false, "results": []}
             }
-        }
-        match_data.rounds_data.append(round_data)
-    
-    data.multiplayer_matches.append(match_data)
-    _save_database()
-    
+        })
+
+    var res: Dictionary = await _fs_create("matches", match_id, match_data)
+    if not res.ok:
+        push_error("Could not create match: %s" % res.message)
+        return ""
     return match_id
 
 
-## Retrieve a specific match by ID
-##
-## @param match_id: Unique identifier of the match
-## @return Dictionary: Match data, or empty Dictionary if not found
+## Retrieve a match by ID, or an empty Dictionary if it is missing or not accessible.
 func get_match(match_id: String) -> Dictionary:
-    for match in data.multiplayer_matches:
-        if match.match_id == match_id:
-            return match
-    
-    push_warning("Match not found: %s" % match_id)
-    return {}
+    var res: Dictionary = await _fs_get("matches", match_id)
+    if not res.ok:
+        push_warning("Match could not be loaded: %s (%s)" % [match_id, res.message])
+        return {}
+    return res.data
 
 
-## Get all active matches for a specific player
-##
-## @param username: Player's username
-## @return Array[Dictionary]: List of active matches where player is participant
-func get_active_matches_for_player(username: String) -> Array:
-    var player_matches: Array = []
-    
-    for match in data.multiplayer_matches:
-        if match.status == "active" and username in match.players:
-            player_matches.append(match)
-    
-    return player_matches
-
-
-## Get all matches (active and finished) for a specific player
-##
-## Unlike get_active_matches_for_player(), this returns matches regardless of status.
-## Useful for displaying finished matches that haven't been dismissed yet.
-##
-## @param username: Player's username
-## @return Array[Dictionary]: List of all matches where player is participant
+## Get all matches (active and finished) of the signed-in player.
 func get_all_matches_for_player(username: String) -> Array:
-    var player_matches: Array = []
-    
-    for match in data.multiplayer_matches:
-        if username in match.players:
-            player_matches.append(match)
-    
-    return player_matches
+    var user: Dictionary = await _resolve_user(username)
+    if not user.found:
+        return []
+
+    var firestore_query: FirestoreQuery = FirestoreQuery.new() \
+        .from("matches") \
+        .where("participant_uids", FirestoreQuery.OPERATOR.ARRAY_CONTAINS, user.uid)
+    var res: Dictionary = await _fs_query(firestore_query)
+    if not res.ok:
+        push_error("Could not load matches: %s" % res.message)
+        return []
+
+    var matches: Array = []
+    for item: Dictionary in res.data:
+        matches.append(item.data)
+    return matches
 
 
-## Update an existing match with new data
-##
-## @param match_data: Complete match Dictionary with updated fields
-func update_match(match_data: Dictionary) -> void:
-    if not match_data.has("match_id"):
-        push_error("Cannot update match: missing match_id")
-        return
-    
-    for i in range(data.multiplayer_matches.size()):
-        if data.multiplayer_matches[i].match_id == match_data.match_id:
-            data.multiplayer_matches[i] = match_data
-            _save_database()
-            return
-    
-    push_warning("Match not found for update: %s" % match_data.match_id)
+func get_active_matches_for_player(username: String) -> Array:
+    var active: Array = []
+    for match_data: Dictionary in await get_all_matches_for_player(username):
+        if match_data.get("status") == "active":
+            active.append(match_data)
+    return active
 
 
-## Delete a match from the database
-##
-## @param match_id: Unique identifier of the match to delete
-## @return bool: true if match was deleted, false if not found
+## Persist a complete match Dictionary.
+func update_match(match_data: Dictionary) -> Dictionary:
+    if not match_data.has("match_id") or not match_data.has("participant_uids"):
+        return _fail("INVALID_MATCH", "Match data needs match_id and participant_uids")
+
+    var res: Dictionary = await _fs_set("matches", match_data.match_id, match_data)
+    if not res.ok:
+        return _backend_fail(res)
+    return {"success": true}
+
+
 func delete_match(match_id: String) -> bool:
-    for i in range(data.multiplayer_matches.size()):
-        if data.multiplayer_matches[i].match_id == match_id:
-            data.multiplayer_matches.remove_at(i)
-            _save_database()
-            print("Match deleted: %s" % match_id)
-            return true
-    
-    push_warning("Match not found for deletion: %s" % match_id)
-    return false
-
-
-## Handle game invite acceptance by creating a match
-##
-## Extracts rounds/questions from the most recent game invite notification
-## for the invitee and creates a persistent match entry.
-##
-## @param inviter_username: Username who sent the invite
-## @param invitee_username: Username who accepted the invite
-func _on_game_invite_accepted(inviter_username: String, invitee_username: String) -> void:
-    # Find the notification with game invite data
-    var notifications = get_notifications(invitee_username)
-    var rounds = 3  # Default fallback
-    var questions = 2  # Default fallback
-    
-    for notif_data in notifications:
-        if notif_data.has("action_data") and notif_data.action_data.get("type") == "game_invite":
-            if notif_data.action_data.get("inviter_id") == inviter_username:
-                rounds = notif_data.action_data.get("rounds", 3)
-                questions = notif_data.action_data.get("questions", 2)
-                break
-    
-    # Create the match
-    var match_id = create_match(inviter_username, invitee_username, rounds, questions)
-    print("Match created: %s between %s and %s (%d rounds, %d questions)" % [
-        match_id, inviter_username, invitee_username, rounds, questions
-    ])
-    
-    # Emit signal to notify UI of new match
-    GlobalSignalBus.match_created.emit(match_id, inviter_username, invitee_username)
+    var res: Dictionary = await _fs_delete("matches", match_id)
+    if not res.ok:
+        push_warning("Match could not be deleted: %s (%s)" % [match_id, res.message])
+    return res.ok
 
 
 ## ============================================================================
-## Player Statistics Management
+## Player statistics
 ## ============================================================================
 
-## Update player statistics after a multiplayer match completes.
+## Apply the statistics of a finished match through the Cloud Function.
 ##
-## Calculates winner/loser based on correct answers, updates wins/losses/streaks,
-## tracks friend-specific wins, and emits signals for UI updates.
-## Uses stats_processed flag to ensure single execution per match.
-##
-## @param match_data: Complete match Dictionary with results for both players
-## Update player statistics after match completion.
-##
-## Increments total_games for both players, updates wins/losses for winner/loser,
-## and tracks category-level played/wins statistics based on rounds_data.
-##
-## Category stats structure: {category: {"played": count, "wins": count}}
-##
-## @param match_data: Complete match Dictionary with players and rounds_data
-func update_player_statistics(match_data: Dictionary) -> void:
-    # Validate match data
+## The latest match state is saved first because the function reads the match from
+## Firestore. The function is idempotent per match (stats_processed).
+func update_player_statistics(match_data: Dictionary) -> Dictionary:
     if not match_data.has("match_id"):
-        push_error("Cannot update statistics: missing match_id")
-        return
-    
+        return _fail("INVALID_MATCH", "Cannot update statistics: missing match_id")
     if not match_data.has("players") or match_data.players.size() != 2:
-        push_error("Cannot update statistics: invalid players array")
-        return
-    
-    # Check if statistics already processed
+        return _fail("INVALID_MATCH", "Cannot update statistics: invalid players array")
     if match_data.get("stats_processed", false):
-        push_warning("Statistics already processed for match %s" % match_data.match_id)
-        return
-    
-    var players: Array = match_data.players
-    var player1: String = players[0]
-    var player2: String = players[1]
-    
-    # Verify both users exist
-    if not user_exists(player1):
-        push_error("Cannot update statistics: player1 '%s' not found" % player1)
-        return
-    
-    if not user_exists(player2):
-        push_error("Cannot update statistics: player2 '%s' not found" % player2)
-        return
-    
-    # Increment total_games for both players
-    _users[player1].total_games += 1
-    _users[player2].total_games += 1
-    
-    # Extract categories from rounds_data and update category stats
-    for round_data: Dictionary in match_data.rounds_data:
-        var category: String = round_data.get("category", "")
-        if category.is_empty():
-            continue
-        
-        # Initialize category stats for both players if needed
-        if not _users[player1].category_stats.has(category):
-            _users[player1].category_stats[category] = {"played": 0, "wins": 0}
-        if not _users[player2].category_stats.has(category):
-            _users[player2].category_stats[category] = {"played": 0, "wins": 0}
-        
-        # Increment played count for both players
-        _users[player1].category_stats[category]["played"] += 1
-        _users[player2].category_stats[category]["played"] += 1
-    
-    # Calculate winner
-    var result: Dictionary = _calculate_match_winner(match_data)
-    
-    if result.is_draw:
-        # Draw - no wins/losses change, but total_games and category stats already updated
-        print("Match %s ended in draw - total_games and category stats updated" % match_data.match_id)
-        match_data.stats_processed = true
-        _save_database()
-        update_match(match_data)
-        GlobalSignalBus.player_stats_updated.emit(player1)
-        GlobalSignalBus.player_stats_updated.emit(player2)
-        return
-    
-    var winner: String = result.winner
-    var loser: String = result.loser
-    
-    # Update winner statistics
-    _users[winner].wins += 1
-    _users[winner].current_streak += 1
-    
-    # Update loser statistics
-    _users[loser].losses += 1
-    _users[loser].current_streak = 0
-    
-    # Update category wins for winner
-    for round_data: Dictionary in match_data.rounds_data:
-        var category: String = round_data.get("category", "")
-        if category.is_empty():
-            continue
-        
-        # Increment wins for winner's categories
-        _users[winner].category_stats[category]["wins"] += 1
-    
-    # Update friend wins if players are friends
-    if are_friends(winner, loser):
-        if not _users[winner].has("friend_wins"):
-            _users[winner].friend_wins = {}
-        
-        var current_friend_wins: int = _users[winner].friend_wins.get(loser, 0)
-        _users[winner].friend_wins[loser] = current_friend_wins + 1
-        
-        print("Friend win recorded: %s now has %d wins vs %s" % [winner, _users[winner].friend_wins[loser], loser])
-    
-    # Mark statistics as processed
+        return {"success": true, "already_processed": true}
+
+    var saved: Dictionary = await update_match(match_data)
+    if not saved.success:
+        return saved
+
+    var task: FunctionTask = Firebase.Functions.execute(
+        STATISTICS_FUNCTION, HTTPClient.METHOD_POST, {}, {"match_id": match_data.match_id}
+    )
+    var response: Variant = await task.task_finished
+    if not task.error.is_empty() or not response is Dictionary:
+        return _fail("STATISTICS_FAILED", "Statistics update failed: %s" % str(task.error))
+
     match_data.stats_processed = true
-    
-    # Save changes
-    _save_database()
-    update_match(match_data)
-    
-    # Emit signals for both players
-    GlobalSignalBus.player_stats_updated.emit(winner)
-    GlobalSignalBus.player_stats_updated.emit(loser)
-    
-    print("Statistics updated for match %s: %s won, %s lost" % [match_data.match_id, winner, loser])
+    for player: String in match_data.players:
+        GlobalSignalBus.player_stats_updated.emit(player)
+    return {"success": true, "already_processed": bool(response.get("already_processed", false))}
 
 
-## Calculate the winner of a completed match based on total correct answers.
-##
-## @param match_data: Complete match Dictionary with player answers
-## @return Dictionary with winner, loser, and is_draw fields
-func _calculate_match_winner(match_data: Dictionary) -> Dictionary:
-    var players: Array = match_data.players
-    var player1: String = players[0]
-    var player2: String = players[1]
-    
-    var score1: int = 0
-    var score2: int = 0
-    
-    # Count correct answers across all rounds
-    for round_data: Dictionary in match_data.rounds_data:
-        # Count player1 correct answers
-        if round_data.player_answers.has(player1):
-            var p1_results: Array = round_data.player_answers[player1].get("results", [])
-            for result: Dictionary in p1_results:
-                if result.get("was_correct", false):
-                    score1 += 1
-        
-        # Count player2 correct answers
-        if round_data.player_answers.has(player2):
-            var p2_results: Array = round_data.player_answers[player2].get("results", [])
-            for result: Dictionary in p2_results:
-                if result.get("was_correct", false):
-                    score2 += 1
-    
-    # Determine winner
-    if score1 > score2:
-        return {"winner": player1, "loser": player2, "is_draw": false}
-    elif score2 > score1:
-        return {"winner": player2, "loser": player1, "is_draw": false}
-    else:
-        return {"winner": "", "loser": "", "is_draw": true}
-
-
-## Save the user database to a JSON file.
-func _save_database() -> void:
-    # Convert data dictionary to JSON
-    var json_string: String = JSON.stringify(data, "\t")
-    
-    # Open file for writing
-    var file: FileAccess = FileAccess.open(DATABASE_PATH, FileAccess.WRITE)
-    if file == null:
-        push_error("Failed to save user database: " + str(FileAccess.get_open_error()))
-        return
-    
-    # Write JSON data to file
-    file.store_string(json_string)
-    file.close()
-
-
-## Load the user database from a JSON file.
-## Creates a new empty database file if it doesn't exist.
-func _load_database() -> void:
-    # Check if file exists
-    if not FileAccess.file_exists(DATABASE_PATH):
-        print("User database not found, creating new database at: " + DATABASE_PATH)
-        data = {
-            "users": {},
-            "multiplayer_matches": []
-        }
-        _save_database()
-        return
-    
-    # Open file for reading
-    var file: FileAccess = FileAccess.open(DATABASE_PATH, FileAccess.READ)
-    if file == null:
-        push_error("Failed to load user database: " + str(FileAccess.get_open_error()))
-        data = {
-            "users": {},
-            "multiplayer_matches": []
-        }
-        return
-    
-    # Read and parse JSON data
-    var json_string: String = file.get_as_text()
-    file.close()
-    
-    # Parse JSON
-    var json: JSON = JSON.new()
-    var parse_result: Error = json.parse(json_string)
-    
-    if parse_result != OK:
-        push_error("Failed to parse user database JSON: " + json.get_error_message())
-        data = {
-            "users": {},
-            "multiplayer_matches": []
-        }
-        return
-    
-    # Load parsed data
-    var loaded_data: Variant = json.data
-    if loaded_data is Dictionary:
-        # Check if this is old format (direct user dictionary) or new format
-        if loaded_data.has("users") and loaded_data.has("multiplayer_matches"):
-            # New format
-            data = loaded_data
-        else:
-            # Old format - migrate
-            print("Migrating database from old format to new format")
-            data = {
-                "users": loaded_data,
-                "multiplayer_matches": []
-            }
-        _migrate_user_data()
-        print("User database loaded successfully. Users: " + str(data.users.size()))
-    else:
-        push_error("User database JSON is not a valid dictionary")
-        data = {
-            "users": {},
-            "multiplayer_matches": []
-        }
-
-
-## Migrate existing user data to include new fields.
-##
-## Adds wins, losses, current_streak, friend_wins, category_stats fields with default values 
-## to existing users that don't have these fields. Ensures backward compatibility.
-## Migrate existing user data to include new fields.
-##
-## Adds total_games field and converts old category_stats structure
-## from {category: count} to {category: {"played": count, "wins": 0}}.
-func _migrate_user_data() -> void:
-    var migrated_count: int = 0
-    
-    for username: String in _users.keys():
-        var user_data: Dictionary = _users[username]
-        var needs_migration: bool = false
-        
-        # Add wins field if missing
-        if not user_data.has("wins"):
-            user_data.wins = 0
-            needs_migration = true
-        
-        # Add losses field if missing
-        if not user_data.has("losses"):
-            user_data.losses = 0
-            needs_migration = true
-        
-        # Add total_games field if missing
-        if not user_data.has("total_games"):
-            user_data.total_games = 0
-            needs_migration = true
-        
-        # Add current_streak field if missing
-        if not user_data.has("current_streak"):
-            user_data.current_streak = 0
-            needs_migration = true
-        
-        # Add friend_wins field if missing
-        if not user_data.has("friend_wins"):
-            user_data.friend_wins = {}
-            needs_migration = true
-        
-        # Add category_stats field if missing or migrate old structure
-        if not user_data.has("category_stats"):
-            user_data.category_stats = {}
-            needs_migration = true
-        else:
-            # Migrate old category_stats structure {category: count} to new structure
-            var old_stats: Dictionary = user_data.category_stats
-            var needs_category_migration: bool = false
-            
-            for category: String in old_stats.keys():
-                var value = old_stats[category]
-                # Check if this is old format (int) vs new format (Dictionary)
-                if typeof(value) == TYPE_INT or typeof(value) == TYPE_FLOAT:
-                    needs_category_migration = true
-                    break
-            
-            if needs_category_migration:
-                var new_stats: Dictionary = {}
-                for category: String in old_stats.keys():
-                    var played_count: int = int(old_stats[category])
-                    new_stats[category] = {"played": played_count, "wins": 0}
-                user_data.category_stats = new_stats
-                needs_migration = true
-                print("Migrated category_stats for user %s to new structure" % username)
-        
-        if needs_migration:
-            migrated_count += 1
-    
-    # Save if any users were migrated
-    if migrated_count > 0:
-        _save_database()
-        print("Migrated %d users to include statistics fields" % migrated_count)
-
-
-## Generate placeholder category statistics for testing.
-##
-## TODO: Replace with real category tracking from gameplay_screen match completion.
-## This function generates random play counts for 3 random categories to allow UI testing
-## before real gameplay tracking is implemented.
-##
-## @return Dictionary mapping category names to play counts (1-20)
+## Placeholder category statistics used by the profile UI for display only (never stored).
 func _generate_placeholder_category_stats() -> Dictionary:
-    # TODO: Replace with real category tracking from gameplay_screen match completion
     var categories: Array[String] = ["General Knowledge", "Entertainment", "Science", "History", "Geography", "Sports"]
     var stats: Dictionary = {}
-    
-    # Pick 3 random categories with random play counts
     var selected_categories: Array[String] = categories.duplicate()
     selected_categories.shuffle()
-    
+
     for i in range(3):
         if i < selected_categories.size():
             var category: String = selected_categories[i]
-            var played: int = randi() % 20 + 1  # Random count 1-20
-            var wins: int = randi() % played  # Random wins (0 to played)
+            var played: int = randi() % 20 + 1
+            var wins: int = randi() % played
             stats[category] = {"played": played, "wins": wins}
-    
+
     return stats

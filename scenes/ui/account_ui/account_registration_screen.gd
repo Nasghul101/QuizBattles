@@ -25,6 +25,7 @@ extends Control
 
 ## Flag to track if account creation failed due to duplicate username
 var _duplicate_username_error: bool = false
+var _creating_account: bool = false
 
 
 func _ready() -> void:
@@ -52,6 +53,7 @@ func _on_name_input_changed() -> void:
     # If there was a duplicate username error, clear it when username is edited
     if _duplicate_username_error:
         _duplicate_username_error = false
+    _update_button_state()
 
 
 ## Update the Create Account button enabled/disabled state
@@ -64,7 +66,7 @@ func _update_button_state() -> void:
     )
     
     # Disable if duplicate username error flag is set
-    create_account_button.disabled = not all_fields_filled or _duplicate_username_error
+    create_account_button.disabled = not all_fields_filled or _duplicate_username_error or _creating_account
 
 
 func _on_back_button_pressed() -> void:
@@ -72,6 +74,9 @@ func _on_back_button_pressed() -> void:
 
 ## Handle Create Account button press
 func _on_create_account_button_pressed() -> void:
+    if _creating_account:
+        return
+
     var username: String = name_input.text.strip_edges()
     var password: String = password_input.text
     var password_confirm_text: String = password_confirm.text
@@ -83,29 +88,36 @@ func _on_create_account_button_pressed() -> void:
         return
     
     # Attempt to create user account
-    var result: Dictionary = UserDatabase.create_user(username, password, email)
+    _creating_account = true
+    _update_button_state()
+    var result: Dictionary = await UserDatabase.create_user(username, password, email)
     
-    if result.success:
-        # Success - log the created user data
-        print("Account created successfully: ", result.user)
-        
-        # Log the user in immediately after account creation
-        var sign_in_result: Dictionary = UserDatabase.sign_in(username, password)
-        if sign_in_result.success:
-            print("User automatically logged in")
-            LocalCache.remember_login(username, password)
+    if result.get("success", false):
+        print("Account created successfully")
+
+        var sign_in_result: Dictionary = await UserDatabase.sign_in(email, password)
+        if sign_in_result.get("success", false):
+            if not LocalCache.remember_session():
+                push_error("Account created and signed in, but the session could not be saved on this device")
             Utils.navigate_to_scene("account_management", "register_login")
         else:
-            print("ERROR: Failed to log in after account creation: ", sign_in_result.message)
+            push_error("Account created, but sign-in failed (%s): %s" % [
+                sign_in_result.get("error_code", "UNKNOWN"),
+                sign_in_result.get("message", "No error details returned")
+            ])
             Utils.navigate_to_scene("register_login")
     else:
-        # Error - log the error message
-        print("ERROR: ", result.message)
+        push_warning("Account creation failed (%s): %s" % [
+            result.get("error_code", "UNKNOWN"),
+            result.get("message", "No error details returned")
+        ])
         
         # If duplicate username error, set flag and disable button
-        if result.error_code == "USERNAME_EXISTS":
+        if result.get("error_code") == "USERNAME_EXISTS":
             _duplicate_username_error = true
-            _update_button_state()
+
+    _creating_account = false
+    _update_button_state()
 
 
 func _on_sign_in_button_pressed() -> void:

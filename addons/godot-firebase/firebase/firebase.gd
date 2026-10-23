@@ -15,6 +15,7 @@ extends Node
 const _ENVIRONMENT_VARIABLES : String = "firebase/environment_variables"
 const _EMULATORS_PORTS : String = "firebase/emulators/ports"
 const _AUTH_PROVIDERS : String = "firebase/auth_providers"
+const _RUNTIME_MODE_SETTING : String = "firebase/runtime_mode"
 
 ## @type FirebaseAuth
 ## The Firebase Authentication API.
@@ -44,7 +45,11 @@ const _AUTH_PROVIDERS : String = "firebase/auth_providers"
 ## The Firebase Remote Config API
 @onready var RemoteConfigAPI := $RemoteConfig
 
-@export var emulating : bool = false
+@export var emulating : bool = true
+
+var configuration_ready: bool = false
+var configuration_error: String = ""
+var emulator_host: String = "127.0.0.1"
 
 # Configuration used by all files in this project
 # These values can be found in your Firebase Project
@@ -92,8 +97,23 @@ func _ready() -> void:
 
 
 func set_emulated(emulating : bool = true) -> void:
-	self.emulating = emulating
+	configuration_ready = false
+	self.emulating = true
 	_check_emulating()
+	if emulating:
+		if not _validate_emulator_configuration():
+			return
+	else:
+		if OS.is_debug_build():
+			_fail_configuration("Production Firebase mode is only allowed in a release build.")
+			return
+		if not _validate_production_configuration():
+			return
+		self.emulating = false
+		_check_emulating()
+
+	configuration_error = ""
+	configuration_ready = true
 
 func _check_emulating() -> void:
 	if emulating:
@@ -103,28 +123,101 @@ func _check_emulating() -> void:
 			module._check_emulating()
 
 func _load_config() -> void:
-	if not (_config.apiKey != "" and _config.authDomain != ""):
-		var env = ConfigFile.new()
-		var err = env.load("res://addons/godot-firebase/.env")
-		if err == OK:
-			for key in _config.keys():
-				var config_value = _config[key]
-				if key == "emulators" and config_value.has("ports"):
-					for port in config_value["ports"].keys():
-						config_value["ports"][port] = env.get_value(_EMULATORS_PORTS, port, "")
-				if key == "auth_providers":
-					for provider in config_value.keys():
-						config_value[provider] = env.get_value(_AUTH_PROVIDERS, provider, "")
-				else:
-					var value : String = env.get_value(_ENVIRONMENT_VARIABLES, key, "")
-					if value == "":
-						_print("The value for `%s` is not configured. If you are not planning to use it, ignore this message." % key)
-					else:
-						_config[key] = value
+	var env = ConfigFile.new()
+	var err = env.load("res://addons/godot-firebase/.env")
+	if err != OK:
+		_fail_configuration("Unable to read Firebase configuration at res://addons/godot-firebase/.env.")
+		return
+
+	var runtime_mode := str(ProjectSettings.get_setting(_RUNTIME_MODE_SETTING, "emulator"))
+	for key in _config.keys():
+		var config_value = _config[key]
+		if key == "emulators" and config_value.has("ports"):
+			for port in config_value.ports.keys():
+				config_value.ports[port] = env.get_value(_EMULATORS_PORTS, port, "")
+		elif key == "auth_providers":
+			for provider in config_value.keys():
+				config_value[provider] = env.get_value(_AUTH_PROVIDERS, provider, "")
 		else:
-			_printerr("Unable to read .env file at path 'res://addons/godot-firebase/.env'")
+			var value: String = env.get_value(_ENVIRONMENT_VARIABLES, key, "")
+			if value == "" and key == "functionsGeoZone" and runtime_mode == "emulator":
+				value = str(ProjectSettings.get_setting("firebase/functions_region", ""))
+			if value == "":
+				_print("The value for `%s` is not configured. If you are not planning to use it, ignore this message." % key)
+			else:
+				_config[key] = value
+
+	if runtime_mode == "emulator":
+		emulating = true
+		_config.projectId = str(ProjectSettings.get_setting("firebase/emulator_project_id", "demo-quizbattles"))
+		emulator_host = str(ProjectSettings.get_setting("firebase/emulator_host", "127.0.0.1")).strip_edges()
+		var emulator_config: Dictionary = _config.get("emulators", {})
+		var ports: Dictionary = emulator_config.get("ports", {})
+		for service in ["authentication", "firestore", "functions"]:
+			if str(ports.get(service, "")).strip_edges().is_empty():
+				ports[service] = str(ProjectSettings.get_setting("firebase/emulators/ports/%s" % service, ""))
+		if not _validate_emulator_configuration():
+			return
+	elif runtime_mode == "production":
+		if OS.is_debug_build():
+			_fail_configuration("Production Firebase mode is only allowed in a release build.")
+			return
+		if not _validate_production_configuration():
+			return
+		emulating = false
+	else:
+		_fail_configuration("Invalid Firebase runtime mode '%s'; expected 'emulator' or 'production'." % runtime_mode)
+		return
 
 	_setup_modules()
+	configuration_error = ""
+	configuration_ready = true
+
+
+func _validate_emulator_configuration() -> bool:
+	var project_id := str(_config.get("projectId", "")).strip_edges()
+	if not project_id.begins_with("demo-"):
+		_fail_configuration("Firebase emulator mode requires a demo project ID beginning with 'demo-'.")
+		return false
+
+	if emulator_host.is_empty() or emulator_host.contains("://") or emulator_host.contains("/") or emulator_host.contains("\\") or emulator_host.contains(":"):
+		_fail_configuration("Firebase emulator host must be a hostname or IPv4 address without a scheme or port.")
+		return false
+
+	var emulator_config: Dictionary = _config.get("emulators", {})
+	var ports: Dictionary = emulator_config.get("ports", {})
+	for service in ["authentication", "firestore", "functions"]:
+		var port_text := str(ports.get(service, "")).strip_edges()
+		if not port_text.is_valid_int():
+			_fail_configuration("Firebase emulator mode requires a valid %s port." % service)
+			return false
+		var port := int(port_text)
+		if port < 1 or port > 65535:
+			_fail_configuration("Firebase emulator mode requires a valid %s port." % service)
+			return false
+
+	if str(_config.get("functionsGeoZone", "")).strip_edges().is_empty():
+		_fail_configuration("Firebase emulator mode requires a Functions region.")
+		return false
+	return true
+
+
+func get_emulator_url(port: String, path: String) -> String:
+	return "http://%s:%s/%s" % [emulator_host, port, path.trim_prefix("/")]
+
+
+func _validate_production_configuration() -> bool:
+	for key in ["apiKey", "authDomain", "projectId", "functionsGeoZone"]:
+		if str(_config.get(key, "")).strip_edges().is_empty():
+			_fail_configuration("Production Firebase mode requires the '%s' configuration value." % key)
+			return false
+	return true
+
+
+func _fail_configuration(message: String) -> void:
+	configuration_ready = false
+	configuration_error = message
+	_printerr(message)
 
 func _setup_modules() -> void:
 	for module in get_children():

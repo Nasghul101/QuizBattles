@@ -18,12 +18,12 @@ extends Node
 signal notification_received(notification_data: Dictionary)
 
 ## Emitted when a user interacts with a notification (accepts or denies).
-## [param notification_id] Unique ID of the notification
+## [param notification_data] Notification data used by the action handler
 ## [param action] Action taken by user ("accept" or "deny")
 ## Systems interested in specific notification types should listen to this signal
 ## and check action_data to handle their notification types appropriately.
 # warning-ignore UNUSED_SIGNAL
-signal notification_action_taken(notification_id: String, action: String)
+signal notification_action_taken(notification_data: Dictionary, action: String)
 
 ## Emitted when a player accepts a game invitation.
 ## [param inviter_username] String - Username of player who sent invite

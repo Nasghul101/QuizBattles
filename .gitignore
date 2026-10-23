@@ -12,6 +12,32 @@ export_credentials.cfg
 # Imported translations (automatically generated from CSV files)
 *.translation
 
+# Firebase tooling
+node_modules/
+.firebase/
+firebase-debug.log
+firestore-debug.log
+ui-debug.log
+
+# Local credentials and user data
+.env*
+!.env.example
+*.pem
+*.key
+*.p12
+*.pfx
+*.p8
+*.keystore
+*.jks
+*service-account*.json
+*serviceAccount*.json
+*firebase-adminsdk*.json
+/data/user_database.json
+*.sqlite
+*.sqlite3
+*.db
+*.log
+
 # Mono-specific ignores
 .mono/
 data_*/

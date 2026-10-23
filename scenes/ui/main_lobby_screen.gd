@@ -30,14 +30,17 @@ var notification_components: Array[Control] = []
 
 
 func _ready() -> void:
+    if not LocalCache.session_restore_done:
+        await LocalCache.session_restore_finished
+
     # Connect to GlobalSignalBus for notifications
     GlobalSignalBus.notification_received.connect(_on_notification_received)
     
     # Load existing notifications for current user
-    _load_existing_notifications()
+    await _load_existing_notifications()
     
     # Update notification indicator
-    _update_notification_indicator()
+    await _update_notification_indicator()
 
     # Set initial page name
     _update_page_name(current_page)
@@ -100,7 +103,7 @@ func _load_existing_notifications() -> void:
     if not UserDatabase.is_signed_in():
         return
     
-    var notifications: Array = UserDatabase.get_notifications(UserDatabase.current_user.username)
+    var notifications: Array = await UserDatabase.get_notifications(UserDatabase.current_user.username)
     
     # Instantiate a component for each notification
     for notif_data: Dictionary in notifications:
@@ -124,7 +127,7 @@ func _on_notification_received(notification_data: Dictionary) -> void:
     _instantiate_notification_component(notification_data)
     
     # Update indicator
-    _update_notification_indicator()
+    await _update_notification_indicator()
 
 
 ## Instantiate a notification component and add to list
@@ -150,7 +153,8 @@ func _on_notification_action(notification_id: String, action: String) -> void:
     if not UserDatabase.is_signed_in():
         return
     
-    # Find component and handle friend request BEFORE emitting signal
+    var notification_data: Dictionary = {}
+    var matching_component: Control
     for i in range(notification_components.size()):
         var component: Control = notification_components[i]
         
@@ -160,39 +164,60 @@ func _on_notification_action(notification_id: String, action: String) -> void:
             if component.get("notification_data") is Dictionary:
                 var data: Dictionary = component.get("notification_data")
                 if data.get("id") == notification_id:
-                    # Handle friend request acceptance FIRST
-                    if data.has("action_data") and action == "accept":
-                        var action_data: Dictionary = data.action_data
-                        if action_data.get("type") == "friend_request":
-                            # Call UserDatabase directly to add friend
-                            var sender: String = data.get("sender", "")
-                            if not sender.is_empty():
-                                UserDatabase.add_friend(UserDatabase.current_user.username, sender)
-                        
-                        # Handle game invite acceptance
-                        if action_data.get("type") == "game_invite":
-                            var inviter_id: String = action_data.get("inviter_id", "")
-                            if inviter_id.is_empty():
-                                push_warning("Game invite missing inviter_id")
-                            else:
-                                # Emit signal for future multiplayer integration
-                                GlobalSignalBus.game_invite_accepted.emit(inviter_id, UserDatabase.current_user.username)
-                                print("Game invite accepted: %s vs %s" % [inviter_id, UserDatabase.current_user.username])
-                                # TODO: Connect multiplayer game initialization to GlobalSignalBus.game_invite_accepted signal
-                    
-                    # Remove from array and free
-                    notification_components.remove_at(i)
-                    component.queue_free()
+                    notification_data = data
+                    matching_component = component
                     break
-    
-    # Remove from database
-    UserDatabase.remove_notification(UserDatabase.current_user.username, notification_id)
-    
-    # Emit global signal AFTER friend is added so listeners see updated state
-    GlobalSignalBus.notification_action_taken.emit(notification_id, action)
-    
-    # Update indicator
-    _update_notification_indicator()
+
+    if notification_data.is_empty():
+        push_warning("Notification action ignored because notification %s is no longer displayed" % notification_id)
+        return
+
+    var action_data: Dictionary = notification_data.get("action_data", {})
+    if action == "accept":
+        if action_data.get("type") == "friend_request":
+            var sender: String = notification_data.get("sender", "")
+            var friendship: Dictionary = await UserDatabase.add_friend(
+                UserDatabase.current_user.username,
+                sender
+            )
+            if not friendship.get("success", false):
+                push_error("Could not accept friend request: %s" % friendship.get("message", "Unknown error"))
+                return
+        elif action_data.get("type") == "game_invite":
+            var inviter: String = str(action_data.get("inviter_id", ""))
+            if inviter.is_empty():
+                push_error("Game invite is missing inviter_id")
+                return
+            var match_id: String = await UserDatabase.create_match(
+                inviter,
+                UserDatabase.current_user.username,
+                int(action_data.get("rounds", 3)),
+                int(action_data.get("questions", 2))
+            )
+            if match_id.is_empty():
+                push_error("Could not create a match for the accepted game invite")
+                return
+            GlobalSignalBus.match_created.emit(
+                match_id,
+                inviter,
+                UserDatabase.current_user.username
+            )
+            GlobalSignalBus.game_invite_accepted.emit(inviter, UserDatabase.current_user.username)
+
+    var removed: Dictionary = await UserDatabase.remove_notification(
+        UserDatabase.current_user.username,
+        notification_id
+    )
+    if not removed.get("success", false):
+        push_error("Could not remove notification: %s" % removed.get("message", "Unknown error"))
+        return
+
+    if is_instance_valid(matching_component):
+        notification_components.erase(matching_component)
+        matching_component.queue_free()
+
+    GlobalSignalBus.notification_action_taken.emit(notification_data, action)
+    await _update_notification_indicator()
 
 
 ## Update visual indicator on notifications button based on unread count
@@ -203,7 +228,7 @@ func _update_notification_indicator() -> void:
         notifications_button.modulate = Color.WHITE
         return
     
-    var unread_count: int = UserDatabase.get_unread_count(UserDatabase.current_user.username)
+    var unread_count: int = await UserDatabase.get_unread_count(UserDatabase.current_user.username)
     
     if unread_count > 0:
         notifications_button.modulate = notification_indicator_color

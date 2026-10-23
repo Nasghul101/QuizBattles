@@ -4,18 +4,22 @@
 Defines local user storage, authentication data, social data, and player statistics.
 ## Requirements
 ### Requirement: User Registration
-The system SHALL allow creating new user accounts with username, password, and email.
+The system SHALL create a Firebase Authentication account with the supplied email and password and create a corresponding Firestore profile containing the unique username, default avatar, notifications, friends, and statistics. Registration SHALL report success only after both the Auth account and profile are available.
 
-**Rationale:** Enable players to create accounts for gameplay and progression tracking.
+**Rationale:** Give each player a shared, persistent identity and profile without storing credentials in the game database.
 
 #### Scenario: Successful user registration
-**Given** no user exists with username "Player123" or email "player@example.com"  
-**When** `create_user("Player123", "password123", "player@example.com")` is called  
-**Then** the user is created and stored in memory  
-**And** the password is hashed using SHA-256  
-**And** the method returns `{success: true, user: {username: "Player123", email: "player@example.com"}}`
+- **GIVEN** the email and username are not already registered
+- **WHEN** the user submits a valid username, password, and email
+- **THEN** Firebase Authentication creates the account and Firestore stores its profile
+- **AND** the profile starts with empty notifications, friends, and statistics
+- **AND** the returned user data excludes the password
 
----
+#### Scenario: Profile creation fails after Auth account creation
+- **GIVEN** Firebase Authentication creates the account but Firestore cannot create the profile
+- **WHEN** registration completes with a backend error
+- **THEN** registration SHALL NOT return success
+- **AND** the error SHALL be surfaced without substituting local or default user data
 
 ### Requirement: Duplicate Username Detection
 The system SHALL prevent registration of usernames that already exist.
@@ -84,30 +88,39 @@ The system SHALL enforce username length between 5 and 15 characters inclusive.
 ---
 
 ### Requirement: User Authentication
-The system SHALL authenticate users with username and password credentials.
+The system SHALL authenticate users with email and password through Firebase Authentication and set the current user session only after the corresponding Firestore profile is loaded.
 
-**Rationale:** Allow registered users to log into their accounts.
+**Rationale:** Authenticate the account using Firebase's supported email/password provider and expose its shared game profile.
 
 #### Scenario: Successful sign-in
-**Given** a user exists with username "Player123" and password "password123"  
-**When** `sign_in("Player123", "password123")` is called  
-**Then** the user is authenticated  
-**And** the current user session is set  
-**And** the method returns `{success: true, user: {username: "Player123", email: "player@example.com"}}`
+- **GIVEN** a Firebase Auth account and matching Firestore profile exist for `player@example.com`
+- **WHEN** the user signs in with that email and its valid password
+- **THEN** the user is authenticated and the current user session is set from the profile
+- **AND** the result includes the profile username and email
+
+#### Scenario: Reject invalid credentials
+- **GIVEN** no Firebase Auth account matches the supplied credentials
+- **WHEN** sign-in completes
+- **THEN** authentication fails with a Firebase Auth error
+- **AND** the current user session remains empty
 
 #### Scenario: Reject non-existent user
-**Given** no user exists with username "Ghost"  
-**When** `sign_in("Ghost", "password")` is called  
-**Then** authentication fails  
-**And** the method returns `{success: false, error_code: "USER_NOT_FOUND", message: "No user found with this username"}`
+- **GIVEN** no Firebase Auth account exists for the supplied email
+- **WHEN** sign-in is attempted
+- **THEN** authentication fails with the corresponding Firebase Auth error
+- **AND** the current user session remains empty
 
 #### Scenario: Reject incorrect password
-**Given** a user exists with username "Player123" and password "password123"  
-**When** `sign_in("Player123", "wrongpassword")` is called  
-**Then** authentication fails  
-**And** the method returns `{success: false, error_code: "INVALID_PASSWORD", message: "Password is incorrect"}`
+- **GIVEN** a Firebase Auth account exists for the supplied email
+- **WHEN** an incorrect password is submitted
+- **THEN** authentication fails with the corresponding Firebase Auth error
+- **AND** the current user session remains empty
 
----
+#### Scenario: Surface authentication service failure
+- **GIVEN** Firebase Authentication is unavailable
+- **WHEN** sign-in is attempted
+- **THEN** the service failure is returned to the caller
+- **AND** the system SHALL NOT report a successful sign-in
 
 ### Requirement: Session Management
 The system SHALL track the currently logged-in user.
@@ -129,23 +142,33 @@ The system SHALL track the currently logged-in user.
 ---
 
 ### Requirement: Password Security
-The system SHALL hash passwords using SHA-256 before storage and never store plain-text passwords.
+The system SHALL delegate password storage and verification to Firebase Authentication. The game SHALL NOT hash, persist, or write passwords to Firestore or the legacy user JSON file.
 
-**Rationale:** Protect user credentials even in temporary storage, following Firebase security practices.
+**Rationale:** Keep password handling within Firebase Authentication rather than implementing a custom credential store.
+
+#### Scenario: Register password through Firebase Authentication
+- **GIVEN** a user registers with a password
+- **WHEN** account creation is submitted
+- **THEN** the password is sent only to Firebase Authentication
+- **AND** the Firestore profile and local user-data cache contain no password or password hash
+
+#### Scenario: Sign in without reading stored credentials
+- **GIVEN** a registered user supplies a password
+- **WHEN** sign-in is submitted
+- **THEN** Firebase Authentication verifies the password
+- **AND** the game does not read a stored password hash from local user data
 
 #### Scenario: Hash password on registration
-**Given** a user registers with password "mypassword"  
-**When** the user data is stored  
-**Then** the password field contains a SHA-256 hash  
-**And** the plain-text password is not stored anywhere
+- **GIVEN** a user registers with a password
+- **WHEN** the account is created
+- **THEN** Firebase Authentication stores and manages the credential
+- **AND** the game stores no password or password hash
 
 #### Scenario: Verify hashed password on sign-in
-**Given** a user registered with password "mypassword" (stored as hash)  
-**When** `sign_in(username, "mypassword")` is called  
-**Then** the provided password is hashed and compared to the stored hash  
-**And** authentication succeeds if hashes match
-
----
+- **GIVEN** a user has a Firebase Auth account
+- **WHEN** the user signs in with a password
+- **THEN** Firebase Authentication verifies the credential
+- **AND** the game does not retrieve or compare a locally stored hash
 
 ### Requirement: Utility Methods
 The system SHALL provide helper methods to check user and email existence.
@@ -218,66 +241,69 @@ The system SHALL provide a method to update the avatar_path of the currently sig
 ---
 
 ### Requirement: User Data Schema with Notifications
-The user database SHALL store a notifications array for each user containing notification objects.
+The system SHALL associate notifications with a Firestore user profile and return the user's notifications as an array containing their complete notification data.
 
-**Rationale:** Notifications must persist across sessions and be tied to user accounts.
+**Rationale:** Preserve the notification data contract while storing each user's shared notifications remotely.
+
+#### Scenario: New user has no notifications
+- **GIVEN** a new user profile is created
+- **WHEN** the user's notifications are queried
+- **THEN** the result is an empty array
 
 #### Scenario: New user has empty notifications array
-**Given** a new user is created with username "newuser"  
-**When** the user is registered via create_user()  
-**Then** the user's data SHALL include a `notifications` key  
-**And** the value SHALL be an empty array `[]`
+- **GIVEN** a new user profile is created
+- **WHEN** the notifications array is requested
+- **THEN** the result is an empty array
+
+#### Scenario: Existing notifications persist across sessions
+- **GIVEN** a user has two notifications stored in Firestore
+- **WHEN** the user signs in from a later session and loads notifications
+- **THEN** both notifications and their original fields are returned
 
 #### Scenario: Existing users retain notifications on save/load
-**Given** a user "testuser" has 2 notifications in their notifications array  
-**When** the database is saved to disk  **And** the game is restarted  
-**And** the database is loaded  
-**Then** the user "testuser" SHALL have exactly 2 notifications  
-**And** each notification SHALL contain all original data fields
-
----
+- **GIVEN** a user has two notifications stored in Firestore
+- **WHEN** the application restarts and reloads that user's notifications
+- **THEN** both notifications and all original fields are returned
 
 ### Requirement: Add Notification to User
-The user database SHALL provide a function to add a notification to a specific user's notification array.
+The user database SHALL create a notification associated with the specified recipient in Firestore and SHALL return success only after the write succeeds.
 
-**Rationale:** Systems need to create notifications and store them for delivery.
+**Rationale:** Deliver notifications across sessions and devices without storing them in a local file.
 
 #### Scenario: Add notification to existing user
-**Given** a user "recipient" exists  
-**When** `add_notification("recipient", notification_data)` is called  
-**And** notification_data contains `{"id": "notif_001", "message": "Test", "timestamp": "2026-02-02T10:00:00Z", "sender": "sender_name", "is_read": false, "has_actions": true, "action_data": {}}`  
-**Then** the notification SHALL be appended to the user's notifications array  
-**And** the database SHALL be saved to disk  
-**And** the function returns successfully
+- **GIVEN** the recipient exists and the notification data is valid
+- **WHEN** the notification is added
+- **THEN** the recipient's remote notification data includes the notification
+- **AND** the operation completes successfully after Firebase confirms the write
 
 #### Scenario: Reject notification for non-existent user
-**Given** no user exists with username "ghost"  
-**When** `add_notification("ghost", notification_data)` is called  
-**Then** the function SHALL log an error  
-**And** no notification is stored  
-**And** the database is not modified
-
----
+- **GIVEN** no user exists for the requested recipient
+- **WHEN** a notification is added
+- **THEN** no notification is stored
+- **AND** the caller receives an explicit error
 
 ### Requirement: Remove Notification from User
-The user database SHALL provide a function to remove a notification by ID from a user's notification array.
+The user database SHALL remove the specified notification from Firestore without changing other notifications for the recipient.
 
-**Rationale:** Notifications are removed when users interact with them or they expire.
+**Rationale:** Keep notification dismissal and expiry synchronized across devices.
 
 #### Scenario: Remove notification by ID
-**Given** user "testuser" has a notification with id "notif_123"  
-**When** `remove_notification("testuser", "notif_123")` is called  
-**Then** the notification with id "notif_123" SHALL be removed from the array  
-**And** other notifications SHALL remain unchanged  
-**And** the database SHALL be saved to disk
+- **GIVEN** a recipient has a notification with the requested ID
+- **WHEN** the notification is removed
+- **THEN** that remote notification is deleted
+- **AND** other notifications remain unchanged
+
+#### Scenario: Remove a missing notification
+- **GIVEN** the requested notification ID does not exist
+- **WHEN** removal is attempted
+- **THEN** no other notification is changed
+- **AND** the operation reports the backend result explicitly
 
 #### Scenario: Gracefully handle missing notification ID
-**Given** user "testuser" has no notification with id "notif_999"  
-**When** `remove_notification("testuser", "notif_999")` is called  
-**Then** the function completes without error  
-**And** the user's notifications array remains unchanged
-
----
+- **GIVEN** the requested notification ID does not exist
+- **WHEN** removal is attempted
+- **THEN** the user's other notifications remain unchanged
+- **AND** no unrelated Firebase record is modified
 
 ### Requirement: Get User Notifications
 The user database SHALL provide a function to retrieve all notifications for a specific user.
@@ -304,25 +330,24 @@ The user database SHALL provide a function to retrieve all notifications for a s
 ---
 
 ### Requirement: Mark Notification as Read
-The user database SHALL provide a function to mark a specific notification as read.
+The user database SHALL persist notification read-state changes in Firestore for the notification recipient.
 
-**Rationale:** Track which notifications the user has acknowledged without removing them immediately.
+**Rationale:** Keep unread state consistent across sessions and devices.
 
 #### Scenario: Mark notification as read
-**Given** user "testuser" has a notification with id "notif_001"  
-**And** the notification's `is_read` field is `false`  
-**When** `mark_notification_read("testuser", "notif_001")` is called  
-**Then** the notification's `is_read` field SHALL be set to `true`  
-**And** the database SHALL be saved to disk
+- **GIVEN** the recipient has an unread notification
+- **WHEN** it is marked as read
+- **THEN** Firestore stores `is_read: true`
+
+#### Scenario: Already-read notification
+- **GIVEN** the notification is already marked as read
+- **WHEN** it is marked as read again
+- **THEN** it remains read and no other notification is changed
 
 #### Scenario: Handle already-read notification
-**Given** user "testuser" has a notification with id "notif_002"  
-**And** the notification's `is_read` field is already `true`  
-**When** `mark_notification_read("testuser", "notif_002")` is called  
-**Then** the function completes without error  
-**And** the notification remains marked as read
-
----
+- **GIVEN** the notification is already marked as read
+- **WHEN** it is marked as read again
+- **THEN** it remains read and no other notification is changed
 
 ### Requirement: Get Unread Notification Count
 The user database SHALL provide a function to retrieve the count of unread notifications for a user.
@@ -387,88 +412,71 @@ The user database SHALL automatically add a timestamp to notifications if not pr
 **And** the timestamp is not overwritten
 
 ### Requirement: Friends Array in User Schema
-UserDatabase SHALL store a friends array for each user containing usernames of their friends.
+The system SHALL provide each user's friends as an array of usernames backed by Firestore friendship records.
 
-**Cross-reference**: Supports `friend-list-management` capability.
+**Rationale:** Keep the existing friends-list behavior while representing shared relationships remotely.
+
+#### Scenario: New user has no friends
+- **GIVEN** a new user profile is created
+- **WHEN** the user's friends are queried
+- **THEN** the result is an empty array
 
 #### Scenario: New user has empty friends array
-**Given** a new user "alice" is created via `create_user()`  
-**When** the user data is stored  
-**Then** the user record SHALL include a `friends` field initialized as an empty array  
-**And** `get_friends("alice")` returns an empty array
+- **GIVEN** a new user profile is created
+- **WHEN** `get_friends()` is called
+- **THEN** it returns an empty array
+
+#### Scenario: Read friends for an existing user
+- **GIVEN** Firestore contains friendship records for the user
+- **WHEN** the user's friends are queried
+- **THEN** the result contains the usernames of those friends
 
 #### Scenario: Existing user without friends field
-**Given** a user "bob" exists in the database without a `friends` field (legacy data)  
-**When** `get_friends("bob")` is called  
-**Then** the function SHALL return an empty array  
-**And** no error SHALL be logged
-
----
+- **GIVEN** a Firestore profile has no friendship records
+- **WHEN** the user's friends are queried
+- **THEN** the result is an empty array without an error
 
 ### Requirement: Add Friend Bidirectionally
-UserDatabase SHALL provide a function to create bidirectional friendships between two users.
+The system SHALL create one Firestore friendship record that represents the relationship in both directions.
 
 **Cross-reference**: Core function for `friend-list-management`.
 
 #### Scenario: Add new friendship
-**Given** user "alice" exists with friends array []  
-**And** user "bob" exists with friends array []  
-**When** `add_friend("alice", "bob")` is called  
-**Then** "bob" SHALL be added to alice's friends array  
-**And** "alice" SHALL be added to bob's friends array  
-**And** the database SHALL be saved to disk  
-**And** `are_friends("alice", "bob")` returns true  
-**And** `are_friends("bob", "alice")` returns true
+- **GIVEN** both users exist and no friendship record exists
+- **WHEN** the friendship is accepted
+- **THEN** one remote relationship is stored for both users
+- **AND** each user's friends query includes the other username
 
 #### Scenario: Prevent duplicate friendship
-**Given** user "alice" has friends array ["bob"]  
-**And** user "bob" has friends array ["alice"]  
-**When** `add_friend("alice", "bob")` is called  
-**Then** no duplicate entry SHALL be added to either friends array  
-**And** alice's friends remains ["bob"]  
-**And** bob's friends remains ["alice"]  
-**And** a warning SHALL be logged
+- **GIVEN** a friendship already exists
+- **WHEN** it is added again
+- **THEN** no duplicate relationship is created
 
 #### Scenario: Reject friendship with non-existent user
-**Given** user "alice" exists  
-**And** user "ghost" does not exist  
-**When** `add_friend("alice", "ghost")` is called  
-**Then** no friendship SHALL be created  
-**And** alice's friends array SHALL remain unchanged  
-**And** an error SHALL be logged
+- **GIVEN** either participant does not exist
+- **WHEN** a friendship is added
+- **THEN** no relationship is created and an explicit error is returned
 
 #### Scenario: Prevent self-friending
-**Given** user "alice" exists  
-**When** `add_friend("alice", "alice")` is called  
-**Then** "alice" SHALL NOT be added to their own friends array  
-**And** an error SHALL be logged
-
----
+- **GIVEN** both participant identifiers refer to the same user
+- **WHEN** a friendship is added
+- **THEN** no relationship is created and an error is returned
 
 ### Requirement: Remove Friend Bidirectionally
-UserDatabase SHALL provide a function to remove friendships between two users bidirectionally.
+The system SHALL remove the Firestore friendship record representing the relationship between two users.
 
-**Cross-reference**: Supports future unfriend feature in `friend-list-management`.
+**Cross-reference**: Supports the unfriend feature in `friend-list-management`.
 
 #### Scenario: Remove existing friendship
-**Given** user "alice" has friends array ["bob", "charlie"]  
-**And** user "bob" has friends array ["alice"]  
-**When** `remove_friend("alice", "bob")` is called  
-**Then** "bob" SHALL be removed from alice's friends array  
-**And** "alice" SHALL be removed from bob's friends array  
-**And** alice's friends becomes ["charlie"]  
-**And** bob's friends becomes []  
-**And** the database SHALL be saved to disk
+- **GIVEN** a friendship exists between two users
+- **WHEN** either user removes the friend
+- **THEN** the shared relationship is removed
+- **AND** neither user's friends query includes the other
 
 #### Scenario: Remove non-existent friendship
-**Given** user "alice" has friends array ["charlie"]  
-**And** user "bob" has friends array []  
-**When** `remove_friend("alice", "bob")` is called  
-**Then** no error SHALL occur  
-**And** alice's friends array SHALL remain ["charlie"]  
-**And** bob's friends array SHALL remain []
-
----
+- **GIVEN** no friendship exists between the users
+- **WHEN** removal is attempted
+- **THEN** no other relationship is changed
 
 ### Requirement: Get Friends with Full Data
 UserDatabase SHALL provide a function to retrieve the full list of friends with their user data.
@@ -563,16 +571,12 @@ UserDatabase SHALL listen to GlobalSignalBus.notification_action_taken and autom
 ---
 
 ### Requirement: Notification Timestamp Support
-UserDatabase SHALL add a timestamp to all notifications when they are created.
+The system SHALL attach a Firebase-compatible creation timestamp to each notification and preserve it when the notification is read.
 
 #### Scenario: Notification created with timestamp
-**Given** a system emits a notification via GlobalSignalBus  
-**When** UserDatabase receives the notification and adds it to a user's notification list  
-**Then** a `timestamp` field is added to the notification data  
-**And** the timestamp uses Unix time in seconds from `Time.get_unix_time_from_system()`  
-**And** the timestamp is stored as a float in the database JSON
-
----
+- **GIVEN** a notification is created without a timestamp
+- **WHEN** it is stored in Firestore
+- **THEN** it receives a timestamp that can be used for ordering and expiry
 
 ### Requirement: Automatic Notification Expiry
 UserDatabase SHALL filter out notifications older than 3 days when querying a user's notifications.
@@ -653,46 +657,45 @@ UserDatabase SHALL send a rejection notification to the inviter when a player de
 ---
 
 ### Requirement: Store Multiplayer Matches Array
-UserDatabase SHALL include a `multiplayer_matches` array in its data structure to persist match state.
+The system SHALL store each multiplayer match as a Firestore match record addressable by a unique match ID.
 
-**Rationale:** Enable asynchronous multiplayer gameplay with persistent state across sessions.
+**Rationale:** Enable asynchronous multiplayer gameplay with persistent state shared across sessions.
+
+#### Scenario: No match records exist
+- **GIVEN** no match has been created for a user
+- **WHEN** the user's matches are queried
+- **THEN** the result is an empty array
+- **AND** no local database file is created to initialize match storage
 
 #### Scenario: Initialize schema on first load
-**Given** the database file does not contain `multiplayer_matches` key  
-**When** UserDatabase loads  
-**Then** `data.multiplayer_matches` is initialized as an empty array  
-**And** the database is saved with the updated schema
-
----
+- **GIVEN** no Firestore match record exists
+- **WHEN** the user requests matches
+- **THEN** an empty result is returned without creating a local `multiplayer_matches` array
 
 ### Requirement: Provide Match CRUD Operations
-UserDatabase SHALL expose methods for creating, retrieving, updating, and querying multiplayer matches.
+The system SHALL expose create, retrieve, update, delete, and player-query operations backed by Firestore match records.
 
-**Rationale:** Centralize match data management in the database layer.
+**Rationale:** Centralize match data management while allowing participants to resume matches on another device.
 
 #### Scenario: Create match returns unique ID
-**Given** `create_match(inviter, invitee, rounds, questions)` is called  
-**When** the match is created  
-**Then** a unique match_id is returned  
-**And** the match is appended to `data.multiplayer_matches`
+- **GIVEN** two valid participants and match configuration are supplied
+- **WHEN** a match is created
+- **THEN** a unique match ID is returned after Firestore confirms creation
 
 #### Scenario: Retrieve match by ID
-**Given** a match with ID "match_123" exists  
-**When** `get_match("match_123")` is called  
-**Then** the complete match Dictionary is returned
+- **GIVEN** a match with the requested ID exists
+- **WHEN** it is retrieved
+- **THEN** the complete match data is returned
 
 #### Scenario: Update match persists changes
-**Given** a match is modified  
-**When** `update_match(modified_match)` is called  
-**Then** the match in the array is replaced  
-**And** the database file is saved
+- **GIVEN** a participant updates a match
+- **WHEN** the update succeeds
+- **THEN** the Firestore match record contains the updated data
 
 #### Scenario: Query active matches for player
-**Given** Player A has 2 active matches and 1 completed match  
-**When** `get_active_matches_for_player("PlayerA")` is called  
-**Then** only the 2 active matches are returned
-
----
+- **GIVEN** a player has active and completed matches
+- **WHEN** active matches are queried
+- **THEN** only that player's active matches are returned
 
 ### Requirement: Handle Game Invite Acceptance Signal
 UserDatabase SHALL connect to `GlobalSignalBus.game_invite_accepted` and automatically create matches when invites are accepted.
@@ -750,86 +753,71 @@ The system SHALL store a `friend_wins` Dictionary in each user record mapping fr
 ---
 
 ### Requirement: Update Player Statistics on Match Completion
-The system SHALL provide an `update_player_statistics(match_data)` method that processes match outcomes and updates winner/loser statistics.
+The system SHALL update both players' statistics exactly once for a completed multiplayer match and persist the match-processing state and statistics in Firebase.
 
-**Rationale:** Centralize statistics update logic to ensure consistent, single-execution updates when multiplayer matches complete.
+**Rationale:** Preserve consistent match results and statistics when the app is used across devices.
 
 **Constraints:**
-- SHALL only update statistics for multiplayer matches (not single-player)
-- SHALL only execute once per match (check `stats_processed` flag)
+- SHALL only update statistics for multiplayer matches
+- SHALL only process a match once
 - SHALL update both players' statistics atomically
-- SHALL emit `GlobalSignalBus.player_stats_updated` for each affected player
+- SHALL emit `GlobalSignalBus.player_stats_updated` for each affected player after successful persistence
 
-#### Scenario: Update winner statistics after match completion
-**Given** a multiplayer match is complete with PlayerA scoring 12 correct and PlayerB scoring 8 correct  
-**And** PlayerA has `wins: 5`, `losses: 2`, `current_streak: 2`  
-**And** the match has `stats_processed: false`  
-**When** `update_player_statistics(match_data)` is called  
-**Then** PlayerA's `wins` is incremented to 6  
-**And** PlayerA's `current_streak` is incremented to 3  
-**And** PlayerA's `losses` remains unchanged at 2  
-**And** the match `stats_processed` flag is set to `true`
+#### Scenario: Update winner and loser statistics
+- **GIVEN** an unprocessed completed match has a winner and a loser
+- **WHEN** its statistics are processed
+- **THEN** the winner and loser statistics are updated in one atomic backend operation
+- **AND** the match is marked as processed
 
-#### Scenario: Update loser statistics after match completion
-**Given** a multiplayer match is complete with PlayerA scoring 12 correct and PlayerB scoring 8 correct  
-**And** PlayerB has `wins: 3`, `losses: 4`, `current_streak: 1`  
-**And** the match has `stats_processed: false`  
-**When** `update_player_statistics(match_data)` is called  
-**Then** PlayerB's `losses` is incremented to 5  
-**And** PlayerB's `current_streak` is reset to 0  
-**And** PlayerB's `wins` remains unchanged at 3
-
-#### Scenario: Draw leaves statistics unchanged
-**Given** a multiplayer match is complete with both players scoring 10 correct  
-**And** PlayerA has `wins: 5`, `losses: 2`, `current_streak: 2`  
-**And** PlayerB has `wins: 3`, `losses: 4`, `current_streak: 1`  
-**And** the match has `stats_processed: false`  
-**When** `update_player_statistics(match_data)` is called  
-**Then** PlayerA's statistics remain `wins: 5`, `losses: 2`, `current_streak: 2`  
-**And** PlayerB's statistics remain `wins: 3`, `losses: 4`, `current_streak: 1`  
-**And** the match `stats_processed` flag is set to `true`
+#### Scenario: Draw leaves win and loss counts unchanged
+- **GIVEN** an unprocessed completed match is a draw
+- **WHEN** its statistics are processed
+- **THEN** wins and losses remain unchanged and the match is marked as processed
 
 #### Scenario: Prevent duplicate statistics updates
-**Given** a multiplayer match has `stats_processed: true`  
-**When** `update_player_statistics(match_data)` is called again  
-**Then** no user statistics are modified  
-**And** no signals are emitted  
-**And** a warning is logged indicating stats already processed
+- **GIVEN** a match has already been processed
+- **WHEN** statistics processing is requested again
+- **THEN** no statistics are changed and no update signals are emitted
+
+#### Scenario: Backend failure does not report success
+- **GIVEN** Firebase cannot atomically persist the match and statistics
+- **WHEN** statistics processing is attempted
+- **THEN** the error is surfaced and the match is not treated as successfully processed
+
+#### Scenario: Update winner statistics after match completion
+- **GIVEN** a completed match has a winner and an unprocessed statistics state
+- **WHEN** statistics are processed
+- **THEN** the winner's wins and current streak are updated in the Firebase transaction
+
+#### Scenario: Update loser statistics after match completion
+- **GIVEN** a completed match has a loser and an unprocessed statistics state
+- **WHEN** statistics are processed
+- **THEN** the loser's losses are updated and current streak is reset in the Firebase transaction
+
+#### Scenario: Draw leaves statistics unchanged
+- **GIVEN** a completed match is a draw
+- **WHEN** statistics are processed
+- **THEN** wins and losses remain unchanged and the match is marked processed
 
 #### Scenario: Update friend wins when players are friends
-**Given** PlayerA and PlayerB are friends (mutual friendship exists)  
-**And** a multiplayer match completes with PlayerA winning  
-**And** PlayerA has `friend_wins: {"PlayerB": 2}`  
-**And** the match has `stats_processed: false`  
-**When** `update_player_statistics(match_data)` is called  
-**Then** PlayerA's `friend_wins["PlayerB"]` is incremented to 3  
-**And** PlayerB's `friend_wins` is not modified (only winner tracks friend wins)
+- **GIVEN** the winner and loser have a friendship record
+- **WHEN** the winner completes the match
+- **THEN** only the winner's friend-specific win count is incremented
 
 #### Scenario: Skip friend wins when players are not friends
-**Given** PlayerA and PlayerB are NOT friends  
-**And** a multiplayer match completes with PlayerA winning  
-**And** PlayerA has `friend_wins: {}`  
-**And** the match has `stats_processed: false`  
-**When** `update_player_statistics(match_data)` is called  
-**Then** PlayerA's `friend_wins` remains empty `{}`  
-**And** no friend-specific wins are recorded
+- **GIVEN** the winner and loser do not have a friendship record
+- **WHEN** the winner completes the match
+- **THEN** no friend-specific win count is changed
 
 #### Scenario: Initialize friend wins entry on first win against friend
-**Given** PlayerA and PlayerB are friends  
-**And** PlayerA has `friend_wins: {}` (no previous wins against PlayerB)  
-**And** a multiplayer match completes with PlayerA winning  
-**And** the match has `stats_processed: false`  
-**When** `update_player_statistics(match_data)` is called  
-**Then** PlayerA's `friend_wins["PlayerB"]` is created and set to 1
+- **GIVEN** the winner has no friend-specific count for the opponent
+- **WHEN** the winner completes a match against that friend
+- **THEN** the winner's friend-specific count is created as one
 
 #### Scenario: Emit signals for both players
-**Given** a multiplayer match completes with PlayerA winning against PlayerB  
-**And** the match has `stats_processed: false`  
-**When** `update_player_statistics(match_data)` is called  
-**Then** `GlobalSignalBus.player_stats_updated.emit("PlayerA")` is called  
-**And** `GlobalSignalBus.player_stats_updated.emit("PlayerB")` is called
-
----
+- **GIVEN** both players' statistics were committed successfully
+- **WHEN** the statistics transaction completes
+- **THEN** `GlobalSignalBus.player_stats_updated` is emitted for both players
 
 ### Requirement: Update Category Statistics After Match Completion
 The system SHALL update category statistics (played count and win count) for both players when a match completes, tracking each category that appeared in the match rounds.
@@ -889,25 +877,6 @@ The system SHALL update category statistics (played count and win count) for bot
 
 ---
 
-### Requirement: Migrate Existing Users with Friend Wins
-The system SHALL extend `_migrate_user_data()` to add `friend_wins` field for existing users.
-
-**Rationale:** Ensure backward compatibility when adding friend wins tracking to existing databases.
-
-#### Scenario: Add friend_wins to existing user
-**Given** user "OldPlayer" exists without a `friend_wins` field  
-**When** the database is loaded and migration runs  
-**Then** user "OldPlayer" has `friend_wins: {}` added  
-**And** the database is saved with the updated schema
-
-#### Scenario: Preserve existing friend_wins data
-**Given** user "ExistingPlayer" has `friend_wins: {"Friend1": 5}`  
-**When** the database is loaded and migration runs  
-**Then** user "ExistingPlayer" retains `friend_wins: {"Friend1": 5}`  
-**And** no migration is applied to this field
-
----
-
 ### Requirement: Get User Data Safe for Display
 The system SHALL provide a `get_user_data_for_display()` method that returns a sanitized Dictionary containing username, avatar_path, wins, losses, current_streak, total_games, friend_wins, and category_stats for UI display purposes.
 
@@ -920,102 +889,110 @@ The system SHALL provide a `get_user_data_for_display()` method that returns a s
 **And** all other fields (username, avatar_path, wins, losses, current_streak, total_games, category_stats) are still included
 
 ### Requirement: Track Total Games Played
-The system SHALL store a `total_games` integer field in each user record that tracks the total number of multiplayer matches the user has completed, incremented after each match regardless of outcome (win, loss, or draw).
+The system SHALL store a `total_games` integer in each Firestore profile and increment it for each completed multiplayer match, including draws.
 
-**Rationale:** Enable calculation of draws (`total_games - wins - losses`) and provide users with a complete count of their match history for display on the account management screen.
+**Rationale:** Allow account screens to report the total number of completed matches.
 
-**Cross-reference:** Used by `account-management-screen` for statistics display.
+#### Scenario: New profile receives total_games
+- **GIVEN** a new Firebase profile is created
+- **WHEN** its statistics are initialized
+- **THEN** `total_games`, `wins`, and `losses` are zero
 
 #### Scenario: New user receives total_games field
-**Given** no user exists with username "NewPlayer"  
-**When** `create_user("NewPlayer", "password", "player@example.com")` is called  
-**Then** the user record SHALL be created with `total_games: 0`  
-**And** `wins: 0` and `losses: 0` (existing fields)
+- **GIVEN** a new Firebase profile is created
+- **WHEN** its statistics are initialized
+- **THEN** it contains `total_games: 0`
+
+#### Scenario: Increment total games after completion
+- **GIVEN** a completed match includes two players
+- **WHEN** match statistics are successfully processed
+- **THEN** both profiles' `total_games` values increase by one
 
 #### Scenario: Total games incremented after match completion
-**Given** user "Player1" has `total_games: 10`  
-**And** user "Player2" has `total_games: 15`  
-**When** `update_player_statistics(match_data)` is called for a completed match between them  
-**Then** Player1's `total_games` SHALL be incremented to 11  
-**And** Player2's `total_games` SHALL be incremented to 16  
-**And** this SHALL occur before determining winner/loser
+- **GIVEN** both players have existing total-games counts
+- **WHEN** a completed match is processed
+- **THEN** each player's count increases by one
 
 #### Scenario: Total games incremented even in draw
-**Given** user "Player1" has `total_games: 5`  
-**And** user "Player2" has `total_games: 8`  
-**When** `update_player_statistics(match_data)` is called for a match that ended in a draw  
-**Then** Player1's `total_games` SHALL be incremented to 6  
-**And** Player2's `total_games` SHALL be incremented to 9  
-**And** wins and losses SHALL remain unchanged (draw handling)
+- **GIVEN** a completed match is a draw
+- **WHEN** match statistics are successfully processed
+- **THEN** both players' total-games counts increase by one
+- **AND** their wins and losses remain unchanged
+
+#### Scenario: Include total games in display data
+- **GIVEN** a profile has a stored `total_games` value
+- **WHEN** display data is requested
+- **THEN** the returned data includes that value
 
 #### Scenario: Total games included in display data
-**Given** user "Player123" has `total_games: 42`  
-**When** `get_user_data_for_display("Player123")` is called  
-**Then** the returned dictionary SHALL include `"total_games": 42`  
-**And** all other fields (username, avatar_path, wins, losses, current_streak, friend_wins, category_stats) are still included
+- **GIVEN** a profile has a stored `total_games` value
+- **WHEN** display data is requested
+- **THEN** the returned data includes `total_games`
 
 #### Scenario: Migrate existing users with total_games field
-**Given** user database contains user "OldUser" without `total_games` field  
-**When** the database is loaded via `_load_database()`  
-**Then** `_migrate_user_data()` SHALL add `total_games: 0` to "OldUser"  
-**And** the database SHALL be saved with the updated schema
-
----
+- **GIVEN** a Firestore profile predates the `total_games` field
+- **WHEN** the profile is loaded
+- **THEN** the Firebase profile schema is completed with a zero default without reading the legacy JSON file
 
 ### Requirement: Restructure Category Stats to Track Wins and Played
-The system SHALL change the `category_stats` dictionary structure from storing simple play counts (`{category: int}`) to storing nested dictionaries with both played counts and win counts (`{category: {"played": int, "wins": int}}`).
+The system SHALL store each category statistic in the profile as `{"played": int, "wins": int}` and preserve that structure in returned display data.
 
-**Rationale:** Enable display of category-specific win rates and performance metrics on the account management screen without requiring separate tracking dictionaries.
+**Rationale:** Support category-specific performance metrics without relying on migration of the local JSON schema.
 
-**Cross-reference:** Used by `account-management-screen` for category statistics display. Also used by `socials-page-friend-display` and `friend-display-component`.
-
-**Migration:** Existing `category_stats` entries SHALL be converted to new format with `wins: 0` during database load.
+#### Scenario: New profile has empty category stats
+- **GIVEN** a new Firebase profile is created
+- **WHEN** its statistics are initialized
+- **THEN** `category_stats` is an empty dictionary
 
 #### Scenario: New user receives empty category stats with new structure
-**Given** no user exists with username "NewPlayer"  
-**When** `create_user("NewPlayer", "password", "player@example.com")` is called  
-**Then** the user record SHALL be created with `category_stats: {}`  
-**And** the dictionary SHALL be empty (no default categories)
+- **GIVEN** a new Firebase profile is created
+- **WHEN** its category statistics are initialized
+- **THEN** `category_stats` is an empty dictionary
+
+#### Scenario: Record category results
+- **GIVEN** a completed match includes category results
+- **WHEN** statistics are processed
+- **THEN** category entries use integer `played` and `wins` values in the nested format
 
 #### Scenario: Category stats stored in new nested format
-**Given** user "Player123" plays a match with categories "History" and "Science"  
-**When** category statistics are updated  
-**Then** the structure SHALL be `{"History": {"played": X, "wins": Y}, "Science": {"played": Z, "wins": W}}`  
-**And** NOT the old format `{"History": X, "Science": Z}`
+- **GIVEN** category results are processed for a user
+- **WHEN** the Firebase profile is updated
+- **THEN** each category has integer `played` and `wins` values
+
+#### Scenario: Return category stats for display
+- **GIVEN** a profile contains category statistics
+- **WHEN** profile display data is requested
+- **THEN** the nested category statistics are included unchanged
 
 #### Scenario: Category stats included in display data with new structure
-**Given** user "Player123" has `category_stats: {"History": {"played": 20, "wins": 12}}`  
-**When** `get_user_data_for_display("Player123")` is called  
-**Then** the returned dictionary SHALL include `"category_stats": {"History": {"played": 20, "wins": 12}}`  
-**And** the nested structure SHALL be preserved
+- **GIVEN** a Firestore profile has nested category statistics
+- **WHEN** profile display data is requested
+- **THEN** the nested category statistics are returned unchanged
+
+#### Scenario: Keep category stats out of current-user summary
+- **GIVEN** a user is signed in
+- **WHEN** the current-user summary is requested
+- **THEN** it contains only the established current-user fields and excludes `category_stats`
 
 #### Scenario: Category stats excluded from current user data
-**Given** user "Player123" is signed in  
-**When** `get_current_user()` is called  
-**Then** the returned dictionary SHALL NOT include category_stats  
-**And** only username, email, and avatar_path SHALL be returned (existing behavior)
+- **GIVEN** a user is signed in
+- **WHEN** the current-user summary is requested
+- **THEN** it excludes `category_stats`
 
 #### Scenario: Migrate existing category stats to new format
-**Given** user "OldUser" has old format `category_stats: {"History": 15, "Science": 8}`  
-**When** the database is loaded via `_load_database()`  
-**Then** `_migrate_user_data()` SHALL convert to `{"History": {"played": 15, "wins": 0}, "Science": {"played": 8, "wins": 0}}`  
-**And** the played count SHALL be preserved from the old single integer  
-**And** wins SHALL be initialized to 0 (historical data not available)  
-**And** the database SHALL be saved with the updated schema
+- **GIVEN** a Firestore profile has an older category-stat representation
+- **WHEN** that profile is loaded
+- **THEN** its category statistics are normalized to the current nested format without reading the legacy JSON file
 
 #### Scenario: Migrate user without category stats field
-**Given** user database contains user "OldUser" without category_stats field  
-**When** the database is loaded via `_load_database()`  
-**Then** `_migrate_user_data()` SHALL add `category_stats: {}` to "OldUser"  
-**And** the database SHALL be saved with the updated schema
+- **GIVEN** a Firestore profile has no `category_stats` field
+- **WHEN** the profile is loaded
+- **THEN** the field is initialized as an empty dictionary without reading the legacy JSON file
 
 #### Scenario: Empty category stats remain empty after migration
-**Given** user "NewUser" has `category_stats: {}`  
-**When** `_migrate_user_data()` runs  
-**Then** category_stats SHALL remain `{}`  
-**And** no placeholder categories SHALL be added
-
----
+- **GIVEN** a Firestore profile has empty category statistics
+- **WHEN** the current profile schema is loaded
+- **THEN** the field remains empty and no placeholder categories are persisted
 
 ### Requirement: Provide Placeholder Category Data Generation
 The system SHALL provide a helper function to generate placeholder category statistics for testing and UI development before real category tracking is implemented.
@@ -1058,3 +1035,59 @@ The `category_stats` field SHALL be a Dictionary where keys are category name St
 
 ---
 
+### Requirement: Persist Shared User Data in Firestore
+The system SHALL read and write profiles, notification records, friendship records, match records, and statistics through Firebase Auth and Firestore, and SHALL NOT use the local user JSON file as a source or destination for those records.
+
+#### Scenario: Load shared data from Firebase
+- **GIVEN** the signed-in user has profile and game data in Firestore
+- **WHEN** the application requests that data
+- **THEN** it returns the remote records after the Firebase operation completes
+
+#### Scenario: Backend operation fails
+- **GIVEN** a Firebase read or write fails
+- **WHEN** the operation completes
+- **THEN** the caller receives an explicit failure
+- **AND** the system SHALL NOT substitute a successful result from stale in-memory or local JSON data
+
+### Requirement: Enforce Firebase Data Ownership
+The system SHALL use Firebase Authentication identity and Firestore security rules to restrict profile and private user-data access to authorized users and match or relationship participants.
+
+#### Scenario: User cannot access another user's private account data
+- **GIVEN** a signed-in user requests another user's private data
+- **WHEN** Firestore evaluates the request
+- **THEN** the request is denied
+- **AND** public profile search returns no password, authentication token, or private email data
+
+#### Scenario: Unauthenticated user attempts protected data access
+- **GIVEN** no Firebase Auth user is signed in
+- **WHEN** a protected Firestore read or write is attempted
+- **THEN** Firestore security rules deny the operation
+
+### Requirement: Isolate Development and Test Data in Firebase Emulators
+Development and test runs SHALL use the Firebase Authentication, Firestore, and Cloud Functions emulators. They SHALL NOT contact production services when an emulator is unavailable or misconfigured.
+
+#### Scenario: Development run connects to emulators
+- **GIVEN** the Authentication, Firestore, and Functions emulators are configured and running
+- **WHEN** a development or test run performs Auth, Firestore, or match-statistics operations
+- **THEN** the operations reach only the configured local emulators
+
+#### Scenario: Emulator is unavailable
+- **GIVEN** an emulator endpoint cannot be reached
+- **WHEN** a development or test run performs an operation
+- **THEN** the operation fails visibly
+- **AND** no request is redirected to a production Firebase endpoint
+
+### Requirement: Do Not Import the Legacy User Database
+The system SHALL NOT read, migrate, seed from, or write `data/user_database.json` during startup or any account or game-data operation.
+
+#### Scenario: Start with legacy JSON present
+- **GIVEN** `data/user_database.json` contains prior local data
+- **WHEN** the application starts
+- **THEN** no data from that file is sent to Firebase
+- **AND** new Firebase accounts and records start without those legacy users or matches
+
+#### Scenario: Start without legacy JSON
+- **GIVEN** `data/user_database.json` is absent
+- **WHEN** the application starts
+- **THEN** Firebase-backed account and game-data behavior remains available
+- **AND** the application does not create the JSON file

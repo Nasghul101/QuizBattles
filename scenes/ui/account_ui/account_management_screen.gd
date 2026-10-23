@@ -27,7 +27,7 @@ func _ready() -> void:
         return
     
     # Fetch user data for display
-    var user_data: Dictionary = UserDatabase.get_user_data_for_display(current_user.username)
+    var user_data: Dictionary = await UserDatabase.get_user_data_for_display(current_user.username)
     if user_data.is_empty():
         push_error("Failed to fetch user data for %s" % current_user.username)
         return
@@ -90,5 +90,5 @@ func _on_back_button_pressed() -> void:
 ## Sign out current user and navigate to main lobby.
 func _on_log_off_button_pressed() -> void:
     UserDatabase.sign_out()
-    LocalCache.forget_login()
+    LocalCache.forget_session()
     Utils.navigate_to_scene("main_lobby")
