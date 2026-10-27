@@ -16,6 +16,7 @@ var draw_percent: int = 0
 var loose_percent: int = 0
 
 func _ready() -> void:
+    chart.material = chart.material.duplicate()
     chart.resized.connect(_on_chart_resized)
     _update_chart()
 
@@ -45,13 +46,24 @@ func _update_chart() -> void:
         if shader_material:
             shader_material.set_shader_parameter("value", 100.0 - float(win_percent))
             
-            var fg_texture = shader_material.get_shader_parameter("fg") as GradientTexture1D
-            if fg_texture and fg_texture.gradient:
-                var gradient = fg_texture.gradient
-                if gradient.offsets.size() >= 3:
-                    gradient.offsets[1] = loose_percent / 100.0
-                    gradient.offsets[2] = (loose_percent / 100.0) + 0.001
-                    
+            # Build a fresh gradient (loss color, then draw color) so each chart instance is independent
+            var loss_color: Color = Utils.resolve_misc_color("Pie chart loss")
+            var draw_color: Color = Utils.resolve_misc_color("Draw")
+            var win_color: Color = Utils.resolve_misc_color("Pie chart win")
+            var loss_fraction := loose_percent / 100.0
+            var gradient := Gradient.new()
+            gradient.offsets = PackedFloat32Array([0.0, loss_fraction, minf(loss_fraction + 0.001, 1.0), 1.0])
+            gradient.colors = PackedColorArray([loss_color, loss_color, draw_color, draw_color])
+            var fg_texture := GradientTexture1D.new()
+            fg_texture.gradient = gradient
+            shader_material.set_shader_parameter("fg", fg_texture)
+
+            var win_gradient := Gradient.new()
+            win_gradient.colors = PackedColorArray([win_color, win_color])
+            var bg_texture := GradientTexture1D.new()
+            bg_texture.gradient = win_gradient
+            shader_material.set_shader_parameter("bg", bg_texture)
+
         _update_labels()
     else:
         _update_labels()

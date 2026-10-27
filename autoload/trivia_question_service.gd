@@ -23,6 +23,12 @@ signal questions_ready(questions: Array)
 
 const DEFAULT_LANGUAGE: String = "en"
 const LANGUAGE_FILE_TEMPLATE: String = "res://data/questions_%s.json"
+## Maps app locales (Utils.SUPPORTED_LOCALES) to questions_<code>.json file codes
+const LOCALE_QUESTION_CODES: Dictionary = {
+    "en": "en",
+    "de": "de",
+    "zh_TW": "zt"
+}
 const CATEGORIES: Array[String] = [
     "General Knowledge",
     "Entertainment",
@@ -92,16 +98,8 @@ func get_available_categories() -> Array[String]:
 # Private helper methods
 
 func _get_user_language() -> String:
-    var stored_language: String = LocalCache.get_setting("language", "")
-    var locale_language: String = OS.get_locale_language()
-
-    if stored_language.strip_edges() != "":
-        return stored_language.strip_edges().to_lower()
-
-    if locale_language.strip_edges() != "":
-        return locale_language.strip_edges().to_lower()
-
-    return DEFAULT_LANGUAGE
+    var locale: String = Utils.resolve_locale()
+    return LOCALE_QUESTION_CODES.get(locale, DEFAULT_LANGUAGE)
 
 
 func _resolve_language_file_path(language: String) -> String:

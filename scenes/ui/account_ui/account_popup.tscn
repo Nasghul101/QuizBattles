@@ -207,7 +207,7 @@ theme = ExtResource("1_mpaho")
 text = "ACCOUNT_POPUP_INVITE_BUTTON"
 
 [node name="UnfriedButon" type="Button" parent="Background/MarginContainer/VBoxContainer/HBoxContainer" unique_id=765703830]
-custom_minimum_size = Vector2(170, 150)
+custom_minimum_size = Vector2(200, 150)
 layout_mode = 2
 theme = ExtResource("1_mpaho")
 theme_override_colors/font_color = Color(0.8, 0.09411765, 0.06666667, 1)

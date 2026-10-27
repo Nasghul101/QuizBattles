@@ -18,6 +18,9 @@
     "miscellaneous": {
         "Right answer": "#00B83A",
         "Wrong answer": "#CC1811",
+        "Draw": "#CA6E0D",
+        "Pie chart win": "#1F6E0D",
+        "Pie chart loss": "#6E140D",
         "Notification": "#17D7FF",
         "App background": "#25002B",
         "App gray": "#4F4350",

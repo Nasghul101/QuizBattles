@@ -11,7 +11,7 @@ colors = PackedColorArray(0.12156863, 0.43137255, 0.050980393, 1, 0.12156863, 0.
 gradient = SubResource("Gradient_bfn1p")
 
 [sub_resource type="Gradient" id="Gradient_vim5g"]
-offsets = PackedFloat32Array(0, 0.201, 0.202, 1)
+offsets = PackedFloat32Array(0, 0.19935691, 0.202, 1)
 colors = PackedColorArray(0.43137255, 0.078431375, 0.050980393, 1, 0.43137255, 0.078431375, 0.050980393, 1, 0.7921569, 0.43137255, 0.050980393, 1, 0.7921569, 0.43137255, 0.050980393, 1)
 
 [sub_resource type="GradientTexture1D" id="GradientTexture1D_rx7rt"]

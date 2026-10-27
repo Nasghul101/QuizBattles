@@ -1,6 +1,7 @@
 [gd_resource type="Theme" format=3 uid="uid://cxninrmdvbey6"]
 
 [ext_resource type="FontFile" uid="uid://c8memnki1ydnd" path="res://assets/Font/exo/Exo-Bold.otf" id="1_f1ody"]
+[ext_resource type="FontFile" uid="uid://dkwrgrlnma73c" path="res://assets/Font/exo/Exo-Regular.otf" id="2_ivg0h"]
 
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_f1ody"]
 bg_color = Color(0.39980367, 0.00046951548, 0.49357402, 1)
@@ -56,6 +57,50 @@ corner_radius_top_right = 10
 corner_radius_bottom_right = 10
 corner_radius_bottom_left = 10
 
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_nt077"]
+bg_color = Color(0.39980367, 0.00046951548, 0.49357402, 1)
+border_width_left = 6
+border_width_top = 6
+border_width_right = 6
+border_width_bottom = 6
+border_color = Color(0.9843137, 0.8627451, 0.9529412, 1)
+corner_radius_top_left = 5
+corner_radius_top_right = 5
+corner_radius_bottom_right = 5
+corner_radius_bottom_left = 5
+
+[sub_resource type="StyleBoxLine" id="StyleBoxLine_iofpt"]
+color = Color(0.9843137, 0.8627451, 0.9529412, 1)
+thickness = 2
+
+[sub_resource type="StyleBoxLine" id="StyleBoxLine_f1ody"]
+color = Color(0.9843137, 0.8627451, 0.9529412, 1)
+thickness = 2
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_iofpt"]
+content_margin_left = 25.0
+content_margin_top = 1.0
+content_margin_right = 20.0
+content_margin_bottom = 1.0
+bg_color = Color(0.19215687, 0, 0.24313726, 1)
+border_width_left = 6
+border_width_top = 6
+border_width_right = 6
+border_width_bottom = 6
+border_color = Color(0.9843137, 0.8627451, 0.9529412, 1)
+corner_radius_top_left = 10
+corner_radius_top_right = 10
+corner_radius_bottom_right = 10
+corner_radius_bottom_left = 10
+expand_margin_left = 10.0
+expand_margin_top = 10.0
+expand_margin_right = 10.0
+expand_margin_bottom = 10.0
+
+[sub_resource type="StyleBoxLine" id="StyleBoxLine_ki538"]
+color = Color(0.9843137, 0.8627451, 0.9529412, 1)
+thickness = 2
+
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_p37ba"]
 content_margin_left = 24.0
 content_margin_top = 10.0
@@ -94,6 +139,14 @@ Label/colors/font_color = Color(0.9843137, 0.8627451, 0.9529412, 1)
 Label/font_sizes/font_size = 30
 Label/fonts/font = ExtResource("1_f1ody")
 Panel/styles/panel = SubResource("StyleBoxFlat_jlylp")
+PopupMenu/constants/v_separation = 10
+PopupMenu/font_sizes/font_size = 30
+PopupMenu/fonts/font = ExtResource("2_ivg0h")
+PopupMenu/styles/hover = SubResource("StyleBoxFlat_nt077")
+PopupMenu/styles/labeled_separator_left = SubResource("StyleBoxLine_iofpt")
+PopupMenu/styles/labeled_separator_right = SubResource("StyleBoxLine_f1ody")
+PopupMenu/styles/panel = SubResource("StyleBoxFlat_iofpt")
+PopupMenu/styles/separator = SubResource("StyleBoxLine_ki538")
 TextEdit/colors/font_color = Color(0.9843137, 0.8627451, 0.9529412, 1)
 TextEdit/font_sizes/font_size = 30
 TextEdit/fonts/font = ExtResource("1_f1ody")

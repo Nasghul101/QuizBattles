@@ -62,5 +62,5 @@ pointing/emulate_touch_from_mouse=true
 
 [internationalization]
 
-locale/translations=PackedStringArray("res://localization/ui_translations.en.translation", "res://localization/ui_translations.de.translation")
-locale/locale_filter=[1, ["en", "de"]]
+locale/translations=PackedStringArray("res://localization/ui_translations.en.translation", "res://localization/ui_translations.de.translation", "res://localization/ui_translations.zh_TW.translation")
+locale/locale_filter=[1, ["en", "de", "zh_TW"]]

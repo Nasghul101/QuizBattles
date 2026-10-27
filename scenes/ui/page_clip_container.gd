@@ -43,6 +43,7 @@ func _ready() -> void:
 
     pages_container.queue_sort()
     await get_tree().process_frame
+    pages_container.position.x = 0.0
     initialized.emit()
 
 

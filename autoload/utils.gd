@@ -19,7 +19,7 @@ const SCENES: Dictionary = {
 var last_lobby_page: int = 0
 
 ## Locales supported by localization/ui_translations.csv, in priority order.
-const SUPPORTED_LOCALES: PackedStringArray = ["en", "de"]
+const SUPPORTED_LOCALES: PackedStringArray = ["en", "de", "zh_TW"]
 
 ## Default locale used when no stored preference or supported OS locale is found.
 const DEFAULT_LOCALE: String = "en"
@@ -33,17 +33,46 @@ func _ready() -> void:
 ##
 ## Priority: stored player preference -> supported OS locale -> DEFAULT_LOCALE.
 func _bootstrap_locale() -> void:
+    TranslationServer.set_locale(resolve_locale())
+
+
+## Resolve the locale to use without applying it.
+##
+## Priority: stored player preference -> supported OS locale -> DEFAULT_LOCALE.
+## @return: A locale code from SUPPORTED_LOCALES
+func resolve_locale() -> String:
     var stored_locale: String = LocalCache.get_setting("locale", "")
     if not stored_locale.is_empty() and SUPPORTED_LOCALES.has(stored_locale):
-        TranslationServer.set_locale(stored_locale)
-        return
+        return stored_locale
 
-    var os_locale: String = OS.get_locale_language()
+    var os_locale: String = _map_os_locale(OS.get_locale())
     if SUPPORTED_LOCALES.has(os_locale):
-        TranslationServer.set_locale(os_locale)
-        return
+        return os_locale
 
-    TranslationServer.set_locale(DEFAULT_LOCALE)
+    return DEFAULT_LOCALE
+
+
+## Map an OS locale string (e.g. "de_DE", "zh_Hant_TW") to a supported locale code.
+##
+## Chinese locales with Traditional script or TW/HK/MO region map to "zh_TW".
+## @param os_locale: Raw locale string from OS.get_locale()
+## @return: Mapped locale code, which may be unsupported
+func _map_os_locale(os_locale: String) -> String:
+    var normalized: String = os_locale.replace("-", "_")
+    var parts: PackedStringArray = normalized.split("_")
+    var language: String = parts[0].to_lower()
+    if language == "zh":
+        for part in parts:
+            if part in ["Hant", "TW", "HK", "MO"]:
+                return "zh_TW"
+        return "zh"
+    return language
+
+
+## Clear the stored locale preference and re-apply the system-based locale.
+func reset_app_locale() -> void:
+    LocalCache.set_setting("locale", "")
+    TranslationServer.set_locale(resolve_locale())
 
 
 ## Change the active app locale at runtime and persist the choice.
@@ -110,6 +139,17 @@ func get_color_codes() -> Dictionary:
         return {}
 
     return json.data
+
+## Resolve a Color from the "miscellaneous" section of color_codes.json
+##
+## Returns the given fallback when the name is unknown or has no defined color.
+func resolve_misc_color(color_name: String, fallback: Color = Color.WHITE) -> Color:
+    var misc: Dictionary = get_color_codes().get("miscellaneous", {})
+    var value = misc.get(color_name)
+    if value == null:
+        return fallback
+    return Color(value)
+
 
 ## Resolve the accent Color for a category name from color_codes.json
 ##

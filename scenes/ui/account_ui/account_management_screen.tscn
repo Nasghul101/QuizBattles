@@ -6,6 +6,9 @@
 [ext_resource type="PackedScene" uid="uid://b0frkcn0f5ddu" path="res://scenes/ui/components/piechart.tscn" id="3_3o5mh"]
 [ext_resource type="FontFile" uid="uid://c2546x0aealwc" path="res://assets/Font/exo/Exo-ExtraBold.otf" id="4_63srb"]
 [ext_resource type="PackedScene" uid="uid://2sxccbvvhgii" path="res://scenes/ui/components/category_statistic_dissplay.tscn" id="5_3o5mh"]
+[ext_resource type="Script" uid="uid://bev8rkjur2ihn" path="res://scenes/ui/pop_up.gd" id="7_x440c"]
+[ext_resource type="Script" uid="uid://bjq3n5yrdthqi" path="res://scenes/script_components/animation_component.gd" id="7_ypymt"]
+[ext_resource type="PackedScene" uid="uid://ctbg4s6mn7ekg" path="res://scenes/ui/components/back_button.tscn" id="8_x440c"]
 
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_63srb"]
 bg_color = Color(0.12156863, 0.43137255, 0.050980393, 1)
@@ -40,6 +43,30 @@ corner_radius_top_right = 40
 corner_radius_bottom_right = 40
 corner_radius_bottom_left = 40
 corner_detail = 1
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_y03n6"]
+bg_color = Color(0.30980393, 0.2627451, 0.3137255, 1)
+border_width_left = 10
+border_width_top = 10
+border_width_right = 10
+border_width_bottom = 10
+border_color = Color(0.9843137, 0.8627451, 0.9529412, 1)
+corner_radius_top_left = 40
+corner_radius_top_right = 40
+corner_radius_bottom_right = 40
+corner_radius_bottom_left = 40
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_iy1ro"]
+bg_color = Color(0.6, 0.6, 0.6, 0)
+border_width_left = 5
+border_width_top = 5
+border_width_right = 5
+border_width_bottom = 5
+border_color = Color(0.9843137, 0.8627451, 0.9529412, 1)
+corner_radius_top_left = 20
+corner_radius_top_right = 20
+corner_radius_bottom_right = 20
+corner_radius_bottom_left = 20
 
 [node name="AccountManagementScreen" type="Control" unique_id=1747724632]
 layout_mode = 3
@@ -314,24 +341,157 @@ category = "Vehicles"
 [node name="HBoxContainer2" type="HBoxContainer" parent="MarginContainer/VBoxContainer" unique_id=663515002]
 layout_mode = 2
 size_flags_vertical = 8
-theme_override_constants/separation = 236
+theme_override_constants/separation = 30
 alignment = 1
 
 [node name="BackButton" type="Button" parent="MarginContainer/VBoxContainer/HBoxContainer2" unique_id=588860973]
 custom_minimum_size = Vector2(300, 100)
 layout_mode = 2
-size_flags_horizontal = 4
+size_flags_horizontal = 2
 size_flags_vertical = 8
 theme = ExtResource("2_xldbt")
 text = "COMMON_BACK_BUTTON"
 
-[node name="LogOffButton" type="Button" parent="MarginContainer/VBoxContainer/HBoxContainer2" unique_id=1769483899]
+[node name="OptionsButton" type="Button" parent="MarginContainer/VBoxContainer/HBoxContainer2" unique_id=20659867]
 custom_minimum_size = Vector2(300, 100)
 layout_mode = 2
 size_flags_horizontal = 4
 size_flags_vertical = 8
 theme = ExtResource("2_xldbt")
+text = "COMMON_OPTIONS_BUTTON"
+
+[node name="LogOffButton" type="Button" parent="MarginContainer/VBoxContainer/HBoxContainer2" unique_id=1769483899]
+custom_minimum_size = Vector2(300, 100)
+layout_mode = 2
+size_flags_horizontal = 10
+size_flags_vertical = 8
+theme = ExtResource("2_xldbt")
 text = "ACCOUNT_MANAGEMENT_LOG_OFF_BUTTON"
 
+[node name="OptionsPopUp" type="MarginContainer" parent="." unique_id=335064094]
+unique_name_in_owner = true
+top_level = true
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_top = 2591.0
+offset_bottom = 2591.0
+grow_horizontal = 2
+grow_vertical = 2
+pivot_offset = Vector2(589.5, 1278)
+mouse_filter = 0
+theme_override_constants/margin_left = 120
+theme_override_constants/margin_top = 500
+theme_override_constants/margin_right = 120
+theme_override_constants/margin_bottom = 500
+script = ExtResource("7_x440c")
+
+[node name="Animation_Component" type="Node" parent="OptionsPopUp" unique_id=76113566]
+script = ExtResource("7_ypymt")
+movement_animation = true
+movement_anim_time = 0.9
+movement_transition = 11
+movement_easing = 2
+movement_position = Vector2(0, -2685)
+metadata/_custom_type_script = "uid://bjq3n5yrdthqi"
+
+[node name="PopUpBackground" type="Panel" parent="OptionsPopUp" unique_id=933052570]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(300, 500)
+layout_mode = 2
+theme = ExtResource("2_xldbt")
+theme_override_styles/panel = SubResource("StyleBoxFlat_y03n6")
+
+[node name="MarginContainer" type="MarginContainer" parent="OptionsPopUp/PopUpBackground" unique_id=1350995050]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_constants/margin_left = 45
+theme_override_constants/margin_top = 50
+theme_override_constants/margin_right = 45
+theme_override_constants/margin_bottom = 50
+
+[node name="NotificationContainer" type="VBoxContainer" parent="OptionsPopUp/PopUpBackground/MarginContainer" unique_id=2121298570]
+layout_mode = 2
+theme_override_constants/separation = 36
+
+[node name="Header" type="Label" parent="OptionsPopUp/PopUpBackground/MarginContainer/NotificationContainer" unique_id=1241920392]
+layout_mode = 2
+size_flags_horizontal = 4
+theme_override_font_sizes/font_size = 60
+text = "COMMON_OPTIONS_BUTTON"
+horizontal_alignment = 1
+
+[node name="OptionsScrollContainer" type="ScrollContainer" parent="OptionsPopUp/PopUpBackground/MarginContainer/NotificationContainer" unique_id=313987309]
+layout_mode = 2
+size_flags_vertical = 3
+theme_override_styles/panel = SubResource("StyleBoxFlat_iy1ro")
+horizontal_scroll_mode = 0
+
+[node name="MarginContainer" type="MarginContainer" parent="OptionsPopUp/PopUpBackground/MarginContainer/NotificationContainer/OptionsScrollContainer" unique_id=1665781871]
+layout_mode = 2
+size_flags_horizontal = 3
+size_flags_vertical = 3
+theme_override_constants/margin_left = 20
+theme_override_constants/margin_top = 20
+theme_override_constants/margin_right = 20
+theme_override_constants/margin_bottom = 20
+
+[node name="OptionsListContainer" type="VBoxContainer" parent="OptionsPopUp/PopUpBackground/MarginContainer/NotificationContainer/OptionsScrollContainer/MarginContainer" unique_id=1551197857]
+layout_mode = 2
+size_flags_horizontal = 3
+size_flags_vertical = 3
+theme_override_constants/separation = 10
+
+[node name="HBoxContainer" type="HBoxContainer" parent="OptionsPopUp/PopUpBackground/MarginContainer/NotificationContainer/OptionsScrollContainer/MarginContainer/OptionsListContainer" unique_id=1313178855]
+layout_mode = 2
+
+[node name="SelectLanguage" type="Label" parent="OptionsPopUp/PopUpBackground/MarginContainer/NotificationContainer/OptionsScrollContainer/MarginContainer/OptionsListContainer/HBoxContainer" unique_id=1388828728]
+layout_mode = 2
+text = "OPTIONS_POPUP_SELECT_LANGUAGE"
+
+[node name="LanguageOptions" type="OptionButton" parent="OptionsPopUp/PopUpBackground/MarginContainer/NotificationContainer/OptionsScrollContainer/MarginContainer/OptionsListContainer/HBoxContainer" unique_id=1775502802]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(0, 100)
+layout_mode = 2
+size_flags_horizontal = 10
+theme = ExtResource("2_xldbt")
+alignment = 2
+selected = 0
+item_count = 3
+popup/item_0/text = "English"
+popup/item_0/id = 0
+popup/item_1/text = "Deutsch"
+popup/item_1/id = 1
+popup/item_2/text = "繁體中文"
+popup/item_2/id = 2
+
+[node name="HBoxContainer" type="HBoxContainer" parent="OptionsPopUp/PopUpBackground/MarginContainer/NotificationContainer" unique_id=1303069017]
+layout_mode = 2
+theme_override_constants/separation = 37
+
+[node name="ClosePopUpButton" parent="OptionsPopUp/PopUpBackground/MarginContainer/NotificationContainer/HBoxContainer" unique_id=126928124 instance=ExtResource("8_x440c")]
+custom_minimum_size = Vector2(150, 50)
+layout_mode = 2
+size_flags_horizontal = 2
+
+[node name="RevertChangesButton" type="Button" parent="OptionsPopUp/PopUpBackground/MarginContainer/NotificationContainer/HBoxContainer" unique_id=319728548]
+custom_minimum_size = Vector2(300, 150)
+layout_mode = 2
+size_flags_horizontal = 10
+size_flags_vertical = 4
+theme = ExtResource("2_xldbt")
+theme_override_font_sizes/font_size = 40
+text = "OPTIONS_POPUP_REVERT_CHANGES"
+autowrap_mode = 3
+
 [connection signal="pressed" from="MarginContainer/VBoxContainer/HBoxContainer2/BackButton" to="." method="_on_back_button_pressed"]
+[connection signal="pressed" from="MarginContainer/VBoxContainer/HBoxContainer2/OptionsButton" to="OptionsPopUp" method="_on_open_pop_up_button_pressed"]
 [connection signal="pressed" from="MarginContainer/VBoxContainer/HBoxContainer2/LogOffButton" to="." method="_on_log_off_button_pressed"]
+[connection signal="item_selected" from="OptionsPopUp/PopUpBackground/MarginContainer/NotificationContainer/OptionsScrollContainer/MarginContainer/OptionsListContainer/HBoxContainer/LanguageOptions" to="." method="_on_language_options_item_selected"]
+[connection signal="pressed" from="OptionsPopUp/PopUpBackground/MarginContainer/NotificationContainer/HBoxContainer/ClosePopUpButton" to="OptionsPopUp" method="_on_close_pop_up_button_pressed"]
+[connection signal="pressed" from="OptionsPopUp/PopUpBackground/MarginContainer/NotificationContainer/HBoxContainer/RevertChangesButton" to="." method="_on_revert_changes_button_pressed"]

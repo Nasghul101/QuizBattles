@@ -13,6 +13,10 @@ extends Control
 @onready var draws_amount : Label = %DrawsAmount
 @onready var loss_amount : Label = %LossAmount
 @onready var category_statistics_container : GridContainer = %CategoryStatisticsContainer
+@onready var language_options : OptionButton = %LanguageOptions
+
+## Locale for each LanguageOptions entry, in dropdown order
+const LANGUAGE_LOCALES: PackedStringArray = ["en", "de", "zh_TW"]
 
 
 ## Initialize the screen with current user's statistics.
@@ -20,6 +24,8 @@ extends Control
 ## Fetches user data from UserDatabase, populates all labels, pie chart,
 ## and category statistics. Calculates draws from total_games - (wins + losses).
 func _ready() -> void:
+    _load_options()
+
     # Get current user
     var current_user: Dictionary = UserDatabase.get_current_user()
     if current_user.is_empty():
@@ -92,3 +98,25 @@ func _on_log_off_button_pressed() -> void:
     UserDatabase.sign_out()
     LocalCache.forget_session()
     Utils.navigate_to_scene("main_lobby")
+
+
+## Sync the options popup controls with the currently active settings.
+##
+## Add further options here so they reflect their state when the screen opens
+## and after a revert.
+func _load_options() -> void:
+    var language_index: int = LANGUAGE_LOCALES.find(TranslationServer.get_locale())
+    language_options.select(maxi(language_index, 0))
+
+
+## Apply the selected language immediately; Utils persists it in LocalCache.
+##
+## @param index: Selected entry index in LanguageOptions
+func _on_language_options_item_selected(index: int) -> void:
+    Utils.set_app_locale(LANGUAGE_LOCALES[index])
+
+
+## Reset all options to their defaults (language follows the system language).
+func _on_revert_changes_button_pressed() -> void:
+    Utils.reset_app_locale()
+    _load_options()

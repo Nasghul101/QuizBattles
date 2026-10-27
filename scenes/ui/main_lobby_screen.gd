@@ -50,6 +50,7 @@ func _ready() -> void:
     page_clip_container.current_page = current_page
     page_clip_container.animate_to_page(current_page)
     _update_page_indicator(current_page)
+    _update_page_name(current_page)
 
 
 func _on_page_clip_container_swipe_requested(target_page: int) -> void:

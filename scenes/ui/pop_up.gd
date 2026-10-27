@@ -20,7 +20,7 @@ func _gui_input(event: InputEvent) -> void:
             accept_event()
 
 
-func _on_notifications_button_pressed() -> void:
+func _on_open_pop_up_button_pressed() -> void:
     play_animation.emit()
 
 

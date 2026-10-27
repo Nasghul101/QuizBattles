@@ -17,8 +17,8 @@ from urllib.request import Request, urlopen
 # Change these values for another translation run.
 INPUT_FILE = Path(__file__).resolve().parent.parent / "data" / "questions_en.json"
 INPUT_LANGUAGE = "en"
-OUTPUT_LANGUAGE = "zh"
-OUTPUT_FILE = Path(__file__).resolve().parent.parent / "data" / "questions_zh.json"
+OUTPUT_LANGUAGE = "zt"
+OUTPUT_FILE = Path(__file__).resolve().parent.parent / "data" / "questions_zt.json"
 
 # LibreTranslate installation and server settings.
 LIBRETRANSLATE_EXECUTABLE = Path(
