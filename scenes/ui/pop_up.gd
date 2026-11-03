@@ -1,4 +1,4 @@
-extends MarginContainer
+class_name PopUp extends MarginContainer
 
 signal play_animation
 

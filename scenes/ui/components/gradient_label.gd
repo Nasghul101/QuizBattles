@@ -5,6 +5,15 @@ class_name GradientLabel
 @onready var gradient : TextureRect = %Gradient
 
 
+func _ready() -> void:
+    # Scene sub-resources are shared between instances; make them unique per label
+    var tex := gradient.texture as GradientTexture2D
+    if tex != null and tex.gradient != null:
+        var unique_tex := tex.duplicate() as GradientTexture2D
+        unique_tex.gradient = tex.gradient.duplicate()
+        gradient.texture = unique_tex
+
+
 ## Set the accent color (index 0) of the gradient overlay
 ##
 ## Args:

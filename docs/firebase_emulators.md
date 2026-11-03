@@ -38,6 +38,9 @@ npm run test:functions
 # UserDatabase Auth, profile, social, match, and statistics integration
 npm run test:user-database
 
+# Google ID-token registration with fake tokens (see docs/google_sign_in_setup.md)
+npm run test:google-sign-in
+
 # LocalCache settings preservation and legacy credential removal
 npm run test:local-cache
 
@@ -49,6 +52,30 @@ npm run test:runtime-mode
 ```
 
 The Godot integration checks use headless scripts rather than GUT. They cover email/password authentication, Firestore-backed profiles and social data, match/statistics operations, session persistence, cache cleanup, and startup. Login uses email; usernames are profile identifiers. Username search is case-insensitive prefix matching (Firestore does not support the legacy substring search).
+
+## Email verification and password-reset testing
+
+The Auth emulator accepts Firebase email-verification and password-reset requests without sending real email. Use throwaway accounts and the demo project; do not use production credentials or real user addresses.
+
+The Godot UserDatabase integration test requests both email actions, checks unknown-address privacy behavior, reads the emulator's local out-of-band codes, applies a verification code, and confirms that a fresh account lookup reports the verified state. Run it with:
+
+```sh
+npm run test:user-database
+```
+
+For manual emulator checks, open the Auth Emulator UI at `http://127.0.0.1:4000/auth` to inspect test accounts. The Auth emulator's local out-of-band action records are available at `http://127.0.0.1:9099/emulator/v1/projects/demo-quizbattles/oobCodes`; open the returned `oobLink` or apply its `oobCode` through the Auth emulator to complete verification or password reset. These emulator links are for local testing only and are unrelated to the Firebase Console's hosted production action links.
+
+## Live data updates
+
+`LiveUpdateService` (`autoload/live_update_service.gd`) polls the signed-in user's notifications, friends and matches every 5 seconds (backing off to 30 seconds after failures) and emits `GlobalSignalBus.notifications_changed`, `friends_changed` and `matches_changed` when remote data changes. `UserDatabase` is not involved in polling. Each poll runs three Firestore queries, so expect a steady stream of requests in the emulator UI while a user is signed in.
+
+Diff logic check (no emulator needed):
+
+```sh
+godot --headless --path . --script res://tests/live_update_diff_test.gd
+```
+
+Manual check with two clients: sign in as A and B on separate instances, leave A on the main lobby, send A a game invite from B, and confirm the notification appears on A within about 5 seconds without switching screens.
 
 ## Interactive smoke-test checklist
 

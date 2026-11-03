@@ -5,10 +5,10 @@
 [ext_resource type="FontFile" uid="uid://c8memnki1ydnd" path="res://assets/Font/exo/Exo-Bold.otf" id="2_6la4g"]
 [ext_resource type="StyleBox" uid="uid://bprlsfswn38in" path="res://Styles/App_Background_Stylebox.tres" id="3_jknti"]
 [ext_resource type="Texture2D" uid="uid://6qloajqsnmxr" path="res://resources/icon_vs.tres" id="5_k136l"]
-[ext_resource type="Shader" uid="uid://dtvwdbl5lb1q" path="res://shaders/predefined_outline_shader.gdshader" id="6_ffyqh"]
 [ext_resource type="PackedScene" uid="uid://ctbg4s6mn7ekg" path="res://scenes/ui/components/back_button.tscn" id="6_jknti"]
 [ext_resource type="Texture2D" uid="uid://pj7nlpjyhaax" path="res://assets/ui/PlayButton.png" id="7_pqwmq"]
 [ext_resource type="Script" uid="uid://du2is7604h5ib" path="res://scenes/ui/components/category_popup_component.gd" id="8_catpop"]
+[ext_resource type="Texture2D" uid="uid://c1h6y31s6k6ln" path="res://assets/ui/PlayButton_Highlighted.png" id="8_k136l"]
 
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_uvioe"]
 bg_color = Color(0.19215687, 0, 0.24313726, 1)
@@ -21,17 +21,6 @@ corner_radius_top_left = 5
 corner_radius_top_right = 5
 corner_radius_bottom_right = 5
 corner_radius_bottom_left = 5
-
-[sub_resource type="ShaderMaterial" id="ShaderMaterial_svdou"]
-shader = ExtResource("6_ffyqh")
-shader_parameter/outline_color = Color(0.9843137, 0.8627451, 0.9529412, 1)
-shader_parameter/outline_threshold = 0.2
-shader_parameter/enable_pulsating = false
-shader_parameter/pulsating_color = Color(0, 1, 1, 1)
-shader_parameter/pulsating_thickness = 6.0
-shader_parameter/pulsating_blur = 0.25
-shader_parameter/pulsating_speed = 1.0
-shader_parameter/pulsating_clockwise = false
 
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_svdou"]
 corner_radius_top_left = 80
@@ -183,13 +172,12 @@ theme_override_styles/normal = SubResource("StyleBoxFlat_uvioe")
 
 [node name="PlayButton" type="TextureButton" parent="MarginContainer/VBoxContainer/HBoxContainer2" unique_id=602982214]
 unique_name_in_owner = true
-self_modulate = Color(0.19215687, 0, 0.24313726, 1)
-material = SubResource("ShaderMaterial_svdou")
 custom_minimum_size = Vector2(700, 200)
 layout_mode = 2
 size_flags_horizontal = 4
 size_flags_vertical = 0
 texture_normal = ExtResource("7_pqwmq")
+texture_pressed = ExtResource("8_k136l")
 ignore_texture_size = true
 stretch_mode = 5
 
@@ -213,10 +201,6 @@ anchor_right = 1.0
 anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
-theme_override_constants/margin_left = 100
-theme_override_constants/margin_top = 100
-theme_override_constants/margin_right = 100
-theme_override_constants/margin_bottom = 100
 
 [node name="ModalOverlay" type="ColorRect" parent="FinishGamePopup" unique_id=2018505671]
 layout_mode = 2
@@ -230,16 +214,74 @@ layout_mode = 2
 
 [node name="WinnerDisplay" type="Label" parent="FinishGamePopup/PanelContainer/VBoxContainer" unique_id=597474134]
 unique_name_in_owner = true
+custom_minimum_size = Vector2(500, 0)
 layout_mode = 2
 size_flags_horizontal = 4
 size_flags_vertical = 6
-theme_override_font_sizes/font_size = 50
+theme = ExtResource("1_vyfkx")
+theme_override_font_sizes/font_size = 100
+text = "Player 1 Wins"
 horizontal_alignment = 1
 vertical_alignment = 1
+autowrap_mode = 3
 
-[node name="FinishGameButton" type="Button" parent="FinishGamePopup/PanelContainer/VBoxContainer" unique_id=1536251671]
+[node name="Score" type="HBoxContainer" parent="FinishGamePopup/PanelContainer/VBoxContainer" unique_id=1527574324]
+layout_mode = 2
+size_flags_horizontal = 4
+theme_override_constants/separation = 100
+
+[node name="VBoxContainer" type="VBoxContainer" parent="FinishGamePopup/PanelContainer/VBoxContainer/Score" unique_id=863480898]
+layout_mode = 2
+
+[node name="FinalNameP1" type="Label" parent="FinishGamePopup/PanelContainer/VBoxContainer/Score/VBoxContainer" unique_id=511324129]
 unique_name_in_owner = true
-custom_minimum_size = Vector2(100, 50)
+layout_mode = 2
+theme_override_colors/font_color = Color(0.9843137, 0.8627451, 0.9529412, 1)
+theme_override_fonts/font = ExtResource("2_6la4g")
+theme_override_font_sizes/font_size = 60
+text = "Name Player 1"
+
+[node name="FinalScoreP1" type="Label" parent="FinishGamePopup/PanelContainer/VBoxContainer/Score/VBoxContainer" unique_id=1924475812]
+unique_name_in_owner = true
+layout_mode = 2
+size_flags_horizontal = 4
+theme_override_font_sizes/font_size = 80
+text = "1"
+
+[node name="TextureRect" type="TextureRect" parent="FinishGamePopup/PanelContainer/VBoxContainer/Score" unique_id=1135507280]
+self_modulate = Color(0.9843137, 0.8627451, 0.9529412, 1)
+custom_minimum_size = Vector2(150, 150)
+layout_mode = 2
+texture = ExtResource("5_k136l")
+expand_mode = 1
+stretch_mode = 5
+
+[node name="VBoxContainer2" type="VBoxContainer" parent="FinishGamePopup/PanelContainer/VBoxContainer/Score" unique_id=100813867]
+layout_mode = 2
+
+[node name="FinalNameP2" type="Label" parent="FinishGamePopup/PanelContainer/VBoxContainer/Score/VBoxContainer2" unique_id=968959567]
+unique_name_in_owner = true
+layout_mode = 2
+theme_override_colors/font_color = Color(0.9843137, 0.8627451, 0.9529412, 1)
+theme_override_fonts/font = ExtResource("2_6la4g")
+theme_override_font_sizes/font_size = 60
+text = "Name Player 1"
+
+[node name="FinalScoreP2" type="Label" parent="FinishGamePopup/PanelContainer/VBoxContainer/Score/VBoxContainer2" unique_id=864556484]
+unique_name_in_owner = true
+layout_mode = 2
+size_flags_horizontal = 4
+theme_override_font_sizes/font_size = 80
+text = "3"
+
+[node name="MarginContainer" type="MarginContainer" parent="FinishGamePopup/PanelContainer/VBoxContainer" unique_id=826520618]
+layout_mode = 2
+size_flags_vertical = 10
+theme_override_constants/margin_bottom = 100
+
+[node name="FinishGameButton" type="Button" parent="FinishGamePopup/PanelContainer/VBoxContainer/MarginContainer" unique_id=1536251671]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(500, 200)
 layout_mode = 2
 size_flags_horizontal = 4
 size_flags_vertical = 10

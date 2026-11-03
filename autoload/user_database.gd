@@ -26,14 +26,22 @@ const NOTIFICATION_EXPIRY_SECONDS: float = 259200.0
 
 ## Maximum number of username search results
 const SEARCH_LIMIT := 20
+const EMAIL_ADDRESS_PATTERN := "^[^\\s@]+@[^\\s@]+\\.[^\\s@]+$"
 
 ## Cloud Function that applies the statistics of a finished match
 const STATISTICS_FUNCTION := "processMatchStatistics"
 
 const AUTH_TIMEOUT_SECONDS := 20.0
 
+## Username collision retries when generating a username for a Google account
+const GOOGLE_USERNAME_ATTEMPTS := 5
+
 ## Currently logged-in user: {uid, username, email, avatar_path} (empty if not signed in)
 var current_user: Dictionary = {}
+
+## Whether the current user dismissed the highlight of the unverified-email reminder
+## via "Mark all as read". It survives scene changes and resets on sign-out.
+var email_reminder_read: bool = false
 
 var _uid_cache: Dictionary = {}
 var _fs_busy: bool = false
@@ -180,11 +188,12 @@ func _auth_request(starter: Callable) -> Dictionary:
     if Firebase.Auth.is_busy:
         return _fail("AUTH_BUSY", "Authentication service is busy")
 
+    Firebase.Auth.timeout = AUTH_TIMEOUT_SECONDS
     var wait := AuthWait.new()
     Firebase.Auth.auth_request.connect(wait.on_result, CONNECT_ONE_SHOT)
     starter.call()
     if wait.result.is_empty():
-        get_tree().create_timer(AUTH_TIMEOUT_SECONDS).timeout.connect(wait.on_timeout)
+        get_tree().create_timer(AUTH_TIMEOUT_SECONDS + 1.0).timeout.connect(wait.on_timeout)
         await wait.finished
     if Firebase.Auth.auth_request.is_connected(wait.on_result):
         Firebase.Auth.auth_request.disconnect(wait.on_result)
@@ -201,7 +210,11 @@ func _auth_request(starter: Callable) -> Dictionary:
     if message.contains("Error connecting"):
         return _fail("SERVICE_UNAVAILABLE", message)
     # Firebase messages look like "WEAK_PASSWORD : Password should be ..."
-    var error_code: String = message.split(" ")[0] if not message.is_empty() else "AUTH_ERROR"
+    var error_code: String = "AUTH_ERROR"
+    if typeof(code) == TYPE_STRING and not str(code).is_empty():
+        error_code = str(code)
+    elif not message.is_empty():
+        error_code = message.split(" ")[0]
     return _fail(error_code, message)
 
 
@@ -234,6 +247,24 @@ func create_user(username: String, password: String, email: String) -> Dictionar
         return signup
 
     var uid: String = _current_uid()
+    var created: Dictionary = await _claim_username_and_create_profile(uid, username, true)
+    if not created.success:
+        return created
+
+    return {
+        "success": true,
+        "user": {
+            "username": username,
+            "email": email,
+            "avatar_path": DEFAULT_AVATAR_PATH
+        }
+    }
+
+
+## Claims the username and creates the profile for an authenticated uid.
+## On failure the claim is released; the Auth account is deleted only if discard_auth_on_failure
+## is true (i.e. the account was created by the current registration).
+func _claim_username_and_create_profile(uid: String, username: String, discard_auth_on_failure: bool) -> Dictionary:
     var normalized: String = username.to_lower()
     var claim: Dictionary = await _fs_create("usernames", _doc_id(normalized), {
         "uid": uid,
@@ -241,7 +272,8 @@ func create_user(username: String, password: String, email: String) -> Dictionar
         "username_normalized": normalized
     })
     if not claim.ok:
-        await _discard_new_account("")
+        if discard_auth_on_failure:
+            await _discard_new_account("")
         if claim.status == "ALREADY_EXISTS":
             return _fail("USERNAME_EXISTS", "Username already exists")
         return _backend_fail(claim)
@@ -259,17 +291,74 @@ func create_user(username: String, password: String, email: String) -> Dictionar
         "category_stats": {}
     })
     if not profile.ok:
-        await _discard_new_account(_doc_id(normalized))
+        if discard_auth_on_failure:
+            await _discard_new_account(_doc_id(normalized))
+        else:
+            var released: Dictionary = await _fs_delete("usernames", _doc_id(normalized))
+            if not released.ok:
+                push_error("Could not release username claim after failed registration: %s" % released.message)
         return _backend_fail(profile)
 
-    return {
-        "success": true,
-        "user": {
-            "username": username,
-            "email": email,
-            "avatar_path": DEFAULT_AVATAR_PATH
-        }
-    }
+    return {"success": true}
+
+
+## Register or sign in with a Google ID token.
+##
+## New Google accounts get a generated username derived from the display name. Accounts
+## that already have a profile are simply signed in. Only an Auth account created by this
+## call is ever deleted on failure.
+##
+## @return {success: true, user: {username, email, avatar_path}} or a failure dictionary
+func register_with_google(id_token: String, display_name: String, email: String = "") -> Dictionary:
+    var login: Dictionary = await _auth_request(
+        func() -> void: Firebase.Auth.login_with_google_id_token(id_token)
+    )
+    if not login.success:
+        return login
+
+    var uid: String = _current_uid()
+    var is_new_account: bool = bool(login.auth.get("isnewuser", false))
+    var account_email: String = str(login.auth.get("email", email))
+
+    var existing: Dictionary = await _fs_get("users", uid)
+    if existing.ok:
+        return await _finish_sign_in(account_email)
+    if existing.status != "NOT_FOUND":
+        Firebase.Auth.logout()
+        return _backend_fail(existing)
+
+    var created: Dictionary = {}
+    for attempt in range(GOOGLE_USERNAME_ATTEMPTS):
+        created = await _claim_username_and_create_profile(uid, _generate_username(display_name, attempt), false)
+        if created.success or created.get("error_code", "") != "USERNAME_EXISTS":
+            break
+
+    if not created.success:
+        if is_new_account:
+            await _discard_new_account("")
+        else:
+            Firebase.Auth.logout()
+        return created
+
+    return await _finish_sign_in(account_email)
+
+
+## Builds a username (5-15 chars, letters/digits/underscore) from a display name.
+## attempt 0 uses the plain name; later attempts append a random number to avoid collisions.
+func _generate_username(display_name: String, attempt: int = 0) -> String:
+    var cleaned := RegEx.new()
+    cleaned.compile("[^A-Za-z0-9_]")
+    var base: String = cleaned.sub(display_name, "", true)
+    if base.is_empty():
+        base = "Player"
+
+    var generated: String = base.substr(0, MAX_USERNAME_LENGTH)
+    if attempt > 0:
+        var suffix: String = str(randi_range(100, 9999))
+        generated = base.substr(0, MAX_USERNAME_LENGTH - suffix.length()) + suffix
+    while generated.length() < MIN_USERNAME_LENGTH:
+        generated += str(randi_range(0, 9))
+    return generated
 
 
 ## Rolls back a partially created registration (username claim first, then the Auth account).
@@ -296,6 +385,59 @@ func sign_in(email: String, password: String) -> Dictionary:
     if not login.success:
         return login
     return await _finish_sign_in(str(login.auth.get("email", email)))
+
+
+## Request an email-verification message for the current authenticated account.
+func send_email_verification() -> Dictionary:
+    if not Firebase.Auth.is_logged_in():
+        return _fail("NOT_SIGNED_IN", "Sign in before requesting email verification")
+    return await _auth_request(func() -> void: Firebase.Auth.send_account_verification_email())
+
+
+## Send a password-reset email without revealing whether the address is registered.
+func request_password_reset_email(email: String) -> Dictionary:
+    var normalized_email: String = email.strip_edges()
+    var email_pattern := RegEx.new()
+    email_pattern.compile(EMAIL_ADDRESS_PATTERN)
+    if email_pattern.search(normalized_email) == null:
+        return _fail("INVALID_EMAIL", "Enter a valid email address")
+
+    var result: Dictionary = await _auth_request(
+        func() -> void: Firebase.Auth.send_password_reset_email(normalized_email)
+    )
+    if not result.success and result.get("error_code", "") == "EMAIL_NOT_FOUND":
+        return {"success": true}
+    return result
+
+
+## Refresh the current account's email verification status from Firebase Authentication.
+func refresh_email_verification_status() -> Dictionary:
+    if not Firebase.Auth.is_logged_in():
+        return _fail("NOT_SIGNED_IN", "Sign in before checking email verification")
+
+    var user_data: Dictionary = {
+        "received": false,
+        "email_verified": false,
+        "provider_id": ""
+    }
+    var on_userdata: Callable = func(data: FirebaseUserData) -> void:
+        user_data["received"] = true
+        user_data["email_verified"] = data.email_verified
+        user_data["provider_id"] = data.provider_id
+    Firebase.Auth.userdata_received.connect(on_userdata, CONNECT_ONE_SHOT)
+
+    var result: Dictionary = await _auth_request(func() -> void: Firebase.Auth.get_user_data())
+    if Firebase.Auth.userdata_received.is_connected(on_userdata):
+        Firebase.Auth.userdata_received.disconnect(on_userdata)
+    if not result.success:
+        return result
+    if not user_data.received:
+        return _fail("USER_DATA_MISSING", "Firebase did not return account verification status")
+    return {
+        "success": true,
+        "email_verified": user_data.email_verified,
+        "provider_id": user_data.provider_id
+    }
 
 
 ## Restore the session stored in the encrypted GodotFirebase auth file.
@@ -330,6 +472,8 @@ func _finish_sign_in(email: String) -> Dictionary:
             return _fail("PROFILE_NOT_FOUND", "No user profile exists for this account")
         return _backend_fail(profile)
 
+    if str(current_user.get("uid", "")) != uid:
+        email_reminder_read = false
     current_user = {
         "uid": uid,
         "username": profile.data.get("username", ""),
@@ -347,6 +491,7 @@ func remember_session() -> bool:
 ## Sign out the current user and clear the session.
 func sign_out() -> void:
     current_user = {}
+    email_reminder_read = false
     _uid_cache.clear()
     Firebase.Auth.logout()
 
@@ -610,6 +755,17 @@ func mark_notification_read(username: String, notification_id: String) -> Dictio
     return {"success": true}
 
 
+## Mark every unread notification of a user as read.
+func mark_all_notifications_read(username: String) -> Dictionary:
+    for notification: Dictionary in await get_notifications(username):
+        if notification.is_read:
+            continue
+        var marked: Dictionary = await mark_notification_read(username, str(notification.id))
+        if not marked.success:
+            return marked
+    return {"success": true}
+
+
 func get_unread_count(username: String) -> int:
     var unread_count: int = 0
     for notification: Dictionary in await get_notifications(username):
@@ -725,7 +881,9 @@ func get_friends(username: String) -> Array:
         .where("participant_uids", FirestoreQuery.OPERATOR.ARRAY_CONTAINS, user.uid)
     var res: Dictionary = await _fs_query(firestore_query)
     if not res.ok:
-        push_error("Could not load friends: %s" % res.message)
+        # Queries still in flight during sign-out are denied by the rules; not an error.
+        if is_signed_in():
+            push_error("Could not load friends: %s" % res.message)
         return []
 
     var friends: Array = []
@@ -807,7 +965,8 @@ func get_all_matches_for_player(username: String) -> Array:
         .where("participant_uids", FirestoreQuery.OPERATOR.ARRAY_CONTAINS, user.uid)
     var res: Dictionary = await _fs_query(firestore_query)
     if not res.ok:
-        push_error("Could not load matches: %s" % res.message)
+        if is_signed_in():
+            push_error("Could not load matches: %s" % res.message)
         return []
 
     var matches: Array = []

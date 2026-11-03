@@ -61,6 +61,7 @@ func _ready() -> void:
     _populate_category_statistics(category_stats)
 
 
+
 ## Populate category statistics components with user data.
 ##
 ## Iterates through all category display components, looks up user's

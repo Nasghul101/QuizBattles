@@ -6,17 +6,20 @@ extends Control
 ## and account management after successful login.
 
 ## Reference to the email input field
-@onready var email_input: TextEdit = %EmailInput
+@onready var email_input: LineEdit = %EmailInput
 
 ## Reference to the password input field
-@onready var password_input: TextEdit = %PasswordInput
+@onready var password_input: LineEdit = %PasswordInput
 
 ## Reference to the Log In button
 @onready var log_in_button: TextureButton = %LogInButton
+@onready var forgot_password_button: Button = $MarginContainer/VBoxContainer/ForgotPasswordButton
+@onready var feedback_dialog: AcceptDialog = $FeedbackDialog
 
 ## Flag to track if login failed due to authentication error
 var _login_failed: bool = false
 var _login_in_progress: bool = false
+var _password_reset_in_progress: bool = false
 
 
 func _ready() -> void:
@@ -30,7 +33,7 @@ func _ready() -> void:
 
 
 ## Called when any input field text changes
-func _on_input_field_changed() -> void:
+func _on_input_field_changed(_new_text: String = "") -> void:
     # A failed login (wrong email or password) is cleared by any edit
     _login_failed = false
     _update_button_state()
@@ -80,3 +83,32 @@ func _on_log_in_button_pressed() -> void:
         ])
         _login_failed = true
         _update_button_state()
+
+
+func _on_forgot_password_button_pressed() -> void:
+    if _password_reset_in_progress:
+        return
+
+    var email: String = email_input.text.strip_edges()
+    if email.is_empty():
+        _show_feedback("REGISTER_LOGIN_EMAIL_REQUIRED")
+        return
+
+    _password_reset_in_progress = true
+    forgot_password_button.disabled = true
+    var result: Dictionary = await UserDatabase.request_password_reset_email(email)
+    if result.get("success", false):
+        _show_feedback("REGISTER_LOGIN_PASSWORD_RESET_SENT")
+    else:
+        push_warning("Password reset request failed (%s): %s" % [
+            result.get("error_code", "UNKNOWN"),
+            result.get("message", "No error details returned")
+        ])
+        _show_feedback("REGISTER_LOGIN_PASSWORD_RESET_FAILED")
+    _password_reset_in_progress = false
+    forgot_password_button.disabled = false
+
+
+func _show_feedback(message_key: String) -> void:
+    feedback_dialog.dialog_text = tr(message_key)
+    feedback_dialog.popup_centered()

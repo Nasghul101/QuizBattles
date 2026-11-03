@@ -48,3 +48,18 @@ signal match_created(match_id: String, player1: String, player2: String)
 ## to refresh displayed statistics including wins, losses, current_streak, and friend_wins.
 # warning-ignore UNUSED_SIGNAL
 signal player_stats_updated(username: String)
+
+## Emitted by LiveUpdateService when the signed-in user's notifications changed remotely.
+## [param added] Array of notification Dictionaries that newly appeared
+## [param removed] Array of notification ids (String) that disappeared
+## Distinct from notification_received, which creates a new notification.
+# warning-ignore UNUSED_SIGNAL
+signal notifications_changed(added: Array, removed: Array)
+
+## Emitted by LiveUpdateService when the signed-in user's friend list changed remotely.
+# warning-ignore UNUSED_SIGNAL
+signal friends_changed()
+
+## Emitted by LiveUpdateService when the signed-in user's matches changed remotely.
+# warning-ignore UNUSED_SIGNAL
+signal matches_changed()

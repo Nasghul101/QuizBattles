@@ -14,6 +14,7 @@ func _ready() -> void:
     
     # Listen for new matches being created
     GlobalSignalBus.match_created.connect(_on_match_created)
+    GlobalSignalBus.matches_changed.connect(_populate_active_matches)
 
 
 func _notification(what: int) -> void:

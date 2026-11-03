@@ -32,6 +32,7 @@ func _ready() -> void:
     
     # Connect to notification actions for friend list updates
     GlobalSignalBus.notification_action_taken.connect(_on_friendship_changed)
+    GlobalSignalBus.friends_changed.connect(_populate_friends_list)
     
     # Refresh friend list when account popup removes a friend
     account_popup.friend_removed.connect(_populate_friends_list)

@@ -5,8 +5,8 @@
 [ext_resource type="StyleBox" uid="uid://bprlsfswn38in" path="res://Styles/App_Background_Stylebox.tres" id="3_uyjcv"]
 [ext_resource type="FontFile" uid="uid://p3ayy83ug584" path="res://assets/Font/exo/Exo-Black.otf" id="4_u0yaj"]
 [ext_resource type="PackedScene" uid="uid://ctbg4s6mn7ekg" path="res://scenes/ui/components/back_button.tscn" id="5_kxw4b"]
-[ext_resource type="Shader" uid="uid://dtvwdbl5lb1q" path="res://shaders/predefined_outline_shader.gdshader" id="5_u0yaj"]
 [ext_resource type="Texture2D" uid="uid://pj7nlpjyhaax" path="res://assets/ui/PlayButton.png" id="6_kxw4b"]
+[ext_resource type="Texture2D" uid="uid://c1h6y31s6k6ln" path="res://assets/ui/PlayButton_Highlighted.png" id="7_kxw4b"]
 
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_kxw4b"]
 bg_color = Color(0.30980393, 0.2627451, 0.3137255, 1)
@@ -56,17 +56,6 @@ corner_radius_top_right = 10
 corner_radius_bottom_right = 10
 corner_radius_bottom_left = 10
 
-[sub_resource type="ShaderMaterial" id="ShaderMaterial_svdou"]
-shader = ExtResource("5_u0yaj")
-shader_parameter/outline_color = Color(0.9843137, 0.8627451, 0.9529412, 1)
-shader_parameter/outline_threshold = 0.2
-shader_parameter/enable_pulsating = false
-shader_parameter/pulsating_color = Color(0, 1, 1, 1)
-shader_parameter/pulsating_thickness = 6.0
-shader_parameter/pulsating_blur = 0.25
-shader_parameter/pulsating_speed = 1.0
-shader_parameter/pulsating_clockwise = false
-
 [node name="AccountRegistrationScreen" type="Control" unique_id=839186813]
 layout_mode = 3
 anchors_preset = 15
@@ -76,6 +65,10 @@ grow_horizontal = 2
 grow_vertical = 2
 theme = ExtResource("1_5uyap")
 script = ExtResource("1_w8hqr")
+
+[node name="FeedbackDialog" type="AcceptDialog" parent="." unique_id=1427797330]
+oversampling_override = 1.0
+size = Vector2i(108, 110)
 
 [node name="BG" type="Panel" parent="." unique_id=1013187217]
 layout_mode = 1
@@ -112,7 +105,7 @@ text = "ACCOUNT_REGISTRATION_HEADER"
 horizontal_alignment = 1
 vertical_alignment = 1
 
-[node name="NameInput" type="TextEdit" parent="MarginContainer/VBoxContainer" unique_id=1651663220]
+[node name="NameInput" type="LineEdit" parent="MarginContainer/VBoxContainer" unique_id=52343252]
 unique_name_in_owner = true
 custom_minimum_size = Vector2(0, 80)
 layout_mode = 2
@@ -120,56 +113,63 @@ theme_override_font_sizes/font_size = 50
 theme_override_styles/normal = SubResource("StyleBoxFlat_kxw4b")
 placeholder_text = "ACCOUNT_REGISTRATION_NAME_PLACEHOLDER"
 
-[node name="PasswordInput" type="TextEdit" parent="MarginContainer/VBoxContainer" unique_id=934657551]
+[node name="PasswordInput" type="LineEdit" parent="MarginContainer/VBoxContainer" unique_id=1588901929]
 unique_name_in_owner = true
 custom_minimum_size = Vector2(0, 80)
 layout_mode = 2
 theme_override_font_sizes/font_size = 50
 theme_override_styles/normal = SubResource("StyleBoxFlat_s42hv")
 placeholder_text = "COMMON_PASSWORD_PLACEHOLDER"
+emoji_menu_enabled = false
 
-[node name="PasswordConfirm" type="TextEdit" parent="MarginContainer/VBoxContainer" unique_id=1249088703]
+[node name="PasswordConfirm" type="LineEdit" parent="MarginContainer/VBoxContainer" unique_id=613127506]
 unique_name_in_owner = true
 custom_minimum_size = Vector2(0, 80)
 layout_mode = 2
 theme_override_font_sizes/font_size = 50
 theme_override_styles/normal = SubResource("StyleBoxFlat_pa4p6")
 placeholder_text = "ACCOUNT_REGISTRATION_CONFIRM_PASSWORD_PLACEHOLDER"
+emoji_menu_enabled = false
 
-[node name="EmailInput" type="TextEdit" parent="MarginContainer/VBoxContainer" unique_id=1446578198]
+[node name="EmailInput" type="LineEdit" parent="MarginContainer/VBoxContainer" unique_id=1594644778]
 unique_name_in_owner = true
 custom_minimum_size = Vector2(0, 80)
 layout_mode = 2
 theme_override_font_sizes/font_size = 50
 theme_override_styles/normal = SubResource("StyleBoxFlat_bmm42")
 placeholder_text = "ACCOUNT_REGISTRATION_EMAIL_PLACEHOLDER"
+emoji_menu_enabled = false
+
+[node name="GoogleSignInButton" type="Button" parent="MarginContainer/VBoxContainer" unique_id=352214169]
+custom_minimum_size = Vector2(300, 200)
+layout_mode = 2
+size_flags_horizontal = 8
+theme_override_font_sizes/font_size = 60
+text = "Google"
 
 [node name="HBoxContainer" type="HBoxContainer" parent="MarginContainer/VBoxContainer" unique_id=482033934]
 layout_mode = 2
 size_flags_vertical = 10
 theme_override_constants/separation = 10
 
-[node name="MarginContainer" type="MarginContainer" parent="MarginContainer/VBoxContainer/HBoxContainer" unique_id=2119113701]
-custom_minimum_size = Vector2(200, 0)
+[node name="MarginContainer2" type="MarginContainer" parent="MarginContainer/VBoxContainer/HBoxContainer" unique_id=1800467460]
 layout_mode = 2
-theme_override_constants/margin_left = 35
-theme_override_constants/margin_top = 35
-theme_override_constants/margin_right = 35
-theme_override_constants/margin_bottom = 35
+theme_override_constants/margin_top = 65
+theme_override_constants/margin_bottom = 65
 
-[node name="BackButton" parent="MarginContainer/VBoxContainer/HBoxContainer/MarginContainer" unique_id=126928124 instance=ExtResource("5_kxw4b")]
+[node name="BackButton" parent="MarginContainer/VBoxContainer/HBoxContainer/MarginContainer2" unique_id=126928124 instance=ExtResource("5_kxw4b")]
 custom_minimum_size = Vector2(150, 150)
 layout_mode = 2
+size_flags_horizontal = 0
 
 [node name="CreateAccountButton" type="TextureButton" parent="MarginContainer/VBoxContainer/HBoxContainer" unique_id=951616059]
 unique_name_in_owner = true
-self_modulate = Color(0.19215687, 0, 0.24313726, 1)
-material = SubResource("ShaderMaterial_svdou")
-custom_minimum_size = Vector2(700, 210)
+custom_minimum_size = Vector2(700, 270)
 layout_mode = 2
 size_flags_horizontal = 6
 size_flags_vertical = 4
 texture_normal = ExtResource("6_kxw4b")
+texture_pressed = ExtResource("7_kxw4b")
 ignore_texture_size = true
 stretch_mode = 5
 
@@ -185,20 +185,19 @@ text = "ACCOUNT_REGISTRATION_CREATE_BUTTON"
 horizontal_alignment = 1
 vertical_alignment = 1
 
-[node name="MarginContainer2" type="MarginContainer" parent="MarginContainer/VBoxContainer/HBoxContainer" unique_id=268821978]
-custom_minimum_size = Vector2(200, 0)
+[node name="MarginContainer" type="MarginContainer" parent="MarginContainer/VBoxContainer/HBoxContainer" unique_id=457496445]
 layout_mode = 2
-theme_override_constants/margin_left = 35
-theme_override_constants/margin_top = 35
-theme_override_constants/margin_right = 35
-theme_override_constants/margin_bottom = 35
+theme_override_constants/margin_top = 65
+theme_override_constants/margin_bottom = 65
 
-[node name="SignInButton" type="Button" parent="MarginContainer/VBoxContainer/HBoxContainer/MarginContainer2" unique_id=65427909]
+[node name="SignInButton" type="Button" parent="MarginContainer/VBoxContainer/HBoxContainer/MarginContainer" unique_id=65427909]
 custom_minimum_size = Vector2(150, 150)
 layout_mode = 2
+size_flags_horizontal = 8
+offset_transform_enabled = true
 theme = ExtResource("1_5uyap")
 text = "COMMON_SIGN_IN_BUTTON"
 
-[connection signal="pressed" from="MarginContainer/VBoxContainer/HBoxContainer/MarginContainer/BackButton" to="." method="_on_back_button_pressed"]
+[connection signal="pressed" from="MarginContainer/VBoxContainer/HBoxContainer/MarginContainer2/BackButton" to="." method="_on_back_button_pressed"]
 [connection signal="pressed" from="MarginContainer/VBoxContainer/HBoxContainer/CreateAccountButton" to="." method="_on_create_account_button_pressed"]
-[connection signal="pressed" from="MarginContainer/VBoxContainer/HBoxContainer/MarginContainer2/SignInButton" to="." method="_on_sign_in_button_pressed"]
+[connection signal="pressed" from="MarginContainer/VBoxContainer/HBoxContainer/MarginContainer/SignInButton" to="." method="_on_sign_in_button_pressed"]

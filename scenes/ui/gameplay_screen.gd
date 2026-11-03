@@ -40,6 +40,10 @@ var selected_category: String = ""
 @onready var finish_game_popup: MarginContainer = $FinishGamePopup
 @onready var winner_display: Label = %WinnerDisplay
 @onready var finish_game_button: Button = %FinishGameButton
+@onready var final_name_p1_label: Label = %FinalNameP1
+@onready var final_name_p2_label: Label = %FinalNameP2
+@onready var final_score_p1_label: Label = %FinalScoreP1
+@onready var final_score_p2_label: Label = %FinalScoreP2
 
 # Scene references
 var result_component_scene: PackedScene = preload("res://scenes/ui/components/result_component.tscn")
@@ -76,6 +80,8 @@ func _ready() -> void:
     # Populate player name labels
     name_p1_label.text = UserDatabase.current_user.username
     name_p2_label.text = opponent_username
+    final_name_p1_label.text = UserDatabase.current_user.username
+    final_name_p2_label.text = opponent_username
     
     # Setup match state
     _update_play_button_state()
@@ -152,7 +158,13 @@ func _on_play_button_pressed() -> void:
         var all_categories = TriviaQuestionService.get_available_categories()
         var random_categories: Array = []
         
-        var available = all_categories.duplicate()
+        var used_categories: Array = []
+        for r in match_data.rounds_data:
+            if r.category != "":
+                used_categories.append(r.category)
+        var available = all_categories.filter(func(c): return not used_categories.has(c))
+        if available.size() < 3:
+            available = all_categories.duplicate()
         available.shuffle()
         for i in range(min(3, available.size())):
             random_categories.append(available[i])
@@ -402,6 +414,8 @@ func _update_score_labels() -> void:
     
     score_p1_label.text = str(p1_score)
     score_p2_label.text = str(p2_score)
+    final_score_p1_label.text = str(p1_score)
+    final_score_p2_label.text = str(p2_score)
 
 
 ## Show finish game popup with winner determination

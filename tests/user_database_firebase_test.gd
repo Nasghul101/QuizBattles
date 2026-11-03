@@ -21,6 +21,9 @@ func _run() -> void:
     var firebase: Node = root.get_node("Firebase")
     if not _expect(firebase.emulating, "The test must use the Firebase emulators."):
         return
+    var local_cache: Node = root.get_node("LocalCache")
+    if not local_cache.session_restore_done:
+        await local_cache.session_restore_finished
     _db = root.get_node("UserDatabase")
     _alice_email = "alice-%s@example.invalid" % _suffix
     _bob_email = "bob-%s@example.invalid" % _suffix
@@ -64,6 +67,105 @@ func _run() -> void:
         return
     result = await _db.sign_in(_alice_email, PASSWORD)
     if not _expect(result.success and result.user.username == _alice_name and result.user.email == _alice_email, "Alice sign-in failed: %s" % str(result)):
+        return
+
+    # Email verification and password recovery
+    var firebase_auth: Node = root.get_node("Firebase").get_node("Auth")
+    var original_uid: String = str(firebase_auth.auth.get("localid", ""))
+    var verification_status: Dictionary = await _db.refresh_email_verification_status()
+    if not _expect(
+        verification_status.success and not verification_status.email_verified and verification_status.provider_id == "password",
+        "New account verification status was wrong: %s" % str(verification_status)
+    ):
+        return
+
+    result = await _db.send_email_verification()
+    if not _expect(result.success, "Verification email request failed: %s" % str(result)):
+        return
+    if not _expect(firebase_auth.auth.get("localid", "") == original_uid, "Verification request replaced the active Auth session."):
+        return
+    result = await _db.send_email_verification()
+    if not _expect(result.success, "Resending verification email failed: %s" % str(result)):
+        return
+
+    var reset_result: Dictionary = await _db.request_password_reset_email(_alice_email)
+    if not _expect(reset_result.success, "Password reset request failed: %s" % str(reset_result)):
+        return
+    reset_result = await _db.request_password_reset_email("unknown-%s@example.invalid" % _suffix)
+    if not _expect(reset_result.success, "Unknown-email reset request exposed account existence: %s" % str(reset_result)):
+        return
+    reset_result = await _db.request_password_reset_email("")
+    if not _expect(not reset_result.success and reset_result.error_code == "INVALID_EMAIL", "Empty reset email was accepted: %s" % str(reset_result)):
+        return
+    reset_result = await _db.request_password_reset_email("not-an-email")
+    if not _expect(not reset_result.success and reset_result.error_code == "INVALID_EMAIL", "Malformed reset email was accepted: %s" % str(reset_result)):
+        return
+
+    firebase_auth.is_busy = true
+    reset_result = await _db.request_password_reset_email(_alice_email)
+    firebase_auth.is_busy = false
+    if not _expect(not reset_result.success and reset_result.error_code == "AUTH_BUSY", "Busy Auth service did not fail explicitly: %s" % str(reset_result)):
+        return
+    var timeout_result: Dictionary = await _db._auth_request(func() -> void: pass)
+    if not _expect(
+        not timeout_result.success and timeout_result.error_code == "SERVICE_UNAVAILABLE",
+        "Auth request timeout did not return a service failure: %s" % str(timeout_result)
+    ):
+        return
+
+    var oob_response: Dictionary = await _request_json(
+        "http://127.0.0.1:9099/emulator/v1/projects/%s/oobCodes" % str(root.get_node("Firebase")._config.get("projectId", "")),
+        HTTPClient.METHOD_GET
+    )
+    if not _expect(oob_response.get("response_code", 0) == 200, "Could not read Auth Emulator email actions: %s" % str(oob_response)):
+        return
+    var verification_code: String = ""
+    for action: Variant in oob_response.get("body", {}).get("oobCodes", []):
+        if action.get("email", "") == _alice_email and action.get("requestType", "") == "VERIFY_EMAIL":
+            verification_code = str(action.get("oobCode", ""))
+    if not _expect(not verification_code.is_empty(), "Auth Emulator did not expose the verification action code."):
+        return
+
+    var apply_code_response: Dictionary = await _request_json(
+        str(firebase_auth._base_url) + "accounts:update?key=" + str(firebase_auth._config.get("apiKey", "")),
+        HTTPClient.METHOD_POST,
+        {"oobCode": verification_code}
+    )
+    if not _expect(apply_code_response.get("response_code", 0) == 200, "Could not apply Auth Emulator verification code: %s" % str(apply_code_response)):
+        return
+    verification_status = await _db.refresh_email_verification_status()
+    if not _expect(
+        verification_status.success and verification_status.email_verified,
+        "Verified email status was not refreshed: %s" % str(verification_status)
+    ):
+        return
+    var auth_base_url: String = str(firebase_auth._base_url)
+    firebase_auth._base_url = "http://127.0.0.1:1/"
+    verification_status = await _db.refresh_email_verification_status()
+    firebase_auth._base_url = auth_base_url
+    if not _expect(
+        not verification_status.success and verification_status.error_code == "SERVICE_UNAVAILABLE",
+        "Verification status refresh failure was not reported: %s" % str(verification_status)
+    ):
+        return
+
+    # A verification-send failure does not roll back an already created account/profile.
+    var retry_email: String = "retry-%s@example.invalid" % _suffix
+    result = await _db.create_user("Retry%s" % str(Time.get_ticks_usec()).right(5), PASSWORD, retry_email)
+    if not _expect(result.success, "Could not create verification retry account: %s" % str(result)):
+        return
+    auth_base_url = str(firebase_auth._base_url)
+    firebase_auth._base_url = "http://127.0.0.1:1/"
+    var failed_verification: Dictionary = await _db.send_email_verification()
+    firebase_auth._base_url = auth_base_url
+    if not _expect(not failed_verification.success, "Verification request unexpectedly succeeded against an unavailable endpoint."):
+        return
+    result = await _db.sign_in(retry_email, PASSWORD)
+    if not _expect(result.success, "Verification email failure removed the account/profile: %s" % str(result)):
+        return
+    _db.sign_out()
+    result = await _db.sign_in(_alice_email, PASSWORD)
+    if not _expect(result.success, "Could not restore Alice's test session: %s" % str(result)):
         return
 
     # Lookup and prefix search
@@ -115,6 +217,9 @@ func _run() -> void:
         return
     result = await _db.mark_notification_read(_bob_name, notifications[0].id)
     if not _expect(result.success and await _db.get_unread_count(_bob_name) == 0, "Marking as read failed: %s" % str(result)):
+        return
+    result = await _db.mark_all_notifications_read(_bob_name)
+    if not _expect(result.success and await _db.get_unread_count(_bob_name) == 0, "Marking all as read failed: %s" % str(result)):
         return
 
     # Friendship
@@ -219,3 +324,26 @@ func _expect(condition: bool, message: String) -> bool:
     push_error(message)
     quit(1)
     return false
+
+
+func _request_json(url: String, method: HTTPClient.Method, data: Dictionary = {}) -> Dictionary:
+    var http_request := HTTPRequest.new()
+    root.add_child(http_request)
+    var request_body: String = JSON.stringify(data) if method != HTTPClient.METHOD_GET else ""
+    var request_error: int = http_request.request(
+        url,
+        PackedStringArray(["Content-Type: application/json"]),
+        method,
+        request_body
+    )
+    if request_error != OK:
+        http_request.queue_free()
+        return {"request_error": request_error}
+
+    var response: Array = await http_request.request_completed
+    http_request.queue_free()
+    var parsed_body: Variant = JSON.parse_string(response[3].get_string_from_utf8())
+    return {
+        "response_code": int(response[1]),
+        "body": parsed_body if parsed_body is Dictionary else {}
+    }

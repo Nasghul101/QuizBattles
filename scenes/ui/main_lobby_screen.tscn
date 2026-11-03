@@ -14,7 +14,7 @@
 [ext_resource type="PackedScene" uid="uid://dgt40tmm1tgde" path="res://scenes/ui/navigation_bar.tscn" id="10_nv11"]
 [ext_resource type="Theme" uid="uid://cxninrmdvbey6" path="res://Styles/BasicTheme.tres" id="12_87f1m"]
 [ext_resource type="PackedScene" uid="uid://ctbg4s6mn7ekg" path="res://scenes/ui/components/back_button.tscn" id="13_87f1m"]
-[ext_resource type="Script" uid="uid://bev8rkjur2ihn" path="res://scenes/ui/pop_up.gd" id="14_e5qb5"]
+[ext_resource type="Script" uid="uid://euvnt2i6xgdd" path="res://scenes/ui/notifications_pop_up.gd" id="14_e5qb5"]
 [ext_resource type="Script" uid="uid://b2doapra872wy" path="res://scenes/ui/page_clip_container.gd" id="14_pageclip"]
 
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_ns136"]
@@ -156,6 +156,7 @@ layout_mode = 1
 anchors_preset = 15
 anchor_right = 1.0
 anchor_bottom = 1.0
+grow_horizontal = 2
 grow_vertical = 2
 theme_override_constants/separation = 200
 
@@ -289,3 +290,4 @@ vertical_alignment = 1
 [connection signal="swipe_requested" from="VBoxContainer/MarginContainer/PageClipContainer" to="." method="_on_page_clip_container_swipe_requested"]
 [connection signal="page_changed" from="VBoxContainer/MarginContainer2/NavigationBar" to="." method="_on_navigation_bar_page_changed"]
 [connection signal="pressed" from="NotificationsPopUp/PopUpBackground/MarginContainer/NotificationContainer/HBoxContainer/ClosePopUpButton" to="NotificationsPopUp" method="_on_close_pop_up_button_pressed"]
+[connection signal="pressed" from="NotificationsPopUp/PopUpBackground/MarginContainer/NotificationContainer/HBoxContainer/MarkAsReadButton" to="NotificationsPopUp" method="_on_mark_as_read_button_pressed"]

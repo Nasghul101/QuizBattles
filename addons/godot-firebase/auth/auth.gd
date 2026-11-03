@@ -76,7 +76,9 @@ enum Auth_Type {
 	LOGIN_ANON,
 	LOGIN_CT,
 	LOGIN_OAUTH,
-	SIGNUP_EP
+	SIGNUP_EP,
+	SEND_VERIFICATION_EMAIL,
+	SEND_PASSWORD_RESET
 }
 
 var _login_request_body : Dictionary = {
@@ -107,7 +109,7 @@ var _custom_token_body : Dictionary = {
 }
 
 var _password_reset_body : Dictionary = {
-	"requestType":"password_reset",
+	"requestType":"PASSWORD_RESET",
 	"email":"",
 }
 
@@ -127,7 +129,7 @@ var _change_password_body : Dictionary = {
 
 
 var _account_verification_body : Dictionary = {
-	"requestType":"verify_email",
+	"requestType":"VERIFY_EMAIL",
 	"idToken":"",
 }
 
@@ -377,6 +379,26 @@ func login_with_oauth(_token: String, provider: AuthProvider) -> void:
 				is_busy = false
 				Firebase._printerr("Error logging in with oauth: %s" % err)
 
+# Login with a Google ID token (e.g. from the Android Credential Manager plugin).
+# Unlike login_with_oauth, no token exchange happens and the token is sent as id_token.
+func login_with_google_id_token(id_token: String) -> void:
+	if id_token.is_empty() or not _is_ready():
+		return
+	is_busy = true
+	var body: Dictionary = {
+		"postBody": "id_token=%s&providerId=google.com" % id_token.uri_encode(),
+		"requestUri": "http://localhost",
+		"returnIdpCredential": true,
+		"returnSecureToken": true,
+	}
+	requesting = Requests.LOGIN_WITH_OAUTH
+	auth_request_type = Auth_Type.LOGIN_OAUTH
+	var err = request(_base_url + _signin_with_oauth_request_url, _headers, HTTPClient.METHOD_POST, JSON.stringify(body))
+	if err != OK:
+		is_busy = false
+		Firebase._printerr("Error logging in with Google ID token: %s" % err)
+
+
 # Exchange the authorization oAuth2 code obtained from browser with a proper access id_token
 func exchange_token(code : String, redirect_uri : String, request_url: String, _client_id: String, _client_secret: String) -> void:
 	if _is_ready():
@@ -482,11 +504,15 @@ func _on_FirebaseAuth_request_completed(result : int, response_code : int, heade
 		if json == null:
 			Firebase._printerr("Error while parsing auth body json")
 			auth_request.emit(ERR_PARSE_ERROR, "Error while parsing auth body json")
+			requesting = Requests.NONE
+			auth_request_type = Auth_Type.NONE
 			return
 
 		res = json
 	if response_code == HTTPClient.RESPONSE_OK:
-		if not res.has("kind"):
+		if auth_request_type == Auth_Type.SEND_VERIFICATION_EMAIL or auth_request_type == Auth_Type.SEND_PASSWORD_RESET:
+			auth_request.emit(1, res)
+		elif not res.has("kind"):
 			auth = get_clean_keys(res)
 			match requesting:
 				Requests.EXCHANGE_TOKEN:
@@ -514,7 +540,9 @@ func _on_FirebaseAuth_request_completed(result : int, response_code : int, heade
 			auth_request.emit(1, auth)
 	else:
 		# error message would be INVALID_EMAIL, EMAIL_NOT_FOUND, INVALID_PASSWORD, USER_DISABLED or WEAK_PASSWORD
-		if requesting == Requests.EXCHANGE_TOKEN:
+		if auth_request_type == Auth_Type.SEND_VERIFICATION_EMAIL or auth_request_type == Auth_Type.SEND_PASSWORD_RESET:
+			auth_request.emit(res.error.code, res.error.message)
+		elif requesting == Requests.EXCHANGE_TOKEN:
 			token_exchanged.emit(false)
 			login_failed.emit(res.error, res.error_description)
 			auth_request.emit(res.error, res.error_description)
@@ -631,11 +659,15 @@ func link_account(email : String, password : String) -> void:
 func send_account_verification_email() -> void:
 	if _is_ready():
 		is_busy = true
+		auth_request_type = Auth_Type.SEND_VERIFICATION_EMAIL
 		_account_verification_body.idToken = auth.idtoken
 		var err = request(_base_url + _oobcode_request_url, _headers, HTTPClient.METHOD_POST, JSON.stringify(_account_verification_body))
+		_account_verification_body.idToken = ""
 		if err != OK:
 			is_busy = false
+			auth_request_type = Auth_Type.NONE
 			Firebase._printerr("Error sending account verification email: %s" % err)
+			auth_request.emit(ERR_CANT_CONNECT, "Error connecting to auth service: %s" % err)
 
 
 # Function used to reset the password for a user who has forgotten in.
@@ -643,11 +675,15 @@ func send_account_verification_email() -> void:
 func send_password_reset_email(email : String) -> void:
 	if _is_ready():
 		is_busy = true
+		auth_request_type = Auth_Type.SEND_PASSWORD_RESET
 		_password_reset_body.email = email
 		var err = request(_base_url + _oobcode_request_url, _headers, HTTPClient.METHOD_POST, JSON.stringify(_password_reset_body))
+		_password_reset_body.email = ""
 		if err != OK:
 			is_busy = false
+			auth_request_type = Auth_Type.NONE
 			Firebase._printerr("Error sending password reset email: %s" % err)
+			auth_request.emit(ERR_CANT_CONNECT, "Error connecting to auth service: %s" % err)
 
 
 # Function called to get all

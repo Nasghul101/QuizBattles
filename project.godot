@@ -25,9 +25,11 @@ GlobalSignalBus="*res://autoload/global_signal_bus.gd"
 TransitionManager="*res://autoload/transition_manager.gd"
 TriviaQuestionService="*res://autoload/trivia_question_service.gd"
 Firebase="*uid://cvb26atjckwlq"
+GoogleSignInService="*res://autoload/google_sign_in_service.gd"
 UserDatabase="*res://autoload/user_database.gd"
 LocalCache="*res://autoload/local_cache.gd"
 Utils="*res://autoload/utils.gd"
+LiveUpdateService="*res://autoload/live_update_service.gd"
 
 [display]
 
@@ -40,7 +42,7 @@ window/handheld/orientation=1
 
 [editor_plugins]
 
-enabled=PackedStringArray("res://addons/font_auto_size_labels/plugin.cfg", "res://addons/godot-firebase/plugin.cfg")
+enabled=PackedStringArray("res://addons/GodotGoogleSignIn/plugin.cfg", "res://addons/font_auto_size_labels/plugin.cfg", "res://addons/godot-firebase/plugin.cfg")
 
 [firebase]
 
@@ -51,6 +53,10 @@ functions_region="us-central1"
 emulators/ports/authentication=9099
 emulators/ports/firestore=8080
 emulators/ports/functions=5001
+
+[google_sign_in]
+
+web_client_id="604709629820-9pq2md3ucerhiiljctgk39sqv75v1d8d.apps.googleusercontent.com"
 
 [gui]
 

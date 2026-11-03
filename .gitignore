@@ -37,6 +37,7 @@ ui-debug.log
 *.sqlite3
 *.db
 *.log
+*.keystore
 
 # Mono-specific ignores
 .mono/

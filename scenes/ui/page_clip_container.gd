@@ -22,6 +22,8 @@ signal swipe_requested(target_page: int)
 @onready var pages_container: HBoxContainer = $PagesContainer
 
 var current_page: int = 0
+## True once the layout has been measured; lets late listeners skip waiting for [signal initialized]
+var is_initialized: bool = false
 var page_width: float = 0.0
 var page_separation: float = 0.0
 var swipe_start_pos: Vector2 = Vector2.ZERO
@@ -44,6 +46,7 @@ func _ready() -> void:
     pages_container.queue_sort()
     await get_tree().process_frame
     pages_container.position.x = 0.0
+    is_initialized = true
     initialized.emit()
 
 

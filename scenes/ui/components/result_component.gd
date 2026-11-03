@@ -157,6 +157,7 @@ func load_result_data(category_name: String, p1_results: Array, p2_results: Arra
 
     # Set category label text
     category_label.text = Utils.translate_category(category_name)
+    category_label.set_accent_color(Utils.resolve_category_color(category_name))
 
     # Mark as not empty
     is_empty = false

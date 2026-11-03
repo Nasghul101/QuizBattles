@@ -31,6 +31,7 @@ ACCOUNT_REGISTRATION_EMAIL_PLACEHOLDER,Email,E-Mail,電子郵件
 ACCOUNT_REGISTRATION_CREATE_BUTTON,Create an account,Konto erstellen,建立帳號
 REGISTER_LOGIN_HEADER,Log in,Anmelden,登入
 REGISTER_LOGIN_EMAIL_PLACEHOLDER,Email,E-Mail,電子郵件
+REGISTER_LOGIN_FORGOT_PASSWORD,Forgot Password?,Passwort vergessen?,忘記密碼？
 REGISTER_LOGIN_CREATE_ACCOUNT_BUTTON,Create new Account,Neues Konto erstellen,建立新帳號
 CATEGORY_POPUP_CHOOSE_HEADLINE,Choose a Category,Wähle eine Kategorie,選擇分類
 CATEGORY_POPUP_LOADING_LABEL,Loading...,Lädt...,載入中...
@@ -67,3 +68,13 @@ CATEGORY_MYTHOLOGY,Mythology,Mythologie,神話
 CATEGORY_POLITICS,Politics,Politik,政治
 CATEGORY_CELEBRITIES,Celebrities,Prominente,名人
 CATEGORY_VEHICLES,Vehicles,Fahrzeuge,交通工具
+REGISTER_LOGIN_EMAIL_REQUIRED,Enter your email address first.,Bitte gib zuerst deine E-Mail-Adresse ein.,請先輸入電子郵件地址。
+REGISTER_LOGIN_PASSWORD_RESET_SENT,If an account exists for this email, a password reset email has been sent.,Falls ein Konto mit dieser E-Mail-Adresse existiert, wurde eine E-Mail zum Zurücksetzen des Passworts gesendet.,如果此電子郵件有帳號，已寄出重設密碼郵件。
+REGISTER_LOGIN_PASSWORD_RESET_FAILED,Could not request a password reset. Check your connection and try again.,Die Anfrage zum Zurücksetzen des Passworts ist fehlgeschlagen. Prüfe deine Verbindung und versuche es erneut.,無法要求重設密碼。請檢查網路連線後再試。
+ACCOUNT_MANAGEMENT_EMAIL_VERIFICATION_REMINDER,Please verify your email address. You can keep playing while it is unverified.,Bitte bestätige deine E-Mail-Adresse. Du kannst weiterspielen, auch wenn sie noch nicht bestätigt ist.,請驗證電子郵件地址。驗證前仍可繼續遊玩。
+ACCOUNT_MANAGEMENT_EMAIL_VERIFICATION_SENT,A verification email has been requested. Check your inbox.,Eine Bestätigungs-E-Mail wurde angefordert. Prüfe deinen Posteingang.,已要求寄送驗證郵件，請查看收件匣。
+ACCOUNT_MANAGEMENT_EMAIL_VERIFICATION_SEND_FAILED,Could not send the verification email. Please try again.,Die Bestätigungs-E-Mail konnte nicht gesendet werden. Bitte versuche es erneut.,無法寄送驗證郵件，請再試一次。
+ACCOUNT_MANAGEMENT_EMAIL_STATUS_FAILED,Could not check email verification status. Please retry.,Der E-Mail-Bestätigungsstatus konnte nicht geprüft werden. Bitte versuche es erneut.,無法檢查電子郵件驗證狀態，請重試。
+ACCOUNT_MANAGEMENT_RESEND_VERIFICATION_BUTTON,Resend email,Bestätigungs-E-Mail erneut senden,重新寄送驗證郵件
+ACCOUNT_MANAGEMENT_REFRESH_VERIFICATION_BUTTON,I've verified,Ich habe bestätigt,已完成驗證
+ACCOUNT_REGISTRATION_VERIFICATION_SEND_FAILED,Your account was created, but we couldn't send the verification email. You can resend it from account management.,Dein Konto wurde erstellt, aber die Bestätigungs-E-Mail konnte nicht gesendet werden. Du kannst sie in der Kontoverwaltung erneut senden.,帳號已建立，但無法寄送驗證郵件。你可以在帳號管理中重新寄送。

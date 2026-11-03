@@ -55,6 +55,7 @@ size_flags_vertical = 4
 theme_override_constants/separation = 15
 
 [node name="Accept" type="Button" parent="MarginContainer/VBoxContainer/MarginContainer/ActionButtonsContainer" unique_id=1660036693]
+unique_name_in_owner = true
 custom_minimum_size = Vector2(200, 60)
 layout_mode = 2
 size_flags_horizontal = 3
@@ -62,6 +63,7 @@ theme = ExtResource("2_oswe5")
 text = "COMMON_ACCEPT_BUTTON"
 
 [node name="Deny" type="Button" parent="MarginContainer/VBoxContainer/MarginContainer/ActionButtonsContainer" unique_id=2118414929]
+unique_name_in_owner = true
 custom_minimum_size = Vector2(200, 60)
 layout_mode = 2
 size_flags_horizontal = 3

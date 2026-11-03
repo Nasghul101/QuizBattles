@@ -18,6 +18,8 @@ signal action_taken(notification_id: String, action: String)
 
 @onready var notification_text: Label = %NotificationText
 @onready var action_buttons_container: HBoxContainer = %ActionButtonsContainer
+@onready var accept_button: Button = %Accept
+@onready var deny_button: Button = %Deny
 
 ## Current notification data
 var notification_data: Dictionary = {}
@@ -29,6 +31,7 @@ var notification_data: Dictionary = {}
 ##   - id: String - Unique notification ID
 ##   - message: String - Notification text to display
 ##   - has_actions: bool - Whether to show accept/deny buttons
+##   - accept_label / deny_label: String - Optional translation keys replacing the button texts
 ##   - (other fields preserved for action handling)
 func set_notification_data(data: Dictionary) -> void:
     notification_data = data
@@ -36,6 +39,11 @@ func set_notification_data(data: Dictionary) -> void:
     # Update message label
     if data.has("message"):
         notification_text.text = data.message
+
+    if data.has("accept_label"):
+        accept_button.text = data.accept_label
+    if data.has("deny_label"):
+        deny_button.text = data.deny_label
     
     # Show/hide action buttons based on has_actions flag
     if data.has("has_actions"):
