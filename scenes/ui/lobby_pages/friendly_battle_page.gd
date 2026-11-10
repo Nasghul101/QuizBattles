@@ -54,6 +54,8 @@ func _populate_active_matches() -> void:
     var matches: Array = []
     for match in all_matches:
         var dismissed_by = match.get("dismissed_by", [])
+        if UserDatabase.get_match_mode(match) == UserDatabase.MODE_RANDOM:
+            continue
         if UserDatabase.current_user.username not in dismissed_by:
             matches.append(match)
     
@@ -65,7 +67,7 @@ func _populate_active_matches() -> void:
     # Create buttons for each match, alternating between left and right
     var match_index = 0
     for match in matches:
-        var opponent_username = _get_opponent_username(match)
+        var opponent_username = MatchHelper.get_opponent_username(match, UserDatabase.current_user.username)
         
         # Determine target container and button scene
         var target_list = friend_list_l if match_index % 2 == 0 else friend_list_r
@@ -76,8 +78,8 @@ func _populate_active_matches() -> void:
         target_list.add_child(button)
         
         # Calculate scores
-        var player_score = _calculate_player_score(match, UserDatabase.current_user.username)
-        var opponent_score = _calculate_player_score(match, opponent_username)
+        var player_score = MatchHelper.calculate_player_score(match, UserDatabase.current_user.username)
+        var opponent_score = MatchHelper.calculate_player_score(match, opponent_username)
         
         # Set button properties
         button.set_player_points(player_score)
@@ -86,7 +88,7 @@ func _populate_active_matches() -> void:
         button.set_opponent_name(opponent_username)
         
         # Set highlight based on turn
-        if match.current_turn == UserDatabase.current_user.username:
+        if match.status == "active" and match.current_turn == UserDatabase.current_user.username:
             button.highlight()
         else:
             button.un_highlight()
@@ -96,35 +98,6 @@ func _populate_active_matches() -> void:
         
         match_index += 1
     _loading_matches = false
-
-
-## Calculate cumulative score for a player across all rounds
-##
-## @param match: Match Dictionary containing rounds_data
-## @param username: Player's username to calculate score for
-## @return int: Total number of correct answers across all rounds
-func _calculate_player_score(match: Dictionary, username: String) -> int:
-    var score = 0
-    for round_data in match.rounds_data:
-        if round_data.player_answers.has(username):
-            var player_answer = round_data.player_answers[username]
-            if player_answer.answered:
-                for result in player_answer.results:
-                    if result.was_correct:
-                        score += 1
-    return score
-
-
-## Get opponent's username from match data
-##
-## @param match: Match Dictionary
-## @return String: Opponent's username
-func _get_opponent_username(match: Dictionary) -> String:
-    var current_username = UserDatabase.current_user.username
-    for player in match.players:
-        if player != current_username:
-            return player
-    return ""
 
 
 ## Handle new match creation by refreshing the match list

@@ -99,6 +99,7 @@ theme_override_icons/grabber = ExtResource("3_tsdpv")
 theme_override_icons/grabber_highlight = ExtResource("3_tsdpv")
 theme_override_icons/grabber_disabled = ExtResource("3_tsdpv")
 theme_override_styles/slider = SubResource("StyleBoxFlat_1t1qp")
+min_value = 1.0
 max_value = 6.0
 value = 5.0
 
@@ -149,8 +150,9 @@ theme_override_icons/grabber = ExtResource("3_tsdpv")
 theme_override_icons/grabber_highlight = ExtResource("3_tsdpv")
 theme_override_icons/grabber_disabled = ExtResource("3_tsdpv")
 theme_override_styles/slider = SubResource("StyleBoxFlat_1t1qp")
-max_value = 6.0
-value = 5.0
+min_value = 1.0
+max_value = 5.0
+value = 3.0
 
 [node name="QuestionsAmount" type="Label" parent="Panel/MarginContainer3/VBoxContainer/Panel2/MarginContainer/HBoxContainer" unique_id=1907399929]
 unique_name_in_owner = true

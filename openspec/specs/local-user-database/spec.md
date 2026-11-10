@@ -820,60 +820,75 @@ The system SHALL update both players' statistics exactly once for a completed mu
 - **THEN** `GlobalSignalBus.player_stats_updated` is emitted for both players
 
 ### Requirement: Update Category Statistics After Match Completion
-The system SHALL update category statistics (played count and win count) for both players when a match completes, tracking each category that appeared in the match rounds.
+The system SHALL update category answer statistics for both players when a match completes, counting each stored answer result under the category of its round.
 
-**Rationale:** Provide category-level performance tracking to show users their strengths and weaknesses across different quiz categories.
+**Rationale:** Provide category-level answer accuracy based on what players actually answered rather than the overall match winner.
 
-**Implementation:** Category updates occur in `update_player_statistics()` function after winner determination.
+**Implementation:** Category answer counts are applied once with the existing atomic match-statistics update.
 
 #### Scenario: Increment category played count for both players
-**Given** user "Player1" has `category_stats: {"History": {"played": 10, "wins": 6}}`  
-**And** user "Player2" has `category_stats: {"History": {"played": 8, "wins": 3}}`  
-**When** `update_player_statistics(match_data)` is called for a match with one History round  
-**Then** Player1's History SHALL be updated to `{"played": 11, "wins": 6}` (or 7 if winner)  
-**And** Player2's History SHALL be updated to `{"played": 9, "wins": 3}` (or 4 if winner)
+**GIVEN** a completed match has one History round
+**AND** Player1 has two correct results and one incorrect result in that round
+**AND** Player2 has one correct result and two incorrect results in that round
+**WHEN** match statistics are processed
+**THEN** each player's History `total_answers` SHALL increase by 3
+**AND** Player1's History `correct_answers` SHALL increase by 2
+**AND** Player2's History `correct_answers` SHALL increase by 1
 
 #### Scenario: Increment category win count for winner only
-**Given** match with categories ["History", "Science", "Geography"]  
-**And** Player1 wins the match  
-**When** `update_player_statistics(match_data)` is called  
-**Then** Player1's History SHALL increment both `played` and `wins`  
-**And** Player1's Science SHALL increment both `played` and `wins`  
-**And** Player1's Geography SHALL increment both `played` and `wins`  
-**And** Player2's categories SHALL increment only `played`, not `wins`
+**GIVEN** a completed match has a winner and a loser who both answered questions in History
+**WHEN** category answer statistics are processed
+**THEN** the former category win count SHALL NOT be awarded based on the overall match winner
+**AND** each player's History `correct_answers` SHALL increase only by that player's correct results
+**AND** each player's History `total_answers` SHALL increase only by that player's stored result count
 
 #### Scenario: Initialize new category with both played and wins
-**Given** user "Player1" has `category_stats: {}` (empty)  
-**When** `update_player_statistics(match_data)` is called for a match with "History" category  
-**Then** Player1's `category_stats` SHALL be updated to `{"History": {"played": 1, "wins": 0 or 1}}`  
-**And** the category SHALL be properly initialized with nested structure
+**GIVEN** a player's `category_stats` is empty
+**WHEN** that player has stored answers in the History category in a completed match
+**THEN** the History entry SHALL contain integer `correct_answers` and `total_answers` values
+**AND** those values SHALL equal the correct and total stored results for that category
 
 #### Scenario: Track multiple categories in single match
-**Given** match with 3 rounds using categories ["History", "Science", "History"]  
-**When** category statistics are updated  
-**Then** History SHALL increment `played` by 2 (appears twice)  
-**And** Science SHALL increment `played` by 1  
-**And** winner's categories SHALL also increment `wins` by the same amounts
+**GIVEN** a completed match has two History rounds and one Science round
+**AND** a player has two results in each History round, one correct in the first and two correct in the second
+**AND** the player has three results in Science, two of them correct
+**WHEN** category answer statistics are processed
+**THEN** History `total_answers` SHALL increase by 4 and `correct_answers` SHALL increase by 3
+**AND** Science `total_answers` SHALL increase by 3 and `correct_answers` SHALL increase by 2
+
+#### Scenario: Count recorded timeout results
+**GIVEN** a timed-out question is stored as an incorrect result in a player's round
+**WHEN** category answer statistics are processed
+**THEN** that result SHALL increase the category's `total_answers` by 1
+**AND** it SHALL NOT increase `correct_answers`
 
 #### Scenario: Handle draw with category updates
-**Given** match ends in a draw with categories ["History", "Science"]  
-**When** `update_player_statistics(match_data)` is called  
-**Then** both players' History and Science SHALL increment `played` by 1  
-**And** neither player's `wins` SHALL be incremented (draw means no winner)  
-**And** `total_games` SHALL still be incremented for both players
+**GIVEN** a completed match is a draw and has stored answer results in History and Science
+**WHEN** match statistics are processed
+**THEN** both players' category answer counts SHALL reflect their stored results
+**AND** the draw SHALL NOT prevent those category counts from being updated
 
 #### Scenario: Extract categories from match rounds_data
-**Given** `match_data.rounds_data` contains `[{"category": "History", ...}, {"category": "Science", ...}]`  
-**When** categories are extracted for statistics update  
-**Then** the system SHALL iterate through `rounds_data`  
-**And** extract the `category` field from each round  
-**And** build a list of categories to update statistics for
+**GIVEN** a completed match contains rounds with categories and per-player stored result arrays
+**WHEN** category answer statistics are processed
+**THEN** each stored result SHALL be associated with the category of its containing round
+**AND** empty or missing round categories SHALL NOT create category statistic entries
 
 #### Scenario: Save database after category updates
-**Given** category statistics have been updated for both players  
-**When** `update_player_statistics()` completes  
-**Then** `_save_database()` SHALL be called to persist changes  
-**And** the match SHALL be updated with `stats_processed: true` flag
+**GIVEN** category answer statistics have been updated for both players
+**WHEN** the match-statistics transaction completes successfully
+**THEN** both profiles and the match's finished and processed state SHALL be persisted atomically
+
+#### Scenario: Process answer statistics only once
+**GIVEN** a match has already been processed
+**WHEN** its statistics are processed again
+**THEN** no category answer counts SHALL change
+
+#### Scenario: Surface backend failure
+**GIVEN** Firebase cannot atomically persist the match and profile statistics
+**WHEN** statistics processing is attempted
+**THEN** the operation SHALL report failure
+**AND** the match SHALL NOT be treated as successfully processed
 
 ---
 
@@ -935,9 +950,9 @@ The system SHALL store a `total_games` integer in each Firestore profile and inc
 - **THEN** the Firebase profile schema is completed with a zero default without reading the legacy JSON file
 
 ### Requirement: Restructure Category Stats to Track Wins and Played
-The system SHALL store each category statistic in the profile as `{"played": int, "wins": int}` and preserve that structure in returned display data.
+The system SHALL store each category statistic in the profile as `{"correct_answers": int, "total_answers": int}` and preserve that structure in returned display data.
 
-**Rationale:** Support category-specific performance metrics without relying on migration of the local JSON schema.
+**Rationale:** Provide per-category correct-answer and total-answer counts for calculating answer accuracy.
 
 #### Scenario: New profile has empty category stats
 - **GIVEN** a new Firebase profile is created
@@ -950,24 +965,24 @@ The system SHALL store each category statistic in the profile as `{"played": int
 - **THEN** `category_stats` is an empty dictionary
 
 #### Scenario: Record category results
-- **GIVEN** a completed match includes category results
+- **GIVEN** a completed match includes category answer results
 - **WHEN** statistics are processed
-- **THEN** category entries use integer `played` and `wins` values in the nested format
+- **THEN** category entries SHALL use integer `correct_answers` and `total_answers` values
 
 #### Scenario: Category stats stored in new nested format
-- **GIVEN** category results are processed for a user
+- **GIVEN** category answers are processed for a user
 - **WHEN** the Firebase profile is updated
-- **THEN** each category has integer `played` and `wins` values
+- **THEN** each category entry SHALL contain integer `correct_answers` and `total_answers` values
 
 #### Scenario: Return category stats for display
-- **GIVEN** a profile contains category statistics
+- **GIVEN** a profile contains category answer statistics
 - **WHEN** profile display data is requested
-- **THEN** the nested category statistics are included unchanged
+- **THEN** the nested `correct_answers` and `total_answers` values SHALL be included unchanged
 
 #### Scenario: Category stats included in display data with new structure
-- **GIVEN** a Firestore profile has nested category statistics
+- **GIVEN** a Firestore profile has nested category answer statistics
 - **WHEN** profile display data is requested
-- **THEN** the nested category statistics are returned unchanged
+- **THEN** the nested category statistics SHALL be returned unchanged
 
 #### Scenario: Keep category stats out of current-user summary
 - **GIVEN** a user is signed in
@@ -980,14 +995,20 @@ The system SHALL store each category statistic in the profile as `{"played": int
 - **THEN** it excludes `category_stats`
 
 #### Scenario: Migrate existing category stats to new format
-- **GIVEN** a Firestore profile has an older category-stat representation
-- **WHEN** that profile is loaded
-- **THEN** its category statistics are normalized to the current nested format without reading the legacy JSON file
+- **GIVEN** a profile contains legacy `played` and `wins` category values
+- **WHEN** the new category answer-statistics format is used
+- **THEN** those legacy values SHALL NOT be treated as answer counts
+- **AND** no historical backfill SHALL be performed
 
 #### Scenario: Migrate user without category stats field
 - **GIVEN** a Firestore profile has no `category_stats` field
 - **WHEN** the profile is loaded
 - **THEN** the field is initialized as an empty dictionary without reading the legacy JSON file
+
+#### Scenario: Initialize missing category stats
+- **GIVEN** a Firestore profile has no `category_stats` field
+- **WHEN** the profile is loaded
+- **THEN** `category_stats` SHALL be initialized as an empty dictionary
 
 #### Scenario: Empty category stats remain empty after migration
 - **GIVEN** a Firestore profile has empty category statistics
@@ -995,43 +1016,45 @@ The system SHALL store each category statistic in the profile as `{"played": int
 - **THEN** the field remains empty and no placeholder categories are persisted
 
 ### Requirement: Provide Placeholder Category Data Generation
-The system SHALL provide a helper function to generate placeholder category statistics for testing and UI development before real category tracking is implemented.
+The system SHALL provide a helper function to generate placeholder category answer statistics for testing and UI development before real category tracking is available.
 
 **Rationale:** Allow social features to be developed and tested visually without waiting for gameplay integration.
 
 **Note:** This is temporary functionality marked with TODO comments for future replacement.
 
 #### Scenario: Generate random placeholder category data
-**Given** no real category tracking exists yet  
-**When** `_generate_placeholder_category_stats()` is called  
-**Then** it SHALL return a Dictionary with 3 random category names  
-**And** each category SHALL have a random play count between 1 and 20  
-**And** the function SHALL include comment: "TODO: Replace with real category tracking from gameplay_screen match completion"
+**GIVEN** placeholder category statistics are requested
+**WHEN** `_generate_placeholder_category_stats()` is called
+**THEN** it SHALL return 3 random category names
+**AND** each category SHALL have a positive `total_answers` count no greater than 20
+**AND** each category SHALL have a `correct_answers` count between 0 and its `total_answers` count
+**AND** the helper SHALL remain display-only and SHALL NOT store the generated data
 
 #### Scenario: Use placeholder data when category stats empty
-**Given** user "Player123" has category_stats: {} (empty)  
-**When** UI components need to display category preferences  
-**Then** they MAY call `_generate_placeholder_category_stats()` to get display data  
-**And** the generated data SHALL NOT be saved to the database (display only)
+**GIVEN** a user has empty `category_stats`
+**WHEN** placeholder statistics are generated for UI development
+**THEN** they MAY be displayed temporarily
+**AND** they SHALL NOT be persisted to the database
 
 ---
 
 ### Requirement: Category Stats Data Type and Constraints
-The `category_stats` field SHALL be a Dictionary where keys are category name Strings and values are nested Dictionaries with integer fields `"played"` and `"wins"`.
+The `category_stats` field SHALL be a Dictionary where keys are category name Strings and values are nested Dictionaries with integer fields `"correct_answers"` and `"total_answers"`.
 
-**Rationale:** Provide clear data structure for tracking both play frequency and wins per category.
+**Rationale:** Provide a consistent and valid data structure for per-category answer counts.
 
 **Constraints:**
-- Keys: String type (category names from TriviaQuestionService.CATEGORY_MAPPING)
-- Values: Dictionary with `"played": int` (non-negative) and `"wins": int` (non-negative)
-- Empty dictionary allowed (new users, no games played)
+- Keys SHALL be Strings (category names from `TriviaQuestionService.CATEGORY_MAPPING`)
+- Values SHALL be Dictionaries with non-negative integer `"correct_answers"` and `"total_answers"` fields
+- `"correct_answers"` SHALL NOT exceed `"total_answers"`
+- An empty dictionary SHALL be allowed for users with no recorded answers
 
 #### Scenario: Valid category stats format
-**Given** a user record is being created or updated  
-**When** category_stats is set  
-**Then** it SHALL be a Dictionary type  
-**And** all keys SHALL be Strings  
-**And** all values SHALL be Dictionaries with "played" and "wins" integer fields >= 0
+**GIVEN** a user record is created or updated
+**WHEN** `category_stats` is set
+**THEN** it SHALL be a Dictionary with String category keys
+**AND** each category value SHALL contain non-negative integer `correct_answers` and `total_answers` fields
+**AND** each category's `correct_answers` SHALL be no greater than its `total_answers`
 
 ---
 

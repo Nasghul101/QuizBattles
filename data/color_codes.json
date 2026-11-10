@@ -2,18 +2,18 @@
     "_note": "Color codes used throughout the project. Null values indicate colors not yet decided.",
     "_note_usage": "To access color codes from a GDScript: var file = FileAccess.open('res://data/color_codes.json', FileAccess.READ); var json = JSON.new(); json.parse(file.get_as_text()); var colors = json.data. Then access values like: Color(colors['miscellaneous']['App background']) or colors['category_colors']['Science'].",
     "category_colors": {
-        "General Knowledge": null,
+        "General Knowledge": "#0056FF",
         "Entertainment": "#DA242B",
         "Science": "#00B8E8",
-        "History": null,
+        "History": "#FF95B4",
         "Geography": "#00F116",
         "Sports": "#CFDD27",
-        "Art": null,
-        "Animals": null,
-        "Mythology": null,
-        "Politics": null,
-        "Celebrities": null,
-        "Vehicles": null
+        "Art": "#AB42FF",
+        "Animals": "#5CFFA3",
+        "Mythology": "#FFB01F",
+        "Politics": "#FF0EAC",
+        "Celebrities": "#F6FF00",
+        "Vehicles": "#BF4D00"
     },
     "miscellaneous": {
         "Right answer": "#00B83A",

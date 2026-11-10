@@ -15,9 +15,9 @@ extends Control
              "Vehicles") var category : String = "General Knowledge"
 @onready var bg : TextureRect = %BG
 @onready var title : AutoSizeLabel = %Title
-@onready var win_amount : AutoSizeLabel = %WinAmount
-@onready var played_amount : AutoSizeLabel = %PlayedAmount
-@onready var win_rate : AutoSizeLabel = %WinRate
+@onready var correct_answers_amount : AutoSizeLabel = %CorrectAnswersAmount
+@onready var total_answers_amount : AutoSizeLabel = %TotalAnswersAmount
+@onready var accuracy : AutoSizeLabel = %Accuracy
 
 func _ready() -> void:
     # Set the title to the translated category name
@@ -36,14 +36,16 @@ func set_bg_color(color: Color) -> void:
     new_texture.gradient = new_gradient
     bg.texture = new_texture
     
-func set_win_amount(amount: int) -> void:
-    win_amount.text = str(amount)
+func set_correct_answers_amount(amount: int) -> void:
+    correct_answers_amount.text = str(amount)
 
-func set_played_amount(amount: int) -> void:
-    played_amount.text = str(amount)
+func set_total_answers_amount(amount: int) -> void:
+    total_answers_amount.text = str(amount)
 
-func set_win_rate() -> void:
-    var rate = 0
-    if played_amount.text.to_int() > 0:
-        rate = int((win_amount.text.to_int() / played_amount.text.to_int()) * 100)
-    win_rate.text = "%d%%" % rate
+func set_accuracy() -> void:
+    var rate: int = 0
+    var total_answers: int = total_answers_amount.text.to_int()
+    if total_answers > 0:
+        var correct_answers: int = correct_answers_amount.text.to_int()
+        rate = int(float(correct_answers) / float(total_answers) * 100.0)
+    accuracy.text = "%d%%" % rate

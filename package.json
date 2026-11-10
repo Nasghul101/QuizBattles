@@ -5,7 +5,7 @@
     "emulators": "firebase emulators:start --project demo-quizbattles",
     "test:rules": "firebase emulators:exec --project demo-quizbattles --only auth,firestore \"npm run test:rules:run\"",
     "test:rules:run": "node tests/firebase/firestore_rules.test.mjs",
-    "test:functions": "firebase emulators:exec --project demo-quizbattles --only auth,firestore,functions \"node --test tests/firebase/match_statistics_function.test.mjs\"",
+    "test:functions": "firebase emulators:exec --project demo-quizbattles --only auth,firestore,functions \"node --test tests/firebase/match_statistics_function.test.mjs tests/firebase/random_opponent_function.test.mjs\"",
     "test:auth-firestore": "firebase emulators:exec --project demo-quizbattles --only auth,firestore \"node tests/firebase/run_auth_firestore_test.mjs\"",
     "test:user-database": "firebase emulators:exec --project demo-quizbattles --only auth,firestore,functions \"node tests/firebase/run_auth_firestore_test.mjs tests/user_database_firebase_test.gd\"",
     "test:google-sign-in": "firebase emulators:exec --project demo-quizbattles --only auth,firestore,functions \"node tests/firebase/run_auth_firestore_test.mjs tests/google_sign_in_test.gd\"",

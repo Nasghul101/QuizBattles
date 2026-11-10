@@ -227,25 +227,25 @@ When the "Invite to Game" button is pressed on account_popup, the popup SHALL cl
 ---
 
 ### Requirement: Populate User Statistics on Screen Load
-The account management screen SHALL fetch and display the current logged-in user's statistics when the screen becomes ready, including total games, wins, losses, draws (calculated), pie chart visualization, and per-category statistics.
+The account management screen SHALL fetch and display the current logged-in user's statistics when the screen becomes ready, including total games, wins, losses, draws (calculated), pie chart visualization, and per-category answer statistics.
 
-**Rationale:** Users need to view their performance data when accessing the account management screen. All UI components are already in place with proper unique names, but lack data population logic.
+**Rationale:** Users need to view their performance data when accessing the account management screen.
 
-**Cross-reference:** Uses `local-user-database.get_user_data_for_display()` and `local-user-database.total_games` field.
+**Cross-reference:** Uses `local-user-database.get_user_data_for_display()` and its `category_stats` answer-count structure.
 
 #### Scenario: Display statistics for user with game history
 **Given** user "Player123" is logged in with `total_games: 50`, `wins: 30`, `losses: 15`  
-**And** user has `category_stats: {"History": {"played": 20, "wins": 12}, "Science": {"played": 15, "wins": 8}}`  
+**And** the user has `category_stats: {"History": {"total_answers": 20, "correct_answers": 12}, "Science": {"total_answers": 15, "correct_answers": 8}}`
 **When** the account management screen `_ready()` function executes  
 **Then** the player name label SHALL display "Player123"  
 **And** total games label SHALL display "50"  
 **And** wins label SHALL display "30"  
 **And** draws label SHALL display "5" (calculated as 50 - 30 - 15)  
 **And** losses label SHALL display "15"  
-**And** the pie chart SHALL be populated by calling `set_chart(30, 5, 50)`  
-**And** the History category component SHALL show 12 wins, 20 played, 60% win rate  
-**And** the Science category component SHALL show 8 wins, 15 played, 53% win rate  
-**And** categories not in `category_stats` SHALL show 0 wins, 0 played, 0% win rate
+**And** the pie chart SHALL display 30 wins, 5 draws, and 15 losses
+**And** the History category SHALL display 12 answered correctly out of 20 total answers and 60% accuracy
+**And** the Science category SHALL display 8 answered correctly out of 15 total answers and 53% accuracy
+**And** categories without data SHALL display 0 answered correctly, 0 total answers, and 0% accuracy
 
 #### Scenario: Display empty state for new user
 **Given** user "NewPlayer" is logged in with `total_games: 0`, `wins: 0`, `losses: 0`  
@@ -257,7 +257,7 @@ The account management screen SHALL fetch and display the current logged-in user
 **And** draws label SHALL display "0"  
 **And** losses label SHALL display "0"  
 **And** the pie chart SHALL display inspector default values (not call `set_chart()` or call with zeros)  
-**And** all category components SHALL show 0 wins, 0 played, 0% win rate
+**And** all category components SHALL show 0 answered correctly, 0 total answers, and 0% accuracy
 
 #### Scenario: Calculate draws correctly
 **Given** user has `total_games: 100`, `wins: 60`, `losses: 30`  
@@ -268,35 +268,40 @@ The account management screen SHALL fetch and display the current logged-in user
 ---
 
 ### Requirement: Populate Category Statistics from User Data
-The account management screen SHALL iterate through all category statistic display components and populate each with the corresponding category data from the user's `category_stats` dictionary.
+The account management screen SHALL iterate through all category statistic display components and populate each with the corresponding answer counts from the user's `category_stats` dictionary.
 
-**Rationale:** Users need to see their performance breakdown by category to understand their strengths and weaknesses.
+**Rationale:** Users need to see their answer accuracy and total answers by category.
 
-**Cross-reference:** Uses restructured `local-user-database.category_stats` with nested `{"played": int, "wins": int}` structure.
+**Cross-reference:** Uses nested `{"correct_answers": int, "total_answers": int}` category statistics from `local-user-database`.
 
 #### Scenario: Populate multiple categories with data
-**Given** user has `category_stats: {"History": {"played": 25, "wins": 18}, "Geography": {"played": 10, "wins": 4}, "Sports": {"played": 8, "wins": 8}}`  
+**Given** the user has History `{"total_answers": 25, "correct_answers": 18}`, Geography `{"total_answers": 10, "correct_answers": 4}`, and Sports `{"total_answers": 8, "correct_answers": 8}`
 **When** the account management screen populates category statistics  
-**Then** the History component SHALL call `set_win_amount(18)`, `set_played_amount(25)`, and `set_win_rate()` resulting in 72% display  
-**And** the Geography component SHALL call `set_win_amount(4)`, `set_played_amount(10)`, and `set_win_rate()` resulting in 40% display  
-**And** the Sports component SHALL call `set_win_amount(8)`, `set_played_amount(8)`, and `set_win_rate()` resulting in 100% display  
-**And** all other category components SHALL show 0, 0, 0%
+**Then** History SHALL show "Answered Correctly" 18, "Total Answers" 25, and 72% accuracy
+**And** Geography SHALL show "Answered Correctly" 4, "Total Answers" 10, and 40% accuracy
+**And** Sports SHALL show "Answered Correctly" 8, "Total Answers" 8, and 100% accuracy
 
 #### Scenario: Handle missing category data gracefully
-**Given** user has `category_stats: {"History": {"played": 5, "wins": 3}}`  
-**And** 11 other categories have no data  
+**Given** the user has answer statistics for History but no entry for the other displayed categories
 **When** the account management screen populates category statistics  
-**Then** the History component SHALL show 3 wins, 5 played, 60% win rate  
-**And** all 11 other category components SHALL show 0 wins, 0 played, 0% win rate  
-**And** no errors SHALL occur for missing categories
+**Then** History SHALL show its correct and total answer counts and calculated accuracy
+**And** categories without data SHALL show 0 answered correctly, 0 total answers, and 0% accuracy
+**And** no error SHALL occur because category data is missing
 
 #### Scenario: Iterate through all category components
 **Given** the CategoryStatisticsContainer has 12 child category components  
-**When** the account management screen populates statistics  
-**Then** the screen SHALL iterate through all 12 children  
-**And** for each child, extract the `category` export variable  
-**And** look up that category in user's `category_stats`  
-**And** populate the component with the data (or zeros if not found)
+**When** the account management screen populates category statistics
+**Then** the screen SHALL iterate through all 12 child components, extract each `category` export variable, and look up that category in the user's `category_stats`
+**And** all 12 components SHALL display their matching answer counts or zero values when no data exists
+**And** each component's accuracy SHALL be calculated as integer percentage `correct_answers / total_answers`
+**And** a category with zero total answers SHALL display 0% accuracy
+
+#### Scenario: Use answer-accuracy labels
+**GIVEN** a category statistic component is displayed
+**WHEN** its labels are rendered
+**THEN** the correct-answer count SHALL be labeled "Answered Correctly"
+**AND** the denominator SHALL be labeled "Total Answers"
+**AND** the percentage SHALL be labeled "Accuracy"
 
 ---
 

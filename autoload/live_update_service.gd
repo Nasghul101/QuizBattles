@@ -21,6 +21,7 @@ var _baseline_ready: bool = false
 var _notification_ids: Dictionary = {}
 var _friend_names: Dictionary = {}
 var _match_hashes: Dictionary = {}
+var _was_searching: bool = false
 
 
 func _ready() -> void:
@@ -67,6 +68,7 @@ func poll_now() -> void:
     var notifications: Array = await UserDatabase.get_notifications(username)
     var friends: Array = await UserDatabase.get_friends(username)
     var matches: Array = await UserDatabase.get_all_matches_for_player(username)
+    var searching: bool = await UserDatabase.has_random_search()
     _polling = false
 
     # Query helpers return [] on errors, so a failed poll must be discarded.
@@ -74,10 +76,10 @@ func poll_now() -> void:
         _failures += 1
         return
     _failures = 0
-    _apply_results(notifications, friends, matches)
+    _apply_results(notifications, friends, matches, searching)
 
 
-func _apply_results(notifications: Array, friends: Array, matches: Array) -> void:
+func _apply_results(notifications: Array, friends: Array, matches: Array, searching: bool = false) -> void:
     var notification_map: Dictionary = {}
     for item: Dictionary in notifications:
         notification_map[str(item.get("id", ""))] = item
@@ -94,12 +96,13 @@ func _apply_results(notifications: Array, friends: Array, matches: Array) -> voi
             GlobalSignalBus.notifications_changed.emit(notif_diff.added, notif_diff.removed)
         if not _same_keys(_friend_names, friend_map):
             GlobalSignalBus.friends_changed.emit()
-        if match_map != _match_hashes:
+        if match_map != _match_hashes or searching != _was_searching:
             GlobalSignalBus.matches_changed.emit()
 
     _notification_ids = notification_map
     _friend_names = friend_map
     _match_hashes = match_map
+    _was_searching = searching
     _baseline_ready = true
 
 

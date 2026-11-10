@@ -3,11 +3,13 @@
 [ext_resource type="Texture2D" uid="uid://5tuxrcqmgin5" path="res://assets/ui/Resultcomponent_Button.png" id="1_e4k1g"]
 [ext_resource type="Script" uid="uid://cnbgabgs8nxlc" path="res://scenes/ui/components/result_button_component.gd" id="1_script"]
 [ext_resource type="Texture2D" uid="uid://d0tmjbmmag7n8" path="res://resources/icon_thinking.tres" id="3_gsw65"]
+[ext_resource type="Texture2D" uid="uid://btx5jvj7fq3m4" path="res://resources/icon_hidden.tres" id="3_j4c4y"]
 
 [node name="ResultButtonComponent" type="TextureButton" unique_id=858801615]
-anchors_preset = 15
+anchors_preset = -1
 anchor_right = 1.0
-anchor_bottom = 1.0
+anchor_bottom = 0.46948355
+offset_bottom = -17.0
 grow_horizontal = 2
 grow_vertical = 2
 size_flags_horizontal = 3
@@ -16,21 +18,36 @@ texture_normal = ExtResource("1_e4k1g")
 ignore_texture_size = true
 stretch_mode = 5
 script = ExtResource("1_script")
+metadata/_edit_use_anchors_ = true
 
-[node name="MarginContainer" type="MarginContainer" parent="." unique_id=1303735232]
-layout_mode = 1
-anchors_preset = 15
-anchor_right = 1.0
-anchor_bottom = 1.0
-grow_horizontal = 2
-grow_vertical = 2
-theme_override_constants/margin_left = 40
-theme_override_constants/margin_right = 40
-
-[node name="HiddenIcon" type="TextureRect" parent="MarginContainer" unique_id=1014116420]
+[node name="HiddenIcon" type="TextureRect" parent="." unique_id=1014116420]
 unique_name_in_owner = true
 self_modulate = Color(0.9843137, 0.8627451, 0.9529412, 1)
-layout_mode = 2
-texture = ExtResource("3_gsw65")
-expand_mode = 5
+layout_mode = 1
+anchors_preset = -1
+anchor_left = 0.11966582
+anchor_top = 0.12087912
+anchor_right = 0.8777897
+anchor_bottom = 0.88116956
+offset_left = -0.08600235
+offset_right = 0.0859375
+texture = ExtResource("3_j4c4y")
+expand_mode = 1
 stretch_mode = 5
+metadata/_edit_use_anchors_ = true
+
+[node name="ThinkingIcon" type="TextureRect" parent="." unique_id=1517079169]
+unique_name_in_owner = true
+self_modulate = Color(0.9843137, 0.8627451, 0.9529412, 1)
+layout_mode = 1
+anchors_preset = -1
+anchor_left = 0.13238846
+anchor_top = 0.10819949
+anchor_right = 0.89051235
+anchor_bottom = 0.8684899
+offset_left = -0.08600235
+offset_right = 0.0859375
+texture = ExtResource("3_gsw65")
+expand_mode = 1
+stretch_mode = 5
+metadata/_edit_use_anchors_ = true

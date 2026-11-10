@@ -3,7 +3,7 @@
 [ext_resource type="Script" uid="uid://b11jdqaf8o7sv" path="res://scenes/ui/main_lobby_screen.gd" id="1_m4p3a"]
 [ext_resource type="StyleBox" uid="uid://bprlsfswn38in" path="res://Styles/App_Background_Stylebox.tres" id="2_gy61d"]
 [ext_resource type="Texture2D" uid="uid://bc7u7qil0eq2c" path="res://assets/ui/MainLobbyHeader.png" id="2_qq38p"]
-[ext_resource type="PackedScene" uid="uid://db55cjof2f4uv" path="res://scenes/ui/lobby_pages/duel_page.tscn" id="3_1l6go"]
+[ext_resource type="PackedScene" uid="uid://db55cjof2f4uv" path="res://scenes/ui/lobby_pages/challenge_page.tscn" id="3_1l6go"]
 [ext_resource type="FontFile" uid="uid://c8memnki1ydnd" path="res://assets/Font/exo/Exo-Bold.otf" id="3_wn6oh"]
 [ext_resource type="PackedScene" uid="uid://cxkr8w47uveic" path="res://scenes/ui/lobby_pages/friendly_battle_page.tscn" id="4_4wv0w"]
 [ext_resource type="Texture2D" uid="uid://d2oj6872a8b7u" path="res://resources/icon_profile.tres" id="4_gj36w"]
@@ -160,7 +160,7 @@ grow_horizontal = 2
 grow_vertical = 2
 theme_override_constants/separation = 200
 
-[node name="DuelPage" parent="VBoxContainer/MarginContainer/PageClipContainer/PagesContainer" unique_id=1034330464 instance=ExtResource("3_1l6go")]
+[node name="ChallengePage" parent="VBoxContainer/MarginContainer/PageClipContainer/PagesContainer" unique_id=1034330464 instance=ExtResource("3_1l6go")]
 layout_mode = 2
 size_flags_horizontal = 3
 

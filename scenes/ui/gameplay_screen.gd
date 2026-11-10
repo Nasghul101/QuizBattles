@@ -88,6 +88,13 @@ func _ready() -> void:
     _load_existing_match_state()
     _update_score_labels()
     
+    # Recover matches where statistics were processed before the finished status was persisted.
+    if match_data.get("stats_processed", false) and match_data.status != "finished":
+        match_data.status = "finished"
+        var saved: Dictionary = await UserDatabase.update_match(match_data)
+        if not saved.get("success", false):
+            push_error("Could not restore completed match status: %s" % saved.get("message", "Unknown error"))
+
     # If match is finished, show popup immediately
     if match_data.status == "finished":
         _show_finish_popup()
@@ -339,6 +346,10 @@ func _update_play_button_state() -> void:
     
     # Enable only if my turn AND I haven't answered yet
     play_button.disabled = not (is_my_turn and not my_answered)
+
+    # Show thinking indicator on my buttons while I haven't played the current round
+    if not my_answered and current_round_idx < result_container.get_child_count():
+        result_container.get_child(current_round_idx).show_thinking()
 
 
 ## Display round results in result_component for both players

@@ -91,7 +91,7 @@ alignment = 1
 layout_mode = 2
 size_flags_horizontal = 3
 
-[node name="WinAmount" type="Label" parent="Panel/BG/MarginContainer/VBoxContainer/HBoxContainer/VBoxContainer" unique_id=87108018]
+[node name="CorrectAnswersAmount" type="Label" parent="Panel/BG/MarginContainer/VBoxContainer/HBoxContainer/VBoxContainer" unique_id=87108018]
 unique_name_in_owner = true
 layout_mode = 2
 size_flags_vertical = 1
@@ -115,7 +115,7 @@ size_flags_vertical = 1
 theme = ExtResource("1_2i8nn")
 theme_override_constants/outline_size = 0
 theme_override_font_sizes/font_size = 30
-text = "STAT_LABEL_WINS"
+text = "STAT_LABEL_CORRECT_ANSWERS"
 horizontal_alignment = 1
 vertical_alignment = 1
 clip_text = true
@@ -130,7 +130,7 @@ metadata/_custom_type_script = "uid://bttgnk3bb2a8i"
 layout_mode = 2
 size_flags_horizontal = 3
 
-[node name="PlayedAmount" type="Label" parent="Panel/BG/MarginContainer/VBoxContainer/HBoxContainer/VBoxContainer2" unique_id=162766555]
+[node name="TotalAnswersAmount" type="Label" parent="Panel/BG/MarginContainer/VBoxContainer/HBoxContainer/VBoxContainer2" unique_id=162766555]
 unique_name_in_owner = true
 layout_mode = 2
 size_flags_vertical = 1
@@ -154,7 +154,7 @@ size_flags_vertical = 1
 theme = ExtResource("1_2i8nn")
 theme_override_constants/outline_size = 0
 theme_override_font_sizes/font_size = 30
-text = "STAT_LABEL_PLAYED"
+text = "STAT_LABEL_TOTAL_ANSWERS"
 horizontal_alignment = 1
 vertical_alignment = 1
 clip_text = true
@@ -168,7 +168,7 @@ metadata/_custom_type_script = "uid://bttgnk3bb2a8i"
 [node name="VBoxContainer" type="VBoxContainer" parent="Panel/BG/MarginContainer/VBoxContainer" unique_id=265940920]
 layout_mode = 2
 
-[node name="WinRate" type="Label" parent="Panel/BG/MarginContainer/VBoxContainer/VBoxContainer" unique_id=166177454]
+[node name="Accuracy" type="Label" parent="Panel/BG/MarginContainer/VBoxContainer/VBoxContainer" unique_id=166177454]
 unique_name_in_owner = true
 layout_mode = 2
 size_flags_vertical = 1
@@ -192,7 +192,7 @@ size_flags_vertical = 1
 theme = ExtResource("1_2i8nn")
 theme_override_constants/outline_size = 0
 theme_override_font_sizes/font_size = 25
-text = "STAT_LABEL_WIN_RATE"
+text = "STAT_LABEL_ACCURACY"
 horizontal_alignment = 1
 vertical_alignment = 1
 clip_text = true

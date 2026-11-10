@@ -207,6 +207,14 @@ func hide_results() -> void:
         button.set_hidden_state()
 
 
+## Show thinking state on P1 (local player) buttons
+##
+## Used for the current round while the local player hasn't played it yet.
+func show_thinking() -> void:
+    for button in answer_buttons_p1:
+        button.set_thinking_state()
+
+
 ## Reveal P2 (opponent) result buttons once both players have completed the round
 ##
 ## Restores all buttons to their correct/incorrect states. Called by gameplay_screen

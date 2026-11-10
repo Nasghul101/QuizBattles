@@ -175,6 +175,11 @@ service cloud.firestore {
       allow delete: if isFriendshipParticipant(resource.data);
     }
 
+    match /random_searches/{uid} {
+      allow get, list: if ownsUser(uid) || (signedIn() && resource.data.uid == request.auth.uid);
+      allow write: if false;
+    }
+
     match /matches/{matchId} {
       allow get: if signedIn() && (resource == null || isMatchParticipant(resource.data));
       allow list: if isMatchParticipant(resource.data);
@@ -187,7 +192,8 @@ service cloud.firestore {
         && request.resource.data.participant_uids[0] != request.resource.data.participant_uids[1]
         && exists(/databases/$(database)/documents/users/$(request.resource.data.participant_uids[0]))
         && exists(/databases/$(database)/documents/users/$(request.resource.data.participant_uids[1]))
-        && request.resource.data.stats_processed == false;
+        && request.resource.data.stats_processed == false
+        && request.resource.data.get('mode', 'friend') != 'random';
 
       allow update: if isMatchParticipant(resource.data)
         && request.resource.data.match_id == matchId

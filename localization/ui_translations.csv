@@ -16,6 +16,9 @@ STAT_LABEL_LOSSES,Losses,Niederlagen,失敗
 STAT_LABEL_TOTAL_GAMES,Total games,Gesamtspiele,總場次
 STAT_LABEL_PLAYED,Played,Gespielt,已玩
 STAT_LABEL_WIN_RATE,Win rate,Gewinnrate,勝率
+STAT_LABEL_CORRECT_ANSWERS,Correct,Richtig,答對題數
+STAT_LABEL_TOTAL_ANSWERS,Total,Gesamt,作答總數
+STAT_LABEL_ACCURACY,Accuracy,Genauigkeit,正確率
 OPTIONS_POPUP_APPLY_CHANGES,Apply Changes,Änderungen übernehmen,套用變更
 OPTIONS_POPUP_REVERT_CHANGES,Revert Changes,Standard Einstellungen,還原預設值
 OPTIONS_POPUP_SELECT_LANGUAGE,Select Language,Sprache auswählen,選擇語言
@@ -49,7 +52,7 @@ SHOP_PAGE_COMING_SOON_LABEL,Shop (Coming Soon),Shop (bald verfügbar),商店（�
 SOCIALS_PAGE_ADD_FRIEND_HEADER,Add new friend,Neuen Freund hinzufügen,新增好友
 SOCIALS_PAGE_ADD_FRIEND_NAME_PLACEHOLDER,Input name,Namen eingeben,輸入名稱
 SOCIALS_PAGE_SEND_REQUEST_BUTTON,Send friend request,Freund hinzufügen,發送好友邀請
-MAIN_LOBBY_PAGE_NAME_DUEL,Duel,Duell,對戰
+MAIN_LOBBY_PAGE_NAME_CHALLENGE,Challenge,Herausforderung,挑戰
 MAIN_LOBBY_PAGE_NAME_SHOP,Shop,Shop,商店
 MAIN_LOBBY_PAGE_NAME_FRIENDLY_BATTLE,Active Games,Aktive Spiele,進行中的遊戲
 MAIN_LOBBY_PAGE_NAME_SOCIALS,Friends,Freunde,好友
@@ -78,3 +81,15 @@ ACCOUNT_MANAGEMENT_EMAIL_STATUS_FAILED,Could not check email verification status
 ACCOUNT_MANAGEMENT_RESEND_VERIFICATION_BUTTON,Resend email,Bestätigungs-E-Mail erneut senden,重新寄送驗證郵件
 ACCOUNT_MANAGEMENT_REFRESH_VERIFICATION_BUTTON,I've verified,Ich habe bestätigt,已完成驗證
 ACCOUNT_REGISTRATION_VERIFICATION_SEND_FAILED,Your account was created, but we couldn't send the verification email. You can resend it from account management.,Dein Konto wurde erstellt, aber die Bestätigungs-E-Mail konnte nicht gesendet werden. Du kannst sie in der Kontoverwaltung erneut senden.,帳號已建立，但無法寄送驗證郵件。你可以在帳號管理中重新寄送。
+REVIEW_SCREEN_FEEDBACK,Feedback,Feedback,回饋
+FEEDBACK_POPUP_QUESTION,Something is wrong with the question,Etwas stimmt mit der Frage nicht,問題有誤
+FEEDBACK_POPUP_LANGUAGE,Something is phrased incorrectly,Etwas ist falsch formuliert,語句有誤
+FEEDBACK_POPUP_OTHERS,Something else,Etwas anderes,其他問題
+FEEDBACK_POPUP_WRITE_FEEDBACK,Write your feedback here,Schreibe hier dein Feedback,在此輸入你的回饋
+FEEDBACK_POPUP_ANSWER,The right answer is incorrect,Die richtige Antwort ist falsch,正確答案有誤
+FEEDBACK_POPUP_SUBMIT,Submit,Absenden,提交
+CHALLENGE_SCREEN_FACE_OPPONENT,Face random Opponent,Zufälligen Gegner herausfordern,隨機挑戰對手
+CHALLENGE_SCREEN_SEARCH_OPPONENT,Searching for an opponent,Suche nach einem Gegner,正在尋找對手
+CHALLENGE_SCREEN_OPPONENT_TURN,Opponent's turn,Gegner ist am Zug,對手的回合
+CHALLENGE_SCREEN_YOUR_TURN,Your turn,Du bist am Zug,你的回合
+CHALLENGE_SCREEN_MORE_GAMEMODES,More Game Modes coming soon,Weitere Spielmodi folgen in Kürze,更多遊戲模式即將推出

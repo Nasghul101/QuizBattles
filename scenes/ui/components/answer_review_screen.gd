@@ -23,6 +23,7 @@ extends Control
 # Node references
 @onready var question_label: AutoSizeLabel = %QuestionLabel
 @onready var answers_grid: GridContainer = %AnswersGrid
+@onready var feedback_pop_up: FeedbackPopUp = $FeedbackPopUp
 
 # Answer button references
 var answer_buttons: Array = []
@@ -64,6 +65,7 @@ func load_review_data(question_data: Dictionary) -> void:
     var all_answers: Array = [correct_answer]
     all_answers.append_array(question_data["incorrect_answers"])
     all_answers.shuffle()
+    feedback_pop_up.set_context(question_data["question"], all_answers, correct_answer, player_answer)
     
     # Populate answer buttons with visual states
     for i in range(answer_buttons.size()):

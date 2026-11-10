@@ -74,7 +74,7 @@ func _on_navigation_bar_page_changed(index: int) -> void:
 func _update_page_name(page_index: int) -> void:
     match page_index:
         0:
-            page_name.text = tr("MAIN_LOBBY_PAGE_NAME_DUEL")
+            page_name.text = tr("MAIN_LOBBY_PAGE_NAME_CHALLENGE")
         1:
             page_name.text = tr("MAIN_LOBBY_PAGE_NAME_SHOP")
         2:

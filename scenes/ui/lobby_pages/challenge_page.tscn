@@ -1,0 +1,48 @@
+[gd_scene format=3 uid="uid://db55cjof2f4uv"]
+
+[ext_resource type="Theme" uid="uid://cxninrmdvbey6" path="res://Styles/BasicTheme.tres" id="1_3a758"]
+[ext_resource type="Script" uid="uid://cvey2h22svmcj" path="res://scenes/ui/lobby_pages/challenge_page.gd" id="1_48ffv"]
+[ext_resource type="StyleBox" uid="uid://bprlsfswn38in" path="res://Styles/App_Background_Stylebox.tres" id="2_xhxml"]
+[ext_resource type="PackedScene" uid="uid://bs3t206ge3vuk" path="res://scenes/ui/components/face_random_opponent_display_component.tscn" id="4_e7wgp"]
+
+[node name="ChallengePage" type="Control" unique_id=232069626]
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+theme = ExtResource("1_3a758")
+script = ExtResource("1_48ffv")
+
+[node name="BG" type="Panel" parent="." unique_id=1599203004]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_styles/panel = ExtResource("2_xhxml")
+
+[node name="VBoxContainer" type="VBoxContainer" parent="." unique_id=445508823]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_constants/separation = 50
+
+[node name="ScrollContainer" type="ScrollContainer" parent="VBoxContainer" unique_id=1865077936]
+layout_mode = 2
+size_flags_vertical = 3
+
+[node name="MatchContainer" type="VBoxContainer" parent="VBoxContainer/ScrollContainer" unique_id=874068208]
+unique_name_in_owner = true
+layout_mode = 2
+size_flags_horizontal = 3
+size_flags_vertical = 3
+
+[node name="FaceRandomOpponent" parent="VBoxContainer/ScrollContainer/MatchContainer" unique_id=1436675940 instance=ExtResource("4_e7wgp")]
+unique_name_in_owner = true
+layout_mode = 2

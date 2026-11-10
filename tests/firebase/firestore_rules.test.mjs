@@ -9,11 +9,15 @@ import {
 } from "@firebase/rules-unit-testing";
 import {
   Timestamp,
+  collection,
   deleteDoc,
   doc,
   getDoc,
+  getDocs,
+  query,
   setDoc,
-  updateDoc
+  updateDoc,
+  where
 } from "firebase/firestore";
 
 const projectId = "demo-quizbattles";
@@ -172,4 +176,41 @@ test("matches are restricted to participants and clients cannot process statisti
   await assertSucceeds(updateDoc(matchRef, { status: "in_progress" }));
   await assertFails(updateDoc(matchRef, { stats_processed: true }));
   await assertFails(updateDoc(matchRef, { participant_uids: ["match-a", "match-outsider"] }));
+});
+
+test("random searches are readable only by their owner and never writable by clients", async () => {
+  await seedUser("search-a", "SearchA");
+  await seedUser("search-b", "SearchB");
+  await testEnvironment.withSecurityRulesDisabled(async (context) => {
+    await setDoc(doc(context.firestore(), "random_searches/search-a"), {
+      uid: "search-a",
+      username: "SearchA",
+      created_at: Date.now()
+    });
+  });
+  const ownerDb = authenticatedDb("search-a");
+  const otherDb = authenticatedDb("search-b");
+
+  await assertSucceeds(getDoc(doc(ownerDb, "random_searches/search-a")));
+  await assertSucceeds(getDocs(query(collection(ownerDb, "random_searches"), where("uid", "==", "search-a"))));
+  await assertFails(getDocs(query(collection(otherDb, "random_searches"), where("uid", "==", "search-a"))));
+  await assertFails(getDocs(collection(otherDb, "random_searches")));
+  await assertFails(getDoc(doc(otherDb, "random_searches/search-a")));
+  await assertFails(setDoc(doc(otherDb, "random_searches/search-b"), {
+    uid: "search-b",
+    username: "SearchB",
+    created_at: Date.now()
+  }));
+  await assertFails(deleteDoc(doc(ownerDb, "random_searches/search-a")));
+});
+
+test("clients cannot create random matches directly", async () => {
+  await seedUser("rand-a", "RandA");
+  await seedUser("rand-b", "RandB");
+  await assertFails(setDoc(doc(authenticatedDb("rand-a"), "matches/random-1"), {
+    match_id: "random-1",
+    participant_uids: ["rand-a", "rand-b"],
+    mode: "random",
+    stats_processed: false
+  }));
 });

@@ -23,11 +23,13 @@ var colors = Utils.get_color_codes()
 
 # Node ref
 @onready var hidden_icon: TextureRect = %HiddenIcon
+@onready var thinking_icon: TextureRect = %ThinkingIcon
 
 func _ready() -> void:
     # Connect internal button signal
     pressed.connect(_on_button_pressed)
     hidden_icon.visible = false
+    thinking_icon.visible = false
 
 
 ## Load question data for this button
@@ -46,6 +48,7 @@ func load_question_data(index: int, data: Dictionary) -> void:
 ## and resets modulation to full color.
 func set_correct_state() -> void:
     hidden_icon.visible = false
+    thinking_icon.visible = false
     disabled = false
     self_modulate = Color(colors["miscellaneous"]["Right answer"])
 
@@ -56,6 +59,7 @@ func set_correct_state() -> void:
 ## and resets modulation to full color.
 func set_incorrect_state() -> void:
     hidden_icon.visible = false
+    thinking_icon.visible = false
     disabled = false
     self_modulate = Color(colors["miscellaneous"]["Wrong answer"])
 
@@ -66,6 +70,7 @@ func set_incorrect_state() -> void:
 func set_empty_state() -> void:
     visible = true
     hidden_icon.visible = false
+    thinking_icon.visible = false
     disabled = true
     self_modulate = Color(colors["miscellaneous"]["App gray"])
 
@@ -76,9 +81,20 @@ func set_empty_state() -> void:
 ## Used when opponent results should not be visible until both players complete the round.
 func set_hidden_state() -> void:
     hidden_icon.visible = true
+    thinking_icon.visible = false       
     disabled = true
     self_modulate = Color(colors["miscellaneous"]["App gray"])
 
+
+## Configure button to display thinking state
+##
+## Sets the button to show the thinking icon and disables interaction.
+## Used when its the players turn to answer but he hasnt answered yet.
+func set_thinking_state() -> void:
+    hidden_icon.visible = false
+    thinking_icon.visible = true       
+    disabled = true
+    self_modulate = Color(colors["miscellaneous"]["App gray"])
 
 ## Handle button press and emit custom signal
 func _on_button_pressed() -> void:

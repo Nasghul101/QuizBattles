@@ -30,6 +30,12 @@ const EMAIL_ADDRESS_PATTERN := "^[^\\s@]+@[^\\s@]+\\.[^\\s@]+$"
 
 ## Cloud Function that applies the statistics of a finished match
 const STATISTICS_FUNCTION := "processMatchStatistics"
+## Cloud Function that stores a random-opponent search or pairs two waiting players.
+const RANDOM_OPPONENT_FUNCTION := "findRandomOpponent"
+## Match mode used for matches created from a friend invite (also the default of legacy matches).
+const MODE_FRIEND := "friend"
+## Match mode used for matches created by random matchmaking.
+const MODE_RANDOM := "random"
 
 const AUTH_TIMEOUT_SECONDS := 20.0
 
@@ -917,6 +923,7 @@ func create_match(inviter: String, invitee: String, rounds: int, questions: int)
         "players": [inviter, invitee],
         "participant_uids": [inviter_user.uid, invitee_user.uid],
         "inviter": inviter,
+        "mode": MODE_FRIEND,
         "config": {"rounds": rounds, "questions": questions},
         "current_turn": inviter,
         "current_round": 1,
@@ -973,6 +980,45 @@ func get_all_matches_for_player(username: String) -> Array:
     for item: Dictionary in res.data:
         matches.append(item.data)
     return matches
+
+
+## Mode of a match; matches stored without the field are friend matches.
+static func get_match_mode(match_data: Dictionary) -> String:
+    return str(match_data.get("mode", MODE_FRIEND))
+
+
+## Store a random-opponent search for the signed-in player, or get paired with a waiting one.
+##
+## @return {success, status: "searching" | "matched", match_id} or a failure Dictionary
+func find_random_opponent() -> Dictionary:
+    if not is_signed_in():
+        return _fail("NOT_SIGNED_IN", "No user is currently signed in")
+
+    var task: FunctionTask = Firebase.Functions.execute(
+        RANDOM_OPPONENT_FUNCTION, HTTPClient.METHOD_POST, {}, {}
+    )
+    var response: Variant = await task.task_finished
+    if not task.error.is_empty() or not response is Dictionary or not response.has("status"):
+        return _fail("RANDOM_SEARCH_FAILED", "Opponent search failed: %s" % str(task.error))
+
+    return {
+        "success": true,
+        "status": str(response.status),
+        "match_id": str(response.get("match_id", ""))
+    }
+
+
+## Whether the signed-in player has a waiting random-opponent search.
+## Returns false when the search state could not be loaded.
+func has_random_search() -> bool:
+    if not is_signed_in():
+        return false
+
+    var firestore_query: FirestoreQuery = FirestoreQuery.new() \
+        .from("random_searches") \
+        .where("uid", FirestoreQuery.OPERATOR.EQUAL, current_user.uid)
+    var res: Dictionary = await _fs_query(firestore_query)
+    return res.ok and not res.data.is_empty()
 
 
 func get_active_matches_for_player(username: String) -> Array:
